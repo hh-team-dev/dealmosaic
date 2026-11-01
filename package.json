@@ -1,0 +1,42 @@
+{
+  "name": "dealmosaic",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:api": "npm run dev -w @dealmosaic/api",
+    "dev:web": "npm run dev -w @dealmosaic/web",
+    "build": "npm run seo && npm run build -w @dealmosaic/web",
+    "preview": "npm run preview -w @dealmosaic/web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "audit:design": "node scripts/audit-design.mjs",
+    "check": "npm run test && npm run audit:design && npm run secrets:scan",
+    "typecheck": "tsc -p apps/web/tsconfig.json --noEmit",
+    "seo": "tsx scripts/generate-seo.mjs",
+    "backup": "node scripts/secrets-scan.mjs && node scripts/backup.mjs",
+    "backup:list": "node scripts/backup.mjs --list",
+    "backup:verify": "node scripts/backup.mjs --verify",
+    "vault:init": "node scripts/vault.mjs init",
+    "vault:edit": "node scripts/vault.mjs edit",
+    "vault:show": "node scripts/vault.mjs show",
+    "vault:set": "node scripts/vault.mjs set",
+    "vault:get": "node scripts/vault.mjs get",
+    "vault:rotate": "node scripts/vault.mjs rotate",
+    "vault:status": "node scripts/vault.mjs status",
+    "secrets:scan": "node scripts/secrets-scan.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "tsx": "^4.20.3",
+    "@types/node": "^22.15.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

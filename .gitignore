@@ -1,0 +1,19 @@
+node_modules
+dist
+*.db
+*.db-wal
+*.db-shm
+.env
+.env.local
+deploy/SECRETS.local.env
+
+# Generated at build time by scripts/generate-seo.mjs — never hand-edited.
+apps/web/public/sitemap.xml
+apps/web/public/robots.txt
+apps/web/public/llms.txt
+
+# Backups and secrets — never committed, never shared via repository
+backups/
+secrets/*
+!secrets/.gitignore
+!secrets/README.md

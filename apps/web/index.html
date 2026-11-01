@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>DEALMOSAIC — One search. Three real deals. Zero price surprises.</title>
+    <meta
+      name="description"
+      content="Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax. At most three ranked offers, commission-blind, with the reason each one ranked where it did."
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://dealmosaic.in/" />
+    <meta name="theme-color" content="#FFF9F0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="application-name" content="DEALMOSAIC" />
+    <meta name="apple-mobile-web-app-title" content="DEALMOSAIC" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="preload" href="/fonts/Outfit.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Plus-Jakarta-Sans.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Social cards. A real 1200×630 image lives at /og.png once the owner
+         designs it; until then the favicon is declared rather than a dead link. -->
+    <meta property="og:site_name" content="DEALMOSAIC" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DEALMOSAIC — every price, honestly compared" />
+    <meta
+      property="og:description"
+      content="Three offers. Itemised costs. Explainable ranking. India first."
+    />
+    <meta property="og:url" content="https://dealmosaic.in/" />
+    <meta property="og:image" content="https://dealmosaic.in/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DEALMOSAIC — every price, honestly compared" />
+    <meta
+      name="twitter:description"
+      content="Three offers. Itemised costs. Explainable ranking. India first."
+    />
+
+    <!-- Site-level structured data is static so it is present for crawlers that
+         do not execute JavaScript. Per-page data is injected by React on route
+         changes. No ratings or reviews are claimed anywhere: we do not own them. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://dealmosaic.in/#organization",
+            "name": "DEALMOSAIC",
+            "url": "https://dealmosaic.in/",
+            "logo": "https://dealmosaic.in/favicon.svg",
+            "slogan": "One search. Three real deals. Zero price surprises.",
+            "description": "DEALMOSAIC compares the true landed cost of a product across Indian stores — item price, delivery, fees and taxes — and shows at most three ranked, commission-blind offers with a stated reason for the order.",
+            "areaServed": { "@type": "Country", "name": "India" },
+            "knowsAbout": ["price comparison", "landed cost", "quick commerce India", "grocery price comparison"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://dealmosaic.in/#website",
+            "url": "https://dealmosaic.in/",
+            "name": "DEALMOSAIC",
+            "inLanguage": "en-IN",
+            "publisher": { "@id": "https://dealmosaic.in/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://dealmosaic.in/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 60ch; margin: 40px auto; padding: 0 20px; font-family: system-ui, sans-serif; color: #452b5e">
+        <h1>DEALMOSAIC</h1>
+        <p>
+          One search. Three real deals. Zero price surprises. DEALMOSAIC compares the true landed cost of a product
+          across Indian stores — item price, delivery, fees and tax — and shows at most three ranked, commission-blind
+          offers.
+        </p>
+        <p>This app needs JavaScript to run comparisons. The pages below work without it:</p>
+        <ul>
+          <li><a href="/browse">Browse every product we compare</a></li>
+          <li><a href="/how-we-rank">How we rank deals — the rules in full</a></li>
+          <li><a href="/data-sources">Where our prices come from</a></li>
+          <li><a href="/disclosure">Affiliate disclosure</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+          <li><a href="/terms">Terms of use</a></li>
+          <li><a href="/contact">Contact and support</a></li>
+        </ul>
+        <p>India only at launch. Prices are observations with a timestamp, not offers.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

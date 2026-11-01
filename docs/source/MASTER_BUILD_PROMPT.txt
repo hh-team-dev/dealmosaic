@@ -1,0 +1,1217 @@
+MASTER BUILD PROMPT — DEALMOSAIC
+
+A colourful, intelligent, global product-price comparison platform
+
+Act as an entire senior product-development team consisting of:
+
+- A principal product strategist.
+- A global e-commerce and price-comparison researcher.
+- A senior UI/UX and visual interaction designer.
+- A full-stack software architect.
+- A frontend and backend engineering team.
+- A database and API integration engineer.
+- An affiliate-marketing and monetisation specialist.
+- A cybersecurity and privacy specialist.
+- A QA and performance-testing engineer.
+
+Your assignment is to research, architect, design and BUILD a complete, functional, responsive website called DEALMOSAIC.
+
+Working brand tagline:
+
+ONE SEARCH. THREE REAL DEALS. ZERO PRICE SURPRISES.
+
+The name is provisional. Keep branding configurable and check domain and trademark availability before recommending it as a final commercial name.
+
+This must be a genuine product-price comparison platform, not an ordinary shopping website, not an online marketplace, and not a static catalogue.
+
+Users search for a product. The platform searches all authorised and connected shopping sources available for the selected country, identifies the same product across retailers, verifies available price information, calculates comparable costs, and presents the three strongest available offers side by side.
+
+The platform must initially be designed to operate using free infrastructure and authorised free data sources wherever possible.
+
+IMPORTANT: Do not claim that all global retailers can be searched in real time for free. Do not invent APIs, retailer partnerships, prices, product reviews or cashback arrangements. Build a modular system that can expand as genuine integrations become available.
+
+---
+
+PART 1 — PRODUCT VISION
+
+Build an online destination where consumers can compare practically anything they might purchase online.
+
+Examples include:
+
+- Smartphones and electronics.
+- Computers and accessories.
+- Clothing and footwear.
+- Beauty and personal care.
+- Home appliances and furniture.
+- Kitchen products.
+- Books.
+- Sports and fitness equipment.
+- Toys.
+- Groceries, where comparable product data is available.
+- Other physical consumer products.
+
+The user should be able to type something as simple as:
+
+"Samsung Galaxy S25 Ultra 512GB"
+
+The platform should identify the exact product and find matching offers from connected retailers.
+
+The output should be a maximum of three leading offers, preferably side by side on desktop and as elegant responsive cards on mobile.
+
+A user must be able to understand within seconds:
+
+1. Which retailer has the lowest verified total price?
+2. How much will the product actually cost?
+3. What additional charges are known?
+4. Is the seller reliable?
+5. How many product reviews are available?
+6. How quickly can the product arrive?
+7. What is the return policy?
+8. When was the price last checked?
+9. Why has this offer been ranked first, second or third?
+
+The platform does not process payments or sell products itself. Purchases happen directly on the retailer's website through properly attributed links where permitted.
+
+PART 2 — MARKET RESEARCH AND COMPETITIVE POSITIONING
+
+Before development, research the existing platforms, including:
+
+- Google Shopping.
+- Buyhatke.
+- ShopSavvy.
+- PriceRunner.
+- PriceSpy.
+- CamelCamelCamel.
+- Capital One Shopping.
+- tookit.co.
+- GetMyPrice.
+- Other relevant country-specific comparison websites.
+
+Identify their strengths, limitations, features, monetisation models, supported countries and opportunities for differentiation.
+
+Do not claim that the idea has never existed.
+
+Our competitive position should be based on the combination of:
+
+- Transparent total-price calculation.
+- Exact product and variant matching.
+- A maximum-three-offer comparison experience.
+- International market selection.
+- Honest data-freshness indicators.
+- Seller and product trust information.
+- Explainable rankings.
+- Accessible price history.
+- Policy-compliant user rewards.
+- An exceptionally delightful interface.
+
+Produce a concise competitor matrix before coding.
+
+PART 3 — BRAND AND VISUAL DESIGN SYSTEM
+
+The website must look extraordinarily colourful, creative, playful, polished and modern.
+
+It should feel like a premium digital shopping arcade mixed with a colourful innovation laboratory.
+
+Avoid looking like a generic e-commerce template, financial dashboard or corporate SaaS website.
+
+Colour palette
+
+Use a vibrant palette built around:
+
+- Coral: #FF6B6B
+- Electric blue: #4361EE
+- Turquoise: #2EC4B6
+- Sunshine yellow: #FFBE0B
+- Vibrant violet: #8B5CF6
+- Candy pink: #FF4FA3
+- Electric lime: #B8F34A
+- Tangerine: #FF8A3D
+- Deep ink: #24243B
+- Warm white: #FFF9F0
+
+Develop coherent gradients and colour combinations from these colours.
+
+Use colour intelligently. Prices, product names, payment information and comparison data must remain highly readable.
+
+Visual identity
+
+Design an original logo and wordmark for DEALMOSAIC.
+
+The logo should communicate:
+
+- Shopping discovery.
+- Multiple retailers.
+- Comparison.
+- Savings.
+- Colourful energy.
+
+Create a distinctive geometric or prism-inspired visual symbol. Do not copy any existing retailer's branding.
+
+Animations and interactions
+
+Animations are a central part of the experience.
+
+Implement:
+
+1. A vibrant animated landing-page hero.
+2. Smooth gradient transitions.
+3. A subtle moving shine across selected buttons and premium cards.
+4. An animated product-search scanner.
+5. Animated country-selector interactions.
+6. Beautiful loading skeletons.
+7. Animated price counters when results appear.
+8. A colourful three-position deal podium.
+9. A delightful success animation when a genuine price saving is discovered.
+10. Ripple effects and tactile button interactions.
+11. Smooth modal and drawer transitions.
+12. Animated favourite and wishlist controls.
+13. Progress animations for product matching.
+14. Beautiful chart transitions for price history.
+15. Toast notifications for completed actions.
+
+Use CSS animations and lightweight libraries where practical.
+
+Do not overload the website with animations that slow down mobile devices. Follow reduced-motion preferences, preserve accessibility and keep animations short and purposeful.
+
+Every button must provide meaningful interaction feedback.
+
+Create a unified animation system with consistent timing, transitions, shadows and interaction states.
+
+PART 4 — COUNTRY AND INTERNATIONAL SEARCH SYSTEM
+
+This is a major part of the product.
+
+Provide a prominent country selector in the header.
+
+The options must include:
+
+- India
+- United States
+- United Kingdom
+- Canada
+- Australia
+- Germany
+- France
+- Japan
+- Singapore
+- United Arab Emirates
+- Other countries supported by the platform
+- UNIVERSAL
+
+Use a searchable country dropdown with flags, country names and default local currencies.
+
+Country-specific mode
+
+When a user chooses India, search only authorised sources associated with the Indian market.
+
+Apply the same logic to other selected countries.
+
+Display local currency by default.
+
+Allow users to select a separate display currency if appropriate.
+
+UNIVERSAL mode
+
+Universal means searching across all countries and markets for which the platform has working and authorised retailer connectors.
+
+Show the country of each retailer and the original price.
+
+Also show an approximate converted price in the user's preferred currency.
+
+Clearly distinguish currency conversion from the actual amount payable.
+
+For accurate international landed-cost calculations, obtain a delivery destination country and, where required, postal code.
+
+Include:
+
+- Product cost.
+- International shipping.
+- Estimated import duties.
+- Known taxes.
+- Mandatory fees.
+- Currency conversion date.
+- Any unknown charges.
+
+Never invent customs costs or claim that an overseas offer is cheaper after delivery unless the relevant costs are sufficiently verified.
+
+If international shipping or customs data is unavailable, explicitly label the total as incomplete.
+
+Create a small GLOBAL SEARCH badge for this mode.
+
+PART 5 — PRODUCT SEARCH EXPERIENCE
+
+The central search bar must be the most prominent feature.
+
+Suggested placeholder:
+
+"What are you hunting for today?"
+
+Features:
+
+- Product-name search.
+- Brand search.
+- Model-number search.
+- SKU/GTIN/UPC/EAN identification where supported.
+- Product URL input as a later extension.
+- Search suggestions.
+- Recent searches.
+- Trending products.
+- Search history.
+- Category shortcuts.
+
+When the user submits a search:
+
+1. Validate the query.
+2. Identify likely products.
+3. Search active retailer connectors.
+4. Normalise the product data.
+5. Match exact product identities.
+6. Separate different variants.
+7. Filter unavailable or incompatible offers.
+8. Calculate comparable prices.
+9. Rank qualifying offers.
+10. Return up to three leading offers.
+
+If the query is ambiguous, show a product-selection screen.
+
+Example:
+
+Samsung Galaxy S25:
+
+- 256GB
+- 512GB
+- 1TB
+
+Do not silently combine prices from different models or variants.
+
+Never fabricate missing offers just to fill all three comparison positions.
+
+If only two reliable offers exist, display two.
+
+PART 6 — THE THREE-DEAL COMPARISON ENGINE
+
+This is the most important screen.
+
+Create an elegant desktop comparison table with three prominent offer columns.
+
+On mobile, provide three vertically arranged cards or a swipeable comparison layout without hiding important information.
+
+Every offer should contain the following information where available:
+
+Product information
+
+- Product image.
+- Full product title.
+- Brand.
+- Model.
+- Variant.
+- Matching confidence.
+- Condition: new, used or refurbished.
+
+Retailer information
+
+- Retailer name.
+- Retailer logo where permitted.
+- Seller name.
+- Seller type, such as marketplace seller or official store.
+- Seller rating, if available.
+- Product rating.
+- Review count.
+- Product page link.
+
+Keep seller ratings distinct from product ratings.
+
+Price information
+
+Itemise:
+
+- Listed product price.
+- Shipping.
+- Known taxes.
+- Mandatory charges.
+- Eligible discounts.
+- Verified promotional reductions.
+- Final known payable total.
+
+Use this calculation:
+
+Known total =
+Product price
+
+- known mandatory delivery charges
+- known applicable taxes
+- other known mandatory fees
+- eligible confirmed discounts.
+
+If part of the calculation is unavailable, display:
+
+"TOTAL NOT FULLY VERIFIED"
+
+Do not interpret missing shipping or tax data as zero.
+
+Additional information
+
+Display:
+
+- Delivery estimate.
+- Stock availability.
+- Return window.
+- Warranty information.
+- Seller identity.
+- Price last checked.
+- Data source.
+- Affiliate disclosure.
+- Whether the offer is eligible for platform rewards.
+
+Buttons
+
+Every card should contain:
+
+1. BUY AT STORE
+2. VIEW PRICE BREAKDOWN
+3. SAVE OFFER
+4. REPORT INCORRECT PRICE
+
+Use retailer-specific authorised tracking URLs when available.
+
+Do not obscure the actual retailer destination.
+
+Ranking logic
+
+The default ranking must be based on verified landed cost.
+
+Prioritise:
+
+1. Lowest confirmed total payable price.
+2. Exact product and variant match.
+3. Reliable seller and current stock.
+4. Delivery and return information.
+5. Data freshness.
+
+Keep the ranking independent of affiliate commission.
+
+A retailer must not be able to purchase a higher organic ranking.
+
+Sponsored placements, should they ever exist, must be visually separated and explicitly labelled.
+
+For offers with incomplete cost data, do not misrepresent them as verified winners.
+
+Add a short explanation:
+
+"Why this deal is ranked #1"
+
+Example:
+
+"Lowest verified price, exact 512GB model, shipping included and seller information available."
+
+PART 7 — SIGNATURE FEATURES
+
+Develop the following original features as the platform's identity.
+
+A. PRICE TRUTH ENGINE
+
+A dedicated expandable section showing exactly how a product's total price is calculated.
+
+Each cost component gets its own line.
+
+Clearly distinguish:
+
+- Confirmed.
+- Estimated.
+- Not available.
+- Not applicable.
+
+This is the central trust-building feature.
+
+B. DEAL PODIUM
+
+Present the three leading offers as a colourful three-position podium.
+
+- First: best verified price.
+- Second: runner-up.
+- Third: third-best verified offer.
+
+Use tasteful celebratory effects without overwhelming the comparison.
+
+C. DEAL CONFIDENCE
+
+Create an explainable data-confidence indicator based on:
+
+- Source reliability.
+- Price freshness.
+- Product-match certainty.
+- Shipping information.
+- Seller information.
+
+Do not invent confidence scores without a defined calculation.
+
+A confidence score must never be confused with product quality or seller rating.
+
+D. PRICE HISTORY
+
+Build a historical price graph.
+
+Display:
+
+- Current observed price.
+- Previous observed prices.
+- Lowest recorded price in the available observation period.
+- Highest recorded price.
+- Average observed price.
+- Date of each observation.
+
+Never invent historical records.
+
+Begin recording snapshots when a real connected offer is first observed.
+
+Clearly state the actual observation period.
+
+E. PRICE DROP ALERT
+
+Allow users to save a product and enter a target price.
+
+Example:
+
+"Notify me when this laptop falls below ₹55,000."
+
+Create an alert management screen.
+
+Use free in-app notifications initially.
+
+Email notifications can be added using an authorised free-tier email service, subject to sending limits.
+
+Do not make paid SMS services a dependency.
+
+F. DEAL PASSPORT
+
+Every offer should have a small information panel containing:
+
+- Retailer country.
+- Currency.
+- Delivery destination eligibility.
+- Shipping status.
+- Currency conversion details.
+- Data verification time.
+
+G. TRUST RADAR
+
+Show meaningful seller information separately from product popularity.
+
+Display verified indicators only when supported by a genuine source.
+
+H. COUPON DISCOVERY
+
+Support retailer coupons and promotional codes only when their source, validity and conditions are known.
+
+Show:
+
+- Code.
+- Discount.
+- Minimum purchase.
+- Eligible products.
+- Expiration.
+- Applicable conditions.
+
+Never advertise an expired or unverified coupon as active.
+
+PART 8 — USER REGISTRATION AND ACCOUNT SYSTEM
+
+Users must sign up and log in before they can use the actual product-search and comparison features.
+
+The public landing page may show product examples and explain the service, but live search results and personal features require authentication.
+
+Registration form:
+
+Required:
+
+- Profile/display name.
+- Email address.
+- Password.
+- Password confirmation.
+
+Date of birth:
+
+- Collect only if there is a genuine product or legal purpose.
+- Otherwise use a simpler age confirmation if needed.
+- If full DOB is collected, provide a clear explanation and allow skipping where it is not genuinely required.
+
+Phone number:
+
+- Optional.
+- Clearly label it optional.
+- Do not force users to supply a number if they can use the website without it.
+
+Registration features:
+
+- Email verification.
+- Secure password storage through the authentication provider.
+- Forgot-password process.
+- Login/logout.
+- Session management.
+- Profile editing.
+- Account deletion.
+- Consent and privacy controls.
+
+Never store plaintext passwords.
+
+Do not request a retailer's login credentials, payment-card details or shopping-account password.
+
+The user dashboard should include:
+
+- My Profile.
+- My Searches.
+- Saved Products.
+- My Watchlist.
+- Price Alerts.
+- Reward Wallet.
+- Notification Centre.
+- Account Settings.
+- Support and Feedback.
+- Delete Account.
+
+PART 9 — REWARD AND LOYALTY SYSTEM
+
+Create a distinctive loyalty identity called:
+
+MOSAIC REWARDS
+
+The reward system must be financially sustainable and compliant with each merchant's affiliate agreement.
+
+Use two separate mechanisms.
+
+1. Mosaic XP
+
+A non-cash experience and achievement system.
+
+Users can gain XP for activities such as:
+
+- Creating and managing a wishlist.
+- Completing a product-matching feedback task.
+- Reporting a genuine incorrect price.
+- Participating in useful product comparisons.
+- Contributing verified corrections.
+
+Provide levels, badges, profile achievements and tasteful celebratory animations.
+
+Do not reward spam, fake reports, repeated artificial searches or affiliate-link clicks.
+
+2. Purchase rewards
+
+Create the technical structure for purchase-related rewards, but activate them only for merchants whose written affiliate terms permit them and whose attribution system reliably confirms qualifying transactions.
+
+The system should support:
+
+- Merchant-specific reward eligibility.
+- Conversion tracking.
+- Pending rewards.
+- Approved rewards.
+- Rejected rewards.
+- Cancelled or returned purchases.
+- Reward history.
+- Redemption rules.
+
+Never display an estimated commission as a guaranteed user reward.
+
+Do not offer customers money, points, cashback or other benefits for using Amazon Special Links. Disable purchase rewards for Amazon referrals unless Amazon's applicable written rules are explicitly changed to allow them.
+
+Do not invent a cashback percentage.
+
+Create a reward-policy configuration in the admin panel.
+
+All reward rates, qualifications and redemption rules must be configurable rather than hardcoded.
+
+For the MVP, Mosaic XP and badges can be functional. Monetary or redeemable purchase rewards should remain disabled until compliant merchant integrations are confirmed.
+
+PART 10 — SITE MAP AND PAGES
+
+Build the following complete structure.
+
+1. Public landing page
+
+- Original animated hero.
+- Search demonstration.
+- Supported countries.
+- How it works.
+- Main product advantages.
+- Sample comparison preview.
+- Affiliate and trust explanation.
+- Sign-up and login buttons.
+
+2. Registration and login
+
+- Attractive authentication screens.
+- Email verification.
+- Password reset.
+
+3. User home dashboard
+
+- Welcome message.
+- Global search.
+- Country selector.
+- Trending searches.
+- Popular categories.
+- Recent searches.
+- Saved products.
+- Recent price drops.
+- Reward progress.
+
+4. Product search page
+
+- Search results.
+- Product identity selection.
+- Filters.
+- Comparison entry.
+
+5. Three-deal comparison page
+
+- Three leading offers.
+- Product matching information.
+- Price Truth breakdown.
+- Trust indicators.
+- Product and seller information.
+- Outbound retailer buttons.
+
+6. Product information page
+
+- Product overview.
+- Exact variants.
+- Retailer offers.
+- Price history.
+- Saved-price controls.
+
+7. Watchlist page
+
+- Saved products.
+- Target prices.
+- Alert settings.
+
+8. Price-alert page
+
+- Active alerts.
+- Triggered alerts.
+- Expired alerts.
+- Alert controls.
+
+9. Mosaic Rewards
+
+- XP.
+- Badges.
+- Eligible purchase rewards.
+- Transaction status.
+- Reward history.
+
+10. Profile and settings
+
+- Personal information.
+- Country preferences.
+- Display currency.
+- Notification settings.
+- Privacy settings.
+- Account deletion.
+
+11. Support centre
+
+- Report incorrect price.
+- Report incorrect product match.
+- Report a retailer issue.
+- Submit feedback.
+- FAQs.
+
+12. Administrator dashboard
+
+Create a secure, separate admin area.
+
+Include:
+
+- Dashboard overview.
+- Registered users.
+- Retailer directory.
+- Country management.
+- Currency settings.
+- API connector management.
+- Data-source health.
+- Product catalogue.
+- Product matching review.
+- Offer management.
+- Price history.
+- Affiliate-link management.
+- Conversion reports.
+- Reward-policy settings.
+- Fraud and abuse reports.
+- Feedback and support tickets.
+- Site configuration.
+- Audit log.
+
+Protect every administrative operation using server-side role verification.
+
+Never rely only on hiding an admin button in the frontend.
+
+PART 11 — DATA SOURCES AND INTEGRATION ARCHITECTURE
+
+This is a critical engineering requirement.
+
+Build independent retailer connector modules.
+
+Every retailer should be integrated through its own adapter using an authorised source such as:
+
+- Official retailer API.
+- Approved affiliate product API.
+- Licensed product feed.
+- Written merchant-authorised feed.
+- Approved affiliate network integration.
+
+Investigate these possibilities:
+
+India:
+
+- Amazon India.
+- Flipkart.
+- Meesho.
+- Croma.
+- Reliance Digital.
+- Vijay Sales.
+- Myntra.
+- Ajio.
+- Tata CLiQ.
+- Nykaa.
+- Other authorised retailers.
+
+International:
+
+- Amazon regional marketplaces.
+- eBay.
+- Walmart.
+- Best Buy.
+- Target.
+- Other relevant country-specific retailers.
+
+Do not assume that a retailer has a public API simply because it has an affiliate programme.
+
+Important sources to investigate:
+
+1. Amazon Creators API:
+   https://affiliate-program.amazon.in/creatorsapi/docs/en-us/introduction
+2. Flipkart Affiliate API:
+   https://affiliate.flipkart.com/api-docs/affiliate_index.html
+3. eBay Browse API:
+   https://developer.ebay.com/api-docs/buy/browse/overview.html
+4. Cuelinks:
+   https://developers.cuelinks.com/docs
+5. Frankfurter currency API:
+   https://frankfurter.dev/
+
+Verify eligibility, marketplace registration, rate limits, licence restrictions, caching rules, attribution and image-usage rights before using each service.
+
+Use the current Amazon Creators API documentation. Do not build against obsolete PA-API documentation.
+
+Cuelinks affiliate monetisation access must not be mistaken for a universal product catalogue API.
+
+If a merchant has no authorised integration, mark the connector as unavailable or pending approval.
+
+Do not scrape retailer websites, bypass bot protections, defeat CAPTCHAs or evade access restrictions.
+
+Do not store retailer API credentials in frontend code.
+
+All API keys and secrets must remain in protected server-side environment variables.
+
+Connector interface
+
+Each connector must support standardised operations where available:
+
+- Search products.
+- Retrieve product details.
+- Retrieve variants.
+- Retrieve offers.
+- Retrieve stock information.
+- Retrieve shipping information.
+- Generate approved affiliate links.
+- Fetch permitted price updates.
+- Retrieve conversion reports, if supported.
+
+Define a uniform data structure for every retailer so the comparison engine does not depend on any single platform's response format.
+
+Use caching and sensible request limits.
+
+Build connector health checks and log failed requests.
+
+PART 12 — PRODUCT MATCHING AND COMPARISON LOGIC
+
+Never compare two different variants simply because their titles look similar.
+
+Use identifiers in this order wherever available:
+
+1. GTIN, EAN or UPC.
+2. Manufacturer part number.
+3. ISBN, where applicable.
+4. Brand and exact model number.
+5. Variant attributes.
+6. Carefully validated text matching.
+
+Product attributes may include:
+
+- Colour.
+- Size.
+- Capacity.
+- Storage.
+- RAM.
+- Model year.
+- Edition.
+- Package quantity.
+- Condition.
+
+Keep separate products separate.
+
+Where confidence is insufficient, ask the user to choose the correct model.
+
+Build a matching engine that can improve over time using reviewed and corrected product matches.
+
+PART 13 — RECOMMENDED ZERO-COST TECHNICAL STACK
+
+Use the following preferred architecture if the AI development environment supports it.
+
+Frontend:
+
+- React.
+- TypeScript.
+- Vite.
+- Responsive CSS.
+- Tailwind CSS or an equivalent design system.
+- Lightweight Framer Motion or CSS animations.
+
+Hosting:
+
+- Cloudflare Pages.
+- Cloudflare Workers for server-side endpoints.
+
+Database and authentication:
+
+- Supabase Free tier.
+- PostgreSQL.
+- Supabase Auth.
+- Row Level Security.
+
+Exchange-rate data:
+
+- Frankfurter API with cached daily rates.
+
+Charts:
+
+- A lightweight open-source chart library.
+
+Testing:
+
+- Vitest.
+- Playwright where supported.
+
+All libraries must be open-source or free to use under licences suitable for the project.
+
+Do not introduce paid plugins, premium themes or paid APIs as dependencies.
+
+Keep the architecture modular so that infrastructure can be migrated later.
+
+A free hosting subdomain can be used for the initial launch. Do not assume a custom domain is free.
+
+Monitor database, storage, function, bandwidth and email quotas.
+
+Never allow accidental billing or automatic plan upgrades without explicit owner approval.
+
+PART 14 — DATABASE DESIGN
+
+Create a proper relational database schema.
+
+Include tables or equivalent structures for:
+
+- users/profiles.
+- user_preferences.
+- countries.
+- currencies.
+- retailers.
+- retailer_markets.
+- retailer_connectors.
+- products.
+- product_variants.
+- product_identifiers.
+- offers.
+- offer_price_snapshots.
+- shipping_information.
+- product_reviews_metadata.
+- seller_metadata.
+- affiliate_links.
+- user_search_history.
+- saved_products.
+- price_alerts.
+- notification_events.
+- reward_accounts.
+- reward_transactions.
+- reward_policy_rules.
+- conversion_events.
+- support_tickets.
+- incorrect_price_reports.
+- product_match_reviews.
+- admin_roles.
+- admin_audit_logs.
+
+Use appropriate unique keys, foreign keys and indexes.
+
+Do not store unnecessary personal data.
+
+Use database-level access policies so that users cannot read or modify another user's private information.
+
+PART 15 — PRIVACY, SECURITY AND TRANSPARENCY
+
+Create:
+
+- Privacy Policy.
+- Terms of Use.
+- Affiliate Disclosure.
+- Cookie and analytics controls where applicable.
+- Contact page.
+- Data deletion procedure.
+- Account export/deletion functionality.
+- Clear privacy notices.
+
+For India, design with the Digital Personal Data Protection Act and the applicable phased commencement of the DPDP Rules in mind.
+
+Consider applicable legal obligations in each country where the platform operates.
+
+Collect only information necessary for the service.
+
+Clearly explain the purpose of collecting any date of birth or phone number.
+
+Never present optional information as mandatory.
+
+Use secure authentication, protected environment variables, server-side authorisation, rate limiting and audit logs.
+
+Prevent:
+
+- SQL injection.
+- Cross-site scripting.
+- Authentication bypass.
+- Unauthorised administrative access.
+- API-secret exposure.
+- User data leakage.
+- Automated scraping abuse of the platform.
+- Fake reward claims.
+
+Use HTTPS.
+
+PART 16 — AFFILIATE BUSINESS MODEL
+
+The core platform must be free for users.
+
+Explore affiliate commissions as the initial monetisation model.
+
+When a user buys through a qualifying affiliate link, the platform may earn a commission, subject to the relevant merchant terms.
+
+Show a clear disclosure close to the retailer links.
+
+The user's retailer checkout price must not be increased by our affiliate relationship.
+
+Never imply that a particular offer is independently verified if it is not.
+
+Keep the comparison ranking independent of commission amount.
+
+Provide an administrative setting to enable, disable or change merchant-specific affiliate integration status.
+
+A later phase may consider clearly separated sponsored placements or advertising, but the initial product should emphasise trust.
+
+PART 17 — ZERO-COST DEVELOPMENT RULES
+
+For the first launch:
+
+- No paid hosting.
+- No paid API subscriptions.
+- No paid AI API.
+- No paid email or SMS dependency.
+- No purchased templates.
+- No proprietary paid UI library.
+- No mandatory premium database.
+- No paid search provider.
+
+Do not confuse free prototypes with free global commerce infrastructure.
+
+Build a realistic MVP around the available authorised feeds.
+
+If a required external service is not freely accessible, create a documented connector interface and leave it disabled until proper access is obtained.
+
+Use clearly labelled demonstration fixtures for development only.
+
+Never display demonstration prices or fake merchant data as live results.
+
+If no authorised data connector is active, show an honest connection-unavailable message rather than pretending a search succeeded.
+
+PART 18 — RESPONSIVENESS AND PERFORMANCE
+
+The entire website must be optimised for:
+
+- Android phones.
+- iPhones.
+- Tablets.
+- Desktop.
+- Large-screen displays.
+
+Design mobile first.
+
+Use:
+
+- Fast-loading pages.
+- Compressed images.
+- Lazy-loaded product images.
+- Lightweight animations.
+- Responsive comparison cards.
+- Proper keyboard navigation.
+- Readable typography.
+- Accessible colour contrast.
+- Reduced-motion support.
+
+Avoid unnecessarily large JavaScript bundles and excessive third-party scripts.
+
+Ensure the search and comparison experience remains useful even on slower mobile connections.
+
+PART 19 — REQUIRED TESTING
+
+Before calling the project complete, test the following:
+
+1. Registration and email verification.
+2. Login and logout.
+3. Password reset.
+4. Search authentication gate.
+5. Country selection.
+6. Universal mode.
+7. Search of an exact product.
+8. Search of an ambiguous product.
+9. Exact variant matching.
+10. Three-offer display.
+11. Two-offer and one-offer fallback.
+12. Price-breakdown calculation.
+13. Unknown shipping and tax display.
+14. Currency conversion.
+15. Product and seller rating distinction.
+16. Affiliate link redirection.
+17. Reward eligibility controls.
+18. Watchlist.
+19. Price alerts.
+20. User privacy and account deletion.
+21. Administrator access.
+22. Product correction reporting.
+23. Mobile responsiveness.
+24. Reduced-motion accessibility.
+25. API failures.
+26. Stale-price handling.
+27. Rate limiting.
+28. Cross-user data isolation.
+
+Produce a test report showing what actually works and what still requires an external integration.
+
+PART 20 — DEVELOPMENT AND DELIVERY STRATEGY
+
+Build in clearly separated phases.
+
+PHASE 1 — FOUNDATION
+
+- Brand identity.
+- Homepage.
+- Navigation.
+- Responsive design.
+- Authentication.
+- User dashboard.
+- Country selector.
+- Demo comparison interface.
+
+PHASE 2 — FUNCTIONAL COMPARISON
+
+- Product search.
+- Product matching.
+- Comparison engine.
+- Price breakdown.
+- Offer ranking.
+- Store cards.
+- Data freshness indicators.
+- Mock connector for development only.
+
+PHASE 3 — REAL DATA INTEGRATIONS
+
+- Investigate retailer access.
+- Implement approved integrations.
+- Configure API credentials.
+- Add live offer fetching.
+- Build reliable error handling.
+- Display genuine retailer data.
+
+PHASE 4 — PERSONAL FEATURES
+
+- Watchlist.
+- Price alerts.
+- Price history.
+- Deal Passport.
+- Mosaic XP.
+- Reward administration.
+
+PHASE 5 — INTERNATIONAL EXPANSION
+
+- Additional country connectors.
+- Universal search.
+- Currency conversion.
+- International destination handling.
+- Country-specific settings.
+
+PHASE 6 — FINAL QUALITY ASSURANCE
+
+- Security.
+- Privacy.
+- Performance.
+- Mobile compatibility.
+- Affiliate compliance.
+- Final testing.
+- Deployment documentation.
+
+The architecture must support expansion without needing to redesign the entire website.
+
+PART 21 — WHAT YOU MUST DELIVER
+
+I want an actual working website, not just a proposal or a collection of design screenshots.
+
+Deliver:
+
+1. Complete source code.
+2. Fully designed responsive frontend.
+3. Working authentication.
+4. Functional search interface.
+5. Functional product-comparison engine.
+6. Proper database design.
+7. Admin dashboard.
+8. Retailer connector architecture.
+9. Clearly labelled sample data for development.
+10. Working integrations wherever authorised credentials are available.
+11. Privacy and legal-information pages.
+12. Affiliate configuration.
+13. Rewards architecture.
+14. Testing report.
+15. Complete deployment instructions.
+16. Environment-variable documentation.
+17. A clear list of external accounts and approvals required.
+18. A zero-cost versus future-cost breakdown.
+
+The final deliverable must state exactly which features are live, which use demonstration data, which need third-party approval and which cannot yet be implemented.
+
+Do not claim a feature is functional merely because a button or screen has been created.
+
+Do not leave dead buttons, inert controls, broken navigation or fake data presented as real information.
+
+Do not silently replace a real integration with a mock response.
+
+FINAL PRODUCT PRINCIPLE
+
+Build DEALMOSAIC as a consumer-first comparison platform.
+
+Its defining promise is:
+
+WE DON'T JUST SHOW YOU A CHEAPER LISTED PRICE. WE HELP YOU DISCOVER THE BETTER PURCHASE.
+
+The three leading offers must be honest, understandable and independently ranked according to the information available.
+
+Make the experience so colourful and enjoyable that users want to return, but make the comparison engine so transparent that users trust the results.
+
+Start with research and a realistic technical feasibility assessment. Then build the website phase by phase, test every major feature and provide a deployable final product.
+
+Do not spend time asking unnecessary questions. Make reasonable product and design decisions, document your assumptions, and proceed with the strongest technically feasible implementation.
