@@ -17,7 +17,9 @@ services:
     plan: free
     region: singapore            # closest free region to India
     branch: main
-    buildCommand: npm ci && npm run build --workspace @dealmosaic/core
+    # --include=dev is required: the build needs dev-only tooling, even though
+    # the service runs with NODE_ENV=production.
+    buildCommand: npm ci --include=dev
     startCommand: npm start --workspace @dealmosaic/api
     healthCheckPath: /api/health
     autoDeploy: true
