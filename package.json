@@ -31,10 +31,10 @@
     "secrets:scan": "node scripts/secrets-scan.mjs"
   },
   "devDependencies": {
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4",
+    "@types/node": "^22.15.3",
     "tsx": "^4.20.3",
-    "@types/node": "^22.15.3"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20"

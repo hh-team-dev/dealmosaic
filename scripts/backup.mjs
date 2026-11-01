@@ -35,7 +35,16 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const BACKUP_DIR = join(ROOT, 'backups');
 
 /** Never archived. Path prefixes are matched against the project-relative path. */
-const EXCLUDE_PREFIXES = ['node_modules/', 'backups/', 'apps/web/dist/', 'dist/'];
+const EXCLUDE_PREFIXES = [
+  'node_modules/',
+  'backups/',
+  'apps/web/dist/',
+  'dist/',
+  // .git is excluded on purpose: it duplicates every file in the archive, and a
+  // remote URL containing a token would be captured in .git/config. History lives
+  // on GitHub; the archive is a source snapshot.
+  '.git/',
+];
 
 /**
  * The whole `secrets/` directory is excluded — not just the vault. A test proved

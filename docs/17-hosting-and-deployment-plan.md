@@ -238,6 +238,32 @@ site is guessing.
 
 ---
 
+## 6a. LIVE STATUS — 2 November 2026
+
+### Website: LIVE
+
+**https://dealmosaic.pages.dev**
+
+| Verified from the public internet | Result |
+|---|---|
+| Home, `/browse`, `/search`, `/c/*`, `/p/*`, `/how-we-rank`, `/privacy` | `200 text/html` |
+| Unknown paths (`/nonexistent-page-xyz`, `/some/deep/junk`) | **`404`** with a branded 404 page |
+| `/api/*` (API not yet deployed) | `503` JSON — honest failure, **not** a fake `200` |
+| `/og.png` | `200 image/png`, 1200×630, 39.7 KB |
+| `/robots.txt`, `/sitemap.xml`, `/llms.txt` | `200`, 50 sitemap URLs |
+| Canonical / `og:url` / `og:image` | `https://dealmosaic.pages.dev/...` (matches the live host) |
+| Security headers | HSTS, `X-Frame-Options: DENY`, `nosniff`, referrer policy, permissions policy |
+| Asset caching | `max-age=31536000, immutable` on hashed assets; `must-revalidate` on HTML |
+
+### API + database: NOT YET DEPLOYED — two owner actions needed
+
+1. **Render 403 on repo access.** The Render key authenticates, but deploying needs
+   Render to reach the source. Either connect the GitHub account in Render
+   (*Account Settings → GitHub → Connect*) or use a public repo.
+2. **No Turso token was supplied**, so there is no durable database to attach.
+
+See §8 for the exact sequence once those arrive.
+
 ## 7. Decision status
 
 | Decision | Status |
