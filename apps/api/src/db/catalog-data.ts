@@ -24,6 +24,9 @@ export interface SeedVariant {
   attributes: Record<string, string>;
   gtin?: string;
   mpn?: string;
+  /** Books only. `product_variants.isbn` exists in schema and is used for
+   *  matching and display, so the seed type must carry it too. */
+  isbn?: string;
   mrp: number; // rupees
   netQuantity?: number;
   unit?: 'g' | 'ml' | 'kg' | 'l' | 'pc';

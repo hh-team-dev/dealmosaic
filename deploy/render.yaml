@@ -1,0 +1,35 @@
+# Render Blueprint — free tier.
+#
+# Deploy with: Render Dashboard → New → Blueprint → pick this repository.
+# The service is defined here rather than clicked together so it is reproducible
+# and reviewable, and so a future rebuild does not depend on remembering settings.
+#
+# Free-tier reality check (see docs/17 §2):
+#   • no persistent disk  → SQLite on local disk is wiped on every restart
+#   • spins down after 15 min idle → kept awake by a free uptime monitor
+#   • 750 instance-hours/month ≈ 744 hours in a 31-day month
+# This is exactly why the database lives in Turso, not on the machine.
+
+services:
+  - type: web
+    name: dealmosaic-api
+    runtime: node
+    plan: free
+    region: singapore            # closest free region to India
+    branch: main
+    buildCommand: npm ci && npm run build --workspace @dealmosaic/core
+    startCommand: npm start --workspace @dealmosaic/api
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      # Set these in the dashboard, never here — this file is committed.
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+      - key: SITE_URL
+        sync: false

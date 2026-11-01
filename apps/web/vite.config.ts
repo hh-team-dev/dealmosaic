@@ -1,8 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+/**
+ * Canonical URLs, og:url and og:image are absolute and must match the domain the
+ * site is actually served from — a mismatch splits ranking signals. Rather than
+ * hard-coding a domain we might not own yet, index.html carries %SITE_URL% and
+ * this plugin substitutes it at build time.
+ */
+const SITE = (process.env.SITE_URL ?? 'https://dealmosaic.in').replace(/\/$/, '');
+
+const siteUrlPlugin = () => ({
+  name: 'dealmosaic-site-url',
+  transformIndexHtml(html: string) {
+    return html.replaceAll('%SITE_URL%', SITE);
+  },
+});
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), siteUrlPlugin()],
   server: {
     host: '0.0.0.0',
     port: 5173,
