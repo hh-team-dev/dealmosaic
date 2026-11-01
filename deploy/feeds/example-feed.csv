@@ -1,0 +1,8 @@
+product_name,brand_name,sale_price,mrp,ean,product_url,availability,delivery_charge,currency
+"Aashirvaad Shudh Chakki Atta, 5 kg",Aashirvaad,285.00,340.00,8901030123456,https://www.jiomart.com/p/atta-5kg,In stock,,INR
+"Amul Taaza Toned Milk, 1 L (Pack of 2)",Amul,138.00,150.00,8901262010011,https://www.jiomart.com/p/amul-milk,In stock,0,INR
+"Tata Salt, 1 kg",Tata,28.00,32.00,,https://www.jiomart.com/p/tata-salt,In stock,,INR
+"Out of stock item test",Test,100.00,120.00,,https://www.jiomart.com/p/oos,Out of stock,,INR
+"No price item",Test,,,,"https://www.jiomart.com/p/noprice",In stock,,INR
+"Broken URL item",Test,50.00,60.00,,not-a-url,In stock,,INR
+"US dollar item",Test,9.99,12.00,,https://www.jiomart.com/p/usd,In stock,,USD

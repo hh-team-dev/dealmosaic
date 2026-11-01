@@ -8,7 +8,7 @@
 | **Tagline** | One search. Three real deals. Zero price surprises. |
 | **Document version** | 1.0 |
 | **Handover date** | 2 November 2026 |
-| **Build state** | Phase 2 complete · 78 tests · 33 design assertions · clean production build |
+| **Build state** | Phase 3 live (website + API + Turso) · 102 tests · 33 design assertions · clean build |
 | **Owner** | The project owner (see `docs/16-owner-credentials-register.md`) |
 | **Secrets** | **Not in this document.** They live in an encrypted vault — §17. |
 
@@ -140,7 +140,7 @@ npm install          # ~154 packages
 npm run dev          # API :8787 + web :5173 together
 npm run dev:api      # API only
 npm run dev:web      # web only  (cwd must be apps/web — Vite resolves index.html there)
-npm test             # 78 tests
+npm test             # 102 tests
 npm run audit:design # colour/contrast/no-black audit
 npm run secrets:scan # check for leaked credentials
 npm run check        # all three gates
@@ -666,7 +666,7 @@ archive into an empty directory, `npm install`, `npx vitest run`. The first atte
 | **`zod` was a phantom dependency** — imported by `routes/search.ts` and `routes/community.ts`, but never declared in `apps/api/package.json`. It resolved locally only because npm hoisted it from another package's tree. | It worked on the machine that built it. Classic phantom dependency. | Declared `"zod": "^3.25.76"` in `apps/api/package.json`, pinned to the version the code was written against. |
 | **A dead npm script** — `apps/api` declared `"migrate": "tsx src/db/migrate.ts"` but that file was never created. | Nothing ran it, so nothing failed. | Removed. Schema is applied on boot from `db/schema.sql` + `db/catalog.sql`; a separate migrate step does not exist. |
 
-After the fix the same clean-room restore passes **78/78 tests**. Run this yourself
+After the fix the same clean-room restore passes **102/102 tests**. Run this yourself
 whenever you doubt the archive:
 
 ```bash
@@ -784,6 +784,9 @@ to share with a new developer; the vault is not.
 | `14-seo-launch-checklist.md` | SEO: done in code vs. owner-only actions |
 | **`15-project-handover.md`** | **This document** |
 | `16-owner-credentials-register.md` | Owner accounts, ownership, access (no secrets) |
+| `17-hosting-and-deployment-plan.md` | Live topology, free-tier limits, database contract, rotation |
+| `18-owner-quickstart-accounts.md` | 15-minute account setup, step by step |
+| `19-data-acquisition.md` | How real prices are obtained; why scraping is rejected |
 | `DEALMOSAIC-STRATEGY.html` | Visual strategy dossier |
 | `source/MASTER_BUILD_PROMPT.txt` | The original brief, verbatim |
 

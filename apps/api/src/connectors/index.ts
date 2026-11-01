@@ -1,5 +1,6 @@
 import { DemoConnector } from './demo.js';
 import { EbayConnector } from './ebay.js';
+import { createFeedConnector } from './feed.js';
 import type { Connector, ConnectorHealth } from './types.js';
 
 /**
@@ -123,15 +124,23 @@ export const KNOWN_PLATFORMS: KnownPlatform[] = [
 const demo = new DemoConnector();
 const ebay = new EbayConnector();
 
+/**
+ * The feed connector covers every platform that issues a product data feed
+ * through an affiliate network — one importer, many platforms, configured by a
+ * mapping file rather than a code change. See docs/19-data-acquisition.md.
+ */
+const feed = createFeedConnector();
+
 /** Connectors that can actually be queried right now. */
 export function activeConnectors(): Connector[] {
   const list: Connector[] = [demo];
   if (ebay.isConfigured()) list.push(ebay);
+  if (feed.isConfigured()) list.push(feed);
   return list;
 }
 
 export function allConnectors(): Connector[] {
-  return [demo, ebay];
+  return [demo, ebay, feed];
 }
 
 export async function connectorHealth(): Promise<Array<ConnectorHealth & { slug: string; displayName: string; kind: string }>> {
@@ -151,5 +160,5 @@ export function unimplementedPlatforms(): KnownPlatform[] {
   return KNOWN_PLATFORMS.filter((p) => !allConnectors().some((c) => c.slug === p.slug));
 }
 
-export { demo as demoConnector, ebay as ebayConnector };
+export { demo as demoConnector, ebay as ebayConnector, feed as feedConnector };
 export type { Connector, ConnectorHealth, ConnectorOffer, ConnectorSearchParams } from './types.js';

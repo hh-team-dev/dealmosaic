@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01T22:42:46.382Z",
+  "generatedAt": "2026-11-01T22:46:16.547Z",
   "source": "libsql://dealmosaic-hh-team-dev.aws-ap-south-1.turso.io",
   "scope": "public",
   "tables": {
@@ -11,9 +11,9 @@
     "offers": 170,
     "offer_snapshots": 170,
     "exchange_rates": 0,
-    "trending_queries": 0
+    "trending_queries": 4
   },
-  "totalRows": 439,
-  "sha256": "aa1773efb12e97c64b751283031ee53899f1e645d2a9f506c3eac619200043ba",
-  "bytes": 233818
+  "totalRows": 443,
+  "sha256": "9d52a3b1a53650726644a8e3b68cb253a300c8e50cb5a6ef07298a912010de3a",
+  "bytes": 234340
 }

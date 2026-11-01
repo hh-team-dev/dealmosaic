@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Example feed mapping. Copy to deploy/feeds/mapping.json (git-ignored) once a",
+    "network has issued a real feed. The only mandatory columns are title, price",
+    "and url — no two affiliate networks export the same column names.",
+    "",
+    "Set FEED_MAPPING and FEED_FILE in the API environment to activate it."
+  ],
+  "platformSlug": "jiomart",
+  "sourceLabel": "JioMart · affiliate feed",
+  "columns": {
+    "title": "product_name",
+    "price": "sale_price",
+    "url": "product_url",
+    "gtin": "ean",
+    "brand": "brand_name",
+    "mrp": "mrp",
+    "inStock": "availability",
+    "shipping": "delivery_charge",
+    "deliveryDaysMin": "delivery_min_days",
+    "deliveryDaysMax": "delivery_max_days",
+    "returnWindowDays": "return_days",
+    "currency": "currency",
+    "priceUnit": "major"
+  },
+  "inStockTrue": ["in stock", "1", "yes", "true"]
+}

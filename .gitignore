@@ -17,3 +17,12 @@ backups/
 secrets/*
 !secrets/.gitignore
 !secrets/README.md
+
+# Live affiliate feed config — per-owner, points at local export paths.
+# The EXAMPLES are committed; the real mapping and feed exports are not.
+deploy/feeds/mapping.json
+deploy/feeds/*.csv
+!deploy/feeds/example-feed.csv
+
+# Public database snapshots ARE committed (db-snapshots/). Private dumps never
+# land here — scripts/db-backup.mjs writes them to ~/.config/dealmosaic/db/.
