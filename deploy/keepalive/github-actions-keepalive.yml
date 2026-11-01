@@ -1,3 +1,10 @@
+# READY TO ENABLE — copy to .github/workflows/keepalive.yml
+#
+# It is not active yet because the GitHub token used for deployment lacked the
+# `workflow` scope, which GitHub requires before a token may create workflow
+# files. Once a token with that scope is supplied (or the file is committed from
+# the web UI), copy it into place and the 5-minute cron starts immediately.
+#
 # Keep the free API instance from spinning down.
 #
 # Render suspends a free web service after 15 minutes without traffic, and the
