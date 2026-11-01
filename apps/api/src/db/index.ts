@@ -1,4 +1,21 @@
-import Database from 'better-sqlite3';
+/**
+ * Database access layer.
+ *
+ * Two backends, one API:
+ *   • Turso (libSQL) over HTTPS — production. Survives restarts and redeploys,
+ *     which is why the database is not on the API host: Render's free tier has
+ *     no persistent disk, so a local SQLite file there is erased on every deploy.
+ *   • A local file (`file:...`) — development and tests. Same driver, same code
+ *     path, so "works locally, breaks in production" cannot happen here.
+ *
+ * The exposed surface deliberately mirrors better-sqlite3 — `prepare(sql).get()`,
+ * `.all()`, `.run()` with either positional args or better-sqlite3's `@name`
+ * object style — because that is what every call site already uses. The single
+ * difference is that these methods are now asynchronous, so callers `await` them.
+ * libSQL accepts all of the parameter styles the old driver did (verified against
+ * a live Turso database), so the SQL itself is untouched.
+ */
+import { createClient, type Client, type InValue, type ResultSet } from '@libsql/client';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -7,39 +24,149 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const DB_PATH = process.env.DB_PATH ?? join(__dirname, '../../data/dealmosaic.db');
 
-function open(): Database.Database {
-  if (DB_PATH !== ':memory:') {
-    mkdirSync(DB_PATH.slice(0, DB_PATH.lastIndexOf('/')), { recursive: true });
-  }
-  const db = new Database(DB_PATH === ':memory:' ? ':memory:' : DB_PATH);
-  db.pragma('journal_mode = WAL');
-  db.pragma('foreign_keys = ON');
-  db.exec(readFileSync(join(__dirname, 'schema.sql'), 'utf8'));
-  db.exec(readFileSync(join(__dirname, 'catalog.sql'), 'utf8'));
-  migrate(db);
-  return db;
+/** Remote when TURSO_DATABASE_URL is set, otherwise a local file. */
+const REMOTE_URL = process.env.TURSO_DATABASE_URL?.trim();
+const AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN?.trim();
+
+export const isRemote = Boolean(REMOTE_URL);
+
+if (!REMOTE_URL && DB_PATH !== ':memory:') {
+  mkdirSync(DB_PATH.slice(0, DB_PATH.lastIndexOf('/')), { recursive: true });
+}
+
+const url = REMOTE_URL ?? (DB_PATH === ':memory:' ? ':memory:' : `file:${DB_PATH}`);
+
+export const client: Client = createClient({
+  url,
+  ...(REMOTE_URL && AUTH_TOKEN ? { authToken: AUTH_TOKEN } : {}),
+});
+
+export type Row = Record<string, unknown>;
+export interface RunResult {
+  changes: number;
+  lastInsertRowid: number | bigint;
 }
 
 /**
- * Forward-only migrations for columns added after a database already exists.
- * `CREATE TABLE IF NOT EXISTS` cannot add a column to a live table, so this
- * checks before altering — safe to run on every boot.
+ * better-sqlite3 takes a single object for named parameters; libSQL accepts that
+ * object directly. Positional arguments arrive as separate arguments instead.
  */
-function migrate(db: Database.Database): void {
-  const hasColumn = (table: string, column: string): boolean => {
-    const cols = db.prepare(`PRAGMA table_info(${table})`).all() as Array<{ name: string }>;
-    return cols.some((c) => c.name === column);
-  };
-
-  if (!hasColumn('user_search_history', 'variant_id')) {
-    db.exec('ALTER TABLE user_search_history ADD COLUMN variant_id TEXT');
+function toArgs(args: unknown[]): InValue[] | Record<string, InValue> {
+  if (args.length === 1 && args[0] !== null && typeof args[0] === 'object' && !Array.isArray(args[0])) {
+    return args[0] as Record<string, InValue>;
   }
-  if (!hasColumn('user_search_history', 'outcome')) {
-    db.exec('ALTER TABLE user_search_history ADD COLUMN outcome TEXT');
-  }
+  return args as InValue[];
 }
 
-export const db = open();
+const mapRun = (r: ResultSet): RunResult => ({
+  changes: Number(r.rowsAffected),
+  lastInsertRowid: r.lastInsertRowid ?? 0,
+});
+
+/** A prepared statement bound to a client or an open transaction. */
+function makeStatement(sql: string, executor: { execute: (q: { sql: string; args: InValue[] | Record<string, InValue> }) => Promise<ResultSet> }) {
+  return {
+    get: async (...args: unknown[]): Promise<Row | undefined> => {
+      const r = await executor.execute({ sql, args: toArgs(args) });
+      return r.rows[0] as Row | undefined;
+    },
+    all: async (...args: unknown[]): Promise<Row[]> => {
+      const r = await executor.execute({ sql, args: toArgs(args) });
+      return r.rows as Row[];
+    },
+    run: async (...args: unknown[]): Promise<RunResult> => {
+      const r = await executor.execute({ sql, args: toArgs(args) });
+      return mapRun(r);
+    },
+  };
+}
+
+export type Statement = ReturnType<typeof makeStatement>;
+
+/** Handle passed to `db.transaction`. Same statement surface, transaction-scoped. */
+export interface Tx {
+  prepare: (sql: string) => Statement;
+}
+
+export const db = {
+  /** Kept for the health endpoint. */
+  open: true,
+
+  prepare: (sql: string): Statement => makeStatement(sql, client),
+
+  /** Runs one or many statements; used for schema and DDL. */
+  exec: async (sql: string): Promise<void> => {
+    await client.executeMultiple(sql);
+  },
+
+  /**
+   * Interactive transaction. Unlike the old synchronous helper this must be
+   * awaited, and the callback receives a transaction-scoped handle:
+   *
+   *     await db.transaction(async (tx) => {
+   *       await tx.prepare('INSERT …').run(v);
+   *     });
+   *
+   * Rolling back is automatic if the callback throws.
+   */
+  transaction: async <T>(fn: (tx: Tx) => Promise<T>): Promise<T> => {
+    if (!isRemote) {
+      // Local file: libSQL's transaction object works the same way.
+      const t = await client.transaction('write');
+      try {
+        const result = await fn({ prepare: (sql: string) => makeStatement(sql, t) });
+        await t.commit();
+        return result;
+      } catch (error) {
+        await t.rollback();
+        throw error;
+      }
+    }
+    const t = await client.transaction('write');
+    try {
+      const result = await fn({ prepare: (sql: string) => makeStatement(sql, t) });
+      await t.commit();
+      return result;
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
+  },
+};
+
+/**
+ * Applies the schema, then forward-only migrations.
+ *
+ * `CREATE TABLE IF NOT EXISTS` cannot add a column to an existing table, and the
+ * production database persists across deploys, so migrations have to be checked
+ * rather than assumed. Safe to run on every boot.
+ */
+export async function initDb(): Promise<void> {
+  // WAL is a local-file optimisation; the remote service manages its own storage.
+  if (!isRemote) {
+    try {
+      await client.execute('PRAGMA journal_mode = WAL');
+      await client.execute('PRAGMA foreign_keys = ON');
+    } catch {
+      // Non-fatal: the pragmas only tune the local file.
+    }
+  }
+
+  await db.exec(readFileSync(join(__dirname, 'schema.sql'), 'utf8'));
+  await db.exec(readFileSync(join(__dirname, 'catalog.sql'), 'utf8'));
+
+  const hasColumn = async (table: string, column: string): Promise<boolean> => {
+    const rows = await db.prepare(`PRAGMA table_info(${table})`).all();
+    return rows.some((c) => c.name === column);
+  };
+
+  if (!(await hasColumn('user_search_history', 'variant_id'))) {
+    await db.exec('ALTER TABLE user_search_history ADD COLUMN variant_id TEXT');
+  }
+  if (!(await hasColumn('user_search_history', 'outcome'))) {
+    await db.exec('ALTER TABLE user_search_history ADD COLUMN outcome TEXT');
+  }
+}
 
 export const nowIso = (): string => new Date().toISOString();
 
@@ -51,14 +178,7 @@ export function newId(): string {
 /* Reference data seeding (idempotent)                               */
 /* ---------------------------------------------------------------- */
 
-export function seedReferenceData(): void {
-  const upsertCountry = db.prepare(`
-    INSERT INTO countries (code, name, flag, default_currency, region, enabled, note)
-    VALUES (@code, @name, @flag, @currency, @region, @enabled, @note)
-    ON CONFLICT(code) DO UPDATE SET
-      name=excluded.name, flag=excluded.flag, default_currency=excluded.default_currency,
-      region=excluded.region, enabled=excluded.enabled, note=excluded.note
-  `);
+export async function seedReferenceData(): Promise<void> {
   const countries = [
     { code: 'IN', name: 'India', flag: '🇮🇳', currency: 'INR', region: 'South Asia', enabled: 1, note: null },
     { code: 'US', name: 'United States', flag: '🇺🇸', currency: 'USD', region: 'North America', enabled: 0, note: 'Market expansion — phase 5' },
@@ -66,12 +186,15 @@ export function seedReferenceData(): void {
     { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪', currency: 'AED', region: 'Middle East', enabled: 0, note: 'Market expansion — phase 5' },
     { code: 'ZZ', name: 'Universal', flag: '🌍', currency: 'USD', region: 'Global', enabled: 0, note: 'Deferred until India is complete' },
   ];
-  for (const c of countries) upsertCountry.run(c);
-
-  const upsertCurrency = db.prepare(`
-    INSERT INTO currencies (code, symbol, name, minor_units) VALUES (@code, @symbol, @name, @mu)
-    ON CONFLICT(code) DO UPDATE SET symbol=excluded.symbol, name=excluded.name, minor_units=excluded.minor_units
+  const upsertCountry = db.prepare(`
+    INSERT INTO countries (code, name, flag, default_currency, region, enabled, note)
+    VALUES (@code, @name, @flag, @currency, @region, @enabled, @note)
+    ON CONFLICT(code) DO UPDATE SET
+      name=excluded.name, flag=excluded.flag, default_currency=excluded.default_currency,
+      region=excluded.region, enabled=excluded.enabled, note=excluded.note
   `);
+  for (const c of countries) await upsertCountry.run(c);
+
   const currencies = [
     { code: 'INR', symbol: '₹', name: 'Indian Rupee', mu: 2 },
     { code: 'USD', symbol: '$', name: 'US Dollar', mu: 2 },
@@ -83,17 +206,13 @@ export function seedReferenceData(): void {
     { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar', mu: 2 },
     { code: 'JPY', symbol: '¥', name: 'Japanese Yen', mu: 0 },
   ];
-  for (const c of currencies) upsertCurrency.run(c);
+  const upsertCurrency = db.prepare(`
+    INSERT INTO currencies (code, symbol, name, minor_units) VALUES (@code, @symbol, @name, @mu)
+    ON CONFLICT(code) DO UPDATE SET symbol=excluded.symbol, name=excluded.name, minor_units=excluded.minor_units
+  `);
+  for (const c of currencies) await upsertCurrency.run(c);
 
   // Platform registry — statuses verified in docs/10-quickcommerce-grocery.md.
-  const upsertPlatform = db.prepare(`
-    INSERT INTO platforms (slug, name, owner, kind, status, status_note, delivery_promise, deep_link_template, affiliate, sort_order)
-    VALUES (@slug, @name, @owner, @kind, @status, @statusNote, @delivery, @deepLink, @affiliate, @sort)
-    ON CONFLICT(slug) DO UPDATE SET
-      name=excluded.name, owner=excluded.owner, kind=excluded.kind, status=excluded.status,
-      status_note=excluded.status_note, delivery_promise=excluded.delivery_promise,
-      deep_link_template=excluded.deep_link_template, affiliate=excluded.affiliate, sort_order=excluded.sort_order
-  `);
   const platforms = [
     {
       slug: 'blinkit', name: 'Blinkit', owner: 'Eternal', kind: 'quick_commerce', status: 'no_public_api',
@@ -166,5 +285,13 @@ export function seedReferenceData(): void {
       delivery: 'Varies by seller', deepLink: 'https://www.ebay.com/sch/i.html?_nkw={q}', affiliate: 0, sort: 140,
     },
   ];
-  for (const p of platforms) upsertPlatform.run(p);
+  const upsertPlatform = db.prepare(`
+    INSERT INTO platforms (slug, name, owner, kind, status, status_note, delivery_promise, deep_link_template, affiliate, sort_order)
+    VALUES (@slug, @name, @owner, @kind, @status, @statusNote, @delivery, @deepLink, @affiliate, @sort)
+    ON CONFLICT(slug) DO UPDATE SET
+      name=excluded.name, owner=excluded.owner, kind=excluded.kind, status=excluded.status,
+      status_note=excluded.status_note, delivery_promise=excluded.delivery_promise,
+      deep_link_template=excluded.deep_link_template, affiliate=excluded.affiliate, sort_order=excluded.sort_order
+  `);
+  for (const p of platforms) await upsertPlatform.run(p);
 }

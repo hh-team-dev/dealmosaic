@@ -28,14 +28,14 @@ const IS_DEV = process.env.NODE_ENV !== 'production';
 const VERIFY_TTL_HOURS = 24;
 const RESET_TTL_MINUTES = 60;
 
-function createSession(c: Parameters<typeof sessionCookie>[0], userId: string) {
+async function createSession(c: Parameters<typeof sessionCookie>[0], userId: string) {
   const token = randomToken(32);
   const csrf = randomToken(24);
   const now = new Date();
   const expires = new Date(now.getTime() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
   const id = newId();
 
-  db.prepare(
+  await db.prepare(
     `INSERT INTO sessions (id, user_id, token_hash, csrf_token, created_at, last_seen_at, expires_at, ip_hash, user_agent)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
@@ -54,18 +54,18 @@ function createSession(c: Parameters<typeof sessionCookie>[0], userId: string) {
   return { id, csrfToken: csrf, expiresAt: expires.toISOString() };
 }
 
-function issueAuthToken(userId: string, email: string, kind: 'verify_email' | 'reset_password') {
+async function issueAuthToken(userId: string, email: string, kind: 'verify_email' | 'reset_password') {
   const token = randomToken(32);
   const ttlMs = kind === 'verify_email' ? VERIFY_TTL_HOURS * 3600_000 : RESET_TTL_MINUTES * 60_000;
   const expires = new Date(Date.now() + ttlMs).toISOString();
-  db.prepare(
+  await db.prepare(
     `INSERT INTO auth_tokens (id, user_id, kind, token_hash, expires_at, created_at)
      VALUES (?, ?, ?, ?, ?, ?)`,
   ).run(newId(), userId, kind, sha256(token), expires, nowIso());
 
   const path = kind === 'verify_email' ? 'verify-email' : 'reset-password';
   const actionUrl = `/${path}?token=${token}`;
-  queueEmail({
+  await queueEmail({
     to: email,
     subject:
       kind === 'verify_email'
@@ -103,7 +103,7 @@ authRoutes.post('/register', authLimiter, async (c) => {
   if (!ageConfirmed) fields.ageConfirmed = 'Please confirm you are 13 or older.';
   if (Object.keys(fields).length > 0) throw badRequest('Please fix the highlighted fields.', fields);
 
-  const existing = db.prepare('SELECT id, email_verified_at FROM users WHERE email = ?').get(email) as
+  const existing = await db.prepare('SELECT id, email_verified_at FROM users WHERE email = ?').get(email) as
     | { id: string; email_verified_at: string | null }
     | undefined;
 
@@ -114,23 +114,25 @@ authRoutes.post('/register', authLimiter, async (c) => {
 
   const id = newId();
   const now = nowIso();
-  db.transaction(() => {
-    db.prepare(
-      `INSERT INTO users (id, email, password_hash, display_name, age_confirmed_at, role, status, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, 'user', 'active', ?, ?)`,
-    ).run(id, email, '', displayName, now, now, now);
-    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run('pending', id);
-  })();
+  await db.transaction(async (tx) => {
+    await tx
+      .prepare(
+        `INSERT INTO users (id, email, password_hash, display_name, age_confirmed_at, role, status, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, 'user', 'active', ?, ?)`,
+      )
+      .run(id, email, '', displayName, now, now, now);
+    await tx.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run('pending', id);
+  });
 
   // Hash outside the transaction: scrypt is intentionally slow.
   const hash = await hashPassword(password);
-  db.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?').run(hash, nowIso(), id);
-  db.prepare(
+  await db.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?').run(hash, nowIso(), id);
+  await db.prepare(
     `INSERT INTO user_preferences (user_id, country_code, display_currency, created_at, updated_at)
      VALUES (?, 'IN', 'INR', ?, ?)`,
   ).run(id, now, now);
 
-  const token = issueAuthToken(id, email, 'verify_email');
+  const token = await issueAuthToken(id, email, 'verify_email');
   logAuthEvent({ userId: id, event: 'register', ipHash: hashIp(clientIp(c)) });
 
   return c.json(
@@ -153,7 +155,7 @@ authRoutes.post('/verify-email', authLimiter, async (c) => {
   const token = String(body.token ?? '');
   if (!token) throw badRequest('Verification token missing.');
 
-  const row = db
+  const row = await db
     .prepare(
       `SELECT id, user_id, expires_at, consumed_at FROM auth_tokens
        WHERE token_hash = ? AND kind = 'verify_email'`,
@@ -167,21 +169,21 @@ authRoutes.post('/verify-email', authLimiter, async (c) => {
   if (row.expires_at < nowIso()) throw badRequest('That link has expired. Request a new one from the sign-in page.');
 
   const now = nowIso();
-  db.transaction(() => {
-    db.prepare('UPDATE auth_tokens SET consumed_at = ? WHERE id = ?').run(now, row.id);
-    db.prepare('UPDATE users SET email_verified_at = ?, updated_at = ? WHERE id = ?').run(now, now, row.user_id);
-  })();
+  await db.transaction(async (tx) => {
+    await tx.prepare('UPDATE auth_tokens SET consumed_at = ? WHERE id = ?').run(now, row.id);
+    await tx.prepare('UPDATE users SET email_verified_at = ?, updated_at = ? WHERE id = ?').run(now, now, row.user_id);
+  });
 
-  const user = db
+  const user = await (db
     .prepare('SELECT id, email, display_name, email_verified_at, role, status, created_at, phone FROM users WHERE id = ?')
-    .get(row.user_id) as UserRow;
-  const session = createSession(c, user.id);
+    .get(row.user_id)) as unknown as UserRow;
+  const session = await createSession(c, user.id);
   logAuthEvent({ userId: user.id, event: 'email_verified', ipHash: hashIp(clientIp(c)) });
 
   return c.json({
     ok: true,
     user: toProfile(user),
-    preferences: getPreferences(user.id),
+    preferences: await getPreferences(user.id),
     csrfToken: session.csrfToken,
   });
 });
@@ -192,13 +194,13 @@ authRoutes.post('/resend-verification', authLimiter, async (c) => {
   assertSameOrigin(c);
   const body = await c.req.json().catch(() => ({}));
   const email = normaliseEmail(String(body.email ?? ''));
-  const user = db.prepare('SELECT id, email_verified_at FROM users WHERE email = ?').get(email) as
+  const user = await db.prepare('SELECT id, email_verified_at FROM users WHERE email = ?').get(email) as
     | { id: string; email_verified_at: string | null }
     | undefined;
 
   let devActionUrl: string | undefined;
   if (user && !user.email_verified_at) {
-    devActionUrl = issueAuthToken(user.id, email, 'verify_email').actionUrl;
+    devActionUrl = (await issueAuthToken(user.id, email, 'verify_email')).actionUrl;
     logAuthEvent({ userId: user.id, event: 'verification_resent', ipHash: hashIp(clientIp(c)) });
   }
   // Always the same response: no account enumeration from this endpoint.
@@ -217,7 +219,7 @@ authRoutes.post('/login', authLimiter, async (c) => {
   const email = normaliseEmail(String(body.email ?? ''));
   const password = String(body.password ?? '');
 
-  const user = db
+  const user = await db
     .prepare('SELECT id, email, password_hash, display_name, email_verified_at, role, status, created_at, phone FROM users WHERE email = ?')
     .get(email) as
     | (UserRow & { password_hash: string })
@@ -233,7 +235,7 @@ authRoutes.post('/login', authLimiter, async (c) => {
   }
   if (user.status !== 'active') throw forbidden('This account is not active. Contact support.');
   if (!user.email_verified_at) {
-    const resend = issueAuthToken(user.id, user.email, 'verify_email');
+    const resend = await issueAuthToken(user.id, user.email, 'verify_email');
     logAuthEvent({ userId: user.id, event: 'login_blocked_unverified', ipHash: hashIp(clientIp(c)) });
     return c.json(
       {
@@ -247,12 +249,12 @@ authRoutes.post('/login', authLimiter, async (c) => {
     );
   }
 
-  const session = createSession(c, user.id);
+  const session = await createSession(c, user.id);
   logAuthEvent({ userId: user.id, event: 'login', ipHash: hashIp(clientIp(c)) });
 
   return c.json({
     user: toProfile(user),
-    preferences: getPreferences(user.id),
+    preferences: await getPreferences(user.id),
     csrfToken: session.csrfToken,
   });
 });
@@ -263,7 +265,7 @@ authRoutes.post('/logout', async (c) => {
   assertSameOrigin(c);
   const session = c.get('session') as SessionRow | null;
   if (session) {
-    db.prepare('UPDATE sessions SET revoked_at = ? WHERE id = ?').run(nowIso(), session.id);
+    await db.prepare('UPDATE sessions SET revoked_at = ? WHERE id = ?').run(nowIso(), session.id);
     logAuthEvent({ userId: session.user_id, event: 'logout', ipHash: hashIp(clientIp(c)) });
   }
   c.header('Set-Cookie', clearSessionCookie(c), { append: true });
@@ -272,13 +274,13 @@ authRoutes.post('/logout', async (c) => {
 
 /* ------------------------------- session -------------------------------- */
 
-authRoutes.get('/session', (c) => {
+authRoutes.get('/session', async (c) => {
   const user = c.get('user');
   const session = c.get('session');
   if (!user || !session) return c.json({ user: null, preferences: null, csrfToken: null });
   return c.json({
     user: toProfile(user),
-    preferences: getPreferences(user.id),
+    preferences: await getPreferences(user.id),
     csrfToken: session.csrf_token,
   });
 });
@@ -289,11 +291,11 @@ authRoutes.post('/forgot-password', authLimiter, async (c) => {
   assertSameOrigin(c);
   const body = await c.req.json().catch(() => ({}));
   const email = normaliseEmail(String(body.email ?? ''));
-  const user = db.prepare('SELECT id FROM users WHERE email = ?').get(email) as { id: string } | undefined;
+  const user = (await db.prepare('SELECT id FROM users WHERE email = ?').get(email)) as { id: string } | undefined;
 
   let devActionUrl: string | undefined;
   if (user) {
-    devActionUrl = issueAuthToken(user.id, email, 'reset_password').actionUrl;
+    devActionUrl = (await issueAuthToken(user.id, email, 'reset_password')).actionUrl;
     logAuthEvent({ userId: user.id, event: 'password_reset_requested', ipHash: hashIp(clientIp(c)) });
   }
   return c.json({
@@ -316,7 +318,7 @@ authRoutes.post('/reset-password', authLimiter, async (c) => {
   if (password !== passwordConfirm) fields.passwordConfirm = 'The two passwords do not match.';
   if (Object.keys(fields).length > 0) throw badRequest('Please fix the highlighted fields.', fields);
 
-  const row = db
+  const row = await db
     .prepare(
       `SELECT id, user_id, expires_at, consumed_at FROM auth_tokens
        WHERE token_hash = ? AND kind = 'reset_password'`,
@@ -330,12 +332,14 @@ authRoutes.post('/reset-password', authLimiter, async (c) => {
 
   const hash = await hashPassword(password);
   const now = nowIso();
-  db.transaction(() => {
-    db.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?').run(hash, now, row.user_id);
-    db.prepare('UPDATE auth_tokens SET consumed_at = ? WHERE id = ?').run(now, row.id);
+  await db.transaction(async (tx) => {
+    await tx.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?').run(hash, now, row.user_id);
+    await tx.prepare('UPDATE auth_tokens SET consumed_at = ? WHERE id = ?').run(now, row.id);
     // Every existing session dies: a reset means "assume someone else had access".
-    db.prepare('UPDATE sessions SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL').run(now, row.user_id);
-  })();
+    await tx
+      .prepare('UPDATE sessions SET revoked_at = ? WHERE user_id = ? AND revoked_at IS NULL')
+      .run(now, row.user_id);
+  });
 
   logAuthEvent({ userId: row.user_id, event: 'password_reset_completed', ipHash: hashIp(clientIp(c)) });
   c.header('Set-Cookie', clearSessionCookie(c), { append: true });

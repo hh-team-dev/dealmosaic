@@ -52,24 +52,24 @@ export const loadSession: MiddlewareHandler<AppBindings> = async (c, next) => {
 
   const raw = getCookie(c, SESSION_COOKIE);
   if (raw) {
-    const row = db
+    const row = await (db
       .prepare(
         `SELECT s.id, s.user_id, s.csrf_token, s.expires_at, s.revoked_at
          FROM sessions s
          WHERE s.token_hash = ? AND s.revoked_at IS NULL AND s.expires_at > ?`,
       )
-      .get(sha256(raw), nowIso()) as SessionRow | undefined;
+      .get(sha256(raw), nowIso())) as unknown as SessionRow | undefined;
 
     if (row) {
-      const user = db
+      const user = await (db
         .prepare(
           `SELECT id, email, display_name, email_verified_at, role, status, created_at, phone
            FROM users WHERE id = ? AND status = 'active'`,
         )
-        .get(row.user_id) as UserRow | undefined;
+        .get(row.user_id)) as unknown as UserRow | undefined;
 
       if (user) {
-        db.prepare('UPDATE sessions SET last_seen_at = ? WHERE id = ?').run(nowIso(), row.id);
+        await db.prepare('UPDATE sessions SET last_seen_at = ? WHERE id = ?').run(nowIso(), row.id);
         c.set('user', user);
         c.set('session', row);
       }
@@ -171,8 +171,8 @@ export function toPreferences(row: PrefRow | undefined): UserPreferences {
   };
 }
 
-export function getPreferences(userId: string): UserPreferences {
-  const row = db.prepare('SELECT * FROM user_preferences WHERE user_id = ?').get(userId) as
+export async function getPreferences(userId: string): Promise<UserPreferences> {
+  const row = await db.prepare('SELECT * FROM user_preferences WHERE user_id = ?').get(userId) as
     | PrefRow
     | undefined;
   return toPreferences(row);

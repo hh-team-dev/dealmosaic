@@ -47,39 +47,39 @@ searchRoutes.post('/', async (c) => {
 
   // Explicit variant choice short-circuits disambiguation.
   if (variantId) {
-    const variant = db
+    const variant = await (db
       .prepare(
         `SELECT v.*, p.slug, p.title, p.brand, p.category, p.category_slug, p.description, p.is_grocery
            FROM product_variants v JOIN catalogue_products p ON p.id = v.product_id
           WHERE v.id = ?`,
       )
-      .get(variantId) as Record<string, unknown> | undefined;
+      .get(variantId)) as Record<string, unknown> | undefined;
 
     if (!variant) {
       return c.json({ error: { code: 'variant_not_found', message: 'That variant does not exist.' } }, 404);
     }
 
-    const siblings = db
+    const siblings = await (db
       .prepare(
         `SELECT v.*, p.slug, p.title, p.brand, p.category, p.category_slug, p.description, p.is_grocery
            FROM product_variants v JOIN catalogue_products p ON p.id = v.product_id
           WHERE v.product_id = ?`,
       )
-      .all(String(variant.product_id)) as never[];
+      .all(String(variant.product_id))) as never[];
 
     const { buildComparison } = await import('../services/search.js');
-    const payload = buildComparison(query, variant as never, siblings);
-    recordHistory(user.id, query, payload.kind === 'comparison' ? payload.variant.id : null);
+    const payload = await buildComparison(query, variant as never, siblings);
+    await recordHistory(user.id, query, payload.kind === 'comparison' ? payload.variant.id : null);
     return c.json(payload);
   }
 
-  const outcome = runComparison(query);
-  recordHistory(user.id, query, outcome.kind === 'comparison' ? outcome.variant.id : null);
+  const outcome = await runComparison(query);
+  await recordHistory(user.id, query, outcome.kind === 'comparison' ? outcome.variant.id : null);
   return c.json(outcome);
 });
 
-function recordHistory(userId: string, query: string, variantId: string | null): void {
-  db.prepare(
+async function recordHistory(userId: string, query: string, variantId: string | null): Promise<void> {
+  await db.prepare(
     'INSERT INTO user_search_history (id, user_id, query, variant_id, created_at) VALUES (?, ?, ?, ?, ?)',
   ).run(newId(), userId, query, variantId, nowIso());
 }

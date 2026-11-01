@@ -10,12 +10,12 @@ import { connectorHealth, KNOWN_PLATFORMS, unimplementedPlatforms } from '../con
  */
 export const catalogueRoutes = new Hono<AppBindings>();
 
-catalogueRoutes.get('/products', (c) => {
+catalogueRoutes.get('/products', async (c) => {
   const category = c.req.query('category');
   const q = c.req.query('q');
   const limit = Math.min(Number(c.req.query('limit') ?? 60), 200);
 
-  const rows = db
+  const rows = await (db
     .prepare(
       `SELECT p.id, p.slug, p.title, p.brand, p.category, p.category_slug, p.description, p.is_grocery,
               MIN(v.mrp_minor) AS price_from_minor, COUNT(DISTINCT v.id) AS variant_count
@@ -31,7 +31,7 @@ catalogueRoutes.get('/products', (c) => {
       category ?? null, category ?? null,
       q ?? null, q ? `%${q}%` : null, q ? `%${q}%` : null, q ? `%${q}%` : null,
       limit,
-    ) as Array<Record<string, unknown>>;
+    )) as Array<Record<string, unknown>>;
 
   return c.json({
     products: rows.map((r) => ({
@@ -49,13 +49,13 @@ catalogueRoutes.get('/products', (c) => {
   });
 });
 
-catalogueRoutes.get('/categories', (c) => {
-  const rows = db
+catalogueRoutes.get('/categories', async (c) => {
+  const rows = await (db
     .prepare(
       `SELECT category, category_slug, COUNT(*) AS n, SUM(is_grocery) AS grocery
          FROM catalogue_products GROUP BY category_slug ORDER BY n DESC, category ASC`,
     )
-    .all() as Array<{ category: string; category_slug: string; n: number; grocery: number }>;
+    .all()) as Array<{ category: string; category_slug: string; n: number; grocery: number }>;
 
   return c.json({
     categories: rows.map((r) => ({
@@ -68,20 +68,20 @@ catalogueRoutes.get('/categories', (c) => {
 });
 
 /** Full product page payload, including every variant and its offer count. */
-catalogueRoutes.get('/products/:slug', (c) => {
+catalogueRoutes.get('/products/:slug', async (c) => {
   const slug = c.req.param('slug');
-  const product = db
+  const product = await (db
     .prepare('SELECT * FROM catalogue_products WHERE slug = ?')
-    .get(slug) as Record<string, unknown> | undefined;
+    .get(slug)) as Record<string, unknown> | undefined;
   if (!product) return c.json({ error: { code: 'not_found', message: 'No such product.' } }, 404);
 
-  const variants = db
+  const variants = await (db
     .prepare(
       `SELECT v.*, (SELECT COUNT(*) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1) AS offer_count,
               (SELECT MIN(o.item_price_minor) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1) AS from_minor
          FROM product_variants v WHERE v.product_id = ? ORDER BY v.sort_order`,
     )
-    .all(String(product.id)) as Array<Record<string, unknown>>;
+    .all(String(product.id))) as Array<Record<string, unknown>>;
 
   return c.json({
     product: {
@@ -126,9 +126,9 @@ catalogueRoutes.get('/connectors', async (c) => {
 });
 
 /** Trending searches — real aggregate, used for SEO hub pages. */
-catalogueRoutes.get('/trending', (c) => {
-  const rows = db
+catalogueRoutes.get('/trending', async (c) => {
+  const rows = await (db
     .prepare('SELECT query, search_count FROM trending_queries ORDER BY search_count DESC, last_seen DESC LIMIT 12')
-    .all() as Array<{ query: string; search_count: number }>;
+    .all()) as Array<{ query: string; search_count: number }>;
   return c.json({ trending: rows });
 });

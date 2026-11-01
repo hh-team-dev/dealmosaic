@@ -200,11 +200,11 @@ function toIdentity(row: VariantRow): VariantIdentity {
 }
 
 /** Find every variant the query could plausibly mean. */
-export function findCandidateVariants(rawQuery: string): VariantRow[] {
+export async function findCandidateVariants(rawQuery: string): Promise<VariantRow[]> {
   const parsed = parseQuery(rawQuery);
 
   if (parsed.gtin) {
-    const byGtin = db.prepare(`${VARIANT_SELECT} WHERE v.gtin = ?`).all(parsed.gtin) as VariantRow[];
+    const byGtin = (await db.prepare(`${VARIANT_SELECT} WHERE v.gtin = ?`).all(parsed.gtin)) as unknown as VariantRow[];
     if (byGtin.length > 0) return byGtin;
   }
 
@@ -213,7 +213,7 @@ export function findCandidateVariants(rawQuery: string): VariantRow[] {
 
   // Rank products by how many query tokens their title/brand contains, so
   // "samsung s25 ultra" finds the right product without a full-text index.
-  const rows = db.prepare(`${VARIANT_SELECT}`).all() as VariantRow[];
+  const rows = (await db.prepare(`${VARIANT_SELECT}`).all()) as unknown as VariantRow[];
 
   const scored = rows
     .map((row) => {
@@ -311,8 +311,8 @@ export function buildOfferPrice(offer: OfferRow): PriceTruth {
   return buildPriceTruth(lines, 'INR');
 }
 
-function loadPlatforms(): Map<string, PlatformInfo> {
-  const rows = db.prepare('SELECT * FROM platforms').all() as Array<Record<string, unknown>>;
+async function loadPlatforms(): Promise<Map<string, PlatformInfo>> {
+  const rows = (await db.prepare('SELECT * FROM platforms').all()) as Array<Record<string, unknown>>;
   const map = new Map<string, PlatformInfo>();
   for (const r of rows) {
     map.set(String(r.slug), {
@@ -340,10 +340,10 @@ const UNKNOWN_PLATFORM: PlatformInfo = {
   affiliate: false,
 };
 
-function observationStats(offerId: string): { count: number; first: string } {
-  const row = db
+async function observationStats(offerId: string): Promise<{ count: number; first: string }> {
+  const row = await (db
     .prepare('SELECT COUNT(*) AS n, MIN(observed_at) AS first FROM offer_snapshots WHERE offer_id = ?')
-    .get(offerId) as { n: number; first: string | null };
+    .get(offerId)) as { n: number; first: string | null };
   return { count: row.n, first: row.first ?? nowIso() };
 }
 
@@ -351,15 +351,15 @@ function observationStats(offerId: string): { count: number; first: string } {
 /* Main entry point                                                    */
 /* ------------------------------------------------------------------ */
 
-export function runComparison(rawQuery: string): SearchOutcome {
+export async function runComparison(rawQuery: string): Promise<SearchOutcome> {
   const query = rawQuery.trim();
   const parsed = parseQuery(query);
-  const rows = findCandidateVariants(query);
+  const rows = await findCandidateVariants(query);
 
   if (rows.length === 0) {
-    const suggestions = db
+    const suggestions = await (db
       .prepare('SELECT slug, title, brand, category FROM catalogue_products ORDER BY RANDOM() LIMIT 6')
-      .all() as Array<{ slug: string; title: string; brand: string; category: string }>;
+      .all()) as Array<{ slug: string; title: string; brand: string; category: string }>;
     return {
       kind: 'no_results',
       query,
@@ -421,14 +421,18 @@ export function runComparison(rawQuery: string): SearchOutcome {
   }
 
   const variant = firstProduct.find((r) => r.id === resolution.variant.variantId)!;
-  return buildComparison(query, variant, firstProduct);
+  return await buildComparison(query, variant, firstProduct);
 }
 
-export function buildComparison(query: string, variant: VariantRow, allVariants: VariantRow[]): ComparisonPayload {
-  const platforms = loadPlatforms();
-  const offerRows = db
+export async function buildComparison(
+  query: string,
+  variant: VariantRow,
+  allVariants: VariantRow[],
+): Promise<ComparisonPayload> {
+  const platforms = await loadPlatforms();
+  const offerRows = await (db
     .prepare('SELECT * FROM offers WHERE variant_id = ? AND is_active = 1 ORDER BY item_price_minor ASC')
-    .all(variant.id) as OfferRow[];
+    .all(variant.id)) as unknown as OfferRow[];
 
   const priced = offerRows.map((offer) => {
     const price = buildOfferPrice(offer);
@@ -458,11 +462,12 @@ export function buildComparison(query: string, variant: VariantRow, allVariants:
   const ranked = rankOffers(priced.map((p) => p.rankable));
   const top = ranked.slice(0, 3);
 
-  const offers: OfferView[] = top.map((r) => {
+  const offers: OfferView[] = await Promise.all(
+    top.map(async (r) => {
     const source = priced.find((p) => p.offer.id === r.offerId)!;
     const offer = source.offer;
     const price = source.price;
-    const stats = observationStats(offer.id);
+    const stats = await observationStats(offer.id);
     const platform = platforms.get(offer.platform_slug) ?? UNKNOWN_PLATFORM;
 
     const hiddenCostMinor = price.knownTotalMinor - offer.item_price_minor;
@@ -507,7 +512,8 @@ export function buildComparison(query: string, variant: VariantRow, allVariants:
       productRating: offer.product_rating,
       productReviewCount: offer.product_review_count,
     };
-  });
+    }),
+  );
 
   const verifiedTotals = priced
     .filter((p) => p.price.verificationState === 'complete')
@@ -563,19 +569,23 @@ export function buildComparison(query: string, variant: VariantRow, allVariants:
         })()
       : null;
 
-  const historyRows = db
+  const historyRows = await (db
     .prepare('SELECT observed_at, price_minor FROM offer_snapshots WHERE offer_id = ? ORDER BY observed_at ASC LIMIT 120')
-    .all(offers[0]?.offerId ?? '') as Array<{ observed_at: string; price_minor: number }>;
+    .all(offers[0]?.offerId ?? '')) as Array<{ observed_at: string; price_minor: number }>;
 
-  const otherVariants = allVariants
+  const otherVariants = await Promise.all(
+    allVariants
     .filter((v) => v.id !== variant.id)
-    .map((v) => ({
+    .map(async (v) => ({
       id: v.id,
       label: v.variant_label,
       offerCount: (
-        db.prepare('SELECT COUNT(*) AS n FROM offers WHERE variant_id = ? AND is_active = 1').get(v.id) as { n: number }
+        (await db.prepare('SELECT COUNT(*) AS n FROM offers WHERE variant_id = ? AND is_active = 1').get(v.id)) as {
+          n: number;
+        }
       ).n,
-    }));
+    })),
+  );
 
   const dataMode: ComparisonPayload['dataMode'] =
     offers.every((o) => o.dataOrigin === 'demo')
@@ -600,7 +610,7 @@ export function buildComparison(query: string, variant: VariantRow, allVariants:
   );
 
   // Record the query for trending / sitemap generation (privacy: query text only).
-  db.prepare(
+  await db.prepare(
     `INSERT INTO trending_queries (query, search_count, last_seen) VALUES (?, 1, ?)
      ON CONFLICT(query) DO UPDATE SET search_count = search_count + 1, last_seen = excluded.last_seen`,
   ).run(query.toLowerCase(), nowIso());
@@ -653,9 +663,16 @@ export interface ConnectorSnapshot {
 }
 
 /** Converts a live connector offer into an `offers` row. Used by the sync job. */
-export function ingestConnectorOffers(variantId: string, offers: ConnectorOffer[]): ConnectorSnapshot {
+export async function ingestConnectorOffers(
+  variantId: string,
+  offers: ConnectorOffer[],
+): Promise<ConnectorSnapshot> {
   let ingested = 0;
-  const stmt = db.prepare(`
+
+  // One transaction: an offer row and its first price snapshot must land together,
+  // or history would show a snapshot for an offer that does not exist.
+  await db.transaction(async (tx) => {
+  const stmt = tx.prepare(`
     INSERT INTO offers (id, variant_id, platform_slug, title, seller_name, seller_type, seller_rating,
       seller_rating_count, product_rating, product_review_count, item_price_minor, currency, mrp_minor,
       item_condition, in_stock, shipping_minor, shipping_note, delivery_days_min, delivery_days_max,
@@ -663,15 +680,14 @@ export function ingestConnectorOffers(variantId: string, offers: ConnectorOffer[
       affiliate, data_origin, source_label, last_checked_at, is_active)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 'included', '[]', '[]', ?, ?, ?, ?, ?, ?, ?, 1)
   `);
-  const snap = db.prepare(
+  const snap = tx.prepare(
     'INSERT INTO offer_snapshots (id, offer_id, price_minor, currency, observed_at, data_origin) VALUES (?, ?, ?, ?, ?, ?)',
   );
 
-  db.transaction(() => {
-    for (const offer of offers) {
+  for (const offer of offers) {
       if (!['live', 'feed', 'community'].includes(offer.dataOrigin)) continue; // demo data never enters via ingest
       const id = newId();
-      stmt.run(
+      await stmt.run(
         id,
         variantId,
         offer.platformSlug,
@@ -699,10 +715,10 @@ export function ingestConnectorOffers(variantId: string, offers: ConnectorOffer[
         offer.sourceLabel,
         offer.lastCheckedAt,
       );
-      snap.run(newId(), id, offer.itemPriceMinor, offer.currency, offer.lastCheckedAt, offer.dataOrigin);
+      await snap.run(newId(), id, offer.itemPriceMinor, offer.currency, offer.lastCheckedAt, offer.dataOrigin);
       ingested++;
-    }
-  })();
+  }
+  });
 
   return { connectorOffers: offers, ingested };
 }

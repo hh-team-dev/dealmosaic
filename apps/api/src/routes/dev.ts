@@ -18,9 +18,9 @@ devRoutes.use('*', async (c, next) => {
   await next();
 });
 
-devRoutes.get('/outbox', (c) => {
+devRoutes.get('/outbox', async (c) => {
   const email = c.req.query('email');
-  const all = listOutbox(25);
+  const all = await listOutbox(25);
   const filtered = email ? all.filter((m) => m.to === email.toLowerCase()) : all;
   return c.json({
     dev: true,

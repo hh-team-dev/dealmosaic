@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { ApiError } from './lib/http.js';
-import { db, seedReferenceData } from './db/index.js';
+import { db, initDb, seedReferenceData } from './db/index.js';
 import { loadSession, type AppBindings } from './middleware/session.js';
 import { generalLimiter } from './lib/rate-limit.js';
 import { authRoutes } from './routes/auth.js';
@@ -13,8 +13,19 @@ import { catalogueRoutes } from './routes/catalogue.js';
 import { communityRoutes } from './routes/community.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
-seedReferenceData();
-seedCatalogue();
+/**
+ * Boot must complete before the first request is served: the schema, reference
+ * data and catalogue seed are all asynchronous now that the database can be
+ * remote. `ready` is awaited by the request pipeline so a cold start never
+ * answers with a half-initialised database.
+ */
+const ready = (async () => {
+  await initDb();
+  await seedReferenceData();
+  await seedCatalogue();
+})();
+
+export { ready };
 
 export const app = new Hono<AppBindings>();
 
@@ -39,6 +50,20 @@ app.use('/api/*', async (c, next) => {
 });
 
 app.use('/api/*', generalLimiter);
+app.use('/api/*', async (c, next) => {
+  try {
+    await ready;
+  } catch (error) {
+    // Surface a real failure rather than serving from an unseeded database.
+    console.error('[dealmosaic-api] initialisation failed', error);
+    return c.json(
+      { error: { code: 'initialising', message: 'The service is starting up. Try again shortly.' } },
+      503,
+    );
+  }
+  await next();
+});
+
 app.use('/api/*', loadSession);
 
 app.get('/api/health', (c) =>

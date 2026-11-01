@@ -18,12 +18,12 @@ export interface OutboxMessage {
   createdAt: string;
 }
 
-export function queueEmail(input: {
+export async function queueEmail(input: {
   to: string;
   subject: string;
   body: string;
   actionUrl?: string;
-}): OutboxMessage {
+}): Promise<OutboxMessage> {
   const message: OutboxMessage = {
     id: newId(),
     to: input.to,
@@ -32,7 +32,7 @@ export function queueEmail(input: {
     actionUrl: input.actionUrl ?? null,
     createdAt: nowIso(),
   };
-  db.prepare(
+  await db.prepare(
     'INSERT INTO dev_outbox (id, to_email, subject, body, action_url, created_at) VALUES (?, ?, ?, ?, ?, ?)',
   ).run(message.id, message.to, message.subject, message.body, message.actionUrl, message.createdAt);
 
@@ -44,10 +44,10 @@ export function queueEmail(input: {
   return message;
 }
 
-export function listOutbox(limit = 20): OutboxMessage[] {
-  const rows = db
+export async function listOutbox(limit = 20): Promise<OutboxMessage[]> {
+  const rows = await (db
     .prepare('SELECT * FROM dev_outbox ORDER BY created_at DESC LIMIT ?')
-    .all(limit) as Array<{
+    .all(limit)) as Array<{
     id: string;
     to_email: string;
     subject: string;
@@ -65,12 +65,15 @@ export function listOutbox(limit = 20): OutboxMessage[] {
   }));
 }
 
-export function findLatestActionFor(to: string, kind: 'verify-email' | 'reset-password'): string | null {
-  const row = db
+export async function findLatestActionFor(
+  to: string,
+  kind: 'verify-email' | 'reset-password',
+): Promise<string | null> {
+  const row = await (db
     .prepare(
       `SELECT action_url FROM dev_outbox
        WHERE to_email = ? AND action_url LIKE ? ORDER BY created_at DESC LIMIT 1`,
     )
-    .get(to, `%${kind}%`) as { action_url: string | null } | undefined;
+    .get(to, `%${kind}%`)) as { action_url: string | null } | undefined;
   return row?.action_url ?? null;
 }

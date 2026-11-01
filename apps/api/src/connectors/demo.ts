@@ -20,7 +20,7 @@ export class DemoConnector implements Connector {
 
   async health(): Promise<ConnectorHealth> {
     const started = Date.now();
-    const row = db.prepare('SELECT COUNT(*) AS n FROM offers WHERE data_origin = ?').get('demo') as { n: number };
+    const row = (await db.prepare('SELECT COUNT(*) AS n FROM offers WHERE data_origin = ?').get('demo')) as { n: number };
     return {
       status: 'demo',
       detail: `${row.n} demonstration offers. No retailer has granted authorised price access yet, so nothing here is a live price.`,
@@ -31,7 +31,7 @@ export class DemoConnector implements Connector {
   }
 
   async search({ query, gtin, limit = 40 }: ConnectorSearchParams): Promise<ConnectorOffer[]> {
-    const rows = db
+    const rows = await (db
       .prepare(
         `SELECT o.*, v.gtin AS variant_gtin, v.mpn AS variant_mpn, v.attributes AS variant_attributes
            FROM offers o
@@ -44,7 +44,7 @@ export class DemoConnector implements Connector {
             )
           LIMIT ?`,
       )
-      .all(gtin ?? null, gtin ?? null, `%${query}%`, `%${query}%`, limit) as Array<Record<string, unknown>>;
+      .all(gtin ?? null, gtin ?? null, `%${query}%`, `%${query}%`, limit)) as Array<Record<string, unknown>>;
 
     return rows.map((row) => ({
       platformSlug: String(row.platform_slug),

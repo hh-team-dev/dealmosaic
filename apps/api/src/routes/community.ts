@@ -21,10 +21,10 @@ const reportBody = z.object({
   note: z.string().max(280).optional(),
 });
 
-communityRoutes.get('/:variantId', (c) => {
+communityRoutes.get('/:variantId', async (c) => {
   const variantId = c.req.param('variantId');
   const pincode = c.req.query('pincode');
-  const rows = db
+  const rows = await (db
     .prepare(
       `SELECT c.id, c.platform_slug, c.pincode, c.price_minor, c.mrp_minor, c.delivery_fee_minor,
               c.reported_at, c.trust_state, c.corroboration_count, c.note, p.name AS platform_name
@@ -34,7 +34,7 @@ communityRoutes.get('/:variantId', (c) => {
           AND (? IS NULL OR c.pincode = ?)
         ORDER BY c.reported_at DESC LIMIT 25`,
     )
-    .all(variantId, pincode ?? null, pincode ?? null) as Array<Record<string, unknown>>;
+    .all(variantId, pincode ?? null, pincode ?? null)) as Array<Record<string, unknown>>;
 
   return c.json({
     reports: rows.map((r) => ({
@@ -68,14 +68,14 @@ communityRoutes.post('/', async (c) => {
   }
   const body = parsed.data;
 
-  const variant = db.prepare('SELECT id FROM product_variants WHERE id = ?').get(body.variantId);
+  const variant = await db.prepare('SELECT id FROM product_variants WHERE id = ?').get(body.variantId);
   if (!variant) {
     return c.json({ error: { code: 'variant_not_found', message: 'Unknown product variant.' } }, 404);
   }
 
   // Corroboration: if another shopper already reported the same pincode+platform
   // within 2 hours and within 5%, mark it corroborated rather than duplicating.
-  const recent = db
+  const recent = await db
     .prepare(
       `SELECT id, price_minor, corroboration_count FROM community_prices
         WHERE variant_id = ? AND platform_slug = ? AND pincode = ? AND trust_state != 'rejected'
@@ -87,7 +87,7 @@ communityRoutes.post('/', async (c) => {
 
   const priceMinor = Math.round(body.price * 100);
   if (recent && Math.abs(recent.price_minor - priceMinor) / recent.price_minor <= 0.05) {
-    db.prepare(
+    await db.prepare(
       'UPDATE community_prices SET corroboration_count = corroboration_count + 1, trust_state = ? WHERE id = ?',
     ).run('corroborated', recent.id);
     return c.json({
@@ -97,7 +97,7 @@ communityRoutes.post('/', async (c) => {
     });
   }
 
-  db.prepare(
+  await db.prepare(
     `INSERT INTO community_prices (id, variant_id, platform_slug, pincode, price_minor, currency, mrp_minor,
       delivery_fee_minor, reported_by, reported_at, trust_state, corroboration_count, note)
      VALUES (?, ?, ?, ?, ?, 'INR', ?, ?, ?, ?, 'reported', 0, ?)`,

@@ -15,8 +15,8 @@ metaRoutes.get('/countries', (c) =>
 
 metaRoutes.get('/currencies', (c) => c.json({ currencies: Object.values(CURRENCIES) }));
 
-metaRoutes.get('/platforms', (c) => {
-  const rows = db.prepare('SELECT * FROM platforms ORDER BY sort_order').all() as Array<{
+metaRoutes.get('/platforms', async (c) => {
+  const rows = (await db.prepare('SELECT * FROM platforms ORDER BY sort_order').all()) as Array<{
     slug: string;
     name: string;
     kind: PlatformSummary['kind'];

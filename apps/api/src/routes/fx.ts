@@ -19,10 +19,10 @@ interface CachedRate {
   fetched_at: string;
 }
 
-function readCache(base: string): CachedRate[] {
-  return db
+async function readCache(base: string): Promise<CachedRate[]> {
+  return (await db
     .prepare('SELECT * FROM exchange_rates WHERE base = ? AND quote IN (' + SUPPORTED.map(() => '?').join(',') + ')')
-    .all(base, ...SUPPORTED) as CachedRate[];
+    .all(base, ...SUPPORTED)) as unknown as CachedRate[];
 }
 
 function writeCache(base: string, entries: Array<{ quote: string; rate: number; date: string }>) {
@@ -58,7 +58,7 @@ function shape(rows: CachedRate[]) {
 }
 
 fxRoutes.get('/rates', async (c) => {
-  const cached = readCache('USD');
+  const cached = await readCache('USD');
   const age = cached[0] ? Date.now() - new Date(cached[0].fetched_at).getTime() : Infinity;
 
   if (cached.length > 0 && age < CACHE_TTL_MS) {
@@ -72,7 +72,7 @@ fxRoutes.get('/rates', async (c) => {
     const data = (await res.json()) as Array<{ date: string; quote: string; rate: number }>;
     const entries = data.map((d) => ({ quote: d.quote, rate: d.rate, date: d.date }));
     writeCache('USD', [...entries, { quote: 'USD', rate: 1, date: data[0]?.date ?? nowIso().slice(0, 10) }]);
-    return c.json(shape(readCache('USD')));
+    return c.json(shape(await readCache('USD')));
   } catch (err) {
     // Honest degradation: serve the last known rates and say they are stale.
     if (cached.length > 0) {
