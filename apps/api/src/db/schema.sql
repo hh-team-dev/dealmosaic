@@ -63,7 +63,11 @@ CREATE TABLE IF NOT EXISTS dev_outbox (
   subject    TEXT NOT NULL,
   body       TEXT NOT NULL,
   action_url TEXT,
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL,
+  -- Delivery outcome. NULL/NULL means no mail transport was configured: the
+  -- message was recorded but not sent, which is not the same as a failure.
+  sent_at    TEXT,
+  send_error TEXT
 );
 
 CREATE TABLE IF NOT EXISTS exchange_rates (

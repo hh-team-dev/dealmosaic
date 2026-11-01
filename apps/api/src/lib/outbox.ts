@@ -1,13 +1,19 @@
 import { db, newId, nowIso } from '../db/index.js';
+import { sendMail, isConfigured as mailConfigured } from './mailer.js';
 
 /**
- * Development mailbox.
+ * Outbox — the record of every message the system tried to deliver.
  *
- * In production these messages go to a real provider (Brevo / Resend free tier)
- * via env config. Until that credential exists, every message is also written
- * here so registration, verification and password reset are *fully testable*
- * without pretending an email was sent. The UI shows this as a clearly labelled
- * "Development outbox" — it is never presented as a real inbox.
+ * Two things happen on each send:
+ *   1. The row is written here FIRST, so there is always an audit trail even if
+ *      delivery fails. This is what makes "we sent you a link" verifiable.
+ *   2. Delivery is attempted through lib/mailer.ts (SMTP, typically a Gmail app
+ *      password — no domain and no cost required). The outcome is recorded on
+ *      the row: `sentAt` on success, `sendError` on failure.
+ *
+ * When no mail credentials exist the message is still recorded and the send is
+ * skipped — the flow stays fully testable, and nothing ever pretends an email
+ * went out. The dev-only endpoint exposes these rows; it is not a real inbox.
  */
 export interface OutboxMessage {
   id: string;
@@ -16,6 +22,10 @@ export interface OutboxMessage {
   body: string;
   actionUrl: string | null;
   createdAt: string;
+  /** When delivery succeeded. Null when the transport is unconfigured or failed. */
+  sentAt: string | null;
+  /** Why delivery failed, for the admin panel. Never shown to end users. */
+  sendError: string | null;
 }
 
 export async function queueEmail(input: {
@@ -31,17 +41,43 @@ export async function queueEmail(input: {
     body: input.body,
     actionUrl: input.actionUrl ?? null,
     createdAt: nowIso(),
+    sentAt: null,
+    sendError: null,
   };
-  await db.prepare(
-    'INSERT INTO dev_outbox (id, to_email, subject, body, action_url, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-  ).run(message.id, message.to, message.subject, message.body, message.actionUrl, message.createdAt);
 
-  // A real provider is wired here in production; until then this is the honest
-  // record of what would have been sent.
-  if (process.env.NODE_ENV === 'production' && process.env.EMAIL_PROVIDER) {
-    console.info(`[mail] queued to provider=${process.env.EMAIL_PROVIDER} subject="${input.subject}"`);
+  // Record first, deliver second: the audit trail must survive a dead mail server.
+  await db
+    .prepare(
+      `INSERT INTO dev_outbox (id, to_email, subject, body, action_url, created_at, sent_at, send_error)
+       VALUES (?, ?, ?, ?, ?, ?, NULL, NULL)`,
+    )
+    .run(message.id, message.to, message.subject, message.body, message.actionUrl, message.createdAt);
+
+  const result = await sendMail({
+    to: input.to,
+    subject: input.subject,
+    body: input.body,
+    actionUrl: input.actionUrl ?? null,
+  });
+
+  if (result.sent) {
+    message.sentAt = nowIso();
+    await db.prepare('UPDATE dev_outbox SET sent_at = ? WHERE id = ?').run(message.sentAt, message.id);
+  } else if (result.transport === 'smtp') {
+    message.sendError = result.error ?? 'Unknown delivery error';
+    await db
+      .prepare('UPDATE dev_outbox SET send_error = ? WHERE id = ?')
+      .run(message.sendError, message.id);
   }
+  // transport 'none' leaves both null: not sent, not failed — simply no mail
+  // configured, which is a different and honest state.
+
   return message;
+}
+
+/** Whether real mail delivery is available right now. */
+export function emailDeliveryConfigured(): boolean {
+  return mailConfigured();
 }
 
 export async function listOutbox(limit = 20): Promise<OutboxMessage[]> {
@@ -54,6 +90,8 @@ export async function listOutbox(limit = 20): Promise<OutboxMessage[]> {
     body: string;
     action_url: string | null;
     created_at: string;
+    sent_at: string | null;
+    send_error: string | null;
   }>;
   return rows.map((r) => ({
     id: r.id,
@@ -62,6 +100,8 @@ export async function listOutbox(limit = 20): Promise<OutboxMessage[]> {
     body: r.body,
     actionUrl: r.action_url,
     createdAt: r.created_at,
+    sentAt: r.sent_at,
+    sendError: r.send_error,
   }));
 }
 

@@ -56,8 +56,16 @@ partnership or is scraping. There is no third option.
   no approval queue, no partner conversation.**
 - Already implemented in `apps/api/src/connectors/ebay.ts`; it needs only
   `EBAY_CLIENT_ID` and `EBAY_CLIENT_SECRET`.
-- **Caveat, stated plainly:** eBay India has thin coverage of Indian quick-commerce
-  groceries. It is excellent for electronics and books, weak for milk and atta.
+- **Important correction (verified 2 Nov 2026):** `EBAY_IN` *is* a valid enum value in
+  eBay's APIs — but eBay's own documentation annotates it: *"eBay India is no longer a
+  functioning eBay marketplace."* The India site was wound down. So the connector
+  should be pointed at a **live** marketplace (`EBAY_GB` for the best
+  price/India-shipping overlap, or `EBAY_US` for range) via `EBAY_MARKETPLACE_ID`,
+  and every offer must be treated as *international with seller-specific shipping to
+  India*. Which is exactly why the schema keeps `shippingMinor` nullable and never
+  defaults it to zero.
+- **Caveat, stated plainly:** eBay's coverage of Indian quick-commerce groceries is
+  effectively nil. It is good for electronics, books and imports, weak for milk and atta.
 
 **Effort: 30 minutes. Coverage: narrow but real. This is the one to switch on first.**
 

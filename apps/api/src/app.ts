@@ -11,6 +11,7 @@ import { devRoutes } from './routes/dev.js';
 import { searchRoutes } from './routes/search.js';
 import { catalogueRoutes } from './routes/catalogue.js';
 import { communityRoutes } from './routes/community.js';
+import { locationRoutes } from './routes/location.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
 /**
@@ -87,6 +88,7 @@ app.route('/api/dev', devRoutes);
 app.route('/api/search', searchRoutes);
 app.route('/api/catalogue', catalogueRoutes);
 app.route('/api/community-prices', communityRoutes);
+app.route('/api/location', locationRoutes);
 
 app.notFound((c) =>
   c.json({ error: { code: 'not_found', message: `No route for ${c.req.method} ${c.req.path}` } }, 404),

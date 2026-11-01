@@ -176,6 +176,13 @@ export async function initDb(): Promise<void> {
   if (!(await hasColumn('user_search_history', 'outcome'))) {
     await db.exec('ALTER TABLE user_search_history ADD COLUMN outcome TEXT');
   }
+  // Outbox delivery tracking (added when real email delivery was wired up).
+  if (!(await hasColumn('dev_outbox', 'sent_at'))) {
+    await db.exec('ALTER TABLE dev_outbox ADD COLUMN sent_at TEXT');
+  }
+  if (!(await hasColumn('dev_outbox', 'send_error'))) {
+    await db.exec('ALTER TABLE dev_outbox ADD COLUMN send_error TEXT');
+  }
 }
 
 export const nowIso = (): string => new Date().toISOString();
