@@ -29,7 +29,9 @@ import { fileURLToPath } from 'node:url';
 import { nowIso, type Connector, type ConnectorHealth, type ConnectorOffer, type ConnectorSearchParams } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_MAPPING_DIR = resolve(__dirname, '../../../deploy/feeds');
+// __dirname is apps/api/src/connectors → four levels up is the repository root.
+// (Three levels lands in apps/, which is how this shipped wrong the first time.)
+const DEFAULT_MAPPING_DIR = resolve(__dirname, '../../../../deploy/feeds');
 
 /* ------------------------------------------------------------------ */
 /* CSV parsing — minimal, correct, no dependency                       */
