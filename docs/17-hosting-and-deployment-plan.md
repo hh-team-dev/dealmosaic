@@ -255,14 +255,44 @@ site is guessing.
 | Security headers | HSTS, `X-Frame-Options: DENY`, `nosniff`, referrer policy, permissions policy |
 | Asset caching | `max-age=31536000, immutable` on hashed assets; `must-revalidate` on HTML |
 
-### API + database: NOT YET DEPLOYED — two owner actions needed
+### API: LIVE
 
-1. **Render 403 on repo access.** The Render key authenticates, but deploying needs
-   Render to reach the source. Either connect the GitHub account in Render
-   (*Account Settings → GitHub → Connect*) or use a public repo.
-2. **No Turso token was supplied**, so there is no durable database to attach.
+**https://dealmosaic-api.onrender.com** (service `srv-dbjrk8o473hc73anclcg`, plan **free**, region **singapore**)
 
-See §8 for the exact sequence once those arrive.
+| Verified | Result |
+|---|---|
+| `/api/health` | `{"ok":true,"database":"connected","environment":"production"}` |
+| `/api/catalogue/categories` | 17 categories |
+| `/api/catalogue/products?limit=3` | 25-product catalogue served |
+| `/api/catalogue/products/:slug` | full product + variants |
+| `POST /api/search` | `401 unauthorized` — **by design**: search requires a free account, so results cannot be scraped |
+
+### Website ↔ API: SAME ORIGIN
+
+`https://dealmosaic.pages.dev/api/*` proxies to the Render service via a Pages
+Function reading the `API_ORIGIN` environment variable.
+
+Verified: `/api/health` returns 200 through the site's own domain, and responses
+carry `x-dealmosaic-proxy: pages`. This means **no CORS**, first-party cookies, and
+a future domain change touches one variable — not the front-end code.
+
+### Database: TEMPORARY — Turso token not supplied
+
+The API currently writes SQLite to Render's ephemeral disk. It boots, seeds and
+serves correctly, but **any restart, redeploy or spin-down erases it**. Treat
+registered accounts and community prices as disposable until Turso is attached.
+
+### Remaining owner actions
+
+| # | Action | Why |
+|---|---|---|
+| 1 | **Turso token** | Durable database. Until then data is erased on restart. |
+| 2 | **`workflow` scope on the GitHub token** (or commit the file from the web UI) | Enables the 5-minute keep-alive cron. The file is ready at `deploy/keepalive/github-actions-keepalive.yml`. |
+| 3 | *(optional)* `Workers Scripts: Edit` on the Cloudflare token | Would allow a Cloudflare cron worker instead of GitHub Actions. |
+
+**Known consequence of not yet having (2):** after 15 idle minutes the API sleeps
+and the next request waits 30–60 s to wake. The static site is unaffected and loads
+instantly; only API-backed pages are slow on the first hit.
 
 ## 7. Decision status
 
