@@ -1,0 +1,10 @@
+name = "dealmosaic-keepalive"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Every 5 minutes: comfortably inside Render's 15-minute idle timeout.
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+API_ORIGIN = "https://dealmosaic-api.onrender.com"
