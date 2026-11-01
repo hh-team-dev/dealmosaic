@@ -28,7 +28,10 @@
     "vault:get": "node scripts/vault.mjs get",
     "vault:rotate": "node scripts/vault.mjs rotate",
     "vault:status": "node scripts/vault.mjs status",
-    "secrets:scan": "node scripts/secrets-scan.mjs"
+    "secrets:scan": "node scripts/secrets-scan.mjs",
+    "db:snapshot": "node scripts/db-backup.mjs",
+    "db:snapshot:private": "node scripts/db-backup.mjs --private",
+    "db:verify": "node scripts/db-backup.mjs --verify"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

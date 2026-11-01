@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-11-01T22:42:46.382Z",
+  "source": "libsql://dealmosaic-hh-team-dev.aws-ap-south-1.turso.io",
+  "scope": "public",
+  "tables": {
+    "countries": 5,
+    "currencies": 9,
+    "platforms": 14,
+    "catalogue_products": 25,
+    "product_variants": 46,
+    "offers": 170,
+    "offer_snapshots": 170,
+    "exchange_rates": 0,
+    "trending_queries": 0
+  },
+  "totalRows": 439,
+  "sha256": "aa1773efb12e97c64b751283031ee53899f1e645d2a9f506c3eac619200043ba",
+  "bytes": 233818
+}
