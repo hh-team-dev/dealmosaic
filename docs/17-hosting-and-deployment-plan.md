@@ -215,6 +215,23 @@ vault (`npm run vault:init`, then `npm run vault:set`), or send them in a chat m
 and rotate them once deployment is verified. If they do go through chat, treat them as
 burned: revoke and reissue after launch.
 
+### Live credentials are stored OUTSIDE the project tree
+
+During deployment the credentials were briefly kept in `secrets/deploy.env` inside the
+project. The secret scanner correctly flagged them there, which proved the point: a
+secret inside the repository directory is one `git add -f` or one mis-scoped archive
+away from exposure.
+
+They now live at **`~/.config/dealmosaic/deploy.env`** (directory `700`, file `600`) —
+outside the repository, so it cannot be committed, archived, or scanned into a backup.
+`npm run check` passes with zero findings and the archive contains no credentials.
+
+When working in this project, load them with:
+
+```bash
+set -a; . ~/.config/dealmosaic/deploy.env; set +a
+```
+
 ---
 
 ## 6. Stage 2 (later, optional): consolidate onto Cloudflare
@@ -276,19 +293,50 @@ Verified: `/api/health` returns 200 through the site's own domain, and responses
 carry `x-dealmosaic-proxy: pages`. This means **no CORS**, first-party cookies, and
 a future domain change touches one variable — not the front-end code.
 
-### Database: TEMPORARY — Turso token not supplied
+### Database: LIVE — Turso, Mumbai (`aws-ap-south-1`)
 
-The API currently writes SQLite to Render's ephemeral disk. It boots, seeds and
-serves correctly, but **any restart, redeploy or spin-down erases it**. Treat
-registered accounts and community prices as disposable until Turso is attached.
+**libsql://dealmosaic-hh-team-dev.aws-ap-south-1.turso.io** — organisation
+`hh-team-dev`, group `india`, database `dealmosaic`. Free plan, no expiry.
+
+| Verified | Result |
+|---|---|
+| Schema applied to the remote database | 21 tables; `initDb` ~2.8 s |
+| Seed | 25 products · 46 variants · 170 offers · 170 snapshots · 14 platforms |
+| Idempotent boot | second boot is a no-op (25 products, unchanged) |
+| **Durability** | Registered a real account through the live API → row present in Turso → **triggered a full redeploy → login still found the user** |
+| Cleanup | probe account and its tokens/sessions deleted; `users` count back to 0 |
+
+The database no longer lives on the API host, so Render's ephemeral disk is no
+longer a data-loss risk.
 
 ### Remaining owner actions
 
 | # | Action | Why |
 |---|---|---|
-| 1 | **Turso token** | Durable database. Until then data is erased on restart. |
-| 2 | **`workflow` scope on the GitHub token** (or commit the file from the web UI) | Enables the 5-minute keep-alive cron. The file is ready at `deploy/keepalive/github-actions-keepalive.yml`. |
-| 3 | *(optional)* `Workers Scripts: Edit` on the Cloudflare token | Would allow a Cloudflare cron worker instead of GitHub Actions. |
+| 1 | **`workflow` scope on the GitHub token** (or commit the file from the web UI) | Enables the 5-minute keep-alive cron. Ready at `deploy/keepalive/github-actions-keepalive.yml`. |
+| 2 | *(optional)* `Workers Scripts: Edit` on the Cloudflare token | Would allow a Cloudflare cron worker instead of GitHub Actions. |
+| 3 | **(security) Rotate all tokens** | Every credential travelled through chat. See `docs/16` §5 for the rotation procedure. |
+
+### Database architecture note (important for the next developer)
+
+`apps/api/src/db/index.ts` is an **async adapter over `@libsql/client`** that
+deliberately mirrors the old `better-sqlite3` surface — `prepare(sql).get/all/run`
+accepting either positional arguments or `@name` objects. Two consequences:
+
+1. **Every database call is asynchronous.** Adding `await` is the only change most
+   call sites needed, and the SQL itself is untouched.
+2. **Statements used inside `db.transaction` must come from the `tx` handle**, not
+   from `db`. Mixing them throws `TRANSACTION_ACTIVE`, because the client cannot
+   run a direct statement while an interactive transaction is open. This was the
+   one non-obvious failure during the migration.
+
+Local development and tests use a `file:` URL through the identical code path —
+same driver, same statements — so dev and production cannot diverge.
+
+**Known debt:** the first seed against an empty database takes ~110 s because it
+writes ~400 statements over HTTP one round trip at a time. It only happens once
+(the seed is idempotent and the data persists), but if the database is ever
+recreated, batching the inserts would be worthwhile.
 
 **Known consequence of not yet having (2):** after 15 idle minutes the API sleeps
 and the next request waits 30–60 s to wake. The static site is unaffected and loads

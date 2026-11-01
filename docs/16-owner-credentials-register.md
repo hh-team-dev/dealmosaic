@@ -343,3 +343,47 @@ Node, SQLite, Hono, React and Vite — all open source, all self-hostable.
 |---|---|---|
 | 2 Nov 2026 | Register created. Zero third-party accounts exist; all rows are templates. Vault tooling built and tested. | Development |
 | | | |
+
+
+---
+
+## 5. Where the deployment credentials actually live
+
+**Location:** `~/.config/dealmosaic/deploy.env` — deliberately **outside** the project
+directory. The folder is `700` and the file `600`. It is therefore never committed,
+never archived by `scripts/backup.mjs`, and never scanned as project source.
+
+**Keys currently held there** (names only — no values in any document):
+
+| Key | Purpose |
+|---|---|
+| `CF_API_TOKEN` | Cloudflare: publish the site |
+| `CF_ACCOUNT_ID` | Cloudflare: account identifier (not secret) |
+| `RENDER_API_KEY` | Render: create/deploy the API, set env vars |
+| `RENDER_OWNER_ID` | Render: workspace id |
+| `GITHUB_TOKEN` | GitHub: push commits |
+| `TURSO_API_TOKEN` | Turso: manage databases |
+| `TURSO_DATABASE_URL` | Turso: database endpoint |
+| `TURSO_AUTH_TOKEN` | Turso: scoped database read/write token |
+
+The two Turso **database** values (not the management token) are also set as environment
+variables on the Render service — that is where the running API reads them.
+
+### Rotation procedure (do this once the build is stable)
+
+Every one of these travelled through chat, so treat all of them as burned.
+
+1. **Cloudflare** → My Profile → API Tokens → *Roll* the `dealmosaic-deploy` token, or
+   delete and recreate. Update `CF_API_TOKEN`.
+2. **Render** → Account Settings → API Keys → revoke, create new. Update `RENDER_API_KEY`.
+3. **Turso** → Settings → API Tokens → revoke, create new. Then Databases → `dealmosaic`
+   → Create Token for the new `TURSO_AUTH_TOKEN`, and update it **both** in
+   `~/.config/dealmosaic/deploy.env` **and** on the Render service's environment tab.
+4. **GitHub** → Settings → Developer settings → the fine-grained token → regenerate.
+   This is also the moment to add the **`workflow`** permission so the keep-alive cron
+   can be enabled.
+5. Confirm the site and API still respond afterwards.
+
+Rotating costs one click per service and invalidates anything that leaked into an old
+chat log. Nothing in the codebase needs to change — the code reads environment
+variables, never literals.

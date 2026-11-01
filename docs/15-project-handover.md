@@ -186,7 +186,7 @@ logic is testable in isolation and impossible to duplicate in the UI.
 ┌────▼─────┐  ┌───▼──────────┐
 │ apps/api │  │ apps/web     │
 │ Hono     │  │ React 19     │
-│ SQLite   │  │ Vite         │
+│ Turso    │  │ Vite         │
 │ connectors  │ routes       │
 └──────────┘  └──────────────┘
 ```
@@ -442,7 +442,7 @@ Security headers on `/api/*`; CSRF token required on state-changing requests;
 same-origin assertion; rate limiting (general + stricter auth); scrypt password
 hashing; sessions stored hashed and revocable; `X-Robots-Tag: noindex` on API
 responses. XSS is prevented by React's escaping; SQL injection by parameterised
-statements throughout (`better-sqlite3` prepared statements only).
+statements throughout (`@libsql/client`, SQLite-compatible prepared statements only).
 
 ---
 
@@ -646,7 +646,7 @@ Ordered by risk. Numbers match the issue tracker convention used in this project
 | 2 | Registration does a two-step insert (placeholder hash, then update) in `routes/auth.ts` | High | Must become one transaction before production — a crash mid-write leaves a user row with an unusable hash |
 | 3 | No real email delivery | High (launch) | Verification links only reachable via the dev outbox |
 | 4 | No prerendering / SSR | Medium (SEO) | Google executes JS, but static HTML would be faster and more robust. `index.html` carries site-level JSON-LD and a `<noscript>` nav as mitigation |
-| 5 | Single SQLite file, single process | Medium (scale) | Fine to launch; needs Postgres before more than one instance |
+| 5 | SQLite dialect via Turso (libSQL), single writer | Medium (scale) | Fine to launch. Turso handles many readers; Postgres is the move before high write concurrency |
 | 6 | In-memory rate limiter | Medium | Per-process only; resets on restart and does not coordinate across instances |
 | 7 | `/search?q=` is `noindex` | Medium (SEO) | Deliberate — thin, volatile query pages. The indexed surface is `/p/:slug` |
 | 8 | Community price submission has an API but no UI | Low | Endpoint, validation and corroboration logic all work |
@@ -705,7 +705,7 @@ Amazon excluded**, support tickets, and a secure admin panel with an audit log.
 
 ### Phase 5 — scale
 
-Postgres migration (add a driver, translate `better-sqlite3` calls, enable RLS),
+Postgres migration (swap the adapter in `db/index.ts` — the SQL is plain SQLite, so this is a driver change plus RLS),
 prerendering, PWA with offline caching, multi-instance rate limiting.
 
 ### Phase 6 — expansion
