@@ -24,9 +24,19 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const DB_PATH = process.env.DB_PATH ?? join(__dirname, '../../data/dealmosaic.db');
 
-/** Remote when TURSO_DATABASE_URL is set, otherwise a local file. */
-const REMOTE_URL = process.env.TURSO_DATABASE_URL?.trim();
-const AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN?.trim();
+/**
+ * Remote when TURSO_DATABASE_URL is set, otherwise a local file.
+ *
+ * SAFETY: never remote under a test runner. This is not theoretical — during
+ * development the test suite was run with TURSO_DATABASE_URL exported in the
+ * shell and it connected to the PRODUCTION database, writing real rows into
+ * real tables. Tests must be incapable of that, regardless of the environment
+ * they inherit.
+ */
+const IS_TEST = Boolean(process.env.VITEST) || process.env.NODE_ENV === 'test';
+
+const REMOTE_URL = IS_TEST ? undefined : process.env.TURSO_DATABASE_URL?.trim();
+const AUTH_TOKEN = IS_TEST ? undefined : process.env.TURSO_AUTH_TOKEN?.trim();
 
 export const isRemote = Boolean(REMOTE_URL);
 

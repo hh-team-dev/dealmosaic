@@ -655,6 +655,30 @@ Ordered by risk. Numbers match the issue tracker convention used in this project
 | 11 | `product_match_reviews` table unused | Low | Schema ready for manual match correction |
 | 12 | Playwright verification scripts are not in the repo | Low | They were scratch tooling in `/tmp`; adding a committed e2e suite is a good Phase 3 task |
 
+### 14.0 INCIDENT: the test suite reached the production database
+
+**What happened.** During Phase 3 the shell had `TURSO_DATABASE_URL` exported. The
+test suite read that variable and connected to the **live Turso database** instead of
+its in-memory one. One run wrote 4 users, 13 sessions, 6 auth tokens, 40 auth events,
+9 outbox messages, 8 search-history rows and 4 trending queries into production.
+
+**Why it was possible.** `db/index.ts` preferred a remote URL whenever the variable
+was present. Tests set `DB_PATH=:memory:` but nothing prevented a remote URL from
+taking priority.
+
+**Fix.** The adapter now refuses a remote connection whenever
+`process.env.VITEST` is set or `NODE_ENV === 'test'`. A regression test
+(`apps/api/tests/db-safety.test.ts`) simulates the exact conditions and fails if the
+guard is removed. The gate was re-run with production credentials deliberately
+exported: **104 tests pass, production untouched (0 users).**
+
+**Cleanup.** All test rows were deleted; catalogue and offers were preserved
+(25 products, 170 offers). The public snapshot was regenerated afterwards.
+
+**Lesson for the next developer.** Never run the suite with production credentials in
+the environment, and never weaken the `IS_TEST` guard. A passing test run is not proof
+that it touched the right database.
+
 ### 14.1 Defects found by the handover restore test (both fixed)
 
 A backup is only proven by restoring it, so a clean-room test was run: extract the

@@ -207,3 +207,31 @@ is structured.
 - `dataOrigin` on every offer is the source of truth for what is real:
   `demo` → demonstration, `feed` → network feed, `live` → API, `community` → reported.
 - The UI must never blur those four.
+
+
+---
+
+## 8. Addendum — the database backup and the test-suite incident
+
+Both happened on the same day and are worth connecting, because they are the same
+lesson from two directions.
+
+**The backup** (`scripts/db-backup.mjs`) splits the schema into PUBLIC and PRIVATE
+tables. The public half — catalogue, offers, 170 price observations, reference data —
+is committed to `db-snapshots/` and pushed to GitHub on every milestone. The private
+half (users, sessions, tokens, search history) is written to
+`~/.config/dealmosaic/db/` at mode 0600 and never leaves the machine. It uses an
+**allow-list**, so a personal table added later is excluded by default rather than
+silently published.
+
+**The incident** was the inverse mistake: not publishing private data, but *writing*
+to production by accident. The test suite inherited `TURSO_DATABASE_URL` from the
+shell and wrote real rows into the live database. See `docs/15` §14.0.
+
+Together they define the two rules that matter:
+
+1. **Personal data must be impossible to publish** — enforced by an allow-list.
+2. **Test data must be impossible to write to production** — enforced by an
+   environment guard and a regression test.
+
+Both are now structural rather than remembered.

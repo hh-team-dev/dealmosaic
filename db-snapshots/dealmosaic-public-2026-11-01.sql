@@ -1,6 +1,6 @@
 -- DEALMOSAIC database snapshot (PUBLIC — safe for a public repository)
 --
--- Generated: 2026-11-01T22:46:16.544Z
+-- Generated: 2026-11-01T22:47:58.597Z
 -- Source:    libsql://dealmosaic-hh-team-dev.aws-ap-south-1.turso.io
 -- Engine:    SQLite (libSQL / Turso)
 --
@@ -17,7 +17,7 @@
 --   offers: 170
 --   offer_snapshots: 170
 --   exchange_rates: 0
---   trending_queries: 4
+--   trending_queries: 0
 
 PRAGMA foreign_keys = OFF;
 BEGIN TRANSACTION;
@@ -474,11 +474,5 @@ INSERT INTO offer_snapshots (id, offer_id, price_minor, currency, observed_at, d
 INSERT INTO offer_snapshots (id, offer_id, price_minor, currency, observed_at, data_origin) VALUES ('4c98db47-132e-4767-9840-52de2f9c78c0', '917fbfe2-36b5-470b-88f2-f31022895699', 90330, 'INR', '2026-11-01T22:27:10.554Z', 'demo');
 INSERT INTO offer_snapshots (id, offer_id, price_minor, currency, observed_at, data_origin) VALUES ('f5b6506a-0d7e-4b48-8f04-1df41dea7a57', 'a0ebe934-ae20-4626-8ff1-8cec98355019', 73373, 'INR', '2026-11-01T21:31:10.771Z', 'demo');
 INSERT INTO offer_snapshots (id, offer_id, price_minor, currency, observed_at, data_origin) VALUES ('e16a78cd-38f4-49e0-8b02-ce0bdf55c8bb', '505559c7-ec17-4c22-8ce2-a0faa40f1196', 103661, 'INR', '2026-11-01T19:52:10.989Z', 'demo');
-
--- trending_queries (4 rows)
-INSERT INTO trending_queries (query, search_count, last_seen) VALUES ('apple iphone 16', 1, '2026-11-01T22:45:38.313Z');
-INSERT INTO trending_queries (query, search_count, last_seen) VALUES ('samsung galaxy s25 ultra 512gb', 2, '2026-11-01T22:45:44.549Z');
-INSERT INTO trending_queries (query, search_count, last_seen) VALUES ('lay''s 52 g', 1, '2026-11-01T22:45:47.969Z');
-INSERT INTO trending_queries (query, search_count, last_seen) VALUES ('lay''s 180 g', 1, '2026-11-01T22:45:52.562Z');
 COMMIT;
 PRAGMA foreign_keys = ON;
