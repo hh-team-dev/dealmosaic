@@ -8,7 +8,7 @@
 | **Tagline** | One search. Three real deals. Zero price surprises. |
 | **Document version** | 1.0 |
 | **Handover date** | 2 November 2026 |
-| **Build state** | Phase 3 live (website + API + Turso) · 133 tests · 33 design assertions · clean build |
+| **Build state** | Phase 3 live (website + API + Turso) · 139 tests · 33 design assertions · clean build |
 | **Owner** | The project owner (see `docs/16-owner-credentials-register.md`) |
 | **Secrets** | **Not in this document.** They live in an encrypted vault — §17. |
 
@@ -140,7 +140,7 @@ npm install          # ~154 packages
 npm run dev          # API :8787 + web :5173 together
 npm run dev:api      # API only
 npm run dev:web      # web only  (cwd must be apps/web — Vite resolves index.html there)
-npm test             # 133 tests
+npm test             # 139 tests
 npm run audit:design # colour/contrast/no-black audit
 npm run secrets:scan # check for leaked credentials
 npm run check        # all three gates
@@ -679,6 +679,21 @@ exported: **104 tests pass, production untouched (0 users).**
 the environment, and never weaken the `IS_TEST` guard. A passing test run is not proof
 that it touched the right database.
 
+### 14.0b Platform constraint: Render free blocks outbound SMTP
+
+Discovered by sending a real email and reading the result: **Render's free web
+services block outbound SMTP on ports 25, 465 and 587** (in force since September
+2025). A Gmail App Password therefore cannot work in production — the TLS
+handshake is severed before authentication and the failure surfaces as
+`Connection timeout`, not as a credential error.
+
+Consequence: **all email must go over HTTPS.** `lib/mailer.ts` prefers Brevo
+(300/day, single-sender verification, no domain, no card), then Resend, then
+SMTP for hosts that allow it. See `docs/20-email-delivery.md`.
+
+Do not "fix" a mail timeout by changing the port to 2525 for Gmail — Gmail does
+not listen there. That trick only works for relays such as Brevo or SMTP2GO.
+
 ### 14.1 Defects found by the handover restore test (both fixed)
 
 A backup is only proven by restoring it, so a clean-room test was run: extract the
@@ -690,7 +705,7 @@ archive into an empty directory, `npm install`, `npx vitest run`. The first atte
 | **`zod` was a phantom dependency** — imported by `routes/search.ts` and `routes/community.ts`, but never declared in `apps/api/package.json`. It resolved locally only because npm hoisted it from another package's tree. | It worked on the machine that built it. Classic phantom dependency. | Declared `"zod": "^3.25.76"` in `apps/api/package.json`, pinned to the version the code was written against. |
 | **A dead npm script** — `apps/api` declared `"migrate": "tsx src/db/migrate.ts"` but that file was never created. | Nothing ran it, so nothing failed. | Removed. Schema is applied on boot from `db/schema.sql` + `db/catalog.sql`; a separate migrate step does not exist. |
 
-After the fix the same clean-room restore passes **102/133 tests**. Run this yourself
+After the fix the same clean-room restore passes **102/139 tests**. Run this yourself
 whenever you doubt the archive:
 
 ```bash
@@ -811,7 +826,7 @@ to share with a new developer; the vault is not.
 | `17-hosting-and-deployment-plan.md` | Live topology, free-tier limits, database contract, rotation |
 | `18-owner-quickstart-accounts.md` | 15-minute account setup, step by step |
 | `19-data-acquisition.md` | How real prices are obtained; why scraping is rejected |
-| `20-email-delivery.md` | Owner steps to turn on real email (Gmail app password, ₹0) |
+| `20-email-delivery.md` | Owner steps to turn on real email (Brevo HTTPS API, ₹0) |
 | `21-location-and-maps.md` | Pincode-first location design; when a map earns its place |
 | `DEALMOSAIC-STRATEGY.html` | Visual strategy dossier |
 | `source/MASTER_BUILD_PROMPT.txt` | The original brief, verbatim |

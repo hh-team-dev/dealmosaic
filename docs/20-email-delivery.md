@@ -1,108 +1,124 @@
 # Email delivery — what it means and what you need to do
 
-**For the owner. Cost: ₹0. Time: about 5 minutes.**
+**For the owner. Cost: ₹0. Time: about 10 minutes.**
+
+> **Correction (2 Nov 2026).** An earlier version of this document told you to use
+> a Gmail App Password over SMTP. **That cannot work on Render's free tier.** Render
+> has blocked outbound SMTP on ports 25, 465 and 587 since September 2025, so the
+> connection dies during the TLS handshake, before any password is even checked.
+> The failure looks like a mysterious timeout rather than a credentials problem.
+> We found this by actually sending an email and reading the error, not by
+> trusting the plan. The instructions below are the corrected ones.
 
 ---
 
 ## 1. Why the site needs to send email at all
 
-Right now, when someone creates an account, the site generates a confirmation
-link — but it cannot deliver it, because there is no mail server. The link is
-written to a private development log instead. That means:
+When someone creates an account the site generates a confirmation link. Without a
+mail provider it can only write that link to a private log, which means:
 
-- Registration works, but **nobody can confirm their email** unless you copy the
-  link out of the log by hand.
+- Registration works, but **nobody can confirm their email** without you copying
+  the link out by hand.
 - Password reset cannot work at all.
-- The site is therefore not ready for real users, even though it looks finished.
+- The site is not yet usable by a stranger, even though it looks finished.
 
-Everything else on the site works. Email is the last thing standing between
-"live" and "usable by a stranger".
+Email is the last thing between "live" and "usable".
 
 ---
 
-## 2. Two ways to fix it — and which one you should use now
+## 2. What was tried, and what the test showed
 
-| | **Gmail (now)** | **Professional provider (later)** |
+| Attempt | Result |
+|---|---|
+| Gmail SMTP, port 587 | ❌ `Connection timeout` from Render. Port blocked at the platform, not a password problem. |
+| Gmail SMTP on port 2525 | ❌ Gmail does not listen on 2525 — that escape hatch only exists for some other relays. |
+| **HTTPS API (Brevo / Resend)** | ✅ Works: ordinary outbound HTTPS on 443, unaffected by the block. |
+
+The code now prefers an HTTPS provider automatically, and keeps SMTP for hosts
+that permit it (such as running locally).
+
+---
+
+## 3. Which provider — Brevo, and why
+
+| | **Brevo** | Resend |
 |---|---|---|
-| Needs a domain? | ❌ No | ✅ Yes |
-| Cost | ₹0 | ₹0 on free tiers |
-| Setup time | 5 minutes | 1 hour, plus DNS records |
-| Sends from | `hh.team.dev@gmail.com` | `hello@dealmosaic.in` |
-| Daily limit | ~500 recipients | Resend 3,000/mo · Brevo 300/day |
-| Deliverability | Good (Google signs it) | Better |
+| Free allowance | 300 emails/day | 3,000/month |
+| Credit card | Not required | Not required |
+| Needs a domain? | **No** — verify a single sender address by clicking a link | **Yes** — to send to anyone but yourself |
+| Verdict | ✅ **Use this now** | ⏳ Use after you own a domain |
 
-**Start with Gmail.** It works today, needs no domain and no payment, and the
-free limit is far beyond anything you will send in the first months. Move to
-Resend or Brevo the day you buy a domain — that is a config change, not a code
-change.
+The deciding factor is the domain. Brevo will verify
+`hh.team.dev@gmail.com` as a sender with a confirmation email. Resend insists on a
+verified domain before it will deliver to third parties. Before the project owns a
+domain, that difference is the whole ballgame.
 
 ---
 
-## 3. Step-by-step: the Gmail App Password
+## 4. Steps — Brevo (do this now)
 
-An "App Password" is a 16-character password that works only for one app and can
-be revoked without touching your real Google password. **You never send me your
-Gmail password** — only this throwaway code.
+1. Go to **brevo.com** → **Sign up free**. No card.
+2. Verify your email address.
+3. Top-right menu → **SMTP & API** → **API Keys** tab → **Generate a new API key**.
+   - Name: `DealMosaic`
+   - Copy the key. It starts with `xkeysib-`.
+4. **Verify the sender** — this is the step people forget:
+   - **Senders & IP** → **Senders** → **Add a sender**
+   - From email: `hh.team.dev@gmail.com`, name: `DealMosaic`
+   - Brevo emails you a confirmation link. **Click it.**
+   - Until this is done, every send fails with "sender not verified".
+5. Go to **dashboard.render.com** → `dealmosaic-api` → **Environment** → **+ Add variable**
+   (the plain option, not the `⌄` menu):
 
-1. Go to **myaccount.google.com** and sign in as `hh.team.dev@gmail.com`.
-2. **Security** → turn on **2-Step Verification** if it is not already on.
-   (App Passwords are impossible without it — this is a Google rule.)
-3. Open **myaccount.google.com/apppasswords** directly.
-4. **App name:** type `DealMosaic` → **Create**.
-5. Google shows a 16-character code like `abcd efgh ijkl mnop`.
-   **Copy it now** — it is shown once and never again. Spaces do not matter.
-
-If the App Passwords page says the option is unavailable, 2-Step Verification is
-not on yet. Go back to step 2.
-
----
-
-## 4. Where to put it — do this yourself, not through me
-
-**Paste it directly into Render.** This is better than sending it to me: the
-credential then never exists in any chat log, and you can rotate it without
-asking anyone.
-
-1. Open **dashboard.render.com** → click the **dealmosaic-api** service.
-2. Left sidebar → **Environment**.
-3. **Add Environment Variable** — add these three, one at a time:
-
-   | Key | Value |
+   | KEY | VALUE |
    |---|---|
-   | `SMTP_USER` | `hh.team.dev@gmail.com` |
-   | `SMTP_PASS` | the 16-character app password (no spaces) |
+   | `BREVO_API_KEY` | `xkeysib-...` (the key from step 3) |
    | `MAIL_FROM` | `hh.team.dev@gmail.com` |
 
-4. Click **Save Changes**. Render redeploys automatically — about 2 minutes.
-5. When I tell you it is done, I will test it by registering a throwaway address
-   and confirming the mail actually arrives.
+6. **Save, rebuild, and deploy.** About 2 minutes.
 
-Defaults if you add nothing else: host `smtp.gmail.com`, port `587`, TLS on.
-Those are the correct Gmail settings.
+### Then delete the two Gmail values
 
-**Tell me only "email is configured"** — I do not need the password itself.
+You still have `SMTP_USER` and `SMTP_PASS` on Render from the earlier attempt.
+They are harmless — the code prefers Brevo — but they are dead weight and an
+unnecessary secret sitting in the account. Use the 🗑 icon to remove both.
 
 ---
 
-## 5. What I have built on the code side (done)
+## 5. Telling me it is done
+
+Say **"Brevo is configured"**. I will then:
+
+1. Register a throwaway account through the live API.
+2. Check the outbox row for `sent_at` (proof of delivery) or `send_error`
+   (proof of what went wrong).
+3. Report the exact provider response if anything fails — Brevo's own error text
+   names the real cause: unverified sender, bad key, quota.
+4. Delete the test account afterwards.
+
+---
+
+## 6. What is built on the code side (done)
 
 | Piece | What it does |
 |---|---|
-| `lib/mailer.ts` | Sends through SMTP. Reads credentials from environment variables only — never from code. |
-| Outbox | Every message is written to the database **before** sending, so there is always a record even if delivery fails. |
-| Delivery state | Each row records `sent_at` on success or `send_error` on failure. You can therefore prove whether an email went out. |
-| Failure policy | **A dead mail server never blocks registration.** The error is logged and the user still gets their account. |
-| Tests | 9 assertions, including "broken credentials fail softly" and "the password never appears in status output". |
-
-Honest limitation: Gmail is not designed to be a bulk sender. At ~500
-recipients/day it is fine for launch. If you ever email thousands of people in a
-day, Google will throttle the account and you should move to Resend or Brevo with
-a proper domain. That is a good problem to have, and it is a one-hour change.
+| `lib/mailer.ts` | Chooses Brevo → Resend → SMTP → none, automatically, from environment variables. Credentials never appear in code. |
+| Outbox | Every message is written to the database **before** sending, so a record exists even if delivery fails. |
+| Delivery state | `sent_at` on success, `send_error` on failure — delivery is provable, not assumed. |
+| Failure policy | **A dead mail provider never blocks registration.** The user still gets their account; the error is logged. |
+| Readable errors | A blocked SMTP port now says so explicitly, with the fix, instead of a bare timeout. |
+| App-password tolerance | Spaces Google inserts (`abcd efgh ijkl mnop`) are stripped automatically. |
+| Tests | 15 assertions, including "a rejected key returns a clear HTTP error without throwing" and "HTTPS is preferred over SMTP". |
 
 ---
 
-## 6. The one-line summary
+## 7. Honest limits
 
-Enable 2-Step Verification on `hh.team.dev@gmail.com` → create an App Password →
-paste three values into Render's Environment tab. That turns email on. Nothing
-else in the project needs to change.
+- **Brevo free is 300 emails/day.** Fine for launch; a busy day of signups will
+  not approach it.
+- **Sending as a Gmail address works but is not ideal for a brand.** Once you buy
+  `dealmosaic.in`, verify the domain in Brevo, send from `hello@dealmosaic.in`,
+  and add SPF/DKIM. That improves deliverability and looks professional. It is a
+  config change, not new code.
+- **Do not use a free Gmail address for bulk mail.** Google throttles it and it
+  damages sender reputation. Transactional trickle only — which is all this is.
