@@ -10,7 +10,7 @@
     "dev": "node scripts/dev.mjs",
     "dev:api": "npm run dev -w @dealmosaic/api",
     "dev:web": "npm run dev -w @dealmosaic/web",
-    "build": "npm run seo && npm run build -w @dealmosaic/web && npm run prerender",
+    "build": "npm run seo && npm run build -w @dealmosaic/web && npm run prerender && node scripts/verify-prerender.mjs",
     "preview": "npm run preview -w @dealmosaic/web",
     "test": "vitest run",
     "test:watch": "vitest",

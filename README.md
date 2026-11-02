@@ -14,9 +14,13 @@ variant → query every *authorised* retailer connector → compute a comparable
 itemised landed total → rank at most three offers and explain exactly why each one
 sits where it does.
 
-> **Current state: PHASE 2 COMPLETE and running.** 78 tests passing, 33 design
-> assertions passing, production build clean, live in a dev environment.
-> Next: Phase 3 (real connector data).
+> **Current state: PHASES 1–7 SHIPPED and live.**
+> `https://dealmosaic.pages.dev` · 211 tests · 33 design assertions · 45 verified
+> prerendered pages · 1,089 live merchant offers · ₹0/month.
+>
+> The one real limit left is catalogue depth (25 comparable products) — see
+> [`docs/00-MASTER-HANDOVER.md`](docs/00-MASTER-HANDOVER.md) §14.2 for why that is a
+> data problem, not an engineering one.
 
 ---
 

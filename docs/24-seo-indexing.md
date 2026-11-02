@@ -163,3 +163,27 @@ answer for specific product queries, and to accumulate authority from that.
 | `noindex` on private routes | ✅ |
 | Mobile-first, single-column, tap targets ≥ 44px | ✅ |
 | Crawlable text without JavaScript | ✅ 7.6–9.1 kB per page |
+
+### Correction, 3 November 2026 — the prerender was producing duplicates
+
+The prerender added 45 real pages with unique titles, canonicals and JSON-LD — and, for
+a day, **44 of those pages served the homepage's body** inside `#root`. The cause was
+order-dependent state: `page()` read `dist/index.html` as its template on every call, so
+the second call onwards re-read a file that already had the homepage body injected, and
+the `replace` that inserts a page's own body found nothing to replace. It returns the
+input unchanged, so the page was written with the correct *title* and the wrong *content*.
+
+Fixed by capturing the pristine shell once, and by making the injector throw when a body
+cannot be placed. `scripts/verify-prerender.mjs` now asserts, on every build, that each
+page has its own `<h1>`, a non-empty `#root`, and no reference to a host we do not own.
+
+Verified after the fix:
+
+```
+/                       → DEALMOSAIC — one search, three real deals
+/deals                  → Today's live coupon codes and deals across Indian stores
+/saved                  → Your saved deals
+/p/aashirvaad-atta      → Aashirvaad Shudh Chakki Atta price comparison in India
+/c/staples              → Staples price comparison in India
+```
+

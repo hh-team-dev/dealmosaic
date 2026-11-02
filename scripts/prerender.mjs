@@ -105,16 +105,36 @@ function renderPage(shell, { title, description, path, jsonLd, bodyHtml, ogType 
   );
 
   // Crawlable content inside #root; React replaces it on mount.
+  const before = html;
   html = html.replace(
     /<div id="root">\s*<\/div>/,
     `<div id="root">${bodyHtml}</div>`,
   );
+  if (html === before && bodyHtml) {
+    // Silence here is how 44 pages shipped with the homepage body.
+    throw new Error(`prerender: could not inject body for ${path} — the shell is not empty`);
+  }
 
   return html;
 }
 
+/**
+ * The shell, captured ONCE, before the first page is written.
+ *
+ * This used to be read from disk on every call, which was silently destructive:
+ * rendering the homepage writes its body into `dist/index.html`, so every later
+ * page re-read a shell whose `#root` was already full. The `replace` below then
+ * matched nothing and returned the homepage body unchanged — 44 pages with unique
+ * <head> tags and an identical front page inside the body. That is the exact
+ * duplicate-content defect this script exists to prevent, and it was invisible
+ * because the title, canonical and JSON-LD were all still correct.
+ */
+const PRISTINE_SHELL = () => readFileSync(join(dist, 'index.html'), 'utf8');
+let pristine = null;
+
 function page({ title, description, path, jsonLd, bodyHtml, ogType }) {
-  const shell = readFileSync(join(dist, 'index.html'), 'utf8');
+  pristine ??= PRISTINE_SHELL();
+  const shell = pristine;
   const html = renderPage(shell, { title, description, path, jsonLd, bodyHtml, ogType });
   const file = path === '/' ? join(dist, 'index.html') : join(dist, path.replace(/^\//, ''), 'index.html');
   mkdirSync(dirname(file), { recursive: true });
@@ -126,7 +146,7 @@ function page({ title, description, path, jsonLd, bodyHtml, ogType }) {
 /* Content builders                                                     */
 /* ------------------------------------------------------------------ */
 
-const shell = () => readFileSync(join(dist, 'index.html'), 'utf8');
+const shell = () => pristine ?? readFileSync(join(dist, 'index.html'), 'utf8');
 
 /**
  * The homepage's static body.

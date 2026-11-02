@@ -2,7 +2,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **2 November 2026** · Version **1.0.0** · All figures verified live
+Last updated: **3 November 2026** · Version **1.0.0** · All figures verified live
 against production at the time of writing, not recalled from memory.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -59,7 +59,7 @@ Every value below was fetched from production while writing this document.
 | Website | Cloudflare Pages (+ Pages Function worker) | `https://dealmosaic.pages.dev` | 200 in ~0.13 s |
 | API | Render free web service | `https://dealmosaic-api.onrender.com` | `{"ok":true,"version":"1.0.0","database":"connected"}` |
 | Database | Turso (libSQL), `aws-ap-south-1` | `libsql://dealmosaic-hh-team-dev.aws-ap-south-1.turso.io` | connected |
-| Code | GitHub (public) | `github.com/hh-team-dev/dealmosaic` | 34 commits |
+| Code | GitHub (public) | `github.com/hh-team-dev/dealmosaic` | 45+ commits |
 | Email | Brevo over HTTPS | — | real delivery confirmed |
 | Keep-alive | Cloudflare Worker + cron | `dealmosaic-keepalive.hh-team-dev.workers.dev` | 20 pings, all 2xx, 245 ms avg |
 | Affiliate | Cuelinks (publisher 283346, channel 333531) | — | API key live in Render |
@@ -68,16 +68,17 @@ Every value below was fetched from production while writing this document.
 
 ### 2.2 Page-level verification
 
-| Route | Status | Time |
-|---|---|---|
-| `/` | 200 | 0.17 s |
-| `/deals` | 200 | 0.14 s |
-| `/browse` | 200 | 0.13 s |
-| `/how-we-rank` | 200 | 0.13 s |
-| `/contact` | 200 | 0.12 s |
-| `/p/aashirvaad-atta` | 200 | 0.11 s |
-| `/c/staples` | 200 | 0.19 s |
-| `/nope-xyz` | **404** (genuine, not a soft 404) | — |
+All 20 routes were requested on 3 November; the full list is in §2.8. Representative rows:
+
+| Route | Status | Time | Its own `<h1>` |
+|---|---|---|---|
+| `/` | 200 | 0.15 s | DEALMOSAIC — one search, three real deals |
+| `/deals` | 200 | 0.14 s | Today's live coupon codes and deals across Indian stores |
+| `/saved` | 200 | 0.11 s | Your saved deals |
+| `/browse` | 200 | 0.13 s | (browse) |
+| `/p/aashirvaad-atta` | 200 | 0.09 s | Aashirvaad Shudh Chakki Atta price comparison in India |
+| `/c/staples` | 200 | 0.21 s | Staples price comparison in India |
+| `/nope-xyz` | **404** (genuine, not a soft 404) | 0.09 s | That page isn't here |
 
 ### 2.3 Data in production
 
@@ -87,22 +88,25 @@ Every value below was fetched from production while writing this document.
 | `catalogue_products` | 25 | demo catalogue |
 | `product_variants` | 46 | sizes/packs |
 | `offers` | 170 | demo offers |
-| **`coupons`** | **1,088** | **real, live, from Cuelinks — 281 with codes, 241 merchants** |
+| **`coupons`** | **1,089** | **real, live, from Cuelinks — 282 with codes, 245 merchants, 375 stating a price, all 1,089 with an expiry** |
+| `offer_snapshots` | 340 | two daily observations per offer — the price history, accruing |
+| `price_alerts` | 0 | the engine works; no shopper has set one yet |
 | `community_prices` | 0 | awaiting real shopper reports |
 
-### 2.3 Quality gates — all green
+### 2.4 Quality gates — all green
 
 ```
-156 tests passing
+211 tests passing
 33 design assertions passing
 typecheck clean across 3 packages (web, api, core)
-0 secrets in 159 scanned files
-backup verified: 172 files, checksums match
+0 secrets in 182 scanned files
+45 prerendered pages, verified unique (scripts/verify-prerender.mjs)
+backup verified: 194 files, checksums match
 ```
 
 ---
 
-### 2.4 Discovery block — added 3 November 2026
+### 2.5 Discovery block — added 3 November 2026
 
 The homepage now has a browsable board of **14 shelves built from live rows**, not a brochure
 around a search box. Read `docs/25-competitive-gap-analysis.md` for the audit that produced it.
@@ -123,7 +127,7 @@ Plus `/saved` — a wishlist and recently-viewed board in `localStorage`, no acc
 `minItems` floor and says so in a `withheld` array. On a thin day the wall gets shorter, never
 fictional. Percentages keep the store's "up to"; prices keep "from" / "under" / "at".
 
-### 2.5 Return-visit block — added 3 November 2026
+### 2.6 Return-visit block — added 3 November 2026
 
 | Feature | Status | Verified how |
 |---|---|---|
@@ -146,7 +150,64 @@ them, so the two-trigger cron worker in `deploy/keepalive` is committed but not
 deployed. Granting *Workers Scripts: Edit* would let `npx wrangler deploy` replace the
 self-scheduling trick with a real cron. Nothing is blocked while it is missing.
 
-### 2.6 A search that matches no product now shows real offers
+### 2.7 What the 3 November verification sweep found
+
+Every route, every endpoint and the whole prerendered output were checked against
+production rather than remembered from a previous build. Two real defects surfaced, both
+invisible to the green gates:
+
+| # | Defect | Why it mattered | Fix |
+|---|---|---|---|
+| 1 | **44 prerendered pages carried the homepage body.** `page()` re-read `dist/index.html` on every call, so after the homepage was written the shell's `#root` was already full — the injection `replace` matched nothing and returned the homepage body unchanged. Titles, canonicals and JSON-LD were all still correct, which is why nobody noticed. | The exact duplicate-content defect this project was built to avoid, shipped silently. A crawler saw 44 copies of the front page. | The shell is read **once**, before the first write; the injector now **throws** if a body cannot be placed. |
+| 2 | **`https://dealmosaic.in` was still hardcoded** in 7 places in `index.html` and in the Vite default, so the built `og:image` pointed at `dealmosaic.in/og.png` — a host we do not own. | Every share on WhatsApp/X showed no image. | Host parameterised as `%SITE_URL%`, default corrected to `pages.dev`. |
+
+`scripts/verify-prerender.mjs` now runs as the last step of `npm run build` and **fails the
+build** if any page lacks a body, repeats another page's `<h1>`, or names the unowned host.
+A prerender that stops working must not be able to report success.
+
+Full sweep results are in §2.8.
+
+### 2.8 Verified live, 3 November 2026
+
+**Web** — 20 routes, all correct: `/`, `/deals`, `/saved`, `/search`, `/browse`, `/how-we-rank`,
+`/data-sources`, `/contact`, `/privacy`, `/terms`, `/disclosure`, `/login`, `/register`,
+`/forgot-password`, `/reset-password`, `/verify-email`, `/app`, `/app/settings`, `/c/staples`,
+`/p/aashirvaad-atta` → **200** in 0.09–0.21 s; `/nope-xyz` → **404** with its own page.
+
+**API** — 18 endpoints exercised, all as designed:
+
+| Endpoint | Result |
+|---|---|
+| `/api/health` | 200, 0.27 s, database connected |
+| `/api/meta/platforms`, `/countries`, `/currencies` | 200 |
+| `/api/catalogue/{categories,products,trending,connectors}` | 200 |
+| `/api/catalogue/products/aashirvaad-atta` | 200, `{product, offersByVariant, history, community}` |
+| `/api/coupons`, `/discover`, `/merchants` | 200 |
+| `/api/fx/rates` | 200, live rate date |
+| `/api/location/pincode/400001`, `/summary` | 200 |
+| `/api/alerts`, `/api/me` (anonymous) | **401** — correctly closed |
+| `/api/maintenance/daily` (no token) | **403** |
+
+**Discovery wall** — 14 shelves, 0 withheld, every row traceable to a live feed row:
+
+```
+totals   live 1089 · withCode 282 · withStatedPrice 375 · endingThisWeek 63 · bankOrUpi 26
+shelves  today 8 · biggest 6 · under-₹99/199/499/999 6 each · grocery/electronics/fashion/
+         beauty/home 6 each · bank 6 · new 6 · ending 6
+```
+
+**Search** — `"noise earbuds"` → 2 live offer listings; `"kurta"` → 8; `"aashirvaad atta"` →
+a real ranked comparison (the fallback never runs when the catalogue hits).
+
+**Daily job** — last run `lastOk: true`, 5,540 ms, affiliate `seen 1085 / updated 1085`,
+snapshots `170 offers`, alerts `checked 0`. Next due in 20 h.
+
+**SEO** — `robots.txt` 200, `sitemap.xml` 200 with **51 URLs**, canonical on every page points
+at `dealmosaic.pages.dev`, Googlebot receives the real product title
+(`Aashirvaad Shudh Chakki Atta price in India — from ₹242.06`), and the homepage's static HTML
+carries **55 real offer lines** so a crawler and a phone with JavaScript off see the same board.
+
+### 2.9 A search that matches no product now shows real offers
 
 `services/offer-search.ts` runs only when the catalogue returns nothing. It looks for live
 merchant offers whose own copy mentions **every** meaningful word typed, and renders them
@@ -371,9 +432,12 @@ and no price. 43 pages of duplicate content is grounds for
 `scripts/prerender.mjs` now runs in the build and writes a real HTML file per
 route. Verified with a Googlebot user agent:
 
+**Corrected 3 November:** the prerendered pages had unique `<head>` tags but **44 of them
+carried the homepage body** — see §9.2b. The figures below are from the fixed build.
+
 | URL | Bytes | Title |
 |---|---|---|
-| `/` | 8,023 | DEALMOSAIC — one search, three real deals |
+| `/` | 15,190 | DEALMOSAIC — one search, three real deals |
 | `/deals` | 8,689 | Today's best coupon codes and deals across Indian stores |
 | `/c/staples` | 8,159 | Staples price comparison in India |
 | `/p/aashirvaad-atta` | 9,480 | Aashirvaad Shudh Chakki Atta price in India — from ₹242.06 |
@@ -521,6 +585,36 @@ wrong client is worse than no suite, because it produces confidence.
 It uses `reported_at` / `trust_state`. Querying `observed_at` / `status` throws
 `SQLITE_ERROR: no such column`. One production location endpoint was broken this way.
 
+### 9.2b Every prerendered page was a copy of the homepage
+
+Found on 3 November during a sweep that read the served HTML instead of trusting the
+build log. `page()` read the shell from `dist/index.html` on **every** call. The first
+call wrote the homepage body into that file, so the second call read a shell whose
+`#root` was already occupied; the injection regex `/<div id="root">\s*<\/div>/` no
+longer matched, `String.replace` returned the string untouched, and the file was
+written with the homepage body and the *new page's* title.
+
+The result: 45 pages, 45 correct titles, 45 correct canonicals, 45 valid JSON-LD blocks,
+and **44 of them showing the front page**. The build printed a green tick every time.
+
+**Fix:** the shell is read once into a module-level variable before the first write, and
+the injector **throws** when a body cannot be placed. `scripts/verify-prerender.mjs` now
+runs at the end of `npm run build` and fails on: a missing body, a repeated `<h1>`, a page
+that names a host we do not own, or fewer pages than expected.
+
+**Lesson: a build that reports success is not evidence of success.** Verify the artifact,
+not the log. This one had been live for a day, and it was the exact duplicate-content
+problem this project exists to avoid.
+
+### 9.2c The unowned domain survived in three places
+
+`seo.tsx` was fixed earlier, but `apps/web/index.html` still hardcoded
+`https://dealmosaic.in` in seven JSON-LD fields and `vite.config.ts` still used it as the
+`%SITE_URL%` default, so the built `og:image` was `https://dealmosaic.in/og.png` — a host
+that does not resolve. Canonicals were correct, so nothing looked wrong; every WhatsApp
+and X share simply showed no picture. Everything now derives from `SITE_URL`, and the
+verifier fails the build if the string reappears.
+
 ### 9.3 Email: Gmail SMTP can never work on Render free
 
 Render blocks outbound SMTP on ports 25, 465, 587 (since Sept 2025). The failure
@@ -604,55 +698,83 @@ Live proof: `400001` → Mumbai, `likely`; `560001` → 14 platforms; `012345` �
 
 ---
 
-## PART 13 — WHAT IS BUILT BUT NOT YET VISIBLE
+## PART 13 — THE GAP BETWEEN CODE AND INTERFACE
 
-Honest inventory of gap between code and interface:
+Reconciled against production on 3 November 2026. Three of the five rows that used to
+read ❌ in the UI column are now shipped, which is why this table is kept short: it is
+the list of things that exist in the API but a shopper cannot reach.
 
 | Capability | API | UI |
 |---|---|---|
-| Coupons / deals | ✅ full | ✅ `/deals` page |
-| Live deals ticker | ✅ | ✅ homepage |
+| Coupons / deals | ✅ | ✅ `/deals`, 14 homepage shelves |
 | Comparison search | ✅ | ✅ `/search?q=` |
-| Location / pincode | ✅ | ❌ **no UI** |
-| Community price reports | ✅ | ❌ no reporting form |
-| Price history | ✅ `offer_snapshots` | ❌ no chart |
-| Coupon moderation | ❌ | ❌ manual SQL today |
-| Coupon → comparison link | ✅ data | ❌ not cross-linked |
-| Admin panel | partial | ❌ |
+| Offers when nothing matches | ✅ | ✅ "Stores mentioning …", §2.9 |
+| Price alerts | ✅ | ✅ product page → `/app` |
+| Price history | ✅ | ✅ chart on the product page |
+| Location / pincode | ✅ | ✅ pincode control, product page |
+| Community price reports | ✅ | ✅ form + list, product page |
+| Coupons on comparison pages | ✅ | ✅ `CouponStrip` |
+| Wishlist / recently viewed | ✅ device-local | ✅ `/saved`, homepage shelf |
+| **Coupon moderation** | ❌ | ❌ manual SQL — see §14.2 item 5 |
+| **Admin panel** | partial | ❌ no admin surface exists, by design |
+
+Owner-only actions are in PART 7; everything else on this table is the agent's work.
 
 ---
 
 ## PART 14 — ROADMAP, IN PRIORITY ORDER
 
-**Ranked by value per hour, not by ambition.**
+**Last reconciled against production: 3 November 2026.** Everything marked done was
+verified live by HTTP or SQL on that date, not inferred from a commit.
 
-0. ~~Browsing with no search term~~ — **done 3 Nov 2026.** 14 live shelves plus `/saved`.
-   See `docs/25`. Browsing works; *searching* outside the catalogue still does not.
-1. **Expand the catalogue from 25 products.** Still the single biggest weakness: a
-   visitor who searches for something we do not stock sees a dead end. A few
-   hundred products makes the site feel like a shop rather than a demo. The
-   discovery wall now gives such a visitor somewhere to go, which buys time —
-   it does not remove the gap.
-2. **Price alerts (email).** `price_alerts` and the Brevo mailer both exist; the
-   signed-in target-price flow and the daily check do not. This is the strongest
-   return-visit mechanic on the list and the only reason "reason to return" is
-   still half-built. Wishlist and recently-viewed already ship locally.
-3. **Wire coupons into comparison pages.** Show the applicable code next to each
-   offer. Converts browsing into saving.
-4. **Pincode UI.** The API is done; a header field would make delivery estimates
-   real for every visitor.
-5. **Community price reporting form.** Turns visitors into a data source and is
-   the only legal route to quick-commerce pricing.
-6. **Price-history charts.** `offer_snapshots` already records the data.
-7. **Coupon moderation panel.** Verification is manual SQL today.
-8. **Brand pages** generated from the catalogue — high-intent searches, but only
-   once there is enough inventory to avoid thin pages.
-9. **Schedule the sync.** `POST /api/coupons/sync?pages=11` now takes **21 s**
-   (was 8 min 34 s) and is batched, so it can run hourly from any free scheduler.
-   Until a scheduler exists it is still manual.
+### 14.1 Done
 
-**Not planned:** PWA (deferred by owner, install-ready), Cloudflare D1 (owner
-chose Turso — do not re-litigate), Google Maps (paid).
+| # | Item | Where it lives |
+|---|---|---|
+| 1 | Premium visual identity, mobile-first, no-black rule | `design/theme.css`, `audit:design` |
+| 2 | Discovery homepage — 14 shelves from live rows | `services/discover.ts`, §2.5 |
+| 3 | Comparison of three best offers with landed cost | `services/search.ts`, `Podium`, `OfferCard` |
+| 4 | Smart Savings / effective price with unknown lines | `packages/core/src/money.ts`, `PriceTruth` |
+| 5 | Coupon intelligence: dedupe, expiry, copy-code, trust state | `routes/coupons.ts`, `services/affiliate-sync.ts` |
+| 6 | Price history (own observations, never backfilled) | `services/snapshots.ts`, `PriceChart` |
+| 7 | Price alerts by email, firing only on a real drop | `services/alerts.ts`, 10 tests |
+| 8 | Wishlist + recently viewed, no account needed | `lib/saved.ts`, `/saved` |
+| 9 | Pincode control and published delivery promises | `lib/pincode.ts`, `/api/location/summary` |
+| 10 | Community price reports (never merged into a total) | `routes/community.ts`, `CommunityPanel` |
+| 11 | Coupons shown on comparison pages | `CouponStrip` |
+| 12 | The whole daily job, self-scheduled off the health ping | `services/daily-job.ts`, §2.6 |
+| 13 | A dead-end search falls back to live store listings | `services/offer-search.ts`, §2.9 |
+| 14 | Unique prerendered body on all 45 pages, verified at build time | `scripts/prerender.mjs`, `verify-prerender.mjs` |
+
+### 14.2 Not done, in the order they should be attempted
+
+1. **Catalogue depth — 25 products is the real ceiling.** Everything else is now in place;
+   this is the one gap a shopper feels. It is not a coding problem: no Indian retailer
+   sells a price API, so more products need either an approved eBay India keyset, a
+   retailer feed partnership, or shopper-contributed data. Until one exists, adding
+   products means inventing prices, which is forbidden.
+2. **Cashback tracking.** Not started, on purpose. There is no cashback ledger to track:
+   Cuelinks pays us on conversions and settles on its own cycle. A "cashback" page built
+   today would be a promise we cannot keep, and cashback is never a discount here anyway.
+3. **Personalised deals.** Deliberately last. With 1 registered user and no click history,
+   "personalised" would mean guessing. The device-local "Where you left off" shelf is the
+   honest version of this until there is traffic to learn from.
+4. **Store pages (`/s/:merchant`).** Every deal currently leads off-site. Grouping the 245
+   merchants into real pages would add a browse layer and deep internal linking. Safe only
+   where a merchant has enough live offers to avoid thin pages.
+5. **Coupon moderation panel.** Verification is manual SQL today. Fine at 1,089 rows,
+   tedious at 10,000.
+6. **Sync speed.** A full 1,089-offer sync now takes **≈8.5 min** (2,170 sequential
+   round-trips to Turso). Correct, but it should be batched like the snapshot writer.
+7. **Brand pages from the catalogue** — high-intent searches, but only once item 1 is
+   solved, or they are thin by construction.
+
+### 14.3 Not planned
+
+- **PWA** — deferred by the owner. The site is install-ready; no service worker is shipped.
+- **Cloudflare D1** — the owner chose Turso. Do not re-litigate.
+- **Google Maps** — paid. Location stays OSM/pincode-based.
+- **Any paid tier** — the ₹0 rule is not a phase.
 
 ---
 
@@ -745,7 +867,9 @@ enough that this line of thinking survives its author.
 
 **What is genuinely limited:** 25 products; no live Indian retail price feed; no
 traffic yet; zero revenue to date; the quick-commerce promise rests entirely on a
-partnership that does not exist.
+partnership that does not exist. Every phase of the master command now has a shipped,
+verifiable surface — but a shopper who searches for something outside those 25 products
+still cannot get a ranked comparison, and no amount of interface work changes that.
 
 **What that means:** the technical foundation is as good as it can be at zero
 cost. The remaining work is **data and content** — catalogue depth, and pages

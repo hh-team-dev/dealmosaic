@@ -7,7 +7,7 @@ import react from '@vitejs/plugin-react';
  * hard-coding a domain we might not own yet, index.html carries %SITE_URL% and
  * this plugin substitutes it at build time.
  */
-const SITE = (process.env.SITE_URL ?? 'https://dealmosaic.in').replace(/\/$/, '');
+const SITE = (process.env.SITE_URL ?? 'https://dealmosaic.pages.dev').replace(/\/$/, '');
 
 const siteUrlPlugin = () => ({
   name: 'dealmosaic-site-url',

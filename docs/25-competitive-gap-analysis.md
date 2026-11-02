@@ -195,6 +195,23 @@ Twelve tests cover it, testing the boundary rather than the feature: a one-word 
 must not match, an expired row must not appear, a rejected row must not appear, and a
 query made only of punctuation must return nothing.
 
+## 5d. The 3 November verification sweep
+
+Every route, endpoint and prerendered page was re-checked against production rather than
+trusted from an earlier build. Two defects had shipped green:
+
+| Defect | Effect | Fixed |
+|---|---|---|
+| `prerender.mjs` re-read `dist/index.html` for every page, so after the homepage was written the shell's `#root` was already full and the body injection silently no-opped | **44 of 45 pages carried the homepage body** with the right title — duplicate content, invisible to every gate | shell read once before the first write; the injector now throws on failure |
+| `dealmosaic.in` still hardcoded in `index.html` ×7 and the Vite `%SITE_URL%` default | built `og:image` pointed at a host we do not own, so every share showed no image | host parameterised; default corrected to `pages.dev` |
+
+`scripts/verify-prerender.mjs` is now the last step of `npm run build` and fails the build
+on a missing body, a duplicate `<h1>`, an unowned host, or a short page count.
+
+Everything else checked out: 20 web routes (one genuine 404), 18 API endpoints, 14
+discovery shelves with 0 withheld, 51 sitemap URLs, anonymous search across the catalogue
+and the fallback, and a daily job whose last run recorded `lastOk: true`.
+
 ## 6. Still open, in priority order
 
 1. **Catalogue depth (the real gap).** 25 products / 46 variants / 170 offers. Browsing now works,

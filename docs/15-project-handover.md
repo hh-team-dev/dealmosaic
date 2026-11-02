@@ -11,11 +11,31 @@
 |---|---|
 | **Project** | DEALMOSAIC — price comparison for India |
 | **Tagline** | One search. Three real deals. Zero price surprises. |
-| **Document version** | 1.0 |
-| **Handover date** | 2 November 2026 |
-| **Build state** | Phase 3 live (website + API + Turso) · 156 tests · 33 design assertions · clean build |
+| **Document version** | 1.1 |
+| **Handover date** | 2 November 2026 · reconciled against production 3 November 2026 |
+| **Build state** | Phases 1–7 live (website + API + Turso) · **211 tests** · 33 design assertions · 45 verified prerendered pages · clean build |
 | **Owner** | The project owner (see `docs/16-owner-credentials-register.md`) |
 | **Secrets** | **Not in this document.** They live in an encrypted vault — §17. |
+
+### Addendum, 3 November 2026 — what changed after this document was written
+
+This log was written on 2 November. Everything below is newer than the body of this
+file, and `00-MASTER-HANDOVER.md` §2.5–§2.9 is the authoritative state:
+
+- **Discovery homepage** — 14 shelves built from the 1,089 live offers, with a floor per
+  shelf and a `withheld` array so a thin day makes the page shorter, never fictional.
+- **Return-visit block** — price alerts (email, fires only on a real drop), price history
+  from our own daily observations, pincode control, community price reports, coupons on
+  product pages, wishlist and recently-viewed in `localStorage`.
+- **Self-scheduling daily job** — feed refresh → snapshots → alerts, claimed by a
+  conditional UPDATE so two health pings cannot double-run it. 5.5 s on production.
+- **Search fallback** — a query the 25-product catalogue cannot answer now returns the
+  live store offers that mention those words, labelled as listings rather than a
+  comparison.
+- **Two shipped defects found and fixed on 3 Nov** — the prerender was writing the
+  homepage body into 44 of 45 pages, and the unowned `dealmosaic.in` host was still
+  emitting an `og:image` that did not resolve. Both are now impossible: the build
+  verifies its own output (`scripts/verify-prerender.mjs`).
 
 > **The 60-second version.** This is a working price-comparison web app for India.
 > It resolves a product to an exact variant, itemises the true landed cost per
