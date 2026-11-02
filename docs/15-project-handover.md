@@ -874,6 +874,7 @@ to share with a new developer; the vault is not.
 | `18-owner-quickstart-accounts.md` | 15-minute account setup, step by step |
 | `19-data-acquisition.md` | How real prices are obtained; why scraping is rejected |
 | `20-email-delivery.md` | Owner steps to turn on real email (Brevo HTTPS API, ₹0) |
+| `23-affiliate-status.md` | **Which merchants earn today vs which are pending** |
 | `22-audit-and-redesign.md` | **Full audit, gap analysis, zero-cost strategy and roadmap** |
 | `21-location-and-maps.md` | Pincode-first location design; when a map earns its place |
 | `DEALMOSAIC-STRATEGY.html` | Visual strategy dossier |
