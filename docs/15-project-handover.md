@@ -694,6 +694,21 @@ SMTP for hosts that allow it. See `docs/20-email-delivery.md`.
 Do not "fix" a mail timeout by changing the port to 2525 for Gmail — Gmail does
 not listen there. That trick only works for relays such as Brevo or SMTP2GO.
 
+### 14.0c Email links were relative, so they were dead on arrival
+
+The first genuinely delivered email contained the literal text
+`/verify-email?token=…` with **no domain**. Delivery had worked; the link had not.
+A relative path has no origin to resolve against inside a mail client, so the
+confirmation could never be clicked. This was found by reading the delivered
+message — the API had reported success, and the outbox said `sent_at`.
+
+`appUrl()` in `routes/auth.ts` now builds an absolute URL from `SITE_URL`, strips a
+trailing slash, and falls back to `http://localhost:5173` in development so local
+links stay clickable. Three tests cover it.
+
+**Generalisable lesson:** "the email was sent" and "the email is useful" are two
+different assertions. Both need checking.
+
 ### 14.1 Defects found by the handover restore test (both fixed)
 
 A backup is only proven by restoring it, so a clean-room test was run: extract the
