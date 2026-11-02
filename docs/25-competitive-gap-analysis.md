@@ -160,11 +160,47 @@ not a market index"* underneath. At the time of writing the catalogue has one da
 of history, so most charts correctly say so instead of drawing a flat line and
 implying stability we never observed.
 
+## 5c. A dead-end search is no longer a dead end
+
+The catalogue holds 25 products and the wall holds 1,089 live merchant offers. When a
+search matched nothing, the site used to answer with an apology and six random product
+chips. That is the wrong answer on a site this size: *"noise earbuds"* is not in our
+catalogue, but a Noise earbuds offer was published by a merchant this morning.
+
+`services/offer-search.ts` now runs when the catalogue returns nothing, and returns the
+live offers whose own copy mentions every meaningful word of the query.
+
+The distinction that makes it honest:
+
+| | Comparison | Offer listing |
+|---|---|---|
+| What it is | we matched a product identity and ranked landed totals | the store published this; we are repeating their words |
+| Claims a winner | yes, with a reason | **never** |
+| Claims a total | yes, with each line's source | **never** — only the price the store itself printed |
+| Shown when | the product is identified | the product is not |
+
+Matching rules: every token must appear (AND, not OR), stopwords dropped, tokens under
+three characters dropped, four-token ceiling, expired and rejected rows excluded, and an
+empty array is a valid answer — no padding to reach a round number.
+
+Verified on production the same hour it shipped:
+
+```
+"noise earbuds"     → 2 offers   (Gonoise "Noise Air Buds Pro 6 at Rs.2707", …)
+"kurta"             → 8 offers   (Pantaloons 75% off, Libas, Ajio Gram …)
+"aashirvaad atta"   → still a comparison (catalogue hit, fallback never runs)
+```
+
+Twelve tests cover it, testing the boundary rather than the feature: a one-word overlap
+must not match, an expired row must not appear, a rejected row must not appear, and a
+query made only of punctuation must return nothing.
+
 ## 6. Still open, in priority order
 
-1. **Catalogue depth (the real gap).** 25 products / 46 variants / 170 offers. Browsing now works;
-   *searching* still dead-ends outside that set. Target: several hundred products across grocery,
-   electronics, fashion, beauty and home before any paid marketing.
+1. **Catalogue depth (the real gap).** 25 products / 46 variants / 170 offers. Browsing now works,
+   and a miss now falls back to live listings (see §5c) instead of an apology — but only 25 products
+   can be *compared*, which is still the honest limit. Target: several hundred products across
+   grocery, electronics, fashion, beauty and home before any paid marketing.
 2. **Price alerts** — the schema (`price_alerts`) exists, the mailer exists (Brevo over HTTPS), the
    UI does not. Needs: signed-in target price → daily check against `offer_snapshots` → email.
    This is the single strongest return-visit mechanic and it is one focused block of work.

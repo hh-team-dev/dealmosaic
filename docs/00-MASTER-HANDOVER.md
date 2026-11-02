@@ -146,6 +146,17 @@ them, so the two-trigger cron worker in `deploy/keepalive` is committed but not
 deployed. Granting *Workers Scripts: Edit* would let `npx wrangler deploy` replace the
 self-scheduling trick with a real cron. Nothing is blocked while it is missing.
 
+### 2.6 A search that matches no product now shows real offers
+
+`services/offer-search.ts` runs only when the catalogue returns nothing. It looks for live
+merchant offers whose own copy mentions **every** meaningful word typed, and renders them
+as *listings* — the store's words, the store's stated price, no ranking and no total. That
+boundary is the whole point: a comparison says "this is the same product and here is the
+cheapest"; a listing says "a store published this and we are repeating it".
+
+Production check: `"noise earbuds"` → 2 offers, `"kurta"` → 8, `"aashirvaad atta"` → still a
+real comparison. Twelve tests; empty results stay empty rather than being padded.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
