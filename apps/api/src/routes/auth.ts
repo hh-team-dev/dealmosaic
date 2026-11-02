@@ -54,6 +54,22 @@ async function createSession(c: Parameters<typeof sessionCookie>[0], userId: str
   return { id, csrfToken: csrf, expiresAt: expires.toISOString() };
 }
 
+/**
+ * Absolute URL for anything that appears in an email.
+ *
+ * A relative path is worthless in a mail client — there is no origin to resolve
+ * it against, so it renders as literal text and clicking it does nothing. This
+ * was found by reading a real delivered email, not by reading the code: the
+ * message arrived containing "/verify-email?token=…" with no domain.
+ *
+ * SITE_URL is set in production. The localhost fallback keeps development
+ * links clickable instead of silently broken.
+ */
+export function appUrl(path: string): string {
+  const base = (process.env.SITE_URL ?? 'http://localhost:5173').replace(/\/+$/, '');
+  return `${base}${path}`;
+}
+
 async function issueAuthToken(userId: string, email: string, kind: 'verify_email' | 'reset_password') {
   const token = randomToken(32);
   const ttlMs = kind === 'verify_email' ? VERIFY_TTL_HOURS * 3600_000 : RESET_TTL_MINUTES * 60_000;
@@ -64,7 +80,7 @@ async function issueAuthToken(userId: string, email: string, kind: 'verify_email
   ).run(newId(), userId, kind, sha256(token), expires, nowIso());
 
   const path = kind === 'verify_email' ? 'verify-email' : 'reset-password';
-  const actionUrl = `/${path}?token=${token}`;
+  const actionUrl = appUrl(`/${path}?token=${token}`);
   await queueEmail({
     to: email,
     subject:

@@ -113,3 +113,38 @@ describe('message rendering', () => {
     expect(text).toContain('If that was not you');
   });
 });
+
+/**
+ * Regression: emails must contain absolute URLs.
+ *
+ * A real delivered email contained literally "/verify-email?token=..." — a
+ * relative path has no origin in a mail client, so the confirmation link was
+ * dead on arrival even though delivery succeeded. Delivery working is not the
+ * same as the link working.
+ */
+describe('email action links', () => {
+  it('builds an absolute URL from SITE_URL so the link is clickable in a mail client', async () => {
+    const { appUrl } = await import('../src/routes/auth.js');
+    const prev = process.env.SITE_URL;
+    process.env.SITE_URL = 'https://dealmosaic.pages.dev';
+    try {
+      expect(appUrl('/verify-email?token=abc')).toBe('https://dealmosaic.pages.dev/verify-email?token=abc');
+    } finally {
+      if (prev === undefined) delete process.env.SITE_URL;
+      else process.env.SITE_URL = prev;
+    }
+  });
+
+  it('tolerates a trailing slash on SITE_URL', async () => {
+    const { appUrl } = await import('../src/routes/auth.js');
+    process.env.SITE_URL = 'https://dealmosaic.pages.dev///';
+    expect(appUrl('/reset-password?token=x')).toBe('https://dealmosaic.pages.dev/reset-password?token=x');
+    delete process.env.SITE_URL;
+  });
+
+  it('falls back to localhost in development rather than emitting a dead relative path', async () => {
+    const { appUrl } = await import('../src/routes/auth.js');
+    delete process.env.SITE_URL;
+    expect(appUrl('/verify-email?token=x')).toMatch(/^http:\/\/localhost:5173\//);
+  });
+});
