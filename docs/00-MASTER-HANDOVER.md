@@ -273,6 +273,39 @@ it now says `no shopper reports yet`.
 **Gates after this work:** 225 tests passing, TypeScript clean in both apps, 33 design
 assertions passing, 0 secrets in 188 files, 53 prerendered pages verified.
 
+### 2.12 Price history refuses to lie — 3 November 2026
+
+The product page drew a price line from whatever records existed and called it history.
+On 3 November that was **two points** — 1 and 2 November — rendered with the same
+confidence as a chart built from a year of records. Nothing throws an error when a line
+is two points long, which is why every site in this market ships it.
+
+**The API decides now, not the client.** `GET /api/catalogue/products/:slug` returns three
+windows per variant — 7, 30 and 90 days — and each window carries `covered`, `daysRecorded`,
+`spanDays`, `coverage`, a sentence of `verdict`, and `unlocksOn`.
+
+| Rule | Value |
+|---|---|
+| A window is covered when | records span ≥ 95 % of the window **and** ≥ 70 % of its days carry a record |
+| Two failure modes, two sentences | *youth* ("needs 6 more days of history") vs *gaps* ("the window has gaps — drawing it would present those gaps as stable prices") |
+| `unlocksOn` is only offered | when waiting actually fixes it — a record with holes gets no date, because waiting does not fill a gap |
+
+The page offers all three windows, and a window it cannot fill shows **dated facts**
+(₹271.79 on 2 Nov · instamart) instead of a line, plus the date the view becomes drawable:
+*"This view becomes drawable on 8 Nov 2026."* Dates and prices are facts; a line through
+two points is an argument.
+
+**Verified on the live site, 390 px:** chips `7d / 30d / 90d`, `0` SVG charts drawn, and
+the panel reading *"We hold 2 days of records for this variant, from 1 Nov 2026 to 2 Nov
+2026. A 7-day view needs 6 more days of history."*
+
+**11 tests** cover the arithmetic — a single observation, a window one day short, a window
+with a hole, points fed out of order, records older than the window, drift between snapshot
+clock times — and an endpoint test that fails if an uncovered window ever carries a
+drawable series.
+
+**Gates:** 236 tests passing, TypeScript clean, 33 design assertions, 0 secrets in 190 files.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
