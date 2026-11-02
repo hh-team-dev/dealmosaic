@@ -1,6 +1,7 @@
 import { db, nowIso } from '../db/index.js';
 import { recordDailySnapshots } from './snapshots.js';
 import { runAlerts } from './alerts.js';
+import { syncCampaigns } from './affiliate-campaigns.js';
 import { syncAffiliateOffers } from './affiliate-sync.js';
 import * as cuelinks from '../lib/cuelinks.js';
 
@@ -154,6 +155,39 @@ export async function runDailyNow(_source: string): Promise<{
   } catch (err) {
     ok = false;
     steps.push({ step: 'alerts', ok: false, error: (err as Error).message });
+  }
+
+  /**
+   * 4. Refresh affiliate approval status — weekly, not daily.
+   *
+   * Campaign approval changes when a network reviews an application, which is a
+   * matter of weeks. Re-pulling 1,884 campaigns every day would burn 19 throttled
+   * requests for information that did not change, so it runs at most once every
+   * six days. It is last because it is the least urgent step and the slowest.
+   */
+  if (cuelinks.isConfigured()) {
+    try {
+      const last = (await db
+        .prepare('SELECT MAX(synced_at) AS last FROM affiliate_campaigns')
+        .get()) as { last: string | null } | undefined;
+      const ageMs = last?.last ? Date.now() - new Date(last.last).getTime() : Number.POSITIVE_INFINITY;
+      if (ageMs > 6 * 86_400_000) {
+        const camps = await syncCampaigns(20);
+        steps.push({
+          step: 'campaigns',
+          ok: camps.ok,
+          seen: camps.seen,
+          earning: camps.joined,
+          pending: camps.pending,
+          pages: camps.pages,
+          errors: camps.errors,
+        });
+      } else {
+        steps.push({ step: 'campaigns', ok: true, skipped: 'fresh', lastSyncedAt: last?.last ?? null });
+      }
+    } catch (err) {
+      steps.push({ step: 'campaigns', ok: false, error: (err as Error).message });
+    }
   }
 
   const tookMs = Date.now() - started;

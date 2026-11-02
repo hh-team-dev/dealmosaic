@@ -66,6 +66,27 @@ for (const file of files) {
 
 if (files.length < 40) problems.push(`only ${files.length} HTML files — expected the full prerender`);
 
+/**
+ * Every URL in the sitemap must be a prerendered file.
+ *
+ * Seven pages were listed in sitemap.xml and never prerendered, so they served the
+ * shell — which is the same duplicate-content defect in a different place. If a URL
+ * is worth telling Google about, it is worth rendering.
+ */
+try {
+  const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const missing = urls
+    .map((u) => new URL(u).pathname)
+    .filter((p) => {
+      const rel = p === '/' ? 'index.html' : join(p.replace(/^\//, ''), 'index.html');
+      return !files.some((f) => f.endsWith(rel));
+    });
+  for (const p of missing) problems.push(`sitemap lists ${p} but no prerendered page exists`);
+} catch {
+  /* no sitemap yet — the sitemap step handles that */
+}
+
 if (problems.length) {
   console.error(`❌ prerender verification failed (${problems.length}):`);
   for (const p of problems.slice(0, 20)) console.error(`   • ${p}`);

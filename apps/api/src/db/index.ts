@@ -216,6 +216,9 @@ export async function initDb(): Promise<void> {
     ['stated_percent', 'INTEGER'],
     ['stated_percent_cap', 'INTEGER DEFAULT 0'],
     ['mentions_bank', 'INTEGER DEFAULT 0'],
+    // The network's own campaign id, so an offer can be joined to the campaign's
+    // approval status. Without it we could never answer "does this link earn?".
+    ['campaign_id', 'INTEGER'],
   ] as const) {
     if (!(await hasColumn('coupons', column))) {
       await db.exec(`ALTER TABLE coupons ADD COLUMN ${column} ${type}`);
@@ -224,6 +227,31 @@ export async function initDb(): Promise<void> {
   await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupons_external ON coupons(external_id) WHERE external_id IS NOT NULL');
   await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_group ON coupons(deal_group, trust_state, expires_at)');
   await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_price ON coupons(stated_price_minor, trust_state)');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_campaign ON coupons(campaign_id)');
+
+  /**
+   * Affiliate campaign approval, cached locally.
+   *
+   * `access_status` is the network's own answer to "will a click on this store pay
+   * us?". The handover has always stated the rule — a link is monetised only when
+   * the network says so — but nothing implemented it, so every outbound link was
+   * implicitly treated as earning. This table is what makes the claim checkable.
+   */
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS affiliate_campaigns (
+      id               INTEGER PRIMARY KEY,
+      name             TEXT NOT NULL,
+      domain           TEXT,
+      access_status    TEXT,
+      campaign_type    TEXT,
+      payout           REAL,
+      payout_currency  TEXT,
+      cookie_duration  TEXT,
+      deeplink_allowed INTEGER DEFAULT 0,
+      cashback_allowed INTEGER DEFAULT 0,
+      synced_at        TEXT
+    )`);
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_affcamp_status ON affiliate_campaigns(access_status)');
 }
 
 export const nowIso = (): string => new Date().toISOString();

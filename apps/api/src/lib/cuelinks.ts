@@ -95,6 +95,36 @@ export interface ConvertResult {
   campaign?: { id: number; name: string };
 }
 
+export interface CuelinksCampaign {
+  id: number;
+  name: string;
+  domain: string | null;
+  payout_type: string | null;
+  payout: string | null;
+  payout_currency: string | null;
+  campaign_type: string | null;
+  /** `open` means approved and earning; `pending` means applied; `not_applied` means never asked. */
+  access_status: string | null;
+  cookie_duration: string | null;
+  deeplink_allowed: boolean | null;
+  cashback_publishers_allowed: boolean | null;
+}
+
+export interface CampaignsPage {
+  data: CuelinksCampaign[];
+  meta: { page: number; per_page: number; total: number; total_pages: number; next_page: number | null };
+}
+
+/**
+ * Campaign list. `per_page` maxes at 100 and the endpoint is limited to 6
+ * requests a minute, exactly like `/offers`. Filtering happens client-side: the
+ * API accepts `campaign_type` but ignores most other query parameters.
+ */
+export function fetchCampaigns(page = 1, perPage = 100, type = 'CPS'): Promise<CampaignsPage> {
+  const qs = new URLSearchParams({ page: String(page), per_page: String(perPage), campaign_type: type });
+  return call<CampaignsPage>(`/campaigns?${qs.toString()}`);
+}
+
 export function convertLink(url: string, channelId?: number): Promise<{ data: ConvertResult }> {
   return call<{ data: ConvertResult }>('/links/convert', {
     method: 'POST',
@@ -126,6 +156,8 @@ export interface CouponRow {
   expiresAt: string | null;
   /** Discovery fields — what the headline says, and which shelf it belongs on. */
   campaignName: string;
+  /** The network's campaign id, when the feed supplied one. */
+  campaignId: number | null;
   categories: string | null;
   primaryCategory: string | null;
   dealGroup: string;
@@ -186,6 +218,7 @@ export function toCouponRow(offer: CuelinksOffer): CouponRow {
     startsAt: offer.start_date ? `${offer.start_date}T00:00:00.000Z` : null,
     expiresAt: offer.end_date ? `${offer.end_date}T23:59:59.000Z` : null,
     campaignName: (offer.campaign_name ?? 'unknown').slice(0, 80),
+    campaignId: offer.campaign_id ?? null,
     categories: categoryNames.length > 0 ? categoryNames.join(', ').slice(0, 160) : null,
     primaryCategory,
     dealGroup: dealGroupOf(primaryCategory),

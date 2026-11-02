@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { affiliateReadiness } from '../services/affiliate-campaigns.js';
 import { COUNTRIES, CURRENCIES, type PlatformSummary } from '@dealmosaic/core';
 import { db } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
@@ -41,4 +42,17 @@ metaRoutes.get('/platforms', async (c) => {
     disclosure:
       'None of these platforms publishes an authorised price API. Prices shown for them will be community-reported and clearly labelled, or absent — never invented.',
   });
+});
+
+/**
+ * GET /api/meta/affiliate
+ *
+ * The revenue picture, stated as fact rather than ambition: which of the stores we
+ * publish offers for actually pay a commission, and which links resolve but earn
+ * nothing. Public on purpose — a comparison site that will not say where its money
+ * comes from should not be trusted with its rankings.
+ */
+metaRoutes.get('/affiliate', async (c) => {
+  c.header('Cache-Control', 'public, max-age=300');
+  return c.json(await affiliateReadiness());
 });

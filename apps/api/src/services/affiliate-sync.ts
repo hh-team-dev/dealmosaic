@@ -53,9 +53,9 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
                                    external_id, tracking_url, starts_at, expires_at, created_at, verified_at,
                                    campaign_name, categories, primary_category, deal_group, offer_type,
                                    stated_price_minor, stated_price_kind, stated_percent, stated_percent_cap,
-                                   mentions_bank)
+                                   mentions_bank, campaign_id)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'moderator_verified', ?, ?, ?, ?, ?, ?,
-                      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
               ON CONFLICT(external_id) WHERE external_id IS NOT NULL DO UPDATE SET
                 platform_slug = excluded.platform_slug,
                 code = excluded.code,
@@ -77,6 +77,7 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
                 stated_percent = excluded.stated_percent,
                 stated_percent_cap = excluded.stated_percent_cap,
                 mentions_bank = excluded.mentions_bank,
+                campaign_id = excluded.campaign_id,
                 verified_at = excluded.verified_at,
                 trust_state = 'moderator_verified'
               RETURNING (created_at = verified_at) AS is_new`,
@@ -89,6 +90,7 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
           row.campaignName, row.categories, row.primaryCategory, row.dealGroup, row.offerType,
           row.statedPriceMinor, row.statedPriceKind, row.statedPercent, row.statedPercentCap,
           row.mentionsBank,
+          row.campaignId,
         ],
       };
     });

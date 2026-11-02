@@ -233,8 +233,22 @@ function productBody(p, variants) {
     </main>`;
 }
 
-function productJsonLd(p, variants) {
-  const offers = variants
+/**
+ * Product structured data.
+ *
+ * The `offers` block is emitted ONLY when every price behind it is live. Until
+ * 3 November this function published demonstration prices as real `Offer` nodes
+ * with `availability: InStock` — the same numbers the interface labels
+ * "illustrative". That is handing Google a price we would not let a shopper act
+ * on, and it is the merchant-listing/product-snippet confusion that gets rich
+ * results withdrawn for the whole domain.
+ *
+ * A comparison site is not the merchant. We can legitimately describe the product
+ * — name, brand, category, GTIN — because that is identity. We cannot describe a
+ * price we have not observed.
+ */
+function productJsonLd(p, variants, pricesAreLive) {
+  const offers = (pricesAreLive ? variants : [])
     .filter((v) => v.priceFromMinor)
     .map((v) => ({
       '@type': 'Offer',
@@ -255,7 +269,18 @@ function productJsonLd(p, variants) {
     ...(offers.length ? { offers } : {}),
     // No aggregateRating: we do not own reviews, and inventing star ratings in
     // structured data is fabrication that Google penalises.
+    //
+    // With demonstration data there is deliberately no `offers` key at all: a
+    // product snippet without a price is a weaker rich result and an honest one.
   };
+}
+
+/** True only when every offer we hold for this product came from a live source. */
+function pricesAreLive(detail) {
+  const byVariant = detail?.offersByVariant ?? {};
+  const all = Object.values(byVariant).flat();
+  if (all.length === 0) return false;
+  return all.every((o) => o?.dataOrigin === 'live');
 }
 
 function categoryBody(catName, catSlug, products) {
@@ -296,6 +321,199 @@ function dealsBody(coupons) {
       on everything that has one, and cashback is never counted as a discount.</p>
       <ul>${rows}</ul>
       <p><a href="/browse">Compare prices for every product</a></p>
+    </main>`;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* The prose pages                                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * These seven pages were in `sitemap.xml` but were never prerendered: every one
+ * of them served the SPA shell, which — after the homepage body was injected —
+ * meant a crawler received seven copies of the front page with the right URL.
+ * That is the thin-and-duplicate pattern Google answers with "Crawled —
+ * currently not indexed", so each one now gets its own real body.
+ *
+ * The bodies are summaries of what the React page actually says, written from the
+ * component, not placeholders. If the page's substance changes, change these too.
+ */
+function browseBody(categories, products) {
+  const cats = categories
+    .map((c) => `<li><a href="/c/${esc(c.slug)}">${esc(c.name)}</a></li>`)
+    .join('');
+  const items = products
+    .slice(0, 80)
+    .map((p) => `<li><a href="/p/${esc(p.slug)}">${esc(p.title)}</a> — ${esc(p.brand ?? '')}</li>`)
+    .join('');
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Browse every product we compare</h1>
+      <p>${products.length} products, each with a confirmed identity — brand, size or
+      storage, and a GTIN where the manufacturer publishes one. We compare a 5 kg pack
+      against another 5 kg pack, never against a 10 kg one.</p>
+      <h2>Categories</h2>
+      <ul>${cats}</ul>
+      <h2>Products</h2>
+      <ul>${items}</ul>
+      <p><a href="/deals">Browse live offers from ${''}Indian stores</a></p>
+    </main>`;
+}
+
+function howWeRankBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>How we rank deals — the rules, in full</h1>
+      <p>Ranking order: verified landed total first, then match confidence, then seller
+      reliability, then delivery, then freshness. <strong>Commission is not an input.</strong>
+      At most three offers are ever shown, and an offer whose total is not fully verified
+      can never rank first.</p>
+      <h2>How we decide two listings are the same product</h2>
+      <ul>
+        <li>GTIN / EAN / UPC — a barcode is an identity. Exact match.</li>
+        <li>Manufacturer part number — the maker's own model code.</li>
+        <li>ISBN — for books.</li>
+        <li>Brand + model + variant attributes — storage, size, colour and pack count must all agree.</li>
+        <li>Brand + model with partial attributes — shown, but never auto-selected.</li>
+        <li>Title similarity — listed as a possible match, never presented as one.</li>
+      </ul>
+      <p>When the match is uncertain we ask which variant you meant. We do not average
+      different products into one price.</p>
+      <h2>What goes into the quality score</h2>
+      <ul>
+        <li>Source reliability — authorised connector, verified feed, or shopper report.</li>
+        <li>Price freshness — how long ago the price was actually observed.</li>
+        <li>Product match — certainty that this is the exact variant.</li>
+        <li>Delivery information — whether the store publishes a delivery charge.</li>
+        <li>Seller information — whether the platform publishes seller ratings at all.</li>
+      </ul>
+      <p><a href="/data-sources">Where the data comes from</a> · <a href="/disclosure">How we earn</a></p>
+    </main>`;
+}
+
+function dataSourcesBody(platforms) {
+  const rows = platforms
+    .map((p) => `<li><strong>${esc(p.name)}</strong> — ${esc(p.access ?? p.mode ?? 'status unpublished')}${
+      p.note ? `: ${esc(p.note)}` : ''
+    }</li>`)
+    .join('');
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Where our data comes from</h1>
+      <p>No Indian retailer sells a public price API. A connector with no authorised
+      data source is disabled and says why; we never scrape, never bypass bot
+      protection, and never invent a price to fill a gap.</p>
+      <h2>Stores we track</h2>
+      <ul>${rows}</ul>
+      <h2>What each label means</h2>
+      <ul>
+        <li><strong>Live</strong> — observed from an authorised source and timestamped.</li>
+        <li><strong>Feed</strong> — supplied by the merchant or their network.</li>
+        <li><strong>Shopper-reported</strong> — a person told us what they paid, at one pincode, at one moment.</li>
+        <li><strong>Illustrative</strong> — demonstration data while a real feed is pending. Never a quote.</li>
+      </ul>
+      <p><a href="/how-we-rank">How we rank</a> · <a href="/deals">Live offers</a></p>
+    </main>`;
+}
+
+function contactBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Contact &amp; support</h1>
+      <p>Write to <a href="mailto:hh.team.dev@gmail.com">hh.team.dev@gmail.com</a>. A
+      person reads it; expect a reply within two working days.</p>
+      <h2>What to include</h2>
+      <ul>
+        <li>The page address and the store name.</li>
+        <li>What you expected and what happened.</li>
+        <li>For a wrong price: a screenshot of the store's own checkout, if you can.</li>
+      </ul>
+      <h2>Report a dead coupon</h2>
+      <p>Every coupon carries a confidence state. Tell us which code failed and at which
+      store, and it is checked and marked rather than left to fail for the next shopper.</p>
+      <p><a href="/privacy">How we handle your data</a> · <a href="/terms">Terms</a></p>
+    </main>`;
+}
+
+function privacyBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Privacy policy</h1>
+      <p>Search and comparison work without an account. Saved deals and recently viewed
+      offers are stored in your own browser and never sent to us.</p>
+      <h2>What we collect, and why</h2>
+      <ul>
+        <li>An email address, if you create an account — to verify it and to send the alerts you asked for.</li>
+        <li>Prices you report, if you choose to report them.</li>
+        <li>Aggregate searches, to know which products people actually look for.</li>
+      </ul>
+      <h2>What we do not collect</h2>
+      <p>No third-party advertising trackers, no cross-site profiles, no selling of data.
+      A pincode is not an identity — it is shared by tens of thousands of people.</p>
+      <h2>Who else sees data</h2>
+      <p>Transactional email is delivered through Brevo; the database is hosted on Turso.
+      Outbound store links pass through an affiliate network, which sets its own cookie at
+      the merchant.</p>
+      <h2>Your rights</h2>
+      <p>Export or delete your account from the dashboard at any time. Deletion removes the
+      account, its sessions and its alerts.</p>
+      <p><a href="/terms">Terms of use</a> · <a href="/contact">Contact</a></p>
+    </main>`;
+}
+
+function termsBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Terms of use</h1>
+      <h2>What DEALMOSAIC is</h2>
+      <p>An independent comparison and discovery service. We are not the seller of any
+      product listed, and no contract of sale is formed with us. Prices and availability
+      belong to the store and can change between the moment we observed them and the
+      moment you arrive.</p>
+      <h2>What we promise — and what we cannot</h2>
+      <p>We promise to show what we observed, dated, with the source named, and to say
+      "unknown" rather than guess. We cannot promise a price will still be live when you
+      click, and a demonstration price is labelled as one.</p>
+      <h2>Community-reported prices</h2>
+      <p>Shopper reports are opinions about one moment at one pincode. They are shown
+      separately and are never merged into a ranked total.</p>
+      <h2>Affiliate links</h2>
+      <p>Some outbound links earn us a commission, at no cost to you. Commission never
+      decides which offer ranks first — see the <a href="/disclosure">disclosure</a>.</p>
+      <p><a href="/privacy">Privacy</a> · <a href="/contact">Contact</a></p>
+    </main>`;
+}
+
+function disclosureBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <nav><a href="/">Home</a></nav>
+      <h1>Affiliate disclosure</h1>
+      <h2>How we earn</h2>
+      <p>When you buy through a link on DEALMOSAIC, the store may pay us a small
+      commission. The price you pay is unchanged. We do not charge stores for placement.</p>
+      <h2>What commission cannot do</h2>
+      <ul>
+        <li>It cannot change the ranking. Ranking is verified landed total, then match confidence, then reliability, then delivery, then freshness.</li>
+        <li>It cannot add a store to a comparison. We compare stores we can see, not stores that pay.</li>
+        <li>It cannot buy a "verified" label. Verification means we checked.</li>
+      </ul>
+      <h2>Where we are not affiliated</h2>
+      <p>Not every store here pays us — several applications are pending. Where a link
+      earns nothing we still show the offer if it is genuinely the better buy, and the
+      link is marked as an outbound link to the store.</p>
+      <h2>Rewards, honestly</h2>
+      <p>Cashback is not a discount. It arrives later, can be refused, and never reduces
+      what you pay at the till. Where we show it, it is a separate line and never
+      subtracted from a total.</p>
+      <p><a href="/how-we-rank">The ranking rules in full</a> · <a href="/terms">Terms</a></p>
     </main>`;
 }
 
@@ -375,6 +593,53 @@ async function main() {
     /* a coupons outage must not fail the build */
   }
 
+  // The prose pages were in the sitemap but not in the prerender, so a crawler got
+  // seven copies of the homepage. Each now has its own body.
+  let allProducts = products;
+  try {
+    const r = await api('/api/catalogue/products?limit=100');
+    if (Array.isArray(r.products) && r.products.length) allProducts = r.products;
+  } catch {
+    /* fall back to the list already fetched */
+  }
+
+  let platformList = [];
+  try {
+    const r = await api('/api/meta/platforms');
+    platformList = r.platforms ?? [];
+  } catch {
+    platformList = [];
+  }
+
+  const prose = [
+    ['/browse', 'Browse every product we compare — DEALMOSAIC',
+      'Every product DEALMOSAIC compares, by category, with the variant identity we matched on. At most three ranked offers per product.',
+      browseBody(categories, allProducts)],
+    ['/how-we-rank', 'How we rank deals — the rules, in full — DEALMOSAIC',
+      'The exact ranking rules: verified totals first, at most three offers, commission is never an input, and an unverified total can never rank first.',
+      howWeRankBody()],
+    ['/data-sources', 'Where our data comes from — DEALMOSAIC',
+      'Which stores we can see, which connectors are disabled and why, and what each provenance label means. We never scrape and never invent a price.',
+      dataSourcesBody(platformList)],
+    ['/contact', 'Contact and support — DEALMOSAIC',
+      'How to reach DEALMOSAIC, what to include in a report, and how a dead coupon is handled.',
+      contactBody()],
+    ['/privacy', 'Privacy policy — DEALMOSAIC',
+      'What DEALMOSAIC collects, what it deliberately does not collect, who else sees data, and how to export or delete an account.',
+      privacyBody()],
+    ['/terms', 'Terms of use — DEALMOSAIC',
+      'What DEALMOSAIC is and is not, what we promise and what we cannot, how community prices are treated, and the affiliate model.',
+      termsBody()],
+    ['/disclosure', 'Affiliate disclosure — DEALMOSAIC',
+      'How DEALMOSAIC earns, what commission cannot influence, where we are not affiliated, and why cashback is never a discount.',
+      disclosureBody()],
+  ];
+
+  for (const [path, title, description, bodyHtml] of prose) {
+    page({ title, description, path, bodyHtml });
+    count++;
+  }
+
   for (const p of products) {
     let detail;
     try {
@@ -388,14 +653,16 @@ async function main() {
       title: `${p.title} price in India${cheapest ? ` — from ${inr(cheapest)}` : ''} | DEALMOSAIC`,
       description: `Compare ${p.title} prices across Indian stores. ${p.description ?? ''} Delivery, fees and tax included, at most three ranked offers.`.slice(0, 300),
       path: `/p/${p.slug}`,
-      jsonLd: productJsonLd(detail.product ?? p, variants),
+      jsonLd: productJsonLd(detail.product ?? p, variants, pricesAreLive(detail)),
       bodyHtml: productBody(detail.product ?? p, variants),
       ogType: 'product',
     });
     count++;
   }
 
-  console.log(`✅ prerendered ${count} pages (1 home, ${categories.length} categories, ${products.length} products)`);
+  console.log(
+    `✅ prerendered ${count} pages (home, saved, deals, browse, 4 policy pages, ${categories.length} categories, ${products.length} products)`,
+  );
 }
 
 main().catch((err) => {
