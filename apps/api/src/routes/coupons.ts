@@ -43,7 +43,7 @@ const submitBody = z.object({
   expiresAt: z.string().datetime().optional(),
 });
 
-interface CouponRow {
+export interface CouponRow {
   id: string;
   platform_slug: string;
   code: string | null;
@@ -78,7 +78,7 @@ interface CouponRow {
   tracking_url?: string | null;
 }
 
-function toApi(r: CouponRow) {
+export function toApi(r: CouponRow) {
   return {
     id: r.id,
     platformSlug: r.platform_slug,

@@ -1,4 +1,5 @@
 import { apiRequest } from './api';
+import type { DealView } from './coupons-api';
 
 /* ------------------------------------------------------------------ */
 /* Types mirroring the API payloads                                    */
@@ -143,6 +144,12 @@ export interface NoResults {
   kind: 'no_results';
   query: string;
   suggestions: Array<{ slug: string; title: string; brand: string; category: string }>;
+  /**
+   * Live merchant offers whose own copy matches the query. Shown as listings,
+   * never as a comparison: we did not match a product identity, so we are
+   * quoting the store rather than ranking anybody.
+   */
+  offers?: DealView[];
   reason: string;
 }
 

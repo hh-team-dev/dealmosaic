@@ -13,6 +13,7 @@ import {
 } from '@dealmosaic/core';
 import { db, newId, nowIso } from '../db/index.js';
 import type { ConnectorOffer } from '../connectors/index.js';
+import { findOfferMatches, type OfferMatch } from './offer-search.js';
 
 /**
  * The comparison pipeline.
@@ -150,6 +151,11 @@ export type SearchOutcome =
       kind: 'no_results';
       query: string;
       suggestions: Array<{ slug: string; title: string; brand: string; category: string }>;
+      /**
+       * Live merchant offers whose own copy matches the words typed, shown as
+       * listings rather than as a comparison. Empty is a normal answer.
+       */
+      offers: OfferMatch[];
       reason: string;
     };
 
@@ -360,12 +366,24 @@ export async function runComparison(rawQuery: string): Promise<SearchOutcome> {
     const suggestions = await (db
       .prepare('SELECT slug, title, brand, category FROM catalogue_products ORDER BY RANDOM() LIMIT 6')
       .all()) as Array<{ slug: string; title: string; brand: string; category: string }>;
+
+    /**
+     * The catalogue missing is not the same as the site having nothing. Before
+     * we tell a shopper we found nothing, ask the 1,089 live merchant offers
+     * whether any of them mention what they typed. Those come back labelled as
+     * listings — the merchant's own copy, not a comparison we performed.
+     */
+    const offers = await findOfferMatches(query);
+
     return {
       kind: 'no_results',
       query,
       suggestions,
+      offers,
       reason:
-        'No product in the catalogue matched that search. We only compare products we can identify precisely — we will not show you a “closest match” and imply it is the same thing.',
+        offers.length > 0
+          ? 'We do not compare this product yet — comparing it needs a confirmed product identity, not a near-miss. These are live listings from stores that do mention it, in their own words.'
+          : 'No product in the catalogue matched that search, and no live store offer mentions it right now. We only compare products we can identify precisely — we will not show you a “closest match” and imply it is the same thing.',
     };
   }
 

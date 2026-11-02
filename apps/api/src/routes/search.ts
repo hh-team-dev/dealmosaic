@@ -31,10 +31,10 @@ const searchBody = z.object({
 /**
  * POST /api/search
  *
- * Auth-gated and email-verification-gated (the 401 → 403 → 501 ladder from
- * Phase 1 is replaced by real results here). Launching as a public
- * search-engine-first site, the marketing pages are public but live comparison
- * stays behind a verified account, exactly as specified.
+ * Public. Anyone can compare, signed in or not — a signup wall in front of the
+ * one thing the site exists to do means nobody can evaluate it, and nothing can
+ * be indexed. What still requires an account is anything that remembers you:
+ * saved comparisons, history and price alerts.
  */
 searchRoutes.post('/', async (c) => {
   // Signed-in users get history recorded; everyone else gets the same results.

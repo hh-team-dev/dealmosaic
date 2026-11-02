@@ -90,7 +90,7 @@ Every value below was fetched from production while writing this document.
 | **`coupons`** | **1,088** | **real, live, from Cuelinks — 281 with codes, 241 merchants** |
 | `community_prices` | 0 | awaiting real shopper reports |
 
-### 2.4 Quality gates — all green
+### 2.3 Quality gates — all green
 
 ```
 156 tests passing

@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
 import { DemoFlag } from '../components/Ui';
+import { DealCard } from '../components/DealCard';
 import { Podium } from '../components/Podium';
 import { OfferCard, OfferDeck } from '../components/OfferCard';
 import { Seo, breadcrumbJsonLd, SITE_NAME } from '../lib/seo';
@@ -241,26 +242,59 @@ function VariantChoice({ data, onChoose }: { data: NeedsSelection; onChoose: (id
 }
 
 function NoMatches({ data }: { data: NoResults }) {
+  const offers = data.offers ?? [];
+
   return (
-    <section className="empty-state card card-lg stack" aria-labelledby="no-results-title">
-      <Icon name="search" size={28} />
-      <h1 id="no-results-title" className="h3">
-        No match for “{data.query}”
-      </h1>
-      <p className="muted">{data.reason}</p>
+    <div className="stack-lg">
+      {offers.length > 0 ? (
+        <section className="stack" aria-labelledby="offer-listings-title">
+          <div className="stack-sm">
+            <span className="eyebrow">Live store listings</span>
+            <h1 id="offer-listings-title" className="h2">
+              Stores mentioning “{data.query}”
+            </h1>
+            <p className="muted" style={{ margin: 0 }}>
+              {data.reason}
+            </p>
+          </div>
+          <div className="discover" style={{ margin: 0 }}>
+            <div className="shelf-row">
+              {offers.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          </div>
+          <p className="tiny muted">
+            These are the store’s own words and their own stated price, if any. We have not compared
+            them, because we have not confirmed they are the same product — and an unconfirmed
+            comparison is how people buy the wrong size.
+          </p>
+        </section>
+      ) : (
+        <section className="empty-state card card-lg stack" aria-labelledby="no-results-title">
+          <Icon name="search" size={28} />
+          <h1 id="no-results-title" className="h3">
+            No match for “{data.query}”
+          </h1>
+          <p className="muted">{data.reason}</p>
+        </section>
+      )}
+
       {data.suggestions.length > 0 && (
-        <>
-          <p className="small muted">Try one of these:</p>
-          <div className="row wrap center-row">
+        <section className="stack-sm">
+          <p className="small muted" style={{ margin: 0 }}>
+            {offers.length > 0 ? 'Or compare one of these we do cover:' : 'Try one of these:'}
+          </p>
+          <div className="row wrap">
             {data.suggestions.map((s) => (
               <Link key={s.slug} className="chip" to={`/p/${s.slug}`}>
                 {s.title}
               </Link>
             ))}
           </div>
-        </>
+        </section>
       )}
-    </section>
+    </div>
   );
 }
 
