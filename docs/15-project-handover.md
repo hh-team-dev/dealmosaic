@@ -709,6 +709,33 @@ links stay clickable. Three tests cover it.
 **Generalisable lesson:** "the email was sent" and "the email is useful" are two
 different assertions. Both need checking.
 
+### 14.0d Keep-alive workflow is installed; its first run is unverified
+
+`.github/workflows/keepalive.yml` is committed to `main`, and the GitHub API
+reports it as `state: active`. It pings `https://dealmosaic-api.onrender.com/api/health`
+every 5 minutes so Render's free tier never sleeps the API.
+
+**Not yet proven to fire.** At the time of writing, no run had been created in
+~40 minutes. GitHub schedules are best-effort and a new workflow's first run is
+often delayed, so this is not necessarily broken — but it is *unverified*, and
+should be recorded as such rather than assumed working.
+
+Cold-start cost measured directly: **22.5 s** on the first request to `/api/health`,
+**0.23 s** once warm. That is what the keep-alive is protecting against.
+
+To confirm: GitHub → repo → **Actions** → `keepalive` → **Run workflow**.
+If a banner says workflows are not being run, enable Actions for the repository.
+
+**If GitHub cron proves unreliable, the fallback is a free uptime monitor**
+(UptimeRobot free tier, 5-minute interval) pointed at the same health URL. That
+needs an account, so it is an owner action. GitHub cron is free and already
+installed, so it is tried first.
+
+**Manual dispatch is not available to the agent:** `POST …/dispatches` returns
+403 `Resource not accessible by personal access token`, because that endpoint
+needs *Actions: write*, which the token does not have. Only *Workflows: write*
+was granted — that is what unblocked committing the file itself.
+
 ### 14.1 Defects found by the handover restore test (both fixed)
 
 A backup is only proven by restoring it, so a clean-room test was run: extract the
