@@ -3414,6 +3414,13 @@ button.chip[aria-selected='true'] {
 .variant-card {
   display: flex;
   flex-direction: column;
+  /*
+   * stretch, not center. An earlier rule centred the card's children, so the whole
+   * variant head — label, GTIN, price, Compare — shrank to the width of its longest
+   * line and floated in the middle of a 390 px card, and the offer rows underneath
+   * came out narrower than the card they sat in.
+   */
+  align-items: stretch;
   gap: 12px;
 }
 /* On a 390 px phone the head has four things to say (label, attributes, price,
@@ -3547,7 +3554,7 @@ button.chip[aria-selected='true'] {
 }
 .origin-caveat {
   max-width: 52ch;
-  margin: 2px 0 0;
+  margin: 2px 0 14px;
 }
 .tile-origin {
   margin-left: 0;

@@ -118,9 +118,11 @@ export default function Product() {
                   {/* "observed across connected stores" was a claim about a
                       measurement. Until a retailer feed exists, the sentence has
                       to say what the number actually is. */}
-                  {productOrigin?.origin === 'live' ? 'observed across connected stores' : 'illustrative, not a live quote'}
+                  {/* The chip is dropped here on purpose: the sentence beside the
+                      number already says it, and the full caveat sits underneath.
+                      Three statements of one fact read as panic. */}
+                  {productOrigin?.origin === 'live' ? 'observed across connected stores' : 'illustrative price'}
                 </span>
-                {productOrigin?.chip && <span className="origin-chip tiny">{productOrigin.chip}</span>}
               </p>
             )}
             {productOrigin?.caveat && (

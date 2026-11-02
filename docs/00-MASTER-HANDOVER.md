@@ -343,6 +343,49 @@ promotion at three accounts, 404 on an unknown id.
 
 **Gates:** 258 tests, TypeScript clean, 33 design assertions, 0 secrets in 193 files.
 
+### 2.14 A price now travels with its provenance — 3 November 2026
+
+**The defect.** The product page printed
+
+> **from ₹242.06** *observed across connected stores*
+
+above an offer list in which **every row said "ILLUSTRATIVE — FEED PENDING"**. The
+careful label sat one level below the number people actually read. The browse cards had a
+second version of the same problem: `from ₹271` was `MIN(mrp_minor)` — the printed pack
+MRP — so the word "from" promised a price and the number was not a price.
+
+**The fix.** Origin is computed where the number is computed and shipped in the same
+object, by `services/price-origin.ts`:
+
+| Function | Answer |
+|---|---|
+| `combineOrigins(['live','demo'])` | `mixed` — one live offer never launders a set |
+| `combineOrigins([])` | `null` — no price, no claim |
+| `describeOrigin('live')` | silent: chip `''`, caveat `''` |
+| `describeOrigin('demo')` | chip `Illustrative`, caveat *"Illustrative price, not a live quote — no authorised retailer feed covers this item yet."* |
+
+The product headline, every variant price, and every browse tile now carry a chip; the
+product page carries one sentence underneath. **Browse shows the cheapest live offer price
+and the MRP as two separate fields**, so a card can say "MRP ₹285" when that is the truth
+instead of dressing it as "from".
+
+JSON-LD emits **no** offers — re-verified rather than assumed: `productJsonLd()` accepts
+`lowPriceMinor`/`highPriceMinor` and uses neither, so no demonstration price reaches
+structured data.
+
+**Two layout defects found while looking at the result on a 390 px phone**, neither
+visible in a diff: the variant card centred its own children (an older
+`align-items: center` rule won over the newer block), so the head floated in the middle of
+the card and the offer rows were narrower than the card containing them; and the
+provenance sentence collided with the next heading.
+
+**Tests:** 12 new — the conservative combination rules, the silent-live case, the mixed
+case, and two endpoint tests asserting that no variant price can ever arrive without an
+origin and that browse returns offer price and MRP as distinct fields.
+
+**Gates:** 270 tests · TypeScript clean · 33 design assertions · 0 secrets in 195 files ·
+53 prerendered pages · 5 routes at 390 px with zero overflow and zero console errors.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
