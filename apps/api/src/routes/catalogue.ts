@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { db, nowIso } from '../db/index.js';
 import { priceHistoryForVariants } from '../services/price-history.js';
+import { assessCoupon } from '../services/coupon-confidence.js';
 import type { AppBindings } from '../middleware/session.js';
 import { connectorHealth, KNOWN_PLATFORMS, unimplementedPlatforms } from '../connectors/index.js';
 
@@ -165,11 +166,13 @@ catalogueRoutes.get('/products/:slug', async (c) => {
     ? ((await db
         .prepare(
           `SELECT c.id, c.platform_slug, c.code, c.title, c.discount_type, c.discount_value,
-                  c.stated_percent, c.stated_percent_cap, c.expires_at, p.name AS platform_name
+                  c.stated_percent, c.stated_percent_cap, c.stated_price_minor, c.expires_at,
+                  c.source, c.trust_state, c.success_count, c.fail_count, c.verified_at,
+                  p.name AS platform_name
              FROM coupons c
              LEFT JOIN platforms p ON p.slug = c.platform_slug
             WHERE c.platform_slug IN (${shopSlugs.map(() => '?').join(',')})
-              AND c.trust_state IN ('community_verified','moderator_verified')
+              AND c.trust_state IN ('listed','community_verified','moderator_verified')
               AND (c.expires_at IS NULL OR c.expires_at > ?)
             ORDER BY CASE WHEN c.code IS NOT NULL THEN 0 ELSE 1 END, c.stated_percent DESC
             LIMIT 8`,
@@ -211,6 +214,20 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       statedPercent: r.stated_percent ?? null,
       percentIsCap: (r.stated_percent_cap ?? 0) === 1,
       expiresAt: r.expires_at,
+      // Same two answers as /api/coupons, computed by the same function, so the
+      // product page cannot describe a code differently from the deal wall.
+      ...assessCoupon({
+        source: String(r.source ?? 'affiliate'),
+        trustState: String(r.trust_state ?? 'listed'),
+        successCount: Number(r.success_count ?? 0),
+        failCount: Number(r.fail_count ?? 0),
+        verifiedAt: (r.verified_at as string | null) ?? null,
+        statedPercent: (r.stated_percent as number | null) ?? null,
+        percentIsCap: (r.stated_percent_cap ?? 0) === 1,
+        statedPriceMinor: (r.stated_price_minor as number | null) ?? null,
+        discountType: String(r.discount_type),
+        discountValue: Number(r.discount_value ?? 0),
+      }),
     })),
     notes: {
       community:

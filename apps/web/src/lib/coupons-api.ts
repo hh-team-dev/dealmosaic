@@ -24,6 +24,24 @@ export interface CouponView {
   trustState: string;
   successCount: number;
   failCount: number;
+  /**
+   * Two answers, not one score. `confidence` is how much evidence stands behind
+   * the row; `quality` is how big the merchant's own number is. Both are decided
+   * server-side and repeated verbatim, because a client that paraphrases will
+   * paraphrase upwards.
+   */
+  confidence: {
+    level: 'unreported' | 'thin' | 'community' | 'moderated';
+    label: string;
+    detail: string;
+    reports: number;
+    workedPct: number | null;
+  };
+  quality: {
+    level: 'unknown' | 'minor' | 'solid' | 'strong';
+    label: string;
+    detail: string;
+  };
   expiresAt: string | null;
   verifiedAt: string | null;
   reducesPayablePrice: boolean;
@@ -239,4 +257,27 @@ export function groupLabel(group: CouponView['dealGroup']): string {
     default:
       return 'Offer';
   }
+}
+
+/**
+ * Tell the site whether a code worked at checkout.
+ *
+ * This is the only signal that can promote a code, so it is deliberately not a
+ * fire-and-forget: the response carries the new counts and the state the code is
+ * now in, and the caller shows it. A shopper who reports a dead code should see
+ * that their report was recorded, not guess.
+ */
+export interface CouponOutcome {
+  ok: boolean;
+  successCount: number;
+  failCount: number;
+  trustState: string;
+  message: string;
+}
+
+export function reportCouponOutcome(couponId: string, worked: boolean): Promise<CouponOutcome> {
+  return apiRequest<CouponOutcome>(`/api/coupons/${encodeURIComponent(couponId)}/outcome`, {
+    method: 'POST',
+    body: { worked },
+  });
 }

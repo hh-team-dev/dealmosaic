@@ -90,6 +90,17 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
 
       <h3 className="deal-card-title">{deal.title}</h3>
 
+      {/*
+        The evidence line. Never a star rating, never a blended "quality" score:
+        either a person confirmed this code, or nobody has told us anything, in
+        which case the card says so in grey. Both are useful; only one is a
+        reason to trust the code.
+      */}
+      <p className={`deal-confidence is-${deal.confidence.level}`} title={deal.confidence.detail}>
+        <Icon name={deal.confidence.level === 'unreported' ? 'info' : 'shield'} size={12} />
+        {deal.confidence.label}
+      </p>
+
       {price && (
         <p className="deal-card-price">
           {price}

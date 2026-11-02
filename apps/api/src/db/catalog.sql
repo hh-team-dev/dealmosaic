@@ -136,8 +136,12 @@ CREATE TABLE IF NOT EXISTS coupons (
   category_slug      TEXT,
   terms              TEXT,
   source             TEXT NOT NULL CHECK (source IN ('community','merchant','affiliate','moderator')),
-  trust_state        TEXT NOT NULL DEFAULT 'reported'
-                     CHECK (trust_state IN ('reported','community_verified','moderator_verified','expired','rejected')),
+  -- 'listed' is the honest state of a row nobody has checked: it came from the
+  -- merchant's own feed. 'moderator_verified' is reserved for a person who
+  -- actually opened the code, and 'community_verified' for three shoppers who
+  -- agree. Nothing else may claim to be verified.
+  trust_state        TEXT NOT NULL DEFAULT 'listed'
+                     CHECK (trust_state IN ('listed','reported','community_verified','moderator_verified','expired','rejected')),
   success_count      INTEGER NOT NULL DEFAULT 0,
   fail_count         INTEGER NOT NULL DEFAULT 0,
   reported_by        TEXT REFERENCES users(id) ON DELETE SET NULL,

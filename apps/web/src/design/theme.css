@@ -3525,6 +3525,57 @@ button.chip[aria-selected='true'] {
 
   display: block;
 }
+/* ---------- coupon evidence ---------- */
+
+/*
+ * The evidence line under a deal title. It is deliberately quiet: "not yet
+ * reported" is the state of almost every code on the site today, and a loud badge
+ * saying "unverified" would read as a warning about the store rather than a
+ * statement about our own records.
+ */
+.deal-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+.deal-confidence.is-community,
+.deal-confidence.is-moderated {
+  color: var(--turq-d);
+}
+.deal-confidence.is-thin {
+  color: var(--coral-d);
+}
+
+/* On a compact shelf card the line is the difference between one card height and
+   two, so it is hidden there and the detail view carries it. */
+.deal-card-compact .deal-confidence { display: none; }
+
+.coupon-chip-body .coupon-conf {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink-muted);
+}
+.coupon-chip-body .coupon-conf.is-community,
+.coupon-chip-body .coupon-conf.is-moderated { color: var(--turq-d); }
+.coupon-chip-body .coupon-conf.is-thin { color: var(--coral-d); }
+
+.coupon-chip-cla {
+  margin-left: 6px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+.coupon-ask {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .chart-ranges {
   display: flex;
   gap: 6px;

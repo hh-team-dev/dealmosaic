@@ -23,7 +23,18 @@ export interface SyncResult {
   errors: string[];
 }
 
-export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
+/**
+ * The fetcher is a parameter so a test can drive the sync with a fixed page of
+ * offers. Without that, the one behaviour that matters most — that a re-sync does
+ * not undo a moderator's decision — can only be verified by waiting a day and
+ * looking.
+ */
+export type OfferFetcher = typeof cuelinks.fetchOffers;
+
+export async function syncAffiliateOffers(
+  pages = 5,
+  fetchOffers: OfferFetcher = cuelinks.fetchOffers,
+): Promise<SyncResult> {
   if (!cuelinks.isConfigured()) {
     return { ok: false, seen: 0, inserted: 0, updated: 0, errors: ['CUELINKS_API_KEY is not set'] };
   }
@@ -37,7 +48,7 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
   for (let page = 1; page <= maxPages; page++) {
     let offers;
     try {
-      offers = await cuelinks.fetchOffers(page, 100, Number(process.env.CUELINKS_CHANNEL_ID) || undefined);
+      offers = await fetchOffers(page, 100, Number(process.env.CUELINKS_CHANNEL_ID) || undefined);
     } catch (err) {
       errors.push((err as Error).message);
       break;
@@ -54,7 +65,7 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
                                    campaign_name, categories, primary_category, deal_group, offer_type,
                                    stated_price_minor, stated_price_kind, stated_percent, stated_percent_cap,
                                    mentions_bank, campaign_id)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'moderator_verified', ?, ?, ?, ?, ?, ?,
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'listed', ?, ?, ?, ?, ?, ?,
                       ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
               ON CONFLICT(external_id) WHERE external_id IS NOT NULL DO UPDATE SET
                 platform_slug = excluded.platform_slug,
@@ -78,8 +89,16 @@ export async function syncAffiliateOffers(pages = 5): Promise<SyncResult> {
                 stated_percent_cap = excluded.stated_percent_cap,
                 mentions_bank = excluded.mentions_bank,
                 campaign_id = excluded.campaign_id,
-                verified_at = excluded.verified_at,
-                trust_state = 'moderator_verified'
+                verified_at = excluded.verified_at
+                /*
+                 * trust_state IS DELIBERATELY ABSENT FROM THIS UPDATE.
+                 *
+                 * It used to be set back to moderator_verified on every sync, which
+                 * meant a code a moderator had rejected returned to the site the next
+                 * morning, and a code shoppers had confirmed lost that confirmation.
+                 * The feed may say what an offer is; only a person or a vote decides
+                 * what we claim about it.
+                 */
               RETURNING (created_at = verified_at) AS is_new`,
         args: [
           newId(), row.platformSlug, row.code, row.title, row.description, row.discountType,

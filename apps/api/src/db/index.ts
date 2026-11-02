@@ -254,6 +254,81 @@ export async function initDb(): Promise<void> {
   await db.exec('CREATE INDEX IF NOT EXISTS idx_affcamp_status ON affiliate_campaigns(access_status)');
 
   /**
+   * TEACHING AN OLD TABLE A NEW WORD.
+   *
+   * `trust_state` carries a CHECK constraint, and the vocabulary it allows had no
+   * value for "imported, nobody has checked it". SQLite cannot alter a constraint,
+   * so the table is rebuilt once — column list read from the live schema rather
+   * than hard-coded, because this table has grown a dozen columns by ALTER and a
+   * hand-written column list would silently drop data.
+   *
+   * Runs only when the current definition cannot express 'listed', so it is a
+   * one-time cost and a no-op on every later boot, including fresh databases.
+   */
+  const couponSchema = (await db
+    .prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'coupons'")
+    .get()) as { sql: string } | undefined;
+  if (couponSchema && !couponSchema.sql.includes("'listed'")) {
+    const columns = (
+      (await db.prepare('PRAGMA table_info(coupons)').all()) as Array<{ name: string }>
+    ).map((c) => `"${c.name}"`);
+    const list = columns.join(', ');
+    const rebuilt = couponSchema.sql
+      .replace(/^CREATE TABLE (IF NOT EXISTS )?"?coupons"?/i, 'CREATE TABLE coupons_rebuilt')
+      .replace(
+        /CHECK \(trust_state IN \([^)]*\)\)/,
+        "CHECK (trust_state IN ('listed','reported','community_verified','moderator_verified','expired','rejected'))",
+      );
+    await db.exec(rebuilt);
+    await db.exec(`INSERT INTO coupons_rebuilt (${list}) SELECT ${list} FROM coupons`);
+    await db.exec('DROP TABLE coupons');
+    await db.exec('ALTER TABLE coupons_rebuilt RENAME TO coupons');
+    await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupons_external ON coupons(external_id) WHERE external_id IS NOT NULL');
+    await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_group ON coupons(deal_group, trust_state, expires_at)');
+    await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_price ON coupons(stated_price_minor, trust_state)');
+    await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_campaign ON coupons(campaign_id)');
+  }
+
+  /**
+   * ONE ROW PER SHOPPER PER COUPON, NOT A COUNTER.
+   *
+   * `coupons.success_count` and `fail_count` were incremented by an unauthenticated
+   * endpoint, which made them a number anybody could raise with a loop. A count
+   * that can be forged is worse than no count, because the interface prints it as
+   * evidence. Reports live here instead, one row per account per coupon, and the
+   * counters are recomputed from these rows — so the only way to inflate a code is
+   * to create a hundred accounts, which the rate limiter and the audit trail see.
+   */
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS coupon_reports (
+      id          TEXT PRIMARY KEY,
+      coupon_id   TEXT NOT NULL,
+      user_id     TEXT NOT NULL,
+      worked      INTEGER NOT NULL,
+      reported_at TEXT NOT NULL
+    )`);
+  await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupon_reports_once ON coupon_reports(coupon_id, user_id)');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupon_reports_coupon ON coupon_reports(coupon_id)');
+
+  /**
+   * CORRECTING A CLAIM WE NEVER EARNED.
+   *
+   * Every imported row was stamped `moderator_verified` on the reasoning that a
+   * merchant's own campaign data is strong provenance. It is — but provenance is
+   * not verification, and the word "verified" on 1,089 codes nobody has opened was
+   * a claim the whole product is built on not making. Feed rows become `listed`,
+   * which is exactly true, and `moderator_verified` is reserved for a person who
+   * actually checked. Idempotent: it only touches rows still carrying the old label.
+   */
+  await db.exec(`
+    UPDATE coupons
+       SET trust_state = 'listed'
+     WHERE trust_state = 'moderator_verified'
+       AND source = 'affiliate'
+       AND success_count = 0
+       AND COALESCE(fail_count, 0) = 0`);
+
+  /**
    * Every administrative change, attributed.
    *
    * The control centre can change a coupon's trust state, a shopper report's

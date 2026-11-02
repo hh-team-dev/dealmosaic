@@ -2,10 +2,13 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
+import { requireCsrf, requireVerifiedUser } from '../middleware/session.js';
 import { createRateLimiter } from '../lib/rate-limit.js';
+import { clientIp } from '../lib/http.js';
 import * as cuelinks from '../lib/cuelinks.js';
 import { buildDiscovery } from '../services/discover.js';
 import { syncAffiliateOffers } from '../services/affiliate-sync.js';
+import { assessCoupon, nextTrustState } from '../services/coupon-confidence.js';
 
 /**
  * COUPONS AND DISCOUNTS.
@@ -79,6 +82,24 @@ export interface CouponRow {
 }
 
 export function toApi(r: CouponRow) {
+  /**
+   * Two separate answers, computed once, server-side: how good the merchant's
+   * number is, and how much evidence stands behind the row. The browser is never
+   * asked to infer either — a client that has to guess will always guess upwards.
+   */
+  const assessment = assessCoupon({
+    source: r.source,
+    trustState: r.trust_state,
+    successCount: r.success_count ?? 0,
+    failCount: r.fail_count ?? 0,
+    verifiedAt: r.verified_at,
+    statedPercent: r.stated_percent ?? null,
+    percentIsCap: (r.stated_percent_cap ?? 0) === 1,
+    statedPriceMinor: r.stated_price_minor ?? null,
+    discountType: r.discount_type,
+    discountValue: r.discount_value,
+  });
+
   return {
     id: r.id,
     platformSlug: r.platform_slug,
@@ -105,7 +126,10 @@ export function toApi(r: CouponRow) {
     source: r.source,
     trustState: r.trust_state,
     successCount: r.success_count,
-    failCount: r.fail_count,
+    failCount: r.fail_count ?? 0,
+    /** What we know, and how good the deal is — never one blended score. */
+    confidence: assessment.confidence,
+    quality: assessment.quality,
     expiresAt: r.expires_at,
     verifiedAt: r.verified_at,
     /** Cashback must never be added into a payable total. */
@@ -188,7 +212,7 @@ couponRoutes.get('/', async (c) => {
       `SELECT c.*, p.name AS platform_name
          FROM coupons c
          LEFT JOIN platforms p ON p.slug = c.platform_slug
-        WHERE c.trust_state IN ('community_verified','moderator_verified')
+        WHERE c.trust_state IN ('listed','community_verified','moderator_verified')
           AND (c.expires_at IS NULL OR c.expires_at > ?)
           AND (c.starts_at IS NULL OR c.starts_at <= ?)
           AND (? IS NULL OR c.platform_slug = ?)
@@ -230,7 +254,7 @@ couponRoutes.get('/', async (c) => {
               SUM(CASE WHEN code IS NOT NULL AND code <> '' THEN 1 ELSE 0 END) AS with_code,
               COUNT(DISTINCT platform_slug) AS stores
          FROM coupons
-        WHERE trust_state IN ('community_verified','moderator_verified')
+        WHERE trust_state IN ('listed','community_verified','moderator_verified')
           AND (expires_at IS NULL OR expires_at > ?)
           AND (starts_at IS NULL OR starts_at <= ?)`,
     )
@@ -284,7 +308,7 @@ couponRoutes.get('/discover', async (c) => {
       `SELECT c.*, p.name AS platform_name
          FROM coupons c
          LEFT JOIN platforms p ON p.slug = c.platform_slug
-        WHERE c.trust_state IN ('community_verified','moderator_verified')
+        WHERE c.trust_state IN ('listed','community_verified','moderator_verified')
           AND (c.expires_at IS NULL OR c.expires_at > ?)
           AND (c.starts_at IS NULL OR c.starts_at <= ?)
         ORDER BY c.created_at DESC
@@ -367,32 +391,89 @@ couponRoutes.post('/', async (c) => {
 /**
  * POST /api/coupons/:id/outcome — did it work at checkout?
  *
- * This is the only signal that cannot be faked by wishful thinking, and it is
- * what eventually promotes or retires a code.
+ * This is the only signal that cannot be faked by wishful thinking, so it is the
+ * only thing allowed to promote a code — and it is worth being strict about what
+ * "cannot be faked" means. The endpoint used to accept an anonymous POST and
+ * increment a counter, which made the counter a number anyone could raise with a
+ * loop and the interface printed it as evidence.
+ *
+ * Now: signed in, email verified, CSRF header present, and **one row per account
+ * per coupon**. Reporting again replaces your earlier answer, so the counts are
+ * people, not clicks. A hundred accounts is a hundred reports and that is still a
+ * hundred people saying something, which is the truth of the situation.
  */
+const outcomeLimiter = createRateLimiter({
+  name: 'coupon-outcome',
+  windowMs: 60 * 60_000,
+  max: 30,
+  // Keyed by account: the limit is about one person, and is the same on every
+  // network they might arrive from.
+  keyFn: (c) => c.get('user')?.id ?? clientIp(c),
+});
 const outcomeBody = z.object({ worked: z.boolean() });
 
-couponRoutes.post('/:id/outcome', async (c) => {
+couponRoutes.post('/:id/outcome', requireVerifiedUser, requireCsrf, outcomeLimiter, async (c) => {
+  const user = c.get('user')!;
+
   const id = c.req.param('id');
   const parsed = outcomeBody.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) {
     return c.json({ error: { code: 'invalid_request', message: 'Say whether the code worked.' } }, 400);
   }
 
-  const col = parsed.data.worked ? 'success_count' : 'fail_count';
-  const row = (await db
-    .prepare(`UPDATE coupons SET ${col} = ${col} + 1 WHERE id = ? RETURNING success_count, fail_count`)
-    .get(id)) as { success_count: number; fail_count: number } | undefined;
+  const exists = (await db.prepare('SELECT id FROM coupons WHERE id = ?').get(id)) as { id: string } | undefined;
+  if (!exists) return c.json({ error: { code: 'not_found', message: 'No such coupon.' } }, 404);
 
-  if (!row) return c.json({ error: { code: 'not_found', message: 'No such coupon.' } }, 404);
+  await db
+    .prepare(
+      `INSERT INTO coupon_reports (id, coupon_id, user_id, worked, reported_at)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(coupon_id, user_id) DO UPDATE SET worked = excluded.worked, reported_at = excluded.reported_at`,
+    )
+    .run(newId(), id, user.id, parsed.data.worked ? 1 : 0, nowIso());
 
-  // Enough failures retire a code automatically: a coupon that mostly fails is
-  // a coupon that wastes people's time.
-  if (row.fail_count >= 5 && row.fail_count > row.success_count * 2) {
-    await db.prepare("UPDATE coupons SET trust_state = 'expired' WHERE id = ?").run(id);
+  // Counts are derived from the reports table, never incremented. A counter that
+  // can drift from its evidence is a counter nobody can audit.
+  const tally = (await db
+    .prepare(
+      `SELECT SUM(CASE WHEN worked = 1 THEN 1 ELSE 0 END) AS worked,
+              SUM(CASE WHEN worked = 0 THEN 1 ELSE 0 END) AS failed
+         FROM coupon_reports WHERE coupon_id = ?`,
+    )
+    .get(id)) as { worked: number | null; failed: number | null } | undefined;
+  const worked = Number(tally?.worked ?? 0);
+  const failed = Number(tally?.failed ?? 0);
+
+  const current = (await db.prepare('SELECT trust_state FROM coupons WHERE id = ?').get(id)) as
+    | { trust_state: string }
+    | undefined;
+  const next = nextTrustState(current?.trust_state ?? 'listed', worked, failed);
+
+  /*
+   * The row's counters are a cache of the reports table, written only here, from
+   * the tally immediately above. The list endpoint sorts on success_count and the
+   * card prints the counts, so they have to agree with the evidence — and the only
+   * way to keep them agreeing is never to increment them by hand.
+   */
+  await db
+    .prepare('UPDATE coupons SET success_count = ?, fail_count = ? WHERE id = ?')
+    .run(worked, failed, id);
+
+  if (next) {
+    await db
+      .prepare('UPDATE coupons SET trust_state = ?, verified_at = ? WHERE id = ?')
+      .run(next, next === 'community_verified' ? nowIso() : null, id);
   }
 
-  return c.json({ ok: true, successCount: row.success_count, failCount: row.fail_count });
+  return c.json({
+    ok: true,
+    successCount: worked,
+    failCount: failed,
+    trustState: next ?? current?.trust_state ?? 'listed',
+    /** What the shopper is told, in the API's words so the page cannot paraphrase it up. */
+    message:
+      'Thanks — that is on the record. A code needs three shoppers agreeing before we call it confirmed.',
+  });
 });
 
 /**
@@ -435,7 +516,7 @@ couponRoutes.get('/merchants', async (c) => {
               SUM(CASE WHEN c.code IS NOT NULL THEN 1 ELSE 0 END) AS codes,
               MAX(c.platform_slug) AS slug
          FROM coupons c
-        WHERE c.trust_state IN ('community_verified','moderator_verified')
+        WHERE c.trust_state IN ('listed','community_verified','moderator_verified')
           AND (c.expires_at IS NULL OR c.expires_at > ?)
         GROUP BY c.platform_slug
         ORDER BY codes DESC, total DESC

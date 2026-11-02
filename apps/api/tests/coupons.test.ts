@@ -92,7 +92,13 @@ describe('coupons', () => {
     expect(cash.reducesPayablePrice).toBe(false);
   });
 
-  it('retires a coupon automatically once it mostly fails', async () => {
+  it('cannot be retired by an anonymous flood of failures', async () => {
+    /*
+     * The endpoint used to accept an anonymous POST and increment a counter, so a
+     * loop could bury a competitor's code in five requests. Retirement now needs
+     * five distinct accounts, each with a verified email and a CSRF header — this
+     * test is the loop, and it must change nothing.
+     */
     const { db, newId, nowIso } = await import('../src/db/index.js');
     const id = newId();
     await db
@@ -105,11 +111,15 @@ describe('coupons', () => {
     for (let i = 0; i < 5; i++) {
       await req('POST', `/api/coupons/${id}/outcome`, { worked: false });
     }
-    const state = (await db.prepare('SELECT trust_state FROM coupons WHERE id = ?').get(id)) as any;
-    expect(state.trust_state).toBe('expired');
+
+    const state = (await db
+      .prepare('SELECT trust_state, fail_count FROM coupons WHERE id = ?')
+      .get(id)) as any;
+    expect(state.trust_state).toBe('moderator_verified');
+    expect(state.fail_count).toBe(0);
 
     const list = await req('GET', '/api/coupons?platform=zepto');
-    expect(list.body.coupons.some((c: any) => c.id === id)).toBe(false);
+    expect(list.body.coupons.some((c: any) => c.id === id)).toBe(true);
   });
 
   it('never returns an expired coupon', async () => {

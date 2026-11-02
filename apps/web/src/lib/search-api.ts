@@ -235,6 +235,17 @@ export interface CommunityPrice {
 
 export interface ProductCoupon {
   id: string;
+  /** Evidence and merchant claim, both decided by the API. */
+  confidence: {
+    level: 'unreported' | 'thin' | 'community' | 'moderated';
+    label: string;
+    detail: string;
+    reports: number;
+    workedPct: number | null;
+  };
+  quality: { level: 'unknown' | 'minor' | 'solid' | 'strong'; label: string; detail: string };
+  successCount: number;
+  failCount: number;
   platformSlug: string;
   platformName: string;
   code: string | null;

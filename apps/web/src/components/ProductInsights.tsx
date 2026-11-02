@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { CommunityPrice, HistoryWindow, ProductCoupon, VariantHistory, VariantOffer } from '../lib/search-api';
 import { createAlert } from '../lib/alerts-api';
+import { reportCouponOutcome, type CouponOutcome } from '../lib/coupons-api';
 import { inr } from '../lib/format';
 import { useAuth } from '../lib/session';
 import { useLocationSummary, usePincode } from '../lib/pincode';
@@ -360,8 +361,25 @@ export function PriceAlertForm({
 
 /* ----------------------------------------------------------------- coupons */
 
+/**
+ * CODES, WITH WHAT WE ACTUALLY KNOW ABOUT THEM.
+ *
+ * The heading here used to read "Codes that work at these stores". Nobody had
+ * opened a single one of them at checkout, so that was a claim dressed as a
+ * description — the exact thing this product exists to stop doing elsewhere.
+ *
+ * Each chip now shows two independent facts: the merchant's own number ("up to
+ * 60% — the store's claim") and our evidence ("not yet reported"). It also asks,
+ * because the evidence has to start somewhere, and asks only of a signed-in
+ * shopper whose email is verified — one report per account, so the count is
+ * people rather than clicks.
+ */
 export function CouponStrip({ coupons }: { coupons: ProductCoupon[] }) {
+  const { user } = useAuth();
   const [copied, setCopied] = useState<string | null>(null);
+  const [reported, setReported] = useState<Record<string, CouponOutcome>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   if (coupons.length === 0) return null;
 
   async function copy(c: ProductCoupon): Promise<void> {
@@ -375,39 +393,98 @@ export function CouponStrip({ coupons }: { coupons: ProductCoupon[] }) {
     }
   }
 
+  async function report(c: ProductCoupon, worked: boolean): Promise<void> {
+    setBusy(c.id);
+    setError(null);
+    try {
+      const out = await reportCouponOutcome(c.id, worked);
+      setReported((prev) => ({ ...prev, [c.id]: out }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not record that. Try again in a moment.');
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <section className="card card-tint stack-sm" aria-labelledby="coupons-heading">
       <h2 id="coupons-heading" className="h4">
-        Codes that work at these stores
+        Codes listed for these stores
       </h2>
       <p className="small muted" style={{ marginTop: 0 }}>
-        Live codes for the stores listed above. Percentages are the store’s own published figure; “up to” stays “up to”.
+        Published by the store, passed on as-is. Percentages are the store’s own figure, “up to” stays “up to”, and
+        none of these has been checked by us unless it says so.
       </p>
+      {error && (
+        <p className="small" role="alert" style={{ color: 'var(--coral-d)', margin: 0 }}>
+          {error}
+        </p>
+      )}
       <ul className="coupon-strip">
-        {coupons.map((c) => (
-          <li key={c.id} className="coupon-chip">
-            <div className="coupon-chip-body">
-              <strong>{c.platformName}</strong>
-              <span className="tiny muted">{c.title}</span>
-              {c.statedPercent !== null && (
-                <span className="coupon-chip-pct">
-                  {c.percentIsCap ? 'up to ' : ''}
-                  {c.statedPercent}% off
-                </span>
+        {coupons.map((c) => {
+          const out = reported[c.id];
+          const reports = c.successCount + c.failCount;
+          return (
+            <li key={c.id} className="coupon-chip">
+              <div className="coupon-chip-body">
+                <strong>{c.platformName}</strong>
+                <span className="tiny muted">{c.title}</span>
+                {c.statedPercent !== null && (
+                  <span className="coupon-chip-pct">
+                    {c.percentIsCap ? 'up to ' : ''}
+                    {c.statedPercent}% off
+                    <span className="coupon-chip-cla">the store’s claim</span>
+                  </span>
+                )}
+                <span className={`coupon-conf is-${c.confidence.level}`}>{c.confidence.label}</span>
+                {!out && (
+                  <span className="coupon-ask">
+                    {user ? (
+                      <>
+                        <span className="tiny muted">Did this code work?</span>
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-sm"
+                          disabled={busy === c.id}
+                          onClick={() => void report(c, true)}
+                        >
+                          It worked
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-sm"
+                          disabled={busy === c.id}
+                          onClick={() => void report(c, false)}
+                        >
+                          It didn’t
+                        </button>
+                      </>
+                    ) : (
+                      <Link className="tiny" to="/login">
+                        {reports === 0 ? 'Tried it? Sign in and tell us' : 'Sign in to add your report'}
+                      </Link>
+                    )}
+                  </span>
+                )}
+                {out && (
+                  <span className="tiny muted">
+                    Recorded — {out.successCount} worked, {out.failCount} did not.
+                  </span>
+                )}
+              </div>
+              {c.code ? (
+                <button type="button" className="deal-code" onClick={() => void copy(c)}>
+                  <span className="deal-code-value">{c.code}</span>
+                  <span className="deal-code-hint">{copied === c.id ? 'Copied' : 'Copy'}</span>
+                </button>
+              ) : (
+                <Link className="btn btn-ghost btn-sm" to="/deals">
+                  See deal
+                </Link>
               )}
-            </div>
-            {c.code ? (
-              <button type="button" className="deal-code" onClick={() => copy(c)}>
-                <span className="deal-code-value">{c.code}</span>
-                <span className="deal-code-hint">{copied === c.id ? 'Copied' : 'Copy'}</span>
-              </button>
-            ) : (
-              <Link className="btn btn-ghost btn-sm" to="/deals">
-                See deal
-              </Link>
-            )}
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
