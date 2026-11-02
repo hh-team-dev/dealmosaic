@@ -141,6 +141,11 @@ CREATE TABLE IF NOT EXISTS coupons (
   success_count      INTEGER NOT NULL DEFAULT 0,
   fail_count         INTEGER NOT NULL DEFAULT 0,
   reported_by        TEXT REFERENCES users(id) ON DELETE SET NULL,
+  -- Set when the row came from an affiliate network rather than a human.
+  -- `external_id` is the network's own offer id, so a re-sync updates in place
+  -- instead of duplicating, and `tracking_url` is the money-making outbound link.
+  external_id        TEXT,
+  tracking_url       TEXT,
   starts_at          TEXT,
   expires_at         TEXT,
   verified_at        TEXT,

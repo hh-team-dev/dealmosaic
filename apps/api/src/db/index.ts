@@ -183,6 +183,14 @@ export async function initDb(): Promise<void> {
   if (!(await hasColumn('dev_outbox', 'send_error'))) {
     await db.exec('ALTER TABLE dev_outbox ADD COLUMN send_error TEXT');
   }
+  // Affiliate offer sync (Cuelinks). The table existed before these columns.
+  if (!(await hasColumn('coupons', 'external_id'))) {
+    await db.exec('ALTER TABLE coupons ADD COLUMN external_id TEXT');
+  }
+  if (!(await hasColumn('coupons', 'tracking_url'))) {
+    await db.exec('ALTER TABLE coupons ADD COLUMN tracking_url TEXT');
+  }
+  await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupons_external ON coupons(external_id) WHERE external_id IS NOT NULL');
 }
 
 export const nowIso = (): string => new Date().toISOString();

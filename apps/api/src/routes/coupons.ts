@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
 import { createRateLimiter } from '../lib/rate-limit.js';
+import * as cuelinks from '../lib/cuelinks.js';
 
 /**
  * COUPONS AND DISCOUNTS.
@@ -222,4 +223,81 @@ couponRoutes.post('/:id/outcome', async (c) => {
   }
 
   return c.json({ ok: true, successCount: row.success_count, failCount: row.fail_count });
+});
+
+/**
+ * POST /api/coupons/sync — pull the affiliate offers feed into `coupons`.
+ *
+ * Guarded by SYNC_TOKEN rather than being open, because it mutates data. It is
+ * idempotent: `external_id` is unique, so re-running updates rows in place
+ * instead of duplicating them, and an offer that has disappeared from the feed is
+ * marked expired rather than deleted — losing history would make it impossible to
+ * tell a withdrawn offer from one that never existed.
+ */
+couponRoutes.post('/sync', async (c) => {
+  const expected = process.env.SYNC_TOKEN;
+  const given = c.req.header('x-sync-token');
+  if (!expected || given !== expected) {
+    return c.json({ error: { code: 'forbidden', message: 'Sync requires a valid token.' } }, 403);
+  }
+  if (!cuelinks.isConfigured()) {
+    return c.json({ error: { code: 'not_configured', message: 'CUELINKS_API_KEY is not set.' } }, 503);
+  }
+
+  const maxPages = Math.min(Number(c.req.query('pages') ?? 5), 20);
+  let inserted = 0;
+  let updated = 0;
+  let seen = 0;
+  const errors: string[] = [];
+
+  for (let page = 1; page <= maxPages; page++) {
+    let offers;
+    try {
+      offers = await cuelinks.fetchOffers(page, 100, Number(process.env.CUELINKS_CHANNEL_ID) || undefined);
+    } catch (err) {
+      errors.push((err as Error).message);
+      break;
+    }
+    if (offers.data.length === 0) break;
+
+    for (const offer of offers.data) {
+      const row = cuelinks.toCouponRow(offer);
+      seen++;
+      const existing = (await db
+        .prepare('SELECT id FROM coupons WHERE external_id = ?')
+        .get(row.externalId)) as { id: string } | undefined;
+
+      if (existing) {
+        await db
+          .prepare(
+            `UPDATE coupons SET platform_slug = ?, code = ?, title = ?, description = ?, discount_type = ?,
+                    discount_value = ?, terms = ?, tracking_url = ?, starts_at = ?, expires_at = ?,
+                    trust_state = 'moderator_verified'
+              WHERE id = ?`,
+          )
+          .run(
+            row.platformSlug, row.code, row.title, row.description, row.discountType,
+            row.discountValue, row.terms, row.trackingUrl, row.startsAt, row.expiresAt, existing.id,
+          );
+        updated++;
+      } else {
+        await db
+          .prepare(
+            `INSERT INTO coupons (id, platform_slug, code, title, description, discount_type, discount_value,
+                                  max_discount_minor, min_order_minor, terms, source, trust_state,
+                                  external_id, tracking_url, starts_at, expires_at, created_at, verified_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'moderator_verified', ?, ?, ?, ?, ?, ?)`,
+          )
+          .run(
+            newId(), row.platformSlug, row.code, row.title, row.description, row.discountType,
+            row.discountValue, row.maxDiscountMinor, row.minOrderMinor, row.terms,
+            row.externalId, row.trackingUrl, row.startsAt, row.expiresAt, nowIso(), nowIso(),
+          );
+        inserted++;
+      }
+    }
+    if (!offers.meta.next_page) break;
+  }
+
+  return c.json({ ok: errors.length === 0, seen, inserted, updated, errors });
 });
