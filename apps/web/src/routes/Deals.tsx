@@ -425,13 +425,17 @@ function CouponCard({
             {days === 0 ? 'Ends today' : `${days} day${days === 1 ? '' : 's'} left`}
           </span>
         )}
-        {coupon.successCount > 0 ? (
+        {/*
+          Only the positive case earns a line here. Saying "not yet tested by
+          shoppers" underneath an evidence line that already reads "Not yet
+          reported" is the same sentence twice, and repetition reads as emphasis —
+          which would make silence feel like a warning.
+        */}
+        {coupon.successCount > 0 && (
           <span className="deal-meta deal-meta-good">
             <Icon name="check" size={13} />
             {coupon.successCount} confirmed
           </span>
-        ) : (
-          <span className="deal-meta">Not yet tested by shoppers</span>
         )}
       </div>
 
