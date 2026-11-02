@@ -306,6 +306,43 @@ drawable series.
 
 **Gates:** 236 tests passing, TypeScript clean, 33 design assertions, 0 secrets in 190 files.
 
+### 2.13 Coupons: confidence is not quality — 3 November 2026
+
+**The defect.** All 1,089 coupon rows said `trust_state = moderator_verified`. Nobody had
+opened a single one of them at checkout. The value was a note about *provenance* (the
+merchant's own feed) written in the vocabulary of a *check* that never happened, and the
+product page then titled the section **"Codes that work at these stores"**.
+
+Four separate faults, all fixed:
+
+| Fault | Fix |
+|---|---|
+| The schema had no word for "imported, unchecked" | `listed` added to the CHECK constraint; the table is rebuilt once, column list read from the live schema. Feed rows are `listed`; `moderator_verified` means a person opened the code; `community_verified` means three shoppers agree |
+| `POST /:id/outcome` accepted **anonymous** reports and incremented a counter | reports live in `coupon_reports`, one row per account per coupon, and the counters are recomputed from those rows — the only way to inflate a code is to create accounts, which leaves a trail |
+| The nightly sync reset `trust_state = 'moderator_verified'` on every run, so a moderator's rejection lasted one day | `trust_state` is not in the update clause at all; a regression test drives a re-sync at a rejected row |
+| One badge blended "big discount" with "probably works" | two independent answers, computed server-side by `assessConfidence()` and `assessQuality()` |
+
+**What a shopper now sees.** `Not yet reported — Listed by the store, and nobody has told
+us whether it worked at checkout. We do not know that it does.` beside `20% off · the
+store's claim`. A code with 2 successes and 1 failure reads **"Often fails"** — 67 % is
+below the threshold and a 3-report sample does not earn a percentage.
+
+**Thresholds:** a percentage is never computed below 3 reports; `community_verified` needs
+3 reports at ≥ 70 % worked; `expired` needs 5 failures and failures > 2 × successes; a
+moderator's decision is never overruled by a tally.
+
+**Verified live:** `trustState: listed` on all 1,089 rows; `/deals` cards print the evidence
+line; a temporary coupon was inserted to prove the product-page strip renders the new
+heading, the claim attribution and the report prompt, then deleted (production is back to
+1,089).
+
+**Not yet verified end-to-end on production:** the report button requires a signed-in
+account with a verified mailbox, which the agent cannot create. The server contract is
+covered by 7 tests that run the whole flow — sign-up, verification, CSRF, double-report,
+promotion at three accounts, 404 on an unknown id.
+
+**Gates:** 258 tests, TypeScript clean, 33 design assertions, 0 secrets in 193 files.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY

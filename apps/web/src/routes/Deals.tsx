@@ -366,6 +366,17 @@ function CouponCard({
 
       <h3 className="deal-title">{coupon.title}</h3>
 
+      {/*
+        What we know, next to what the store claims. This page draws its own card
+        rather than reusing DealCard, which is how the evidence line went missing
+        here while appearing on the homepage shelves — one fact, two code paths, is
+        how they drift.
+      */}
+      <p className={`deal-confidence is-${coupon.confidence.level}`} title={coupon.confidence.detail}>
+        <Icon name={coupon.confidence.level === 'unreported' ? 'info' : 'shield'} size={12} />
+        {coupon.confidence.label}
+      </p>
+
       {coupon.description && <p className="deal-desc">{coupon.description}</p>}
 
       {coupon.code ? (

@@ -3564,7 +3564,8 @@ button.chip[aria-selected='true'] {
 .coupon-chip-body .coupon-conf.is-thin { color: var(--coral-d); }
 
 .coupon-chip-cla {
-  margin-left: 6px;
+  display: block;
+  margin-top: 1px;
   font-size: 0.68rem;
   font-weight: 500;
   color: var(--ink-muted);
