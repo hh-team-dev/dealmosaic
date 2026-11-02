@@ -5,6 +5,7 @@ import { Icon } from '../components/Icon';
 import { inr } from '../lib/format';
 import { getProduct, type ProductDetail } from '../lib/search-api';
 import { Seo, breadcrumbJsonLd, productJsonLd, SITE_URL } from '../lib/seo';
+import { CommunityPanel, CouponStrip, OfferList, PriceAlertForm, PriceChart } from '../components/ProductInsights';
 
 /**
  * /p/:slug — the indexable product page.
@@ -58,7 +59,7 @@ export default function Product() {
     );
   }
 
-  const { product, variants, disclosure } = state.data;
+  const { product, variants, disclosure, offersByVariant, history, community, coupons, notes } = state.data;
   const cheapest = variants.reduce<number | null>(
     (min, v) => (v.priceFromMinor === null ? min : min === null ? v.priceFromMinor : Math.min(min, v.priceFromMinor)),
     null,
@@ -128,31 +129,55 @@ export default function Product() {
             <ul className="variant-cards">
               {variants.map((v) => (
                 <li key={v.id} className="variant-card card">
-                  <div className="stack-sm" style={{ flex: 1 }}>
-                    <strong>{v.label}</strong>
-                    <span className="tiny muted">
-                      {Object.entries(v.attributes)
-                        .map(([k, value]) => `${k}: ${value}`)
-                        .join(' · ')}
-                    </span>
-                    {v.gtin && <span className="tiny muted">GTIN {v.gtin}</span>}
+                  <div className="variant-head">
+                    <div className="stack-sm" style={{ flex: 1 }}>
+                      <strong>{v.label}</strong>
+                      <span className="tiny muted">
+                        {Object.entries(v.attributes)
+                          .map(([k, value]) => `${k}: ${value}`)
+                          .join(' · ')}
+                      </span>
+                      {v.gtin && <span className="tiny muted">GTIN {v.gtin}</span>}
+                    </div>
+                    <div className="stack-sm" style={{ alignItems: 'flex-end' }}>
+                      {v.priceFromMinor !== null && <strong className="numeric">{inr(v.priceFromMinor)}</strong>}
+                      <span className="tiny muted">
+                        {v.offerCount} offer{v.offerCount === 1 ? '' : 's'}
+                      </span>
+                    </div>
+                    <Link
+                      className="btn btn-primary btn-sm"
+                      to={`/search?q=${encodeURIComponent(`${product.title} ${v.label}`)}&v=${v.id}`}
+                    >
+                      Compare
+                    </Link>
                   </div>
-                  <div className="stack-sm" style={{ alignItems: 'flex-end' }}>
-                    {v.priceFromMinor !== null && <strong className="numeric">{inr(v.priceFromMinor)}</strong>}
-                    <span className="tiny muted">
-                      {v.offerCount} offer{v.offerCount === 1 ? '' : 's'}
-                    </span>
+
+                  {/* The offers behind the number, each labelled with its origin. */}
+                  <OfferList offers={offersByVariant?.[v.id] ?? []} />
+
+                  <div className="variant-extras">
+                    <div className="variant-chart">
+                      <h3 className="tiny muted" style={{ margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        Price history
+                      </h3>
+                      <PriceChart points={history?.[v.id] ?? []} label={`${product.title} ${v.label}`} />
+                    </div>
+                    <PriceAlertForm variantId={v.id} variantLabel={v.label} currentPriceMinor={v.priceFromMinor} />
                   </div>
-                  <Link
-                    className="btn btn-primary btn-sm"
-                    to={`/search?q=${encodeURIComponent(`${product.title} ${v.label}`)}&v=${v.id}`}
-                  >
-                    Compare
-                  </Link>
                 </li>
               ))}
             </ul>
           </section>
+
+          {coupons && coupons.length > 0 && <CouponStrip coupons={coupons} />}
+
+          <CommunityPanel
+            variantId={variants[0]?.id ?? ''}
+            variantLabel={variants[0]?.label ?? product.title}
+            reports={community ?? []}
+            note={notes?.community ?? 'Shopper-reported prices, never merged into the ranked offers.'}
+          />
 
           <section className="card card-tint stack-sm" aria-labelledby="how-heading">
             <h2 id="how-heading" className="h4">

@@ -161,8 +161,63 @@ export interface ProductSummary {
   variantCount: number;
 }
 
+/** One live offer attached to a variant. */
+export interface VariantOffer {
+  id: string;
+  platformSlug: string;
+  platformName: string;
+  sellerName: string;
+  priceMinor: number;
+  currency: string;
+  deliveryDaysMin: number | null;
+  deliveryDaysMax: number | null;
+  inStock: boolean;
+  /** `live` / `feed` / `community` / `demo` — drives the honesty label. */
+  dataOrigin: 'live' | 'feed' | 'community' | 'demo';
+  sourceLabel: string;
+  lastCheckedAt: string;
+  productUrl: string;
+  affiliate: boolean;
+}
+
+export interface PricePoint {
+  observedAt: string;
+  priceMinor: number;
+  platformSlug: string;
+  dataOrigin: string;
+}
+
+export interface CommunityPrice {
+  variantId: string;
+  platformSlug: string;
+  platformName: string;
+  pincode: string;
+  priceMinor: number;
+  reportedAt: string;
+  trustState: string;
+  corroborationCount: number;
+}
+
+export interface ProductCoupon {
+  id: string;
+  platformSlug: string;
+  platformName: string;
+  code: string | null;
+  title: string;
+  discountType: 'percent' | 'flat' | 'cashback' | 'free_delivery';
+  discountValue: number;
+  statedPercent: number | null;
+  percentIsCap: boolean;
+  expiresAt: string | null;
+}
+
 export interface ProductDetail {
   product: Omit<ProductSummary, 'priceFromMinor' | 'variantCount'>;
+  offersByVariant?: Record<string, VariantOffer[]>;
+  history?: Record<string, PricePoint[]>;
+  community?: CommunityPrice[];
+  coupons?: ProductCoupon[];
+  notes?: { community: string; history: string };
   variants: Array<{
     id: string;
     label: string;

@@ -2,9 +2,15 @@ name = "dealmosaic-keepalive"
 main = "src/index.js"
 compatibility_date = "2026-01-01"
 
-# Every 5 minutes: comfortably inside Render's 15-minute idle timeout.
+# Two schedules, one worker.
+#   */5 * * * *  — keep the free API instance warm (Render sleeps after 15 min).
+#   17 2 * * *   — once a day at 02:17 UTC (07:47 IST): record price snapshots,
+#                  then send any price alerts that have genuinely triggered.
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/5 * * * *", "17 2 * * *"]
 
 [vars]
 API_ORIGIN = "https://dealmosaic-api.onrender.com"
+# The cron expression that means "keep-alive", so the script can tell the two
+# triggers apart.
+KEEPALIVE_CRON = "*/5 * * * *"

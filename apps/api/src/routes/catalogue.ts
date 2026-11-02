@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
-import { db } from '../db/index.js';
+import { db, nowIso } from '../db/index.js';
+import { priceHistory } from '../services/alerts.js';
 import type { AppBindings } from '../middleware/session.js';
 import { connectorHealth, KNOWN_PLATFORMS, unimplementedPlatforms } from '../connectors/index.js';
 
@@ -83,6 +84,99 @@ catalogueRoutes.get('/products/:slug', async (c) => {
     )
     .all(String(product.id))) as Array<Record<string, unknown>>;
 
+  /**
+   * WHAT ELSE THE PAGE NEEDS TO BE USEFUL.
+   *
+   * The product page used to list variants and nothing else, which meant the one
+   * page a search engine will rank had no prices on it, no history, no way to
+   * watch the price, and no sign that anyone had ever been there. Four extra
+   * queries, all bounded, all cheap:
+   *
+   *  - `offersByVariant` — the live offers behind each "from ₹X", so the number
+   *    can be inspected instead of taken on trust;
+   *  - price history per variant, one point per day, for the chart;
+   *  - community reports, kept visually and structurally separate because they
+   *    are not retailer-verified;
+   *  - coupon codes for the stores that appear in the offers.
+   */
+  const variantIds = variants.map((v) => String(v.id));
+
+  const offersByVariant: Record<string, Array<Record<string, unknown>>> = {};
+  if (variantIds.length > 0) {
+    const placeholders = variantIds.map(() => '?').join(',');
+    const offerRows = (await db
+      .prepare(
+        `SELECT o.variant_id, o.id, o.platform_slug, o.seller_name, o.item_price_minor, o.currency,
+                o.delivery_days_min, o.delivery_days_max, o.in_stock, o.data_origin, o.source_label,
+                o.last_checked_at, o.product_url, o.affiliate, p.name AS platform_name
+           FROM offers o
+           LEFT JOIN platforms p ON p.slug = o.platform_slug
+          WHERE o.variant_id IN (${placeholders}) AND o.is_active = 1
+          ORDER BY o.item_price_minor ASC`,
+      )
+      .all(...variantIds)) as Array<Record<string, unknown>>;
+
+    for (const r of offerRows) {
+      const key = String(r.variant_id);
+      (offersByVariant[key] ??= []).push({
+        id: r.id,
+        platformSlug: r.platform_slug,
+        platformName: r.platform_name ?? r.platform_slug,
+        sellerName: r.seller_name,
+        priceMinor: r.item_price_minor,
+        currency: r.currency,
+        deliveryDaysMin: r.delivery_days_min,
+        deliveryDaysMax: r.delivery_days_max,
+        inStock: Boolean(r.in_stock),
+        /** The label the interface must show next to the price. */
+        dataOrigin: r.data_origin,
+        sourceLabel: r.source_label,
+        lastCheckedAt: r.last_checked_at,
+        productUrl: r.product_url,
+        affiliate: Boolean(r.affiliate),
+      });
+    }
+  }
+
+  const history: Record<string, Awaited<ReturnType<typeof priceHistory>>> = {};
+  await Promise.all(
+    variantIds.slice(0, 12).map(async (id) => {
+      history[id] = await priceHistory(id, 30);
+    }),
+  );
+
+  const communityRows = variantIds.length
+    ? ((await db
+        .prepare(
+          `SELECT c.variant_id, c.platform_slug, c.pincode, c.price_minor, c.reported_at,
+                  c.trust_state, c.corroboration_count, p.name AS platform_name
+             FROM community_prices c
+             LEFT JOIN platforms p ON p.slug = c.platform_slug
+            WHERE c.variant_id IN (${variantIds.map(() => '?').join(',')})
+              AND c.trust_state != 'rejected'
+            ORDER BY c.reported_at DESC
+            LIMIT 40`,
+        )
+        .all(...variantIds)) as Array<Record<string, unknown>>)
+    : [];
+
+  const shopSlugs = [...new Set(Object.values(offersByVariant).flat().map((o) => String(o.platformSlug)))];
+  const couponRows = shopSlugs.length
+    ? ((await db
+        .prepare(
+          `SELECT c.id, c.platform_slug, c.code, c.title, c.discount_type, c.discount_value,
+                  c.stated_percent, c.stated_percent_cap, c.expires_at, p.name AS platform_name
+             FROM coupons c
+             LEFT JOIN platforms p ON p.slug = c.platform_slug
+            WHERE c.platform_slug IN (${shopSlugs.map(() => '?').join(',')})
+              AND c.trust_state IN ('community_verified','moderator_verified')
+              AND (c.expires_at IS NULL OR c.expires_at > ?)
+            ORDER BY CASE WHEN c.code IS NOT NULL THEN 0 ELSE 1 END, c.stated_percent DESC
+            LIMIT 8`,
+        )
+        .all(...shopSlugs, nowIso())) as Array<Record<string, unknown>>)
+    : [];
+
   return c.json({
     product: {
       id: product.id,
@@ -93,6 +187,36 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       categorySlug: product.category_slug,
       description: product.description,
       isGrocery: Boolean(product.is_grocery),
+    },
+    offersByVariant,
+    history,
+    community: communityRows.map((r) => ({
+      variantId: r.variant_id,
+      platformSlug: r.platform_slug,
+      platformName: r.platform_name ?? r.platform_slug,
+      pincode: r.pincode,
+      priceMinor: r.price_minor,
+      reportedAt: r.reported_at,
+      trustState: r.trust_state,
+      corroborationCount: r.corroboration_count,
+    })),
+    coupons: couponRows.map((r) => ({
+      id: r.id,
+      platformSlug: r.platform_slug,
+      platformName: r.platform_name ?? r.platform_slug,
+      code: r.code,
+      title: r.title,
+      discountType: r.discount_type,
+      discountValue: r.discount_value,
+      statedPercent: r.stated_percent ?? null,
+      percentIsCap: (r.stated_percent_cap ?? 0) === 1,
+      expiresAt: r.expires_at,
+    })),
+    notes: {
+      community:
+        'Shopper-reported prices. They are not retailer-verified, are specific to one pincode and moment, and never affect the ranking of the three verified offers.',
+      history:
+        'Each point is the cheapest observation we recorded that day. It is our own record, not a market index.',
     },
     variants: variants.map((v) => ({
       id: v.id,
