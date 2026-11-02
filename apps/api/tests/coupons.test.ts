@@ -1,12 +1,18 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import * as cuelinks from '../src/lib/cuelinks.js';
-import { toApi } from '../src/routes/coupons.js';
 
 process.env.DB_PATH = ':memory:';
 process.env.NODE_ENV = 'development';
 process.env.SITE_URL = 'https://dealmosaic.pages.dev';
 
 let app: any;
+/**
+ * Imported inside `beforeAll`, never at the top of the file: a static import is
+ * hoisted above `process.env.DB_PATH = ':memory:'`, which would initialise the
+ * database module against whatever it defaults to. That is how a test suite
+ * starts writing to the wrong database.
+ */
+let cuelinks: typeof import('../src/lib/cuelinks.js');
+let toApi: typeof import('../src/routes/coupons.js').toApi;
 let ipSeq = 0;
 const ip = () => `203.0.113.${++ipSeq}`;
 
@@ -25,6 +31,8 @@ async function req(method: string, path: string, body?: unknown, headers: Record
 
 beforeAll(async () => {
   ({ app } = await import('../src/app.js'));
+  cuelinks = await import('../src/lib/cuelinks.js');
+  ({ toApi } = await import('../src/routes/coupons.js'));
 });
 
 const aCoupon = {

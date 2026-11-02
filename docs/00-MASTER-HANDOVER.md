@@ -96,11 +96,11 @@ All 20 routes were requested on 3 November; the full list is in §2.8. Represent
 ### 2.4 Quality gates — all green
 
 ```
-211 tests passing
+214 tests passing
 33 design assertions passing
 typecheck clean across 3 packages (web, api, core)
-0 secrets in 182 scanned files
-45 prerendered pages, verified unique (scripts/verify-prerender.mjs)
+0 secrets in 184 scanned files
+52 prerendered pages, verified unique and sitemap-complete (scripts/verify-prerender.mjs)
 backup verified: 194 files, checksums match
 ```
 
@@ -217,6 +217,32 @@ cheapest"; a listing says "a store published this and we are repeating it".
 
 Production check: `"noise earbuds"` → 2 offers, `"kurta"` → 8, `"aashirvaad atta"` → still a
 real comparison. Twelve tests; empty results stay empty rather than being padded.
+
+---
+
+### 2.10 Grandmaster audit 2.0 — 3 November 2026
+
+Full report: `docs/26-grandmaster-audit-2.md`. The short version, with every number
+fetched from production:
+
+| Found | Severity | State |
+|---|---|---|
+| 56 of 282 coupon codes carried trailing whitespace, so copying one pasted `NEW200       ` into checkout | critical | fixed at three layers, rows cleaned, 3 tests |
+| 7 sitemap URLs (`/browse`, `/how-we-rank`, `/data-sources`, `/contact`, `/privacy`, `/terms`, `/disclosure`) were never prerendered and served the homepage body | critical | each now has its own real body; the build fails if a sitemap URL is unrendered |
+| Product JSON-LD published demonstration prices as `Offer` + `InStock` | critical | `offers` emitted only for `data_origin: 'live'` prices — currently zero |
+| `/deals` printed "200 offers live now" because it counted the loaded page; the truth is 1,089 | critical | server-side totals on the endpoint |
+| The `affiliated` rule was documented and **never enforced**; `convertLink()` was never called | high | campaign approval synced weekly, `GET /api/meta/affiliate` |
+| Deals hero claimed codes are "retired automatically" when shoppers report failure | high | copy corrected |
+| Coded cards labelled "Deal" because the feed's discount value is 0 | high | they now say "Code" |
+
+**Affiliate reality, measured:** 1,884 CPS campaigns cached — 1,543 `open`, 4 `pending`,
+341 `not_applied`. Of the **241** merchants we publish offers for, **240 are approved and
+earn on a completed purchase**. Cross-checked against `/links/convert`: Croma, Nykaa and
+Firstcry returned `affiliated: true`; Flipkart, Myntra and Ajio returned `false`.
+
+**Browser verification:** five viewports (360, 390, 430, 820, 1280) on home, deals, product,
+the search fallback, browse and how-we-rank. No horizontal overflow anywhere, one `<h1>` per
+page, 0 console errors, copy-to-clipboard confirmed writing the trimmed code.
 
 ---
 
@@ -403,6 +429,10 @@ Verified live: Croma → `true`, Nykaa → `true`, Flipkart (pending) → `false
   Firstcry, Decathlon, Moglix, Gonoise, Cashify, AliExpress, Banggood India.
 - **Pending approval (agent-applied via API):** Flipkart (#122975), Amazon India,
   Myntra, Ajio.
+- **Approval measured, not assumed (3 Nov 2026):** 1,884 CPS campaigns cached in
+  `affiliate_campaigns` — **1,543 open** (approved, earns on a completed purchase),
+  4 pending, 341 never applied. Of the **241** merchants whose offers we publish,
+  **240 are approved**. Queryable at `GET /api/meta/affiliate`.
 - **Zero earnings to date.** No traffic means no clicks. This is expected.
 
 ### 5.4 Admitad — tagged, blocked on owner
@@ -615,6 +645,19 @@ that does not resolve. Canonicals were correct, so nothing looked wrong; every W
 and X share simply showed no picture. Everything now derives from `SITE_URL`, and the
 verifier fails the build if the string reappears.
 
+### 9.2d The green build that shipped a false number
+
+`/deals` printed *"200 offers live now"*. It was `coupons.length` — the rows that had
+loaded — against a request capped at 200. The true figure was 1,089. Nothing in the
+stack objected: the page rendered, the number was an integer, the design audit passed.
+
+The same class of bug as 9.2b: a value derived from what happened to be in hand rather
+than from the source of truth. Both are now impossible to reintroduce quietly, because
+the endpoint returns whole-table totals and the deals page has nothing else to count.
+
+**Lesson: any number on a page must come from a query that counts the population, not
+from the array that happens to be rendered.**
+
 ### 9.3 Email: Gmail SMTP can never work on Render free
 
 Render blocks outbound SMTP on ports 25, 465, 587 (since Sept 2025). The failure
@@ -744,7 +787,12 @@ verified live by HTTP or SQL on that date, not inferred from a commit.
 | 11 | Coupons shown on comparison pages | `CouponStrip` |
 | 12 | The whole daily job, self-scheduled off the health ping | `services/daily-job.ts`, §2.6 |
 | 13 | A dead-end search falls back to live store listings | `services/offer-search.ts`, §2.9 |
-| 14 | Unique prerendered body on all 45 pages, verified at build time | `scripts/prerender.mjs`, `verify-prerender.mjs` |
+| 14 | Unique prerendered body on every page, verified at build time | `scripts/prerender.mjs`, `verify-prerender.mjs` |
+| 15 | All 7 prose pages prerendered (were serving the homepage body) | `scripts/prerender.mjs` |
+| 16 | Structured data stops publishing demonstration prices | `productJsonLd(..., pricesAreLive)` |
+| 17 | Affiliate approval made checkable; `GET /api/meta/affiliate` | `services/affiliate-campaigns.ts` |
+| 18 | Coupon codes trimmed at import, read and clipboard | `cuelinks.ts`, `coupons.ts`, `DealCard.tsx` |
+| 19 | Whole-table totals on `/deals` instead of counting the loaded page | `routes/coupons.ts`, `Deals.tsx` |
 
 ### 14.2 Not done, in the order they should be attempted
 
@@ -762,11 +810,13 @@ verified live by HTTP or SQL on that date, not inferred from a commit.
 4. **Store pages (`/s/:merchant`).** Every deal currently leads off-site. Grouping the 245
    merchants into real pages would add a browse layer and deep internal linking. Safe only
    where a merchant has enough live offers to avoid thin pages.
-5. **Coupon moderation panel.** Verification is manual SQL today. Fine at 1,089 rows,
-   tedious at 10,000.
-6. **Sync speed.** A full 1,089-offer sync now takes **≈8.5 min** (2,170 sequential
-   round-trips to Turso). Correct, but it should be batched like the snapshot writer.
-7. **Brand pages from the catalogue** — high-intent searches, but only once item 1 is
+5. **Admin control centre.** No admin surface exists at all: moderation, verification and
+   catalogue edits are SQL. At 1,089 rows that is survivable; it is the largest remaining
+   build and the one the owner asked for by name.
+6. **Coupon moderation panel.** Verification is manual SQL today.
+7. **Sync speed.** A full 1,089-offer sync took **28 s** in the audit-2 run (batched per
+   page); a cold, unbatched run was 8.5 min. Watch it rather than assume.
+8. **Brand pages from the catalogue** — high-intent searches, but only once item 1 is
    solved, or they are thin by construction.
 
 ### 14.3 Not planned

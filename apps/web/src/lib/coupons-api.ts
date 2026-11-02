@@ -136,8 +136,13 @@ export function discountLabel(c: CouponView): string {
       return `₹${c.discountValue} cashback`;
     case 'free_delivery':
       return 'Free delivery';
+    /**
+     * The feed leaves the structured value at 0 for most offers, so this branch is
+     * the common case, not the edge. When a code exists the useful label is the
+     * code — "Deal" told a shopper nothing they could act on.
+     */
     default:
-      return c.discountValue > 0 ? `₹${c.discountValue} off` : 'Deal';
+      return c.discountValue > 0 ? `₹${c.discountValue} off` : c.code ? 'Code' : 'Deal';
   }
 }
 

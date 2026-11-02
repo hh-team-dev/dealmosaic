@@ -353,7 +353,15 @@ function CouponCard({
             {discountLabel(coupon)}
           </span>
         )}
-        {isDealWithoutValue && <span className="deal-badge deal-badge-quiet">Deal</span>}
+        {/*
+          A card with a copyable code should say so. The feed leaves the structured
+          discount at 0 for most offers, so a coded card used to be labelled "Deal" —
+          technically true, and it hid the one action worth taking.
+        */}
+        {isDealWithoutValue && (
+          <span className="deal-badge deal-badge-quiet">{coupon.code ? 'Code' : 'Deal'}</span>
+        )}
+
       </div>
 
       <h3 className="deal-title">{coupon.title}</h3>

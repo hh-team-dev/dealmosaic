@@ -33,6 +33,15 @@ a crawler or the business — not about how hard it was to fix.
 
 ### CRITICAL
 
+**C0 — Twenty percent of coupon codes copied with the network's padding.**
+`coupon_code` arrives untrimmed (`"NEW200       "`, `"   BM5"`). Copying a code put
+the padding on the clipboard, so a paste into a checkout field failed and the
+shopper had every right to blame the site. **56 of 282** live codes were affected
+when this was found, and the copy button reported success either way.
+Fixed on import, on read and before the clipboard write; existing rows cleaned;
+three tests pin both boundaries.
+
+
 **C1 — Seven sitemap URLs served the homepage.**
 `/browse`, `/how-we-rank`, `/data-sources`, `/contact`, `/privacy`, `/terms` and
 `/disclosure` were listed in `sitemap.xml` and never prerendered. Each returned the SPA
@@ -50,7 +59,7 @@ confusion a comparison site must not create.
 
 **C3 — The deals page printed a false count.**
 *"200 offers live now"* was computed from the rows the page had loaded, and the request is
-capped at 200. The true figure is **1,089**, with **282** codes and **245** stores. A wrong
+capped at 200. The true figure is **1,089**, with **282** codes and **241** stores. A wrong
 number on the busiest page is a checkable false statement, not a rounding issue.
 
 ### HIGH
@@ -85,6 +94,11 @@ and none are skipped.
 **282** carry a code, **375** state a price, all **1,089** carry the store's own expiry.
 A code-less deal is a real offer and is labelled as a deal, not a coupon.
 
+**H3 — A code-bearing card was labelled "Deal".**
+The feed leaves the structured discount value at 0 for most offers, so the badge
+fall-through printed "Deal" on cards whose whole value was the copyable code next to
+it. Not false, but it hid the only action worth taking.
+
 **M5 — 1,089 live offers vs 170 comparable offers.** These are different things and the
 interface says so: 170 offers sit inside the 25-product comparison catalogue and carry an
 origin tag (`demo`, `feed`, `live`, `community`); 1,089 are merchant listings. The
@@ -99,9 +113,11 @@ catalogue figure has **not** been dressed up as coverage.
 | C1 | Seven prose pages now have real bodies built from the live API (product list, category list, platform status) | `/privacy` 8,914 B · `/terms` 8,810 B · `/browse` 11,025 B · `/data-sources` 9,469 B · `/how-we-rank` 9,470 B · `/disclosure` 8,963 B · `/contact` 8,379 B, each with its own `<h1>` |
 | C1 (prevention) | `scripts/verify-prerender.mjs` now also fails the build when a **sitemap URL has no prerendered file** | build step, runs every time |
 | C2 | `offers` is emitted only when every price behind it is `data_origin: 'live'` | `"@type":"Offer"` count in `/p/aashirvaad-atta` = **0** |
-| C3 | `GET /api/coupons` returns whole-table `totals`; the page renders those | 1,089 / 282 / 245 on the live page |
+| C3 | `GET /api/coupons` returns whole-table `totals`; the page renders those | 1,089 / 282 / 241 on the live page |
 | H1 | `affiliate_campaigns` table + weekly sync + `GET /api/meta/affiliate` | **1,884** CPS campaigns cached: **1,543** open, 4 pending, 341 not applied; **240 of the 241 merchants we list are approved and earn** |
 | H2 | Copy replaced with what actually happens | live page |
+| C0 | `code.trim()` on import, on read and before the clipboard write; 56 rows cleaned in place | clipboard now receives `NEW200`, not `NEW200       ` |
+| H3 | A coded card labelled itself **"Deal"** because the feed's structured discount is 0 and the label fell through to a default | live `/deals`: coded cards now read **"Code"** |
 
 ### Reconciliation of the affiliate picture
 
@@ -130,7 +146,7 @@ sale — the link simply earns nothing, and `GET /api/meta/affiliate` says so pu
 | Variants with confirmed identity | **46** |
 | Offers inside the comparison engine | **170** (all labelled `demo`) |
 | Live merchant offers | **1,089** |
-| Distinct stores among live offers | **245** |
+| Distinct stores among live offers | **241** |
 | Merchants approved as affiliates | **240** |
 | Categories | 17 |
 | Live price observations | 340 (2 per offer) |
