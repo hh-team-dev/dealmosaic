@@ -81,6 +81,8 @@ export interface MerchantView {
 }
 
 export interface CouponsPayload {
+  /** Whole-table counts. Never derive a headline number from the loaded page. */
+  totals?: { live: number; withCode: number; stores: number };
   coupons: CouponView[];
   count: number;
   rules: { cashbackIsNotADiscount: string; onlyCheckedCoupons: string };

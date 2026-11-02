@@ -30,6 +30,7 @@ import {
  */
 export default function Deals() {
   const [coupons, setCoupons] = useState<CouponView[] | null>(null);
+  const [totals, setTotals] = useState<{ live: number; withCode: number; stores: number } | null>(null);
   const [merchants, setMerchants] = useState<MerchantView[]>([]);
   /**
    * The homepage shelves link here with a filter already applied
@@ -95,7 +96,10 @@ export default function Deals() {
         limit: 200,
         signal: controller.signal,
       })
-        .then((d) => setCoupons(d.coupons))
+        .then((d) => {
+          setCoupons(d.coupons);
+          if (d.totals) setTotals(d.totals);
+        })
         .catch((err: unknown) => {
           if ((err as Error).name === 'AbortError') return;
           setError('Could not load deals just now. Try again in a moment.');
@@ -120,7 +124,12 @@ export default function Deals() {
     }
   }, []);
 
-  const withCodes = useMemo(() => coupons?.filter((c) => c.code).length ?? 0, [coupons]);
+  /**
+   * Counts come from the server over the whole table. The page request is capped
+   * at 200 rows, so counting what arrived would print "200 offers live now" while
+   * 1,089 were live — a confident, checkable falsehood on the busiest page.
+   */
+  const withCodes = totals?.withCode ?? (coupons?.filter((c) => c.code).length ?? 0);
 
   return (
     <>
@@ -144,12 +153,13 @@ export default function Deals() {
               Every code here is <span className="deals-hero-accent">live right now</span>
             </h1>
             <p className="deals-hero-lede">
-              Sourced from the stores themselves, never scraped from a coupon farm. Each one shows
-              its expiry date, and codes that shoppers report as failing get retired automatically.
+              Sourced from the stores' own campaign feeds, never scraped from a coupon farm. Each
+              one shows the expiry the store published. We do not claim a code has been tested at
+              checkout unless it has — the label on the card says which.
             </p>
             <div className="deals-hero-stats">
               <div className="deals-stat">
-                <strong>{coupons === null ? '—' : coupons.length}</strong>
+                <strong>{totals ? totals.live.toLocaleString('en-IN') : coupons === null ? '—' : coupons.length}</strong>
                 <span>offers live now</span>
               </div>
               <div className="deals-stat">
@@ -157,7 +167,7 @@ export default function Deals() {
                 <span>with a copyable code</span>
               </div>
               <div className="deals-stat">
-                <strong>{merchants.length || '—'}</strong>
+                <strong>{totals ? totals.stores.toLocaleString('en-IN') : merchants.length || '—'}</strong>
                 <span>Indian stores</span>
               </div>
             </div>

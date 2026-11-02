@@ -215,7 +215,32 @@ couponRoutes.get('/', async (c) => {
     )) as unknown as CouponRow[];
 
   c.header('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
+  /**
+   * Totals over the WHOLE table, not over the page we are about to return.
+   *
+   * The deals page used to print `coupons.length` as "offers live now" while the
+   * request was capped at 200, so a shopper was shown "200 offers live now" when
+   * there were 1,089. A wrong number on the busiest page is worse than no number:
+   * it is a statement of fact that happens to be false.
+   */
+  const totals = (await db
+    .prepare(
+      `SELECT COUNT(*) AS live,
+              SUM(CASE WHEN code IS NOT NULL AND code <> '' THEN 1 ELSE 0 END) AS with_code,
+              COUNT(DISTINCT platform_slug) AS stores
+         FROM coupons
+        WHERE trust_state IN ('community_verified','moderator_verified')
+          AND (expires_at IS NULL OR expires_at > ?)
+          AND (starts_at IS NULL OR starts_at <= ?)`,
+    )
+    .get(now, now)) as unknown as { live: number; with_code: number | null; stores: number | null };
+
   return c.json({
+    totals: {
+      live: totals?.live ?? 0,
+      withCode: totals?.with_code ?? 0,
+      stores: totals?.stores ?? 0,
+    },
     coupons: rows.map(toApi),
     count: rows.length,
     /** Stated in the API so the interface cannot drift from the policy. */
