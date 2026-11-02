@@ -14,7 +14,28 @@ import { useEffect } from 'react';
  *    price validity window.
  */
 
-export const SITE_URL = 'https://dealmosaic.in';
+/**
+ * The site's own origin, resolved at runtime.
+ *
+ * This used to be the hardcoded string 'https://dealmosaic.in' — a domain we do
+ * not own and which does not resolve. Every page therefore declared a canonical
+ * URL on a non-existent host while robots.txt and sitemap.xml pointed at
+ * dealmosaic.pages.dev. Conflicting signals like that can suppress indexing
+ * outright, so the SEO work was actively undone by one constant.
+ *
+ * Reading `location.origin` is correct in every environment by construction:
+ * pages.dev today, a custom domain the day one exists, localhost in dev. No
+ * rebuild, no config, nothing to forget. The build-time SITE_URL is kept as the
+ * fallback for non-browser contexts (tests, prerender).
+ */
+function resolveOrigin(): string {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin;
+  }
+  return process.env.SITE_URL ?? 'https://dealmosaic.pages.dev';
+}
+
+export const SITE_URL = resolveOrigin();
 export const SITE_NAME = 'DEALMOSAIC';
 
 export interface SeoProps {

@@ -9,7 +9,6 @@ import { Seo, breadcrumbJsonLd, SITE_NAME } from '../lib/seo';
 import { inr, relativeTime } from '../lib/format';
 import { ApiError } from '../lib/api';
 import { search, type Comparison, type NeedsSelection, type NoResults, type SearchOutcome } from '../lib/search-api';
-import { useAuth } from '../lib/session';
 
 /**
  * /search?q=...
@@ -23,7 +22,6 @@ export default function Search() {
   const [params, setParams] = useSearchParams();
   const query = params.get('q') ?? '';
   const variantId = params.get('v') ?? undefined;
-  const { user, loading: authLoading } = useAuth();
 
   const [state, setState] = useState<
     { status: 'idle' } | { status: 'loading' } | { status: 'ok'; data: SearchOutcome } | { status: 'error'; error: string; gated?: boolean }
@@ -39,20 +37,9 @@ export default function Search() {
     for (const el of Array.from(document.querySelectorAll('link[rel="canonical"], link[rel="prev"], link[rel="next"]'))) {
       el.remove();
     }
-    // Wait for the session probe before deciding: firing a request we know will be
-    // refused would put a 401 in the console and burn a rate-limit slot.
-    if (authLoading) {
-      setState({ status: 'loading' });
-      return;
-    }
-    if (!user) {
-      setState({
-        status: 'error',
-        error: 'Comparing prices needs a free account — that is how we keep results clean of ads and trackers.',
-        gated: true,
-      });
-      return;
-    }
+    // Search is deliberately open to everyone. No session probe is awaited here:
+    // a signed-out visitor gets the same three deals, and waiting on auth only
+    // delayed the one thing the site exists to do.
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -73,7 +60,7 @@ export default function Search() {
       });
 
     return () => controller.abort();
-  }, [query, variantId, user, authLoading]);
+  }, [query, variantId]);
 
   const chooseVariant = useCallback(
     (id: string) => {

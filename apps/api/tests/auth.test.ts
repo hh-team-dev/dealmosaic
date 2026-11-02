@@ -274,11 +274,22 @@ describe('password reset', () => {
   });
 });
 
-describe('search authentication gate', () => {
-  it('returns 401 to anonymous callers', async () => {
+describe('search access', () => {
+  it('answers anonymous callers — search is the product, not a perk of signing up', async () => {
+    // This used to assert 401. The gate was removed deliberately: a visitor who
+    // cannot see a single comparison cannot judge the site, and a crawler that
+    // is refused cannot index one. Accounts now gate history and alerts only.
     const c = new Client(app);
     const res = await c.req('POST', '/api/search', { query: 'iphone 16' });
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(200);
+    expect(['needs_selection', 'comparison', 'no_results']).toContain(res.body?.kind);
+  });
+
+  it('still records history only for signed-in users', async () => {
+    const c = new Client(app);
+    await c.req('POST', '/api/search', { query: 'iphone 16' });
+    const me = await c.req('GET', '/api/me/history');
+    expect(me.status).toBe(401);
   });
 
   it('asks which variant before comparing, then returns at most three ranked offers', async () => {

@@ -17,7 +17,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PRODUCTS } from '../apps/api/src/db/catalog-data.ts';
 
-const SITE = process.env.SITE_URL ?? 'https://dealmosaic.in';
+const SITE = process.env.SITE_URL ?? 'https://dealmosaic.pages.dev';
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(here, '..', 'apps', 'web', 'public');
 mkdirSync(publicDir, { recursive: true });

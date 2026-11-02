@@ -12,6 +12,7 @@ import { searchRoutes } from './routes/search.js';
 import { catalogueRoutes } from './routes/catalogue.js';
 import { communityRoutes } from './routes/community.js';
 import { locationRoutes } from './routes/location.js';
+import { couponRoutes } from './routes/coupons.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
 /**
@@ -89,6 +90,7 @@ app.route('/api/search', searchRoutes);
 app.route('/api/catalogue', catalogueRoutes);
 app.route('/api/community-prices', communityRoutes);
 app.route('/api/location', locationRoutes);
+app.route('/api/coupons', couponRoutes);
 
 app.notFound((c) =>
   c.json({ error: { code: 'not_found', message: `No route for ${c.req.method} ${c.req.path}` } }, 404),

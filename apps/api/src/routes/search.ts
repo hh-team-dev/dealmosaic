@@ -3,6 +3,22 @@ import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
 import { runComparison } from '../services/search.js';
+import { createRateLimiter } from '../lib/rate-limit.js';
+
+/**
+ * Anonymous search limiter.
+ *
+ * Search is public: the whole promise of the site is "type a product, see the
+ * three best deals", and a signup wall in front of that means a visitor cannot
+ * evaluate the product without committing, and a crawler cannot index a single
+ * comparison. What was private was the *history* and the *alerts*, and those
+ * still require an account.
+ *
+ * The limiter is per-IP and deliberately generous — a human comparing prices
+ * fires a handful of requests, while a scraper does not. It keys on IP only, so
+ * it costs nothing and needs no shared store at launch scale.
+ */
+const anonSearchLimiter = createRateLimiter({ name: 'anon-search', windowMs: 60_000, max: 30 });
 
 export const searchRoutes = new Hono<AppBindings>();
 
@@ -21,18 +37,11 @@ const searchBody = z.object({
  * stays behind a verified account, exactly as specified.
  */
 searchRoutes.post('/', async (c) => {
+  // Signed-in users get history recorded; everyone else gets the same results.
   const user = c.get('user');
+
   if (!user) {
-    return c.json(
-      { error: { code: 'unauthorized', message: 'Sign in to compare prices. Accounts are free, and search results are never public.' } },
-      401,
-    );
-  }
-  if (!user.email_verified_at) {
-    return c.json(
-      { error: { code: 'email_unverified', message: 'Confirm your email address to unlock comparison.' } },
-      403,
-    );
+    await anonSearchLimiter(c, async () => {});
   }
 
   const parsed = searchBody.safeParse(await c.req.json().catch(() => ({})));
@@ -69,12 +78,16 @@ searchRoutes.post('/', async (c) => {
 
     const { buildComparison } = await import('../services/search.js');
     const payload = await buildComparison(query, variant as never, siblings);
-    await recordHistory(user.id, query, payload.kind === 'comparison' ? payload.variant.id : null);
+    if (user) {
+      await recordHistory(user.id, query, payload.kind === 'comparison' ? payload.variant.id : null);
+    }
     return c.json(payload);
   }
 
   const outcome = await runComparison(query);
-  await recordHistory(user.id, query, outcome.kind === 'comparison' ? outcome.variant.id : null);
+  if (user) {
+    await recordHistory(user.id, query, outcome.kind === 'comparison' ? outcome.variant.id : null);
+  }
   return c.json(outcome);
 });
 

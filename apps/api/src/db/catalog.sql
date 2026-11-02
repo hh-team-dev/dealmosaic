@@ -110,3 +110,41 @@ CREATE TABLE IF NOT EXISTS trending_queries (
   search_count INTEGER NOT NULL DEFAULT 0,
   last_seen   TEXT NOT NULL
 );
+
+-- ---------------------------------------------------------------------------
+-- COUPONS
+--
+-- A claim about a discount is worth nothing until someone has checked it, so
+-- every row carries a trust_state and a source. Nothing is seeded: an empty
+-- table producing an honest "no verified offers" message is strictly better
+-- than invented codes that fail at checkout and destroy trust on first use.
+--
+-- discount_type covers the shapes Indian retail actually uses: percentage off,
+-- flat rupees off, cashback credited after purchase (which is NOT a price cut
+-- and must stay separate in the UI), and free delivery.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS coupons (
+  id                 TEXT PRIMARY KEY,
+  platform_slug      TEXT NOT NULL,
+  code               TEXT,
+  title              TEXT NOT NULL,
+  description        TEXT,
+  discount_type      TEXT NOT NULL CHECK (discount_type IN ('percent','flat','cashback','free_delivery')),
+  discount_value     INTEGER NOT NULL DEFAULT 0,
+  max_discount_minor INTEGER,
+  min_order_minor    INTEGER,
+  category_slug      TEXT,
+  terms              TEXT,
+  source             TEXT NOT NULL CHECK (source IN ('community','merchant','affiliate','moderator')),
+  trust_state        TEXT NOT NULL DEFAULT 'reported'
+                     CHECK (trust_state IN ('reported','community_verified','moderator_verified','expired','rejected')),
+  success_count      INTEGER NOT NULL DEFAULT 0,
+  fail_count         INTEGER NOT NULL DEFAULT 0,
+  reported_by        TEXT REFERENCES users(id) ON DELETE SET NULL,
+  starts_at          TEXT,
+  expires_at         TEXT,
+  verified_at        TEXT,
+  created_at         TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_coupons_platform ON coupons(platform_slug, trust_state, expires_at);
+CREATE INDEX IF NOT EXISTS idx_coupons_category ON coupons(category_slug, trust_state);
