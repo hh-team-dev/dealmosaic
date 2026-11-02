@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 process.env.DB_PATH = ':memory:';
 process.env.NODE_ENV = 'development';
+process.env.SITE_URL = 'https://dealmosaic.pages.dev';
 
 let app: any;
 let ipSeq = 0;
@@ -127,5 +128,73 @@ describe('public search', () => {
     const res = await req('POST', '/api/search', { query: '' });
     expect(res.status).toBe(400);
     expect(res.body.error.message).toBeTruthy();
+  });
+});
+
+/**
+ * REGRESSION: registration must work from a real browser through the proxy.
+ *
+ * The suite missed this for hours because every test called the API directly,
+ * without an Origin header. A browser always sends one, and Cloudflare's proxy
+ * means the browser's origin (dealmosaic.pages.dev) legitimately differs from
+ * the host the API sees (dealmosaic-api.onrender.com). The old check compared
+ * the two, so every human signup got "Cross-origin request blocked" while the
+ * tests stayed green.
+ *
+ * These tests send the headers a browser actually sends.
+ */
+describe('browser origin handling', () => {
+  const browserHeaders = (origin: string, host = 'dealmosaic-api.onrender.com') => ({
+    origin,
+    'x-forwarded-host': host,
+  });
+
+  it('accepts a signup whose Origin is the Netlify/Pages site proxied to the API', async () => {
+    const res = await req(
+      'POST',
+      '/api/auth/register',
+      {
+        email: `browser-${Date.now()}@example.in`,
+        password: 'MosaicPrism#2026',
+        passwordConfirm: 'MosaicPrism#2026',
+        displayName: 'Browser Test',
+        ageConfirmed: true,
+      },
+      browserHeaders('https://dealmosaic.pages.dev'),
+    );
+    expect(res.status).toBe(201);
+  });
+
+  it('still refuses an origin we do not own', async () => {
+    const res = await req(
+      'POST',
+      '/api/auth/register',
+      {
+        email: `evil-${Date.now()}@example.in`,
+        password: 'MosaicPrism#2026',
+        passwordConfirm: 'MosaicPrism#2026',
+        displayName: 'Evil',
+        ageConfirmed: true,
+      },
+      browserHeaders('https://attacker.example'),
+    );
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe('forbidden');
+  });
+
+  it('accepts the API host serving itself', async () => {
+    const res = await req(
+      'POST',
+      '/api/auth/register',
+      {
+        email: `self-${Date.now()}@example.in`,
+        password: 'MosaicPrism#2026',
+        passwordConfirm: 'MosaicPrism#2026',
+        displayName: 'Self Test',
+        ageConfirmed: true,
+      },
+      browserHeaders('https://dealmosaic-api.onrender.com'),
+    );
+    expect(res.status).toBe(201);
   });
 });
