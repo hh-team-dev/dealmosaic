@@ -99,7 +99,13 @@ export function describeWindows(allPoints: HistoryPoint[], now = new Date()): Re
 
     // Youth and gaps are the same verdict to a reader ("not yet") but different
     // facts, so they get different sentences.
-    const needsDays = Math.max(0, Math.ceil(days - spanDays));
+    /*
+     * Round, not ceil. A real snapshot lands at 20:24 one day and 20:42 the next,
+     * which makes a two-day record span 0.985 days — and ceil(6.015) then tells
+     * the reader "needs 7 more days" when six will do. Understating by a day is a
+     * smaller error than overstating one, and the unlock date carries the detail.
+     */
+    const needsDays = Math.max(1, Math.round(days - spanDays));
     const covered = points.length >= 2 && coverage >= 0.95 && daysRecorded >= Math.ceil(days * 0.7);
 
     let verdict: string;

@@ -133,7 +133,6 @@ export function PriceChart({ history, label }: { history: VariantHistory | undef
               title={w?.covered ? `${d}-day view` : `${d}-day view — not enough history yet`}
             >
               {d}d
-              {!w?.covered && <span aria-hidden="true" className="chip-count">·</span>}
             </button>
           );
         })}
@@ -141,11 +140,13 @@ export function PriceChart({ history, label }: { history: VariantHistory | undef
 
       {win.covered ? <CoveredChart win={win} label={label} /> : <NotEnough win={win} label={label} />}
 
-      <p className="tiny muted" style={{ margin: 0 }}>
-        {win.covered
-          ? `${win.daysRecorded} recorded days · cheapest observation each day, our own record — not a market index.`
-          : win.verdict}
-      </p>
+      {/* When the window is not covered the panel above has already said why, and in
+          more detail than a footnote could. Repeating it here would read as a stutter. */}
+      {win.covered && (
+        <p className="tiny muted" style={{ margin: 0 }}>
+          {win.daysRecorded} recorded days · cheapest observation each day, our own record — not a market index.
+        </p>
+      )}
     </div>
   );
 }

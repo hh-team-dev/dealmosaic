@@ -55,6 +55,18 @@ describe('describeWindows', () => {
     expect(w.unlocksOn).toBe(new Date(new Date(points[0]!.observedAt).getTime() + 7 * DAY).toISOString().slice(0, 10));
   });
 
+  it('does not overstate the shortfall when snapshots land at different clock times', () => {
+    // Real snapshots drift by minutes, so a two-day record spans 0.985 days.
+    const points: HistoryPoint[] = [
+      { observedAt: new Date(NOW.getTime() - DAY - 18 * 60_000).toISOString(), priceMinor: 19900, platformSlug: 'zepto', dataOrigin: 'live' },
+      { observedAt: new Date(NOW.getTime()).toISOString(), priceMinor: 19900, platformSlug: 'zepto', dataOrigin: 'live' },
+    ];
+    const w = describeWindows(points, NOW)['7']!;
+    expect(w.covered).toBe(false);
+    expect(w.verdict).toContain('needs 6 more days');
+    expect(w.verdict).not.toContain('needs 7 more days');
+  });
+
   it('covers a window only when the records span it', () => {
     // Eight daily records span seven days, which is what a "7-day" view claims.
     const seven = describeWindows(dailyPoints(8), NOW);
