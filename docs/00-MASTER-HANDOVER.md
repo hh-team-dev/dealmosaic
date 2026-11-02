@@ -244,6 +244,35 @@ Firstcry returned `affiliated: true`; Flipkart, Myntra and Ajio returned `false`
 the search fallback, browse and how-we-rank. No horizontal overflow anywhere, one `<h1>` per
 page, 0 console errors, copy-to-clipboard confirmed writing the trimmed code.
 
+### 2.11 Owner control centre — shipped and verified on a real phone
+
+`/admin` is live and was driven end-to-end on a 390 px viewport with a real administrator
+session, not just built and unit-tested:
+
+- five tabs (Overview / Coupons / Price reports / People / Audit log), each fed by
+  `/api/admin/*` behind `requireUser` + `requireAdmin`;
+- a coupon was **rejected**, and the public `/api/coupons` list stopped serving it; the
+  audit log recorded `coupon.state`, the actor's email and the before/after rows; it was
+  then **restored** to `moderator_verified`. Production ended the run exactly as it began;
+- the temporary administrator account and its audit rows were deleted afterwards — the live
+  database holds **1 account and 0 audit rows**, which is the correct starting state;
+- the role is read from the database on every request. Hiding a button is decoration; the
+  403 is the enforcement, and an ordinary signed-in account gets 403 on every admin route.
+
+Three defects were found only by looking at it on a phone, and fixed:
+
+| Defect | Why it mattered |
+|---|---|
+| Audit JSON ran out of the card and clipped | an audit entry that hides part of the record is worse than none |
+| Dates printed as `2/11/2026` | half the people reading that read it as February |
+| Five tabs sliced dead straight at the screen edge | reads as a broken layout, not a row that continues — now fades |
+
+`0/0 shopper reports positive` also read like a score when nobody had reported anything;
+it now says `no shopper reports yet`.
+
+**Gates after this work:** 225 tests passing, TypeScript clean in both apps, 33 design
+assertions passing, 0 secrets in 188 files, 53 prerendered pages verified.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
@@ -758,8 +787,8 @@ the list of things that exist in the API but a shopper cannot reach.
 | Community price reports | ✅ | ✅ form + list, product page |
 | Coupons on comparison pages | ✅ | ✅ `CouponStrip` |
 | Wishlist / recently viewed | ✅ device-local | ✅ `/saved`, homepage shelf |
-| **Coupon moderation** | ❌ | ❌ manual SQL — see §14.2 item 5 |
-| **Admin panel** | partial | ❌ no admin surface exists, by design |
+| **Coupon moderation** | ✅ | ✅ `/admin` → Coupons tab, with audit trail |
+| **Admin control centre** | ✅ | ✅ `/admin` — owner only, 5 tabs, every write audited |
 
 Owner-only actions are in PART 7; everything else on this table is the agent's work.
 
@@ -810,10 +839,11 @@ verified live by HTTP or SQL on that date, not inferred from a commit.
 4. **Store pages (`/s/:merchant`).** Every deal currently leads off-site. Grouping the 245
    merchants into real pages would add a browse layer and deep internal linking. Safe only
    where a merchant has enough live offers to avoid thin pages.
-5. **Admin control centre.** No admin surface exists at all: moderation, verification and
-   catalogue edits are SQL. At 1,089 rows that is survivable; it is the largest remaining
-   build and the one the owner asked for by name.
-6. **Coupon moderation panel.** Verification is manual SQL today.
+5. ~~**Admin control centre.**~~ **Shipped 3 November 2026** — see §2.11. `/admin` covers
+   coupon state (reject/restore), shopper price reports (confirm/reject), roles, the daily
+   job, affiliate earning and the audit log. Catalogue edits remain SQL, deliberately: a
+   form that can rewrite a price is a form that can invent one.
+6. ~~**Coupon moderation panel.**~~ **Shipped** as part of item 5.
 7. **Sync speed.** A full 1,089-offer sync took **28 s** in the audit-2 run (batched per
    page); a cold, unbatched run was 8.5 min. Watch it rather than assume.
 8. **Brand pages from the catalogue** — high-intent searches, but only once item 1 is

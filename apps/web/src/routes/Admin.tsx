@@ -42,6 +42,26 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'audit', label: 'Audit log' },
 ];
 
+/**
+ * "2 Nov 2026", not "2/11/2026": a date written with slashes is read as month-first
+ * by half the people who see it, and this one sits next to an expiry — the one place
+ * being wrong costs someone a wasted trip to a checkout.
+ */
+function formatDay(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/** "2 Nov 2026, 10:15 pm" — unambiguous day-first, and honest about the hour. */
+function formatMoment(iso: string): string {
+  return new Date(iso).toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export default function Admin() {
   const [params, setParams] = useSearchParams();
   const tab = (params.get('tab') as Tab) ?? 'overview';
@@ -185,7 +205,7 @@ function Overview({ onError }: { onError: (e: unknown) => void }) {
         {o.job ? (
           <>
             <p className="muted" style={{ margin: 0 }}>
-              Last finished <strong>{o.job.lastFinishedAt ? new Date(o.job.lastFinishedAt).toLocaleString('en-IN') : 'never'}</strong>
+              Last finished <strong>{o.job.lastFinishedAt ? formatMoment(o.job.lastFinishedAt) : 'never'}</strong>
               {' · '}
               {o.job.lastOk ? 'reported ok' : 'reported a problem'} · {o.job.due ? 'run is due' : 'next run not yet due'}
             </p>
@@ -205,7 +225,7 @@ function Overview({ onError }: { onError: (e: unknown) => void }) {
             <strong>{o.affiliate.merchantsEarning}</strong> of <strong>{o.affiliate.merchantsTracked}</strong>{' '}
             listed merchants are approved and earn on a completed purchase. {o.affiliate.earning.toLocaleString('en-IN')}{' '}
             of {o.affiliate.tracked.toLocaleString('en-IN')} cached campaigns are open. Last synced{' '}
-            {o.affiliate.lastSyncedAt ? new Date(o.affiliate.lastSyncedAt).toLocaleDateString('en-IN') : 'never'}.
+            {o.affiliate.lastSyncedAt ? formatDay(o.affiliate.lastSyncedAt) : 'never'}.
           </p>
         ) : (
           <p className="muted">Approval status has not been synced yet.</p>
@@ -229,7 +249,7 @@ function Overview({ onError }: { onError: (e: unknown) => void }) {
               {data.runs.slice(0, 8).map((r, i) => (
                 <tr key={i}>
                   <td>{String(r.name)}</td>
-                  <td>{r.last_started_at ? new Date(String(r.last_started_at)).toLocaleString('en-IN') : '—'}</td>
+                  <td>{r.last_started_at ? formatMoment(String(r.last_started_at)) : '—'}</td>
                   <td>{String(r.last_ok) === '1' ? 'ok' : 'problem'}</td>
                 </tr>
               ))}
@@ -305,8 +325,10 @@ function Coupons({ onError }: { onError: (e: unknown) => void }) {
                 <span className="tiny muted">
                   {c.code ? <code className="admin-code">{c.code}</code> : 'no code'}
                   {c.stated_percent ? ` · ${c.stated_percent}%` : ''}
-                  {c.expires_at ? ` · ends ${new Date(c.expires_at).toLocaleDateString('en-IN')}` : ''}
-                  {` · ${c.success_count}/${c.success_count + c.fail_count} shopper reports positive`}
+                  {c.expires_at ? ` · ends ${formatDay(c.expires_at)}` : ''}
+                  {c.success_count + c.fail_count === 0
+                    ? ' · no shopper reports yet'
+                    : ` · ${c.success_count} worked, ${c.fail_count} did not`}
                 </span>
               </div>
               <div className="admin-row-actions">
@@ -369,7 +391,7 @@ function Reports({ onError }: { onError: (e: unknown) => void }) {
             </strong>
             <span className="tiny muted">
               {inr(r.price_minor / 100)} at {r.platform_slug} · PIN {r.pincode ?? 'not given'} ·{' '}
-              {r.observed_at ? new Date(r.observed_at).toLocaleDateString('en-IN') : 'no date'}
+              {r.observed_at ? formatDay(r.observed_at) : 'no date'}
             </span>
           </div>
           <div className="admin-row-actions">
@@ -416,7 +438,7 @@ function People({ onError }: { onError: (e: unknown) => void }) {
             <strong>{u.email}</strong>
             <span className="tiny muted">
               {u.role} · {u.status} · {u.email_verified_at ? 'verified' : 'unverified'} · joined{' '}
-              {new Date(u.created_at).toLocaleDateString('en-IN')}
+              {formatDay(u.created_at)}
             </span>
           </div>
           <div className="admin-row-actions">
@@ -451,9 +473,13 @@ function Audit({ onError }: { onError: (e: unknown) => void }) {
           <div className="admin-row-main">
             <strong>{e.action}</strong>
             <span className="tiny muted">
-              {e.actor_email} · {e.entity} {e.entity_id.slice(0, 8)} · {new Date(e.at).toLocaleString('en-IN')}
+              {e.actor_email} · {e.entity} {e.entity_id.slice(0, 8)} · {formatMoment(e.at)}
             </span>
-            <span className="tiny muted">
+            {/* Raw JSON of the before and after row. It has no spaces to break on,
+                so it needs its own class — otherwise it runs out of the card and
+                clips, and an audit entry that hides part of the record is worse
+                than no audit entry at all. */}
+            <span className="tiny muted admin-json">
               {e.before_json ?? '—'} → {e.after_json ?? '—'}
             </span>
           </div>

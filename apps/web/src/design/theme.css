@@ -3703,13 +3703,32 @@ button.chip[aria-selected='true'] {
  * colour only on state: green for live, red for rejected.
  */
 
+.admin-json {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Every admin row is a flex line; without this a long child refuses to shrink
+   and pushes the row wider than the card instead of wrapping inside it. */
+.admin-row-main { min-width: 0; }
+
 .admin-tabs {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  /*
+   * Five tabs never fit a 390 px phone. A chip sliced dead straight at the screen
+   * edge reads as a broken layout; a chip fading out reads as a row that continues,
+   * which is what it is. The scrollbar is hidden because a phone scrollbar would
+   * sit here permanently, so the fade is the only affordance there is.
+   */
+  mask-image: linear-gradient(to right, currentColor calc(100% - 26px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - 26px), transparent 100%);
 }
+.admin-tabs > * { scroll-snap-align: start; }
 .admin-tabs::-webkit-scrollbar { display: none; }
 
 .chip-active {
@@ -3779,6 +3798,13 @@ button.chip[aria-selected='true'] {
   background: var(--tint);
   font-size: 0.72rem;
   line-height: 1.5;
+  /*
+   * Audit entries carry raw JSON of the before and after rows. JSON has no spaces
+   * to break on, so on a phone it runs straight out of the card and clips — the
+   * one thing an audit log must never do is hide part of the record.
+   */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   overflow-x: auto;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
