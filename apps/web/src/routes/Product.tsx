@@ -59,7 +59,8 @@ export default function Product() {
     );
   }
 
-  const { product, variants, disclosure, offersByVariant, history, community, coupons, notes } = state.data;
+  const { product, variants, disclosure, offersByVariant, history, community, coupons, notes, productOrigin } =
+    state.data;
   const cheapest = variants.reduce<number | null>(
     (min, v) => (v.priceFromMinor === null ? min : min === null ? v.priceFromMinor : Math.min(min, v.priceFromMinor)),
     null,
@@ -113,7 +114,18 @@ export default function Product() {
             {cheapest !== null && (
               <p className="price-from">
                 from <strong className="numeric">{inr(cheapest)}</strong>{' '}
-                <span className="tiny muted">observed across connected stores</span>
+                <span className="tiny muted">
+                  {/* "observed across connected stores" was a claim about a
+                      measurement. Until a retailer feed exists, the sentence has
+                      to say what the number actually is. */}
+                  {productOrigin?.origin === 'live' ? 'observed across connected stores' : 'illustrative, not a live quote'}
+                </span>
+                {productOrigin?.chip && <span className="origin-chip tiny">{productOrigin.chip}</span>}
+              </p>
+            )}
+            {productOrigin?.caveat && (
+              <p className="tiny muted origin-caveat" role="note">
+                {productOrigin.caveat}
               </p>
             )}
           </header>
@@ -140,7 +152,12 @@ export default function Product() {
                       {v.gtin && <span className="tiny muted">GTIN {v.gtin}</span>}
                     </div>
                     <div className="stack-sm" style={{ alignItems: 'flex-end' }}>
-                      {v.priceFromMinor !== null && <strong className="numeric">{inr(v.priceFromMinor)}</strong>}
+                      {v.priceFromMinor !== null && (
+                        <strong className="numeric">
+                          {inr(v.priceFromMinor)}
+                          {v.priceOrigin?.chip && <span className="origin-chip tiny">{v.priceOrigin.chip}</span>}
+                        </strong>
+                      )}
                       <span className="tiny muted">
                         {v.offerCount} offer{v.offerCount === 1 ? '' : 's'}
                       </span>

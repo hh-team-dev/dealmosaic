@@ -113,8 +113,18 @@ export default function Browse() {
                       {p.variantCount} variant{p.variantCount === 1 ? '' : 's'} · {p.category}
                     </span>
                     <span className="tile-price numeric">
-                      {p.priceFromMinor !== null ? `from ${inr(p.priceFromMinor)}` : 'no price yet'}
+                      {p.priceFromMinor !== null
+                        ? `from ${inr(p.priceFromMinor)}`
+                        : p.mrpFromMinor
+                          ? `MRP ${inr(p.mrpFromMinor)}`
+                          : 'no price yet'}
                     </span>
+                    {/*
+                      A price with no origin on it is a price pretending to be a
+                      quote. Illustrative prices get a chip on every card, including
+                      the ones nobody clicks.
+                    */}
+                    {p.priceOrigin?.chip && <span className="tile-origin tiny">{p.priceOrigin.chip}</span>}
                   </Link>
                 </li>
               ))}

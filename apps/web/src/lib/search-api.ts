@@ -165,6 +165,14 @@ export interface ProductSummary {
   description: string;
   isGrocery: boolean;
   priceFromMinor: number | null;
+  /**
+   * The printed pack MRP. Kept separate from the offer price because they answer
+   * different questions, and a card that prints MRP as "from" promises a price we
+   * do not have.
+   */
+  mrpFromMinor?: number | null;
+  /** Provenance of the price above, decided by the API. */
+  priceOrigin?: { origin: 'live' | 'demo' | 'mixed' | null; chip: string; caveat: string };
   variantCount: number;
 }
 
@@ -257,7 +265,15 @@ export interface ProductCoupon {
   expiresAt: string | null;
 }
 
+export interface OriginLabel {
+  origin: 'live' | 'demo' | 'mixed' | null;
+  chip: string;
+  caveat: string;
+}
+
 export interface ProductDetail {
+  /** Provenance of every price on the page, decided by the API. */
+  productOrigin?: OriginLabel;
   product: Omit<ProductSummary, 'priceFromMinor' | 'variantCount'>;
   offersByVariant?: Record<string, VariantOffer[]>;
   history?: Record<string, VariantHistory>;
@@ -277,6 +293,8 @@ export interface ProductDetail {
     packCount: number;
     offerCount: number;
     priceFromMinor: number | null;
+    /** Origin of the offers behind this variant's headline price. */
+    priceOrigin?: OriginLabel;
   }>;
   disclosure: string;
 }

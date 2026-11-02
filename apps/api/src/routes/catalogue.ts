@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { db, nowIso } from '../db/index.js';
 import { priceHistoryForVariants } from '../services/price-history.js';
 import { assessCoupon } from '../services/coupon-confidence.js';
+import { labelFor } from '../services/price-origin.js';
 import type { AppBindings } from '../middleware/session.js';
 import { connectorHealth, KNOWN_PLATFORMS, unimplementedPlatforms } from '../connectors/index.js';
 
@@ -19,8 +20,20 @@ catalogueRoutes.get('/products', async (c) => {
 
   const rows = await (db
     .prepare(
+      /*
+       * The browse card used to say "from ₹271" from MIN(mrp_minor) — which is not
+       * what the item costs anywhere, it is the printed pack MRP. Two numbers now,
+       * kept apart: the cheapest live offer (a price), and the MRP (a reference).
+       * A card that shows the MRP says "MRP", because "from" promises a price we
+       * do not have.
+       */
       `SELECT p.id, p.slug, p.title, p.brand, p.category, p.category_slug, p.description, p.is_grocery,
-              MIN(v.mrp_minor) AS price_from_minor, COUNT(DISTINCT v.id) AS variant_count
+              (SELECT MIN(o.item_price_minor) FROM offers o JOIN product_variants ov ON ov.id = o.variant_id
+                WHERE ov.product_id = p.id AND o.is_active = 1) AS price_from_minor,
+              MIN(v.mrp_minor) AS mrp_from_minor,
+              (SELECT o.data_origin FROM offers o JOIN product_variants ov ON ov.id = o.variant_id
+                WHERE ov.product_id = p.id AND o.is_active = 1 ORDER BY o.item_price_minor ASC LIMIT 1) AS price_origin,
+              COUNT(DISTINCT v.id) AS variant_count
          FROM catalogue_products p
          JOIN product_variants v ON v.product_id = p.id
         WHERE (? IS NULL OR p.category_slug = ?)
@@ -45,7 +58,9 @@ catalogueRoutes.get('/products', async (c) => {
       categorySlug: r.category_slug,
       description: r.description,
       isGrocery: Boolean(r.is_grocery),
-      priceFromMinor: r.price_from_minor,
+      priceFromMinor: (r.price_from_minor as number | null) ?? null,
+      mrpFromMinor: (r.mrp_from_minor as number | null) ?? null,
+      priceOrigin: labelFor([(r.price_origin as string | null) ?? null]),
       variantCount: r.variant_count,
     })),
   });
@@ -180,7 +195,16 @@ catalogueRoutes.get('/products/:slug', async (c) => {
         .all(...shopSlugs, nowIso())) as Array<Record<string, unknown>>)
     : [];
 
+  /**
+   * The headline price and its provenance, together. `priceFromMinor` is a MIN()
+   * over the offers, and a minimum cannot carry a caveat by itself — so the caveat
+   * is computed here and travels in the same object as the number.
+   */
+  const allOrigins = Object.values(offersByVariant).flat().map((o) => String(o.dataOrigin));
+  const headlineOrigin = labelFor(allOrigins);
+
   return c.json({
+    productOrigin: headlineOrigin,
     product: {
       id: product.id,
       slug: product.slug,
@@ -248,6 +272,8 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       packCount: v.pack_count,
       offerCount: v.offer_count,
       priceFromMinor: v.from_minor,
+      /** Origin of the offers behind `priceFromMinor`, so the number is never naked. */
+      priceOrigin: labelFor((offersByVariant[String(v.id)] ?? []).map((o) => String(o.dataOrigin))),
     })),
     disclosure:
       'Variant identities are real. Offer prices come from the connector layer and are labelled with their origin — demonstration data until an authorised feed is connected.',

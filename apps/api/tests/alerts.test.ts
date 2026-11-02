@@ -247,3 +247,39 @@ describe('product detail for the page', () => {
     expect(history.windows['90'].covered).toBe(false);
   });
 });
+
+describe('the headline price carries its origin', () => {
+  it('labels the product headline and every variant price', async () => {
+    const c = new Client();
+    const res = await c.req('GET', `/api/catalogue/products/${productSlug}`);
+    const body = res.body as Record<string, any>;
+
+    /*
+     * The headline is MIN(offer price). A minimum cannot carry a caveat, so the
+     * caveat is computed server-side and shipped beside it — otherwise the page is
+     * free to print "from ₹271.79" above a list where every row says "illustrative".
+     */
+    expect(body.productOrigin).toBeTruthy();
+    expect(body.productOrigin.origin).toBe('demo');
+    expect(body.productOrigin.caveat).toContain('not a live quote');
+
+    for (const v of body.variants) {
+      if (v.priceFromMinor === null) continue;
+      expect(v.priceOrigin, 'a variant price without an origin is an unlabelled claim').toBeTruthy();
+      expect(['live', 'demo', 'mixed', null]).toContain(v.priceOrigin.origin);
+    }
+  });
+
+  it('keeps the browse list from printing MRP as a "from" price', async () => {
+    const c = new Client();
+    const res = await c.req('GET', '/api/catalogue/products?limit=5');
+    const body = res.body as Record<string, any>;
+    expect(Array.isArray(body.products)).toBe(true);
+    for (const p of body.products) {
+      // Both numbers are present and separately named, so the card can choose.
+      expect('priceFromMinor' in p).toBe(true);
+      expect('mrpFromMinor' in p).toBe(true);
+      expect(p.priceOrigin).toBeTruthy();
+    }
+  });
+});

@@ -3525,6 +3525,35 @@ button.chip[aria-selected='true'] {
 
   display: block;
 }
+/* ---------- price provenance ---------- */
+
+/*
+ * A chip that says where a number came from. It is quiet by design: it appears on
+ * almost every price today, and a loud warning would teach people to ignore the
+ * one place it will matter — the day a real feed arrives and most chips vanish.
+ */
+.origin-chip,
+.tile-origin {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--sun-tint, #fdf3d7);
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+.origin-caveat {
+  max-width: 52ch;
+  margin: 2px 0 0;
+}
+.tile-origin {
+  margin-left: 0;
+  margin-top: 4px;
+}
+
 /* ---------- coupon evidence ---------- */
 
 /*
