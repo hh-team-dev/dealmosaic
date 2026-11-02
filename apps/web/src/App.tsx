@@ -14,6 +14,7 @@ import { Contact, Disclosure, NotFound, Privacy, Terms } from './routes/Legal';
 import Search from './routes/Search';
 import Product from './routes/Product';
 import Browse from './routes/Browse';
+import Deals from './routes/Deals';
 import { DataSources, HowWeRank } from './routes/Method';
 
 function ScrollToTop() {
@@ -65,6 +66,7 @@ export default function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/search" element={<Search />} />
             <Route path="/browse" element={<Browse />} />
+            <Route path="/deals" element={<Deals />} />
             <Route path="/c/:slug" element={<Browse />} />
             <Route path="/p/:slug" element={<Product />} />
             <Route path="/how-we-rank" element={<HowWeRank />} />

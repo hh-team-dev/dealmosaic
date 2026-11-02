@@ -30,6 +30,7 @@ const today = new Date().toISOString().slice(0, 10);
 
 const staticPages = [
   { path: '/', changefreq: 'daily', priority: '1.0', note: 'Landing' },
+  { path: '/deals', changefreq: 'daily', priority: '0.95', note: 'Live coupons and deals' },
   { path: '/browse', changefreq: 'daily', priority: '0.9', note: 'Catalogue index' },
   { path: '/how-we-rank', changefreq: 'monthly', priority: '0.8', note: 'Methodology' },
   { path: '/data-sources', changefreq: 'weekly', priority: '0.7', note: 'Data provenance' },
@@ -148,6 +149,7 @@ See ${SITE}/data-sources for the live connector status of every platform.
 
 ## Pages
 - ${SITE}/ — product overview
+- ${SITE}/deals — verified coupons and deals
 - ${SITE}/browse — every product compared
 - ${SITE}/how-we-rank — the ranking rules in full
 - ${SITE}/data-sources — connector status and access routes

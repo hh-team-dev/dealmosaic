@@ -14,6 +14,7 @@ export function SiteHeader() {
           <Wordmark sub />
         </Link>
         <nav className="site-nav" aria-label="Sections">
+          <Link to="/deals">Deals</Link>
           <Link to="/browse">Browse</Link>
           <Link to="/how-we-rank">How we rank</Link>
           <Link to="/data-sources">Data sources</Link>
@@ -74,6 +75,7 @@ export function SiteFooter() {
             <Link to="/register">Create account</Link>
             <Link to="/how-we-rank">How we rank</Link>
             <Link to="/data-sources">Where our prices come from</Link>
+            <Link to="/deals">Today's deals and coupons</Link>
             <Link to="/browse">Browse every product</Link>
           </div>
           <p className="tiny" style={{ marginTop: 14 }}>

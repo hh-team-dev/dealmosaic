@@ -96,7 +96,9 @@ function toApi(r: CouponRow) {
 couponRoutes.get('/', async (c) => {
   const platform = c.req.query('platform');
   const category = c.req.query('category');
-  const limit = Math.min(Number(c.req.query('limit') ?? 40), 100);
+  const q = c.req.query('q')?.trim();
+  const withCodeOnly = c.req.query('codes') === '1';
+  const limit = Math.min(Number(c.req.query('limit') ?? 40), 200);
   const now = nowIso();
 
   const rows = (await db
@@ -109,15 +111,25 @@ couponRoutes.get('/', async (c) => {
           AND (c.starts_at IS NULL OR c.starts_at <= ?)
           AND (? IS NULL OR c.platform_slug = ?)
           AND (? IS NULL OR c.category_slug IS NULL OR c.category_slug = ?)
+          AND (? IS NULL OR c.title LIKE ? OR c.code LIKE ? OR c.platform_slug LIKE ?)
+          AND (? = 0 OR c.code IS NOT NULL)
         ORDER BY
-          CASE c.trust_state WHEN 'moderator_verified' THEN 0 ELSE 1 END,
-          c.success_count DESC, c.created_at DESC
+          -- A code is more useful than a bare promotion, so codes rank first,
+          -- then the ones a shopper has actually confirmed at checkout, then
+          -- whatever expires soonest (urgency is real information).
+          CASE WHEN c.code IS NOT NULL THEN 0 ELSE 1 END,
+          c.success_count DESC,
+          CASE WHEN c.expires_at IS NULL THEN 1 ELSE 0 END,
+          c.expires_at ASC,
+          c.created_at DESC
         LIMIT ?`,
     )
     .all(
       now, now,
       platform ?? null, platform ?? null,
       category ?? null, category ?? null,
+      q ?? null, q ? `%${q}%` : null, q ? `%${q}%` : null, q ? `%${q}%` : null,
+      withCodeOnly ? 1 : 0,
       limit,
     )) as unknown as CouponRow[];
 
@@ -300,4 +312,42 @@ couponRoutes.post('/sync', async (c) => {
   }
 
   return c.json({ ok: errors.length === 0, seen, inserted, updated, errors });
+});
+
+/**
+ * GET /api/coupons/merchants — the facet list for the deals page.
+ *
+ * Only merchants that actually have a live, usable offer appear. Showing a store
+ * with nothing behind it is a dead end for the shopper and a thin page for a
+ * crawler.
+ */
+couponRoutes.get('/merchants', async (c) => {
+  const now = nowIso();
+  const rows = (await db
+    .prepare(
+      `SELECT c.platform_slug,
+              COUNT(*) AS total,
+              SUM(CASE WHEN c.code IS NOT NULL THEN 1 ELSE 0 END) AS codes,
+              MAX(c.platform_slug) AS slug
+         FROM coupons c
+        WHERE c.trust_state IN ('community_verified','moderator_verified')
+          AND (c.expires_at IS NULL OR c.expires_at > ?)
+        GROUP BY c.platform_slug
+        ORDER BY codes DESC, total DESC
+        LIMIT 80`,
+    )
+    .all(now)) as unknown as Array<{ platform_slug: string; total: number; codes: number }>;
+
+  c.header('Cache-Control', 'public, max-age=600, stale-while-revalidate=3600');
+  return c.json({
+    merchants: rows.map((r) => ({
+      slug: r.platform_slug,
+      name: r.platform_slug
+        .split('-')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' '),
+      total: Number(r.total),
+      codes: Number(r.codes),
+    })),
+  });
 });

@@ -36,7 +36,8 @@ type IconName =
   | 'tag'
   | 'chevron-right'
   | 'star'
-  | 'ban-circle';
+  | 'ban-circle'
+  | 'copy';
 
 const PATHS: Record<IconName, React.ReactNode> = {
   search: (
@@ -195,6 +196,12 @@ const PATHS: Record<IconName, React.ReactNode> = {
   'chevron-right': <path d="m9 5 7 7-7 7" />,
   star: (
     <path d="m12 3.6 2.6 5.4 5.9.8-4.3 4.1 1.1 5.9-5.3-2.9-5.3 2.9 1.1-5.9L3.5 9.8l5.9-.8L12 3.6Z" />
+  ),
+  copy: (
+    <>
+      <rect x="9" y="9" width="11" height="11" rx="2.5" />
+      <path d="M6.5 15H5.5A1.5 1.5 0 0 1 4 13.5v-8A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5v1" />
+    </>
   ),
   'ban-circle': (
     <>

@@ -22,6 +22,7 @@ const SPA_ROUTES = [
   /^\/$/,
   /^\/search\/?$/,
   /^\/browse\/?$/,
+  /^\/deals\/?$/,
   /^\/c\/[^/]+\/?$/, // category
   /^\/p\/[^/]+\/?$/, // product
   /^\/how-we-rank\/?$/,
