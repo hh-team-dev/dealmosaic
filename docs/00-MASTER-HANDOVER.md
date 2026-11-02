@@ -413,6 +413,30 @@ horizontal overflow anywhere, zero JS errors, zero 4xx except the intentional
 200, while a programmatic `fetch('/favicon.svg')` from the page returns 404. No user-facing
 effect, recorded here rather than silently dropped, and not yet explained.
 
+### 2.16 Accessibility and touch pass — 3 November 2026
+
+Audited in a real 390 px browser, not by reading markup: images without `alt`, buttons and
+links with no accessible name, inputs with no label, duplicate `id`s, `<html lang>`, and
+every interactive element's rendered box.
+
+| Found | Fixed |
+|---|---|
+| The logo's three gradient ids were **fixed strings**, and the mark renders twice per page (header + footer) — duplicate ids in every document | `useId()` per instance |
+| The save heart on 86 homepage cards measured **28 × 28 px** | 40 × 40 |
+| Ticker items on the homepage were **20 px tall** links — the first thing on the page, and every item is a tap target | `min-height: 36px` with padding, strip height unchanged |
+
+**Left alone on purpose:** 9–12 remaining sub-32px targets per page are **inline links inside
+sentences** ("See today's best deals", "Full disclosure"). WCAG 2.2's target-size criterion
+explicitly exempts links in a block of text, and padding them would break the paragraph
+rhythm for no real gain.
+
+**Result:** duplicate ids gone; homepage small targets 126 → 12; zero unlabelled controls,
+zero missing `alt`, zero duplicate ids across all ten audited routes.
+
+**Weight, measured not guessed:** main bundle 444 KB raw / **134 KB gzipped**, CSS 68 KB /
+~12 KB gzipped. Acceptable for a React SPA on Indian 4G; recorded so a future regression is
+visible rather than assumed.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY

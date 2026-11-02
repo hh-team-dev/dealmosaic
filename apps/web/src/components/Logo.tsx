@@ -1,5 +1,14 @@
-/** The "Prism Tessera" mark: three angular tiles converge into one prism, with an
- *  aperture notch for discovery. Original geometry, inline SVG, animates on mount. */
+import { useId } from 'react';
+
+/**
+ * The "Prism Tessera" mark: three angular tiles converge into one prism, with an
+ * aperture notch for discovery. Original geometry, inline SVG, animates on mount.
+ *
+ * The gradient ids are per-instance. The mark renders in the header and the footer
+ * of every page, and fixed ids meant the same three ids existed twice in one
+ * document — invalid HTML, and a coin flip for which definition the second mark
+ * resolved against.
+ */
 export function LogoMark({
   size = 34,
   animated = false,
@@ -9,6 +18,9 @@ export function LogoMark({
   animated?: boolean;
   title?: string;
 }) {
+  const uid = useId().replace(/[:]/g, '');
+  const ids = { a: `dmA${uid}`, b: `dmB${uid}`, c: `dmC${uid}` };
+
   return (
     <svg
       className={`brand-mark logo-tiles${animated ? ' logo-anim' : ''}`}
@@ -19,22 +31,22 @@ export function LogoMark({
       aria-label={title}
     >
       <defs>
-        <linearGradient id="dmA" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={ids.a} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#FF6B6B" />
           <stop offset="1" stopColor="#FF8A3D" />
         </linearGradient>
-        <linearGradient id="dmB" x1="1" y1="0" x2="0" y2="1">
+        <linearGradient id={ids.b} x1="1" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FFBE0B" />
           <stop offset="1" stopColor="#B8F34A" />
         </linearGradient>
-        <linearGradient id="dmC" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={ids.c} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2EC4B6" />
           <stop offset="1" stopColor="#4361EE" />
         </linearGradient>
       </defs>
-      <polygon points="32,4 8,32 32,32" fill="url(#dmA)" />
-      <polygon points="32,4 56,32 32,32" fill="url(#dmB)" />
-      <polygon points="8,32 32,32 32,60 56,32" fill="url(#dmC)" />
+      <polygon points="32,4 8,32 32,32" fill={`url(#${ids.a})`} />
+      <polygon points="32,4 56,32 32,32" fill={`url(#${ids.b})`} />
+      <polygon points="8,32 32,32 32,60 56,32" fill={`url(#${ids.c})`} />
       <circle cx="40.5" cy="21.5" r="6.2" fill="none" stroke="#FFF9F0" strokeWidth="3.2" />
       <line x1="45" y1="26" x2="50" y2="31" stroke="#FFF9F0" strokeWidth="3.2" strokeLinecap="round" />
     </svg>
