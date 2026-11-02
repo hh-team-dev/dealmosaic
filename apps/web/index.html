@@ -26,6 +26,15 @@
       ownership by reading a meta tag from the static HTML — so this must be in
       the served document, not injected by React after load.
     -->
+    <!--
+      Google Search Console ownership verification (URL-prefix property).
+
+      Must be in the STATIC HTML: Google's verifier fetches the page without
+      executing JavaScript, so a tag injected by React after load is invisible
+      to it. Same reason the Cuelinks and Admitad tags live here.
+    -->
+    <meta name="google-site-verification" content="Ersx7PMejxhq5o7QjPl1dLZtn1CGrkAM3wAP71fIc0M" />
+
     <meta name="mitgo-verification" content="948e5d58-89bf-4591-a75b-928c26fadba6" />
 
     <meta name="cuelinks-verification" content="VERIFY-CL-3DHLX1JK" />
