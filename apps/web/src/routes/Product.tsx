@@ -161,7 +161,7 @@ export default function Product() {
                       <h3 className="tiny muted" style={{ margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         Price history
                       </h3>
-                      <PriceChart points={history?.[v.id] ?? []} label={`${product.title} ${v.label}`} />
+                      <PriceChart history={history?.[v.id]} label={`${product.title}, ${v.label}`} />
                     </div>
                     <PriceAlertForm variantId={v.id} variantLabel={v.label} currentPriceMinor={v.priceFromMinor} />
                   </div>

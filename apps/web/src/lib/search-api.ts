@@ -194,6 +194,34 @@ export interface PricePoint {
   dataOrigin: string;
 }
 
+/**
+ * A window of history, with the verdict already decided by the API. `covered`
+ * false means there is not enough record to draw the window, and `verdict`
+ * explains that in one sentence so the page never has to invent its own reason.
+ */
+export interface HistoryWindow {
+  days: number;
+  observations: number;
+  daysRecorded: number;
+  spanDays: number;
+  coverage: number;
+  covered: boolean;
+  from: string | null;
+  to: string | null;
+  verdict: string;
+  unlocksOn: string | null;
+  points: PricePoint[];
+}
+
+export interface VariantHistory {
+  observations: number;
+  daysRecorded: number;
+  firstObservedAt: string | null;
+  lastObservedAt: string | null;
+  points: PricePoint[];
+  windows: Record<string, HistoryWindow>;
+}
+
 export interface CommunityPrice {
   variantId: string;
   platformSlug: string;
@@ -221,7 +249,7 @@ export interface ProductCoupon {
 export interface ProductDetail {
   product: Omit<ProductSummary, 'priceFromMinor' | 'variantCount'>;
   offersByVariant?: Record<string, VariantOffer[]>;
-  history?: Record<string, PricePoint[]>;
+  history?: Record<string, VariantHistory>;
   community?: CommunityPrice[];
   coupons?: ProductCoupon[];
   notes?: { community: string; history: string };

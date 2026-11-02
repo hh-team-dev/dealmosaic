@@ -222,6 +222,28 @@ describe('product detail for the page', () => {
     // The origin label is what stops demo data being read as a live quote.
     expect(body.offersByVariant[firstVariant.id][0].dataOrigin).toBeTruthy();
     expect(body.notes.history).toContain('our own record');
-    expect(Array.isArray(body.history[firstVariant.id])).toBe(true);
+
+    /*
+     * HISTORY ARRIVES WITH ITS VERDICT ATTACHED.
+     *
+     * The page must not be the place that decides whether a 30-day chart is
+     * justified: a client that receives raw points will draw them, and two points
+     * drawn across a 30-day axis is the exact lie this endpoint exists to prevent.
+     */
+    const history = body.history[firstVariant.id];
+    expect(history.windows['7']).toBeTruthy();
+    expect(history.windows['30']).toBeTruthy();
+    expect(history.windows['90']).toBeTruthy();
+    for (const days of ['7', '30', '90']) {
+      const w = history.windows[days];
+      expect(typeof w.covered).toBe('boolean');
+      expect(typeof w.verdict).toBe('string');
+      expect(w.verdict.length).toBeGreaterThan(10);
+      expect(w.coverage).toBeLessThanOrEqual(1);
+      // A window we cannot cover must never carry a drawable series.
+      if (!w.covered) expect(w.verdict).toMatch(/not|Nothing|One observation|Only|needs/i);
+    }
+    // A brand-new install has hours of records, not months: nothing is covered.
+    expect(history.windows['90'].covered).toBe(false);
   });
 });

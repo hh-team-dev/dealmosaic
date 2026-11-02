@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { db, nowIso } from '../db/index.js';
-import { priceHistory } from '../services/alerts.js';
+import { priceHistoryForVariants } from '../services/price-history.js';
 import type { AppBindings } from '../middleware/session.js';
 import { connectorHealth, KNOWN_PLATFORMS, unimplementedPlatforms } from '../connectors/index.js';
 
@@ -138,12 +138,12 @@ catalogueRoutes.get('/products/:slug', async (c) => {
     }
   }
 
-  const history: Record<string, Awaited<ReturnType<typeof priceHistory>>> = {};
-  await Promise.all(
-    variantIds.slice(0, 12).map(async (id) => {
-      history[id] = await priceHistory(id, 30);
-    }),
-  );
+  /**
+   * History arrives window-shaped, with the verdict already decided server-side.
+   * The page cannot draw a 30-day chart out of two days of records because the
+   * API never hands it a 30-day window it cannot stand behind.
+   */
+  const history = await priceHistoryForVariants(variantIds.slice(0, 12));
 
   const communityRows = variantIds.length
     ? ((await db
@@ -216,7 +216,7 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       community:
         'Shopper-reported prices. They are not retailer-verified, are specific to one pincode and moment, and never affect the ranking of the three verified offers.',
       history:
-        'Each point is the cheapest observation we recorded that day. It is our own record, not a market index.',
+        'Each point is the cheapest observation we recorded that day. It is our own record, not a market index. A chart is only drawn once our records span the whole window it claims.',
     },
     variants: variants.map((v) => ({
       id: v.id,

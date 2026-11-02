@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { CommunityPrice, PricePoint, ProductCoupon, VariantOffer } from '../lib/search-api';
+import type { CommunityPrice, HistoryWindow, ProductCoupon, VariantHistory, VariantOffer } from '../lib/search-api';
 import { createAlert } from '../lib/alerts-api';
 import { inr } from '../lib/format';
 import { useAuth } from '../lib/session';
@@ -77,36 +77,94 @@ export function OfferList({ offers }: { offers: VariantOffer[] }) {
  * line across a single observation would read as "the price has been stable",
  * which is a claim we would not have earned.
  */
-export function PriceChart({ points, label }: { points: PricePoint[]; label: string }) {
-  if (points.length === 0) {
+/**
+ * A hand-drawn SVG line: no chart library, no 90 kB dependency, no external
+ * request. Zero cost, and it renders in the preview iframe where a CDN would
+ * not.
+ *
+ * THE HARD PART IS NOT THE LINE. It is refusing to draw one.
+ *
+ * The site began recording on 1 November 2026. A "30-day" tab drawn from two
+ * days of records is the most convincing lie a price-history chart can tell, and
+ * it is the default everywhere else in this market. So the range control offers
+ * all three windows — a shopper is entitled to ask for them — and any window we
+ * cannot fill answers with what we actually hold: the days recorded, the exact
+ * date it becomes drawable, and the observations themselves as dated prices.
+ *
+ * A date and a price is a fact. A line through two points is an argument.
+ */
+export function PriceChart({ history, label }: { history: VariantHistory | undefined; label: string }) {
+  const windows = history?.windows ?? {};
+  const available = Object.keys(windows)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  /** Default to the longest window we can actually draw; 7 days otherwise. */
+  const bestCovered = available.filter((d) => windows[String(d)]?.covered).pop();
+  const [chosen, setChosen] = useState<number | null>(bestCovered ?? null);
+  const days = chosen ?? bestCovered ?? available[0] ?? 7;
+  const win = windows[String(days)];
+
+  if (!win) {
     return (
       <div className="chart-empty">
         <Icon name="chart" size={18} />
         <p className="small" style={{ margin: 0 }}>
           We have not recorded a price for <strong>{label}</strong> yet. Recording starts the first time we observe
-          this offer, and history builds from there — we will not draw a past we did not see.
+          an offer, and history builds from there — we will not draw a past we did not see.
         </p>
       </div>
     );
   }
 
+  return (
+    <div className="chart-wrap">
+      <div className="chart-ranges" role="group" aria-label="History window">
+        {available.map((d) => {
+          const w = windows[String(d)];
+          const active = d === days;
+          return (
+            <button
+              key={d}
+              type="button"
+              className={`chip${active ? ' is-active' : ''}`}
+              aria-pressed={active}
+              onClick={() => setChosen(d)}
+              title={w?.covered ? `${d}-day view` : `${d}-day view — not enough history yet`}
+            >
+              {d}d
+              {!w?.covered && <span aria-hidden="true" className="chip-count">·</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {win.covered ? <CoveredChart win={win} label={label} /> : <NotEnough win={win} label={label} />}
+
+      <p className="tiny muted" style={{ margin: 0 }}>
+        {win.covered
+          ? `${win.daysRecorded} recorded days · cheapest observation each day, our own record — not a market index.`
+          : win.verdict}
+      </p>
+    </div>
+  );
+}
+
+function shortDay(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+}
+
+function fullDay(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/** The window we can stand behind. */
+function CoveredChart({ win, label }: { win: HistoryWindow; label: string }) {
+  const points = win.points;
   const first = points[0];
   const last = points[points.length - 1];
-  if (!first || !last) return null;
 
-  if (points.length === 1) {
-    const only = first;
-    return (
-      <div className="chart-empty">
-        <Icon name="chart" size={18} />
-        <p className="small" style={{ margin: 0 }}>
-          One observation so far: <strong>{inr(only.priceMinor)}</strong> on{' '}
-          {new Date(only.observedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}. A trend needs at
-          least two days of records, so we are not drawing a line yet.
-        </p>
-      </div>
-    );
-  }
+  if (points.length < 2 || !first || !last) return <NotEnough win={win} label={label} />;
 
   const width = 320;
   const height = 64;
@@ -123,16 +181,16 @@ export function PriceChart({ points, label }: { points: PricePoint[]; label: str
   const cheaper = delta < 0;
 
   return (
-    <div className="chart-wrap">
+    <>
       <div className="chart-head">
         <strong className="numeric">{inr(last.priceMinor)}</strong>
         <span className={`chart-delta${cheaper ? ' is-down' : delta > 0 ? ' is-up' : ''}`}>
           {delta === 0
             ? 'unchanged over this window'
-            : `${cheaper ? '▼' : '▲'} ${inr(Math.abs(delta))} since ${new Date(first.observedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`}
+            : `${cheaper ? '▼' : '▲'} ${inr(Math.abs(delta))} since ${shortDay(first.observedAt)}`}
         </span>
       </div>
-      <svg viewBox={`0 0 ${width} ${height}`} className="chart-svg" role="img" aria-label={`Price history for ${label}`}>
+      <svg viewBox={`0 0 ${width} ${height}`} className="chart-svg" role="img" aria-label={`Price history for ${label}, ${win.days} days`}>
         <defs>
           <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--violet)" stopOpacity="0.28" />
@@ -146,9 +204,48 @@ export function PriceChart({ points, label }: { points: PricePoint[]; label: str
         ))}
       </svg>
       <p className="tiny muted" style={{ margin: 0 }}>
-        {points.length} daily observations · lowest {inr(min)} · highest {inr(max)} · cheapest observation each day,
-        our own record — not a market index.
+        {points.length} daily observations · lowest {inr(min)} · highest {inr(max)}
       </p>
+    </>
+  );
+}
+
+/**
+ * The honest alternative to a chart: the observations we actually hold, newest
+ * first, as dates and prices. It reads as a record rather than a trend, which is
+ * exactly what it is.
+ */
+function NotEnough({ win, label }: { win: HistoryWindow; label: string }) {
+  const shown = [...win.points].reverse().slice(0, 4);
+  return (
+    <div className="chart-empty">
+      <Icon name="chart" size={18} />
+      <div>
+        <p className="small" style={{ margin: '0 0 6px' }}>
+          <strong>Not enough history yet for a {win.days}-day view of {label}.</strong> {win.verdict}
+        </p>
+        {shown.length > 0 && (
+          <>
+            <p className="tiny muted" style={{ margin: '0 0 2px' }}>
+              What we have recorded:
+            </p>
+            <ul className="chart-facts">
+              {shown.map((p) => (
+                <li key={p.observedAt}>
+                  <span className="numeric">{inr(p.priceMinor)}</span> on {shortDay(p.observedAt)}
+                  <span className="muted"> · {p.platformSlug}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {win.unlocksOn && (
+          <p className="tiny muted" style={{ margin: '6px 0 0' }}>
+            This view becomes drawable on <strong>{fullDay(win.unlocksOn)}</strong>, once our oldest record is{' '}
+            {win.days} days old.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

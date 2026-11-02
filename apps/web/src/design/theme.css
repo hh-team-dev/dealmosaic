@@ -3525,6 +3525,30 @@ button.chip[aria-selected='true'] {
 
   display: block;
 }
+.chart-ranges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.chart-ranges .chip {
+  min-height: 28px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
+/* The observations behind a "not enough history" message: dates and prices, no line. */
+.chart-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+.chart-facts .numeric { color: var(--ink); font-weight: 700; }
+
 .chart-empty {
   display: flex;
   gap: 10px;
