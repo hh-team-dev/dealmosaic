@@ -1,5 +1,10 @@
 # DEALMOSAIC — Complete Project Handover
 
+> **The single entry point is [`00-MASTER-HANDOVER.md`](00-MASTER-HANDOVER.md).**
+> This file remains the detailed technical log — incident history, schema notes and
+> per-module detail — and is the reference the master document links into.
+
+
 **For any developer, AI or human, taking over this project.**
 
 | | |

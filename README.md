@@ -1,5 +1,12 @@
 # DEALMOSAIC
 
+> **NEW DEVELOPER? START HERE → [`docs/00-MASTER-HANDOVER.md`](docs/00-MASTER-HANDOVER.md)**
+> One document connecting the concept, the architecture, the live systems, every
+> bug found, what is blocked on a human, and exactly what to do next. Written so
+> you can continue without asking a question.
+
+
+
 **One search. Three real deals. Zero price surprises.**
 
 A price-comparison product for India. Search a product → we resolve the exact
