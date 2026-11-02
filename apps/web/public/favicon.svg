@@ -1,13 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6B6B"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient>
-    <linearGradient id="b" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFBE0B"/><stop offset="1" stop-color="#B8F34A"/></linearGradient>
-    <linearGradient id="c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2EC4B6"/><stop offset="1" stop-color="#4361EE"/></linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="#FFF9F0"/>
-  <polygon points="32,7 11,32 32,32" fill="url(#a)"/>
-  <polygon points="32,7 53,32 32,32" fill="url(#b)"/>
-  <polygon points="11,32 32,32 32,57 53,32" fill="url(#c)"/>
-  <circle cx="40" cy="22" r="5.4" fill="none" stroke="#FFF9F0" stroke-width="3"/>
-  <line x1="44" y1="26" x2="48" y2="30" stroke="#FFF9F0" stroke-width="3" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3 4 58 58" width="58" height="58" role="img" aria-label="DEALMOSAIC"><title>DEALMOSAIC</title><polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="#2F49C9"/><polygon points="32,29 44,12 56,12 56,54 44,54 44,31 32,48" fill="#FF6B6B"/></svg>

@@ -18,6 +18,8 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / 'scripts/brand'))
+from brand import COBALT, CORAL, LEFT, RIGHT  # noqa: E402  (single source of truth)
 PUBLIC = ROOT / 'apps/web/public'
 OUT = PUBLIC / 'og.png'
 
@@ -29,6 +31,20 @@ TINT = (253, 241, 231)
 
 # The prism gradient, straight from apps/web/src/design/theme.css
 PRISM = [(255, 107, 107), (255, 190, 11), (184, 243, 74), (46, 196, 182), (67, 97, 238)]
+
+
+def hex_rgb(h: str):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def draw_mark(d, x, y, height):
+    """Draw the brand mark (the same two polygons as the site) at x, y."""
+    k = height / 42.0
+    def place(poly):
+        return [(x + (px - 8) * k, y + (py - 12) * k) for px, py in poly]
+    d.polygon(place(LEFT), fill=hex_rgb(COBALT))
+    d.polygon(place(RIGHT), fill=hex_rgb(CORAL))
 
 
 def brand_font(weight_name: str, cache: pathlib.Path, weight: int = 700) -> pathlib.Path:
@@ -78,17 +94,12 @@ def main():
     # Soft warm band behind the lower third — matches the site's --tint
     d.rectangle([0, H - 150, W, H], fill=TINT)
 
-    # Prism rule across the very top
-    for x in range(W):
-        d.line([(x, 0), (x, 10)], fill=prism_color(x / W))
+    # Two-tone rule across the very top: the mark's two facets, no gradient
+    d.rectangle([0, 0, W // 2, 10], fill=hex_rgb(COBALT))
+    d.rectangle([W // 2, 0, W, 10], fill=hex_rgb(CORAL))
 
-    # Mosaic tile motif, top right: 5 rounded squares in the spark palette
-    tx, ty, size, gap = 880, 92, 46, 16
-    for idx, col in enumerate(PRISM):
-        col_i, row_i = idx % 3, idx // 3
-        x0 = tx + col_i * (size + gap)
-        y0 = ty + row_i * (size + gap)
-        d.rounded_rectangle([x0, y0, x0 + size, y0 + size], radius=12, fill=col)
+    # The mark itself, top right, flat fills at the size it can hold
+    draw_mark(d, 872, 96, 168)
 
     title_font = ImageFont.truetype(outfit, 112)
     tag_font = ImageFont.truetype(jakarta_bold, 42)
@@ -109,10 +120,9 @@ def main():
     d.text((76, H - 104), 'Grocery  ·  Quick commerce  ·  Everyday electronics',
            font=foot_font, fill=INK_MUTED)
 
-    # Small prism swatch bottom-right
-    for i in range(5):
-        c = PRISM[i]
-        d.rounded_rectangle([W - 190 + i * 30, H - 96, W - 166 + i * 30, H - 72], radius=6, fill=c)
+    # The two brand facets, bottom-right
+    d.rounded_rectangle([W - 172, H - 96, W - 148, H - 72], radius=6, fill=hex_rgb(COBALT))
+    d.rounded_rectangle([W - 142, H - 96, W - 118, H - 72], radius=6, fill=hex_rgb(CORAL))
 
     img.save(OUT, 'PNG', optimize=True)
     print(f'{OUT.relative_to(ROOT)}  {OUT.stat().st_size / 1024:.1f} KB  {img.size[0]}x{img.size[1]}')

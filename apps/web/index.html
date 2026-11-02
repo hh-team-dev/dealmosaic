@@ -45,8 +45,16 @@
     <meta name="apple-mobile-web-app-title" content="DEALMOSAIC" />
     <meta name="format-detection" content="telephone=no" />
 
+    <!-- Icons. The SVG is first because it scales cleanly in every modern tab;
+         the ICO is the fallback for browsers and Windows shortcuts that ignore it.
+         apple-touch-icon must be a 180 px PNG — iOS does not render SVG here, and
+         pointing it at the SVG (as this file did until now) meant no home-screen
+         icon at all. All three are generated from one geometry by
+         scripts/brand/brand.py. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" href="/fonts/Outfit.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Plus-Jakarta-Sans.woff2" as="font" type="font/woff2" crossorigin />
 
@@ -87,7 +95,7 @@
             "@id": "%SITE_URL%/#organization",
             "name": "DEALMOSAIC",
             "url": "%SITE_URL%/",
-            "logo": "%SITE_URL%/favicon.svg",
+            "logo": "%SITE_URL%/brand/dm-icon-512.png",
             "slogan": "One search. Three real deals. Zero price surprises.",
             "description": "DEALMOSAIC compares the true landed cost of a product across Indian stores — item price, delivery, fees and taxes — and shows at most three ranked, commission-blind offers with a stated reason for the order.",
             "areaServed": { "@type": "Country", "name": "India" },

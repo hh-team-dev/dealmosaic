@@ -1,13 +1,24 @@
-import { useId } from 'react';
-
 /**
- * The "Prism Tessera" mark: three angular tiles converge into one prism, with an
- * aperture notch for discovery. Original geometry, inline SVG, animates on mount.
+ * The DEALMOSAIC mark — "Mosaic M".
  *
- * The gradient ids are per-instance. The mark renders in the header and the footer
- * of every page, and fixed ids meant the same three ids existed twice in one
- * document — invalid HTML, and a coin flip for which definition the second mark
- * resolved against.
+ * Two polygons, one letterform. An angular M whose left facet is Cobalt Deep and
+ * whose right facet is Coral Spark; the two halves meet along the chevron that
+ * runs up the middle of the letter, so the colour change *is* the letter's
+ * construction rather than a decoration laid over it. Read as a whole it is an M;
+ * read as parts it is two tiles joined at an angle — a mosaic.
+ *
+ * The geometry is original. It is deliberately not a gradient, not a stroke, not a
+ * glyph set in a typeface, and not assembled from pieces of other companies' marks.
+ * Flat fills only: that is what survives being scaled to 16 px and what prints in
+ * one ink when the palette is unavailable.
+ *
+ * The grid is 64 x 64 with the mark inset to x 8..56 / y 12..54, and the viewBox
+ * crops to a square window around it so the optical padding is even on all sides.
+ * Assets generated from the same geometry live in apps/web/public/brand/
+ * (see scripts/brand/brand.py and docs/brand-identity.md).
+ *
+ * Colours come from CSS custom properties rather than hard-coded hex, so the mark
+ * can be re-tinted per surface (e.g. the on-dark pair) without touching markup.
  */
 export function LogoMark({
   size = 34,
@@ -18,37 +29,17 @@ export function LogoMark({
   animated?: boolean;
   title?: string;
 }) {
-  const uid = useId().replace(/[:]/g, '');
-  const ids = { a: `dmA${uid}`, b: `dmB${uid}`, c: `dmC${uid}` };
-
   return (
     <svg
       className={`brand-mark logo-tiles${animated ? ' logo-anim' : ''}`}
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox="3 4 58 58"
       role="img"
       aria-label={title}
     >
-      <defs>
-        <linearGradient id={ids.a} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#FF6B6B" />
-          <stop offset="1" stopColor="#FF8A3D" />
-        </linearGradient>
-        <linearGradient id={ids.b} x1="1" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#FFBE0B" />
-          <stop offset="1" stopColor="#B8F34A" />
-        </linearGradient>
-        <linearGradient id={ids.c} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#2EC4B6" />
-          <stop offset="1" stopColor="#4361EE" />
-        </linearGradient>
-      </defs>
-      <polygon points="32,4 8,32 32,32" fill={`url(#${ids.a})`} />
-      <polygon points="32,4 56,32 32,32" fill={`url(#${ids.b})`} />
-      <polygon points="8,32 32,32 32,60 56,32" fill={`url(#${ids.c})`} />
-      <circle cx="40.5" cy="21.5" r="6.2" fill="none" stroke="#FFF9F0" strokeWidth="3.2" />
-      <line x1="45" y1="26" x2="50" y2="31" stroke="#FFF9F0" strokeWidth="3.2" strokeLinecap="round" />
+      <polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="var(--brand-cobalt)" />
+      <polygon points="32,29 44,12 56,12 56,54 44,54 44,31 32,48" fill="var(--brand-coral)" />
     </svg>
   );
 }

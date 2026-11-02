@@ -33,6 +33,17 @@
   --hairline: #ebddea;
   --hairline-strong: #dcc9dd;
 
+  /* ---- brand mark ------------------------------------------------------
+     The mark's two facets. Cobalt Deep is --blue-d and Coral Spark is --coral,
+     so the identity introduces no new hues; these aliases exist so the SVG can
+     be re-pointed per surface without editing markup. The on-dark pair clears
+     3:1 against Mosaic Plum, which the primary cobalt does not (1.66:1).
+     Documented in docs/brand-identity.md. */
+  --brand-cobalt: #2f49c9;
+  --brand-coral: #ff6b6b;
+  --brand-cobalt-on-dark: #8fa6ff;
+  --brand-coral-on-dark: #ff8a8a;
+
   /* ---- spark (decorative fills) --------------------------------------- */
   --coral: #ff6b6b;
   --blue: #4361ee;
@@ -871,10 +882,10 @@ kbd {
   line-height: 1;
 }
 .brand-word span {
-  background: var(--grad-aurora);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  /* The full stop carries the mark's coral, so the wordmark and the symbol read
+     as one identity. Coral Spark is only 2.65:1 on Warm White, so the deeper
+     Coral value is used at text size. */
+  color: var(--coral-d);
 }
 .brand-sub {
   display: none;
@@ -1049,13 +1060,10 @@ kbd {
   transform-origin: center;
 }
 .logo-anim polygon:nth-child(1) {
-  animation: tileIn 620ms var(--ease-snap) both;
+  animation: tileIn 560ms var(--ease-snap) both;
 }
 .logo-anim polygon:nth-child(2) {
-  animation: tileIn 620ms var(--ease-snap) 60ms both;
-}
-.logo-anim polygon:nth-child(3) {
-  animation: tileIn 620ms var(--ease-snap) 120ms both;
+  animation: tileIn 560ms var(--ease-snap) 80ms both;
 }
 @keyframes tileIn {
   from {

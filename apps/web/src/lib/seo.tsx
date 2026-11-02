@@ -127,7 +127,7 @@ export function organizationJsonLd(): Record<string, unknown> {
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.svg`,
+    logo: `${SITE_URL}/brand/dm-icon-512.png`,
     description:
       'DEALMOSAIC compares the true landed cost of a product across Indian stores — item price, delivery, fees and taxes — and shows at most three ranked, commission-blind offers.',
     areaServed: { '@type': 'Country', name: 'India' },
