@@ -78,7 +78,7 @@ export default function Landing() {
                     id="hero-search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search a product — try “iPhone 16” or “atta 5kg”"
+                    placeholder="Search a product, brand or model"
                     autoComplete="off"
                     enterKeyHint="search"
                   />
@@ -104,13 +104,15 @@ export default function Landing() {
               </div>
             </form>
 
-            <div className="hero-cta">
-              <Link to="/register" className="btn btn-primary btn-lg">
-                Create free account
-              </Link>
-              <a href="#how" className="btn btn-quiet btn-lg">
-                See how ranking works
-              </a>
+            {/* One primary action (the search above) plus two quiet links.
+                A third and fourth large button pushed the discovery wall below
+                the fold on a 390 px phone, which defeats the point of having one. */}
+            <div className="hero-links">
+              <a href="#discover">See today’s best deals</a>
+              <span aria-hidden="true">·</span>
+              <a href="#how">How ranking works</a>
+              <span aria-hidden="true">·</span>
+              <Link to="/saved">Your saved deals</Link>
             </div>
 
             <div className="hero-trust">

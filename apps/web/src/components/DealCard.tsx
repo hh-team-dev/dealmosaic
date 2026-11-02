@@ -133,7 +133,11 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         ) : (
           <span className="deal-urgency deal-urgency-none">No expiry published</span>
         )}
-        {deal.code ? <span className="deal-card-hint">Code copied — paste it at checkout</span> : null}
+        {deal.code ? (
+          <span className="deal-card-hint">
+            {copied ? 'Copied — paste it at checkout' : 'Tap the code to copy it'}
+          </span>
+        ) : null}
       </footer>
     </article>
   );

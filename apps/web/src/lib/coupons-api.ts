@@ -185,10 +185,15 @@ export function statedPercentLabel(d: { statedPercent: number | null; percentIsC
 /** The tightest honest urgency line: a real date, or nothing at all. */
 export function expiryLabel(expiresAt: string | null, daysLeft: number | null): string | null {
   if (!expiresAt) return null;
-  if (daysLeft === null) return null;
-  if (daysLeft <= 0) return 'Ends today';
-  if (daysLeft === 1) return 'Ends tomorrow';
-  if (daysLeft <= 7) return `${daysLeft} days left`;
+  // Callers that did not receive a server-computed day count (the saved page
+  // rebuilds cards from localStorage) still get a real label — deriving it here
+  // beats printing "No expiry published" on an offer that has a date.
+  const days =
+    daysLeft ??
+    Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 86_400_000));
+  if (days <= 0) return 'Ends today';
+  if (days === 1) return 'Ends tomorrow';
+  if (days <= 7) return `${days} days left`;
   const date = new Date(expiresAt);
   return `Until ${date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
 }

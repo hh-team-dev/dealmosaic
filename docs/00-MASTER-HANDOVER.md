@@ -102,6 +102,29 @@ backup verified: 172 files, checksums match
 
 ---
 
+### 2.4 Discovery block — added 3 November 2026
+
+The homepage now has a browsable board of **14 shelves built from live rows**, not a brochure
+around a search box. Read `docs/25-competitive-gap-analysis.md` for the audit that produced it.
+
+| Section | Live rows behind it (verified from `/api/coupons/discover`) |
+|---|---|
+| Today's best deals | 8 of 1,089 live offers, codes first |
+| Biggest savings on the board | ranked by the store's own published percentage |
+| Under ₹99 / ₹199 / ₹499 / ₹999 | 9 / 22 / 73 / 127 offers whose headline states a price |
+| Grocery, Electronics, Fashion, Beauty, Home | 120 / 123 / 167 / 275 / 18 |
+| Bank, card & UPI offers | 26 offers whose copy names a bank, card or UPI app |
+| Newly discovered | added in the last 14 days |
+| Ending in the next seven days | 63 offers with a real expiry date |
+
+Plus `/saved` — a wishlist and recently-viewed board in `localStorage`, no account required.
+
+**The rule that makes it safe to ship:** the server withholds any shelf that cannot meet its
+`minItems` floor and says so in a `withheld` array. On a thin day the wall gets shorter, never
+fictional. Percentages keep the store's "up to"; prices keep "from" / "under" / "at".
+
+---
+
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
 
 ### 3.1 Repository map
@@ -569,19 +592,30 @@ Honest inventory of gap between code and interface:
 
 **Ranked by value per hour, not by ambition.**
 
-1. **Expand the catalogue from 25 products.** The single biggest weakness: a
+0. ~~Browsing with no search term~~ — **done 3 Nov 2026.** 14 live shelves plus `/saved`.
+   See `docs/25`. Browsing works; *searching* outside the catalogue still does not.
+1. **Expand the catalogue from 25 products.** Still the single biggest weakness: a
    visitor who searches for something we do not stock sees a dead end. A few
-   hundred products makes the site feel like a shop rather than a demo.
-2. **Wire coupons into comparison pages.** Show the applicable code next to each
+   hundred products makes the site feel like a shop rather than a demo. The
+   discovery wall now gives such a visitor somewhere to go, which buys time —
+   it does not remove the gap.
+2. **Price alerts (email).** `price_alerts` and the Brevo mailer both exist; the
+   signed-in target-price flow and the daily check do not. This is the strongest
+   return-visit mechanic on the list and the only reason "reason to return" is
+   still half-built. Wishlist and recently-viewed already ship locally.
+3. **Wire coupons into comparison pages.** Show the applicable code next to each
    offer. Converts browsing into saving.
-3. **Pincode UI.** The API is done; a header field would make delivery estimates
+4. **Pincode UI.** The API is done; a header field would make delivery estimates
    real for every visitor.
-4. **Community price reporting form.** Turns visitors into a data source and is
+5. **Community price reporting form.** Turns visitors into a data source and is
    the only legal route to quick-commerce pricing.
-5. **Price-history charts.** `offer_snapshots` already records the data.
-6. **Coupon moderation panel.** Verification is manual SQL today.
-7. **Brand pages** generated from the catalogue — high-intent searches, but only
+6. **Price-history charts.** `offer_snapshots` already records the data.
+7. **Coupon moderation panel.** Verification is manual SQL today.
+8. **Brand pages** generated from the catalogue — high-intent searches, but only
    once there is enough inventory to avoid thin pages.
+9. **Schedule the sync.** `POST /api/coupons/sync?pages=11` now takes **21 s**
+   (was 8 min 34 s) and is batched, so it can run hourly from any free scheduler.
+   Until a scheduler exists it is still manual.
 
 **Not planned:** PWA (deferred by owner, install-ready), Cloudflare D1 (owner
 chose Turso — do not re-litigate), Google Maps (paid).
@@ -637,6 +671,7 @@ Two rules learned the hard way:
 |---|---|
 | **`00-MASTER-HANDOVER.md`** | **This file — read first** |
 | `00-executive-summary.md` | Original concept and positioning |
+| **`25-competitive-gap-analysis.md`** | **The audit behind the discovery block: what was broken, the price-parsing discovery, shelf-by-shelf data reality, what is still open** |
 | `01-research-competitive-matrix.md` | Competitor analysis |
 | `02-connector-feasibility.md` | Per-retailer API reality |
 | `03-architecture.md` | Original architecture decisions |

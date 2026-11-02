@@ -128,15 +128,62 @@ function page({ title, description, path, jsonLd, bodyHtml, ogType }) {
 
 const shell = () => readFileSync(join(dist, 'index.html'), 'utf8');
 
-function homeBody() {
+/**
+ * The homepage's static body.
+ *
+ * It carries the discovery shelves, not just a heading. Two reasons, both about
+ * the same underlying fact — a crawler and a phone with JavaScript disabled see
+ * the same HTML: 44 prerendered pages already exist so the site is indexable, and
+ * a homepage that only says "type in the search box" wastes the strongest page on
+ * the domain. The lists below link straight into /deals.
+ */
+function homeBody(discovery) {
+  const shelves = (discovery?.sections ?? [])
+    .slice(0, 8)
+    .map((section) => {
+      const items = section.items
+        .slice(0, 6)
+        .map((d) => {
+          const bits = [];
+          if (d.statedPercent) bits.push(`${d.percentIsCap ? 'up to ' : ''}${d.statedPercent}% off`);
+          if (d.statedPriceMinor) bits.push(`from ₹${Math.round(d.statedPriceMinor / 100)}`);
+          if (d.code) bits.push(`code <code>${esc(d.code)}</code>`);
+          return `<li><strong>${esc(d.platformName)}</strong> — ${esc(d.title)}${
+            bits.length ? ` (${bits.join(' · ')})` : ''
+          }</li>`;
+        })
+        .join('');
+      return `<h2>${esc(section.title)}</h2><p>${esc(section.subtitle)}</p><ul>${items}</ul>`;
+    })
+    .join('');
+
+  const totals = discovery?.totals
+    ? `<p>${discovery.totals.live} offers live right now · ${discovery.totals.withCode} with a copyable code · ${discovery.totals.endingThisWeek} ending this week.</p>`
+    : '';
+
   return `
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
       <h1>DEALMOSAIC — one search, three real deals</h1>
       <p>Compare the true landed cost of any product across Indian stores: item price,
       delivery, fees and tax, ranked by what you actually pay.</p>
-      <p><a href="/deals">Today's verified coupons and deals</a> ·
+      <p><a href="/deals">Every live coupon and deal</a> ·
          <a href="/browse">Browse every product we compare</a> ·
-         <a href="/how-we-rank">How we rank offers</a></p>
+         <a href="/how-we-rank">How we rank offers</a> ·
+         <a href="/saved">Your saved deals</a></p>
+      ${totals}
+      ${shelves}
+    </main>`;
+}
+
+/** /saved — mostly a client-side board, but it needs a real page to exist first. */
+function savedBody() {
+  return `
+    <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
+      <h1>Your saved deals</h1>
+      <p>Tap the heart on any deal and it is kept on this device — no account, no
+      tracking, nothing sent to our servers. Recently viewed offers appear here too.</p>
+      <p><a href="/deals">Find something worth saving</a> ·
+         <a href="/browse">Browse every product we compare</a></p>
     </main>`;
 }
 
@@ -224,7 +271,7 @@ function dealsBody(coupons) {
     .join('');
   return `
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
-      <h1>Today's verified coupon codes and deals across Indian stores</h1>
+      <h1>Today's live coupon codes and deals across Indian stores</h1>
       <p>Every code here comes from the merchant's own campaign data. Expiry is shown
       on everything that has one, and cashback is never counted as a discount.</p>
       <ul>${rows}</ul>
@@ -258,7 +305,22 @@ async function main() {
 
   let count = 0;
 
-  page({ title: 'DEALMOSAIC — one search, three real deals', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody() });
+  let discovery = null;
+  try {
+    discovery = await api('/api/coupons/discover');
+  } catch {
+    /* an API outage must not fail the build; the shelves simply stay client-side */
+  }
+
+  page({ title: 'DEALMOSAIC — one search, three real deals', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody(discovery) });
+  count++;
+
+  page({
+    title: 'Your saved deals — DEALMOSAIC',
+    description: 'The deals you kept and the offers you looked at, stored on your own device. No account needed.',
+    path: '/saved',
+    bodyHtml: savedBody(),
+  });
   count++;
 
   for (const cat of categories) {
