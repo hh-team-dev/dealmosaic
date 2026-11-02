@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import type { AppBindings } from '../middleware/session.js';
 import { recordDailySnapshots } from '../services/snapshots.js';
 import { runAlerts } from '../services/alerts.js';
+import { syncAffiliateOffers } from '../services/affiliate-sync.js';
 import * as cuelinks from '../lib/cuelinks.js';
 import { mailStatus } from '../lib/mailer.js';
 
@@ -39,10 +40,23 @@ maintenanceRoutes.post('/daily', async (c) => {
     steps.push({ step: 'snapshots', ok: false, error: (err as Error).message });
   }
 
-  // Refresh the affiliate feed first when it is configured: an alert that fires
-  // on a week-old price is a false alarm with an audience.
+  // Refresh the affiliate feed first. The deal wall is the front page of the
+  // site; a day-old feed is a day-old front page, and an expired offer that
+  // still looks live is worse than no offer at all.
   if (cuelinks.isConfigured() && c.req.query('refresh') !== '0') {
-    steps.push({ step: 'affiliate', ok: true, note: 'call POST /api/coupons/sync separately; it is slow by design and kept out of this path' });
+    try {
+      const sync = await syncAffiliateOffers(40);
+      steps.push({
+        step: 'affiliate',
+        ok: sync.ok,
+        seen: sync.seen,
+        inserted: sync.inserted,
+        updated: sync.updated,
+        errors: sync.errors.slice(0, 2),
+      });
+    } catch (err) {
+      steps.push({ step: 'affiliate', ok: false, error: (err as Error).message });
+    }
   }
 
   try {
