@@ -15,6 +15,7 @@ import Search from './routes/Search';
 import Product from './routes/Product';
 import Browse from './routes/Browse';
 import Deals from './routes/Deals';
+import Admin from './routes/Admin';
 import Saved from './routes/Saved';
 import { DataSources, HowWeRank } from './routes/Method';
 
@@ -68,7 +69,8 @@ export default function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/browse" element={<Browse />} />
             <Route path="/deals" element={<Deals />} />
-            <Route path="/saved" element={<Saved />} />
+            <Route path="/admin" element={<Admin />} />
+          <Route path="/saved" element={<Saved />} />
             <Route path="/c/:slug" element={<Browse />} />
             <Route path="/p/:slug" element={<Product />} />
             <Route path="/how-we-rank" element={<HowWeRank />} />

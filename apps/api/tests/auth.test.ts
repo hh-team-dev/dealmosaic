@@ -219,13 +219,16 @@ describe('login, logout, session lifecycle', () => {
       email: 'ananya@example.in',
       password,
     });
+    expect(login.status, `login failed: ${JSON.stringify(login.body)}`).toBe(200);
     c.csrf = null; // simulate a cross-site request
     const res = await c.req('PATCH', '/api/me', { displayName: 'Hacked' });
-    expect(res.status).toBe(401);
+    // 403, not 401: the session is real, the request is refused. The distinction
+    // matters to the client — a 401 sends a signed-in person back to a login form.
+    expect(res.status).toBe(403);
 
     c.csrf = 'not-the-right-token';
     const res2 = await c.req('PATCH', '/api/me', { displayName: 'Hacked' });
-    expect(res2.status).toBe(401);
+    expect(res2.status).toBe(403);
 
     c.csrf = login.body.csrfToken;
     const ok = await c.req('PATCH', '/api/me', { displayName: 'Ananya S.' });

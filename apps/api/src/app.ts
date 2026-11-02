@@ -15,6 +15,7 @@ import { locationRoutes } from './routes/location.js';
 import { couponRoutes } from './routes/coupons.js';
 import { alertRoutes } from './routes/alerts.js';
 import { maintenanceRoutes } from './routes/maintenance.js';
+import { adminRoutes } from './routes/admin.js';
 import { maybeRunDaily } from './services/daily-job.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
@@ -90,10 +91,23 @@ app.get('/api/health', (c) => {
     markets: ['IN'],
     environment: process.env.NODE_ENV ?? 'development',
   });
-  // Never inside a test run: the job writes rows and sends email, and a test
-  // suite must not be able to reach either.
+  /**
+   * THE DAILY JOB SCHEDULES ITSELF OFF THIS PING.
+   *
+   * The keep-alive worker already calls `/api/health` every five minutes, so the
+   * API can ask "am I due?" on each ping and run at most once per 20 hours. That
+   * removes the need for a second cron trigger, a paid scheduler, or a GitHub
+   * Actions workflow that does not fire.
+   *
+   * The response is built first and the work is fired afterwards without being
+   * awaited, so a health check never waits for it. `runDailyNow` claims its slot
+   * with a conditional UPDATE, so two simultaneous pings cannot both start it.
+   *
+   * Never inside a test run: the job writes rows and sends email, and a test
+   * suite must be able to reach neither.
+   */
   if (!process.env.VITEST && process.env.NODE_ENV !== 'test' && process.env.DAILY_JOB !== 'off') {
-    void maybeRunDaily().catch(() => {});
+    void maybeRunDaily().catch((err) => console.warn('[daily] skipped:', (err as Error).message));
   }
   return res;
 });
@@ -111,6 +125,7 @@ app.route('/api/location', locationRoutes);
 app.route('/api/coupons', couponRoutes);
 app.route('/api/alerts', alertRoutes);
 app.route('/api/maintenance', maintenanceRoutes);
+app.route('/api/admin', adminRoutes);
 
 /**
  * `POST /api/maintenance/daily` was the original entry point for the scheduler.

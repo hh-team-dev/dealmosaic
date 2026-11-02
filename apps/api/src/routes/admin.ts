@@ -1,0 +1,288 @@
+import { Hono } from 'hono';
+import { z } from 'zod';
+import { db, newId, nowIso } from '../db/index.js';
+import type { AppBindings } from '../middleware/session.js';
+import { requireUser, requireAdmin, requireCsrf } from '../middleware/session.js';
+import { createRateLimiter } from '../lib/rate-limit.js';
+import { dailyJobStatus } from '../services/daily-job.js';
+import { affiliateReadiness } from '../services/affiliate-campaigns.js';
+
+/**
+ * THE OWNER'S CONTROL CENTRE.
+ *
+ * Until now every operational task — verifying a code, retiring a dead one,
+ * moderating a shopper's price report, promoting an account — meant writing SQL
+ * against production. That is not a product; it is a liability with a database
+ * attached. This module is the minimum surface that lets the owner run the site
+ * from a phone.
+ *
+ * Three rules shape it:
+ *
+ *  1. **The server decides.** Every route here mounts behind `requireAdmin`, which
+ *     reads the role from the database on each request. The interface hides what
+ *     it should, but hiding is decoration — the 403 is the enforcement.
+ *  2. **Every write is attributable.** No destructive route exists without an
+ *     `admin_audit` row recording who did it, to what, from which value to which.
+ *  3. **No route here can delete money or people.** Archiving and rejecting are
+ *     reversible state changes; there is no hard delete of a coupon, an offer or a
+ *     user from this surface.
+ */
+
+export const adminRoutes = new Hono<AppBindings>();
+
+const adminLimiter = createRateLimiter({ name: 'admin', windowMs: 60_000, max: 120 });
+
+// Every request must be a signed-in administrator. This is mounted first, so no
+// route registered below can be reached without passing it.
+adminRoutes.use('*', async (c, next) => {
+  await adminLimiter(c, async () => {});
+  await next();
+});
+adminRoutes.use('*', requireUser);
+adminRoutes.use('*', requireAdmin);
+
+/* ------------------------------------------------------------------ */
+/* Audit log                                                           */
+/* ------------------------------------------------------------------ */
+
+async function audit(
+  actor: { id: string; email: string },
+  action: string,
+  entity: string,
+  entityId: string,
+  before: unknown,
+  after: unknown,
+): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO admin_audit (id, actor_id, actor_email, action, entity, entity_id, before_json, after_json, at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      newId(),
+      actor.id,
+      actor.email,
+      action,
+      entity,
+      entityId,
+      before === null ? null : JSON.stringify(before).slice(0, 2000),
+      after === null ? null : JSON.stringify(after).slice(0, 2000),
+      nowIso(),
+    );
+}
+
+/* ------------------------------------------------------------------ */
+/* Overview                                                            */
+/* ------------------------------------------------------------------ */
+
+adminRoutes.get('/overview', async (c) => {
+  const now = nowIso();
+
+  const coupons = (await db
+    .prepare(
+      `SELECT COUNT(*) AS total,
+              SUM(CASE WHEN expires_at IS NOT NULL AND expires_at > ? THEN 1 ELSE 0 END) AS live,
+              SUM(CASE WHEN expires_at IS NOT NULL AND expires_at <= ? THEN 1 ELSE 0 END) AS expired,
+              SUM(CASE WHEN code IS NOT NULL AND code <> '' THEN 1 ELSE 0 END) AS with_code,
+              SUM(CASE WHEN stated_price_minor IS NOT NULL THEN 1 ELSE 0 END) AS with_price,
+              SUM(CASE WHEN trust_state = 'rejected' THEN 1 ELSE 0 END) AS rejected,
+              SUM(CASE WHEN trust_state = 'community_verified' THEN 1 ELSE 0 END) AS community_verified,
+              COUNT(DISTINCT platform_slug) AS stores
+         FROM coupons`,
+    )
+    .get(now, now)) as Record<string, number>;
+
+  const people = (await db
+    .prepare(
+      `SELECT COUNT(*) AS users,
+              SUM(CASE WHEN email_verified_at IS NOT NULL THEN 1 ELSE 0 END) AS verified,
+              SUM(CASE WHEN status <> 'active' THEN 1 ELSE 0 END) AS inactive
+         FROM users`,
+    )
+    .get()) as Record<string, number>;
+
+  const catalogue = (await db
+    .prepare(
+      `SELECT (SELECT COUNT(*) FROM catalogue_products) AS products,
+              (SELECT COUNT(*) FROM product_variants) AS variants,
+              (SELECT COUNT(*) FROM offers) AS offers,
+              (SELECT COUNT(*) FROM offer_snapshots) AS snapshots,
+              (SELECT COUNT(*) FROM price_alerts) AS alerts,
+              (SELECT COUNT(*) FROM community_prices) AS community,
+              (SELECT COUNT(*) FROM community_prices WHERE trust_state = 'unverified') AS community_pending`,
+    )
+    .get()) as Record<string, number>;
+
+  const job = await dailyJobStatus().catch(() => null);
+  const affiliate = await affiliateReadiness().catch(() => null);
+
+  return c.json({ coupons, people, catalogue, job, affiliate, now });
+});
+
+/* ------------------------------------------------------------------ */
+/* Coupons                                                             */
+/* ------------------------------------------------------------------ */
+
+const couponQuery = z.object({
+  state: z.enum(['live', 'expired', 'rejected', 'codes', 'all']).default('live'),
+  q: z.string().trim().max(120).optional(),
+  limit: z.coerce.number().min(1).max(200).default(50),
+});
+
+adminRoutes.get('/coupons', async (c) => {
+  const parsed = couponQuery.safeParse({
+    state: c.req.query('state') ?? 'live',
+    q: c.req.query('q') ?? undefined,
+    limit: c.req.query('limit') ?? 50,
+  });
+  if (!parsed.success) return c.json({ error: { code: 'invalid_request', message: parsed.error.issues[0]?.message } }, 400);
+
+  const { state, q, limit } = parsed.data;
+  const now = nowIso();
+  const where = [`(? = 'all'
+      OR (? = 'live' AND (c.expires_at IS NULL OR c.expires_at > ?))
+      OR (? = 'expired' AND c.expires_at IS NOT NULL AND c.expires_at <= ?)
+      OR (? = 'rejected' AND c.trust_state = 'rejected')
+      OR (? = 'codes' AND c.code IS NOT NULL AND c.code <> ''))`].join(' AND ');
+
+  const rows = (await db
+    .prepare(
+      `SELECT c.id, c.platform_slug, c.campaign_name, c.code, c.title, c.trust_state, c.source,
+              c.expires_at, c.success_count, c.fail_count, c.stated_percent, c.stated_price_minor,
+              c.offer_type, c.tracking_url, a.access_status AS affiliate_status
+         FROM coupons c
+    LEFT JOIN affiliate_campaigns a ON a.id = c.campaign_id
+        WHERE ${where}
+          AND (? IS NULL OR LOWER(c.title) LIKE ? OR LOWER(COALESCE(c.code,'')) LIKE ? OR LOWER(c.platform_slug) LIKE ?)
+        ORDER BY CASE WHEN c.expires_at IS NULL THEN 1 ELSE 0 END, c.expires_at ASC
+        LIMIT ?`,
+    )
+    .all(
+      state, state, now, state, now, state, state,
+      q ?? null, q ? `%${q.toLowerCase()}%` : null, q ? `%${q.toLowerCase()}%` : null, q ? `%${q.toLowerCase()}%` : null,
+      limit,
+    )) as unknown as Array<Record<string, unknown>>;
+
+  return c.json({ state, count: rows.length, coupons: rows });
+});
+
+const stateBody = z.object({ trustState: z.enum(['moderator_verified', 'community_verified', 'rejected', 'expired']) });
+
+/**
+ * Change a coupon's trust state. Reversible by design: rejecting is a label, not
+ * a deletion, so a mistake is one more click rather than a restore from backup.
+ */
+adminRoutes.post('/coupons/:id/state', requireCsrf, async (c) => {
+  const user = c.get('user')!;
+  const parsed = stateBody.safeParse(await c.req.json().catch(() => ({})));
+  if (!parsed.success) return c.json({ error: { code: 'invalid_request', message: 'Unknown trust state' } }, 400);
+
+  const id = c.req.param('id');
+  const before = (await db.prepare('SELECT id, trust_state, expires_at FROM coupons WHERE id = ?').get(id)) as
+    | { id: string; trust_state: string; expires_at: string | null }
+    | undefined;
+  if (!before) return c.json({ error: { code: 'not_found', message: 'No such coupon' } }, 404);
+
+  await db
+    .prepare('UPDATE coupons SET trust_state = ? WHERE id = ?')
+    .run(parsed.data.trustState, id);
+
+  await audit(user, 'coupon.state', 'coupon', id, before, { trust_state: parsed.data.trustState });
+  return c.json({ ok: true, id, trustState: parsed.data.trustState });
+});
+
+/* ------------------------------------------------------------------ */
+/* Community price reports                                             */
+/* ------------------------------------------------------------------ */
+
+adminRoutes.get('/community', async (c) => {
+  const rows = (await db
+    .prepare(
+      `SELECT cp.id, cp.variant_id, cp.platform_slug, cp.price_minor, cp.pincode, cp.observed_at,
+              cp.trust_state, cp.reported_by, v.variant_label, p.title
+         FROM community_prices cp
+    LEFT JOIN product_variants v ON v.id = cp.variant_id
+    LEFT JOIN catalogue_products p ON p.id = v.product_id
+        ORDER BY cp.reported_at DESC
+        LIMIT 100`,
+    )
+    .all()) as unknown as Array<Record<string, unknown>>;
+  return c.json({ count: rows.length, reports: rows });
+});
+
+adminRoutes.post('/community/:id/state', requireCsrf, async (c) => {
+  const user = c.get('user')!;
+  const parsed = stateBody.safeParse(await c.req.json().catch(() => ({})));
+  if (!parsed.success) return c.json({ error: { code: 'invalid_request', message: 'Unknown trust state' } }, 400);
+
+  const id = c.req.param('id');
+  const before = (await db.prepare('SELECT id, trust_state FROM community_prices WHERE id = ?').get(id)) as
+    | { id: string; trust_state: string }
+    | undefined;
+  if (!before) return c.json({ error: { code: 'not_found', message: 'No such report' } }, 404);
+
+  await db.prepare('UPDATE community_prices SET trust_state = ? WHERE id = ?').run(parsed.data.trustState, id);
+  await audit(user, 'community.state', 'community_price', id, before, { trust_state: parsed.data.trustState });
+  return c.json({ ok: true, id, trustState: parsed.data.trustState });
+});
+
+/* ------------------------------------------------------------------ */
+/* People                                                              */
+/* ------------------------------------------------------------------ */
+
+adminRoutes.get('/users', async (c) => {
+  const rows = (await db
+    .prepare(
+      `SELECT id, email, display_name, role, status, email_verified_at, created_at
+         FROM users ORDER BY created_at DESC LIMIT 200`,
+    )
+    .all()) as unknown as Array<Record<string, unknown>>;
+  return c.json({ count: rows.length, users: rows });
+});
+
+const roleBody = z.object({ role: z.enum(['user', 'admin']) });
+
+/**
+ * Promote or demote an administrator.
+ *
+ * `super_admin` cannot be granted from the web at all — only set directly in the
+ * database — so a compromised admin session cannot mint an unrevokable owner.
+ */
+adminRoutes.post('/users/:id/role', requireCsrf, async (c) => {
+  const user = c.get('user')!;
+  const parsed = roleBody.safeParse(await c.req.json().catch(() => ({})));
+  if (!parsed.success) return c.json({ error: { code: 'invalid_request', message: 'Role must be user or admin' } }, 400);
+
+  const id = c.req.param('id');
+  const before = (await db.prepare('SELECT id, email, role FROM users WHERE id = ?').get(id)) as
+    | { id: string; email: string; role: string }
+    | undefined;
+  if (!before) return c.json({ error: { code: 'not_found', message: 'No such user' } }, 404);
+  if (before.role === 'super_admin') {
+    return c.json({ error: { code: 'forbidden', message: 'A super admin cannot be changed from the web' } }, 403);
+  }
+
+  await db.prepare('UPDATE users SET role = ? WHERE id = ?').run(parsed.data.role, id);
+  await audit(user, 'user.role', 'user', id, before, { role: parsed.data.role });
+  return c.json({ ok: true, id, role: parsed.data.role });
+});
+
+/* ------------------------------------------------------------------ */
+/* Jobs, sync health and the audit trail                               */
+/* ------------------------------------------------------------------ */
+
+adminRoutes.get('/jobs', async (c) => {
+  const job = await dailyJobStatus().catch(() => null);
+  const runs = (await db
+    .prepare('SELECT name, last_started_at, last_finished_at, last_ok, last_result FROM job_runs ORDER BY last_started_at DESC LIMIT 20')
+    .all()) as unknown as Array<Record<string, unknown>>;
+  return c.json({ job, runs });
+});
+
+adminRoutes.get('/audit', async (c) => {
+  const rows = (await db
+    .prepare('SELECT id, actor_email, action, entity, entity_id, before_json, after_json, at FROM admin_audit ORDER BY at DESC LIMIT 200')
+    .all()) as unknown as Array<Record<string, unknown>>;
+  return c.json({ count: rows.length, entries: rows });
+});
+

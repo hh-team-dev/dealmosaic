@@ -252,6 +252,28 @@ export async function initDb(): Promise<void> {
       synced_at        TEXT
     )`);
   await db.exec('CREATE INDEX IF NOT EXISTS idx_affcamp_status ON affiliate_campaigns(access_status)');
+
+  /**
+   * Every administrative change, attributed.
+   *
+   * The control centre can change a coupon's trust state, a shopper report's
+   * status and a person's role. Without this table those changes would be
+   * indistinguishable from a direct SQL edit, which is exactly the accountability
+   * an owner-run platform needs.
+   */
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS admin_audit (
+      id          TEXT PRIMARY KEY,
+      actor_id    TEXT NOT NULL,
+      actor_email TEXT NOT NULL,
+      action      TEXT NOT NULL,
+      entity      TEXT NOT NULL,
+      entity_id   TEXT NOT NULL,
+      before_json TEXT,
+      after_json  TEXT,
+      at          TEXT NOT NULL
+    )`);
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_admin_audit_at ON admin_audit(at DESC)');
 }
 
 export const nowIso = (): string => new Date().toISOString();

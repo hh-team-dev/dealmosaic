@@ -3691,3 +3691,107 @@ button.chip[aria-selected='true'] {
   gap: 2px;
   min-width: 0;
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Owner control centre                                                */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Deliberately quiet. This surface is read at 7am on a phone between other
+ * things, so it uses the same type scale as the rest of the site and spends its
+ * colour only on state: green for live, red for rejected.
+ */
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.admin-tabs::-webkit-scrollbar { display: none; }
+
+.chip-active {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+
+.admin-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.admin-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--sh-1);
+}
+.admin-tile strong {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.admin-field { display: flex; flex-direction: column; gap: 4px; }
+.admin-field.grow { flex: 1 1 200px; }
+
+.admin-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+.admin-row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+}
+.admin-row-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.admin-row-main strong { font-size: 0.95rem; line-height: 1.35; overflow-wrap: anywhere; }
+.admin-row-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+.admin-code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  background: var(--tint);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.admin-pre {
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.admin-table th { text-align: left; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--hairline-strong); }
+.admin-table td { padding: 6px 8px; border-bottom: 1px solid var(--hairline); }
+
+.btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+
+@media (max-width: 520px) {
+  .admin-row { flex-direction: column; }
+  .admin-row-actions { width: 100%; justify-content: flex-end; }
+  .admin-tile strong { font-size: 1.3rem; }
+}

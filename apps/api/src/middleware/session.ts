@@ -1,7 +1,7 @@
 import type { Context, MiddlewareHandler } from 'hono';
 import { db, nowIso } from '../db/index.js';
 import { sha256, safeEqual } from '../lib/security.js';
-import { unauthorized } from '../lib/http.js';
+import { unauthorized, forbidden } from '../lib/http.js';
 import type { UserPreferences, UserProfile } from '@dealmosaic/core';
 
 export const SESSION_COOKIE = 'dm_session';
@@ -101,7 +101,9 @@ export const requireCsrf: MiddlewareHandler<AppBindings> = async (c, next) => {
   if (!session) throw unauthorized();
   const header = c.req.header('x-csrf-token') ?? '';
   if (!header || !safeEqual(header, session.csrf_token)) {
-    throw unauthorized('Security token expired. Refresh the page and try again.');
+    // 403, not 401: the session is valid, the request is not. A client that gets
+    // 401 here would show a login screen to someone who is already signed in.
+    throw forbidden('Security token expired. Refresh the page and try again.');
   }
   await next();
 };
@@ -109,8 +111,13 @@ export const requireCsrf: MiddlewareHandler<AppBindings> = async (c, next) => {
 export const requireAdmin: MiddlewareHandler<AppBindings> = async (c, next) => {
   const user = c.get('user');
   if (!user) throw unauthorized();
+  /**
+   * 401 means "we do not know who you are"; 403 means "we know, and you may not".
+   * This used to throw 401 for a signed-in non-administrator, which sent the
+   * client back to a login screen that could never help them.
+   */
   if (user.role !== 'admin' && user.role !== 'super_admin') {
-    throw unauthorized('Administrator access required.');
+    throw forbidden('This account is not an administrator.');
   }
   await next();
 };

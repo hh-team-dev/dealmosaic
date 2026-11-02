@@ -24,6 +24,7 @@ const SPA_ROUTES = [
   /^\/browse\/?$/,
   /^\/deals\/?$/,
   /^\/saved\/?$/,
+  /^\/admin\/?$/, // owner control centre — auth is enforced by the API, not by hiding the route
   /^\/c\/[^/]+\/?$/, // category
   /^\/p\/[^/]+\/?$/, // product
   /^\/how-we-rank\/?$/,
