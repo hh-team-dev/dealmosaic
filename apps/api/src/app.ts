@@ -15,6 +15,7 @@ import { locationRoutes } from './routes/location.js';
 import { couponRoutes } from './routes/coupons.js';
 import { alertRoutes } from './routes/alerts.js';
 import { maintenanceRoutes } from './routes/maintenance.js';
+import { maybeRunDaily } from './services/daily-job.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
 /**
@@ -70,8 +71,17 @@ app.use('/api/*', async (c, next) => {
 
 app.use('/api/*', loadSession);
 
-app.get('/api/health', (c) =>
-  c.json({
+/**
+ * The health check also acts as the scheduler's heartbeat.
+ *
+ * A free uptime ping calls this every five minutes to keep the Render instance
+ * awake. That is a reliable, zero-cost tick, so the daily maintenance job asks
+ * "am I due?" here rather than needing a cron of its own. The call is
+ * fire-and-forget and the response is sent first: a health endpoint that waits
+ * 25 seconds for a feed sync reports the service as down.
+ */
+app.get('/api/health', (c) => {
+  const res = c.json({
     ok: true,
     service: 'dealmosaic-api',
     version: '1.0.0',
@@ -79,8 +89,14 @@ app.get('/api/health', (c) =>
     database: db.open ? 'connected' : 'unavailable',
     markets: ['IN'],
     environment: process.env.NODE_ENV ?? 'development',
-  }),
-);
+  });
+  // Never inside a test run: the job writes rows and sends email, and a test
+  // suite must not be able to reach either.
+  if (!process.env.VITEST && process.env.NODE_ENV !== 'test' && process.env.DAILY_JOB !== 'off') {
+    void maybeRunDaily().catch(() => {});
+  }
+  return res;
+});
 
 app.route('/api/auth', authRoutes);
 app.route('/api/me', meRoutes);
@@ -95,6 +111,12 @@ app.route('/api/location', locationRoutes);
 app.route('/api/coupons', couponRoutes);
 app.route('/api/alerts', alertRoutes);
 app.route('/api/maintenance', maintenanceRoutes);
+
+/**
+ * `POST /api/maintenance/daily` was the original entry point for the scheduler.
+ * It still works, and still needs the token; see services/daily-job.ts for why
+ * the running system no longer depends on an external cron calling it.
+ */
 
 app.notFound((c) =>
   c.json({ error: { code: 'not_found', message: `No route for ${c.req.method} ${c.req.path}` } }, 404),
