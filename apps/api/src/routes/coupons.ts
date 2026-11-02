@@ -4,6 +4,7 @@ import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
 import { createRateLimiter } from '../lib/rate-limit.js';
 import * as cuelinks from '../lib/cuelinks.js';
+import { buildDiscovery } from '../services/discover.js';
 
 /**
  * COUPONS AND DISCOUNTS.
@@ -60,6 +61,20 @@ interface CouponRow {
   expires_at: string | null;
   verified_at: string | null;
   platform_name?: string | null;
+  /* Discovery fields (added when the homepage needed real shelves to fill). */
+  campaign_name?: string | null;
+  categories?: string | null;
+  primary_category?: string | null;
+  deal_group?: string | null;
+  offer_type?: string | null;
+  stated_price_minor?: number | null;
+  stated_price_kind?: string | null;
+  stated_percent?: number | null;
+  stated_percent_cap?: number | null;
+  mentions_bank?: number | null;
+  starts_at?: string | null;
+  created_at?: string | null;
+  tracking_url?: string | null;
 }
 
 function toApi(r: CouponRow) {
@@ -84,8 +99,34 @@ function toApi(r: CouponRow) {
     verifiedAt: r.verified_at,
     /** Cashback must never be added into a payable total. */
     reducesPayablePrice: r.discount_type !== 'cashback',
+    /* ---- discovery ---- */
+    campaignName: r.campaign_name ?? r.platform_name ?? r.platform_slug,
+    categories: r.categories ?? null,
+    dealGroup: r.deal_group ?? 'other',
+    offerType: r.offer_type === 'coupon' ? 'coupon' : 'deal',
+    /**
+     * The price the headline states, in paise, plus how it was qualified.
+     * `null` means "the retailer did not state a price in the copy" — never
+     * "free", and never zero.
+     */
+    statedPriceMinor: r.stated_price_minor ?? null,
+    statedPriceKind: r.stated_price_kind ?? null,
+    /**
+     * The percentage the retailer printed. `percentIsCap` is true when the copy
+     * said "up to", so the interface must say "up to" as well.
+     */
+    statedPercent: r.stated_percent ?? null,
+    percentIsCap: (r.stated_percent_cap ?? 0) === 1,
+    mentionsBankOrUpi: (r.mentions_bank ?? 0) === 1,
+    /** Outbound link. Present only for affiliate-sourced rows. */
+    outboundUrl: r.tracking_url ?? null,
+    startsAt: r.starts_at ?? null,
+    createdAt: r.created_at ?? null,
   };
 }
+
+/** The public shape of a coupon, derived from the mapper so it cannot drift. */
+export type CouponView = ReturnType<typeof toApi>;
 
 /**
  * GET /api/coupons?platform=&category=
@@ -101,6 +142,36 @@ couponRoutes.get('/', async (c) => {
   const limit = Math.min(Number(c.req.query('limit') ?? 40), 200);
   const now = nowIso();
 
+  /**
+   * Shelf filters. These exist because the homepage's sections link into this
+   * endpoint: "Deals under ₹499" must land on exactly the offers that made the
+   * count on the homepage, not an approximation of them.
+   */
+  const group = c.req.query('group')?.trim() || null;
+  const maxPriceRupees = Number(c.req.query('maxPrice') ?? '');
+  const maxPriceMinor = Number.isFinite(maxPriceRupees) && maxPriceRupees > 0 ? Math.round(maxPriceRupees * 100) : null;
+  const expiringDays = Number(c.req.query('expiring') ?? '');
+  const expiringBefore =
+    Number.isFinite(expiringDays) && expiringDays > 0
+      ? new Date(Date.now() + expiringDays * 86_400_000).toISOString()
+      : null;
+  const bankOnly = c.req.query('bank') === '1';
+  const sort = c.req.query('sort') ?? '';
+  const orderBy =
+    sort === 'savings'
+      ? 'c.stated_percent DESC, c.stated_price_minor ASC, c.expires_at ASC'
+      : sort === 'price'
+        ? 'c.stated_price_minor ASC, c.expires_at ASC'
+        : sort === 'new'
+          ? 'c.created_at DESC, c.expires_at ASC'
+          : sort === 'ending'
+            ? 'c.expires_at ASC'
+            : `CASE WHEN c.code IS NOT NULL THEN 0 ELSE 1 END,
+               c.success_count DESC,
+               CASE WHEN c.expires_at IS NULL THEN 1 ELSE 0 END,
+               c.expires_at ASC,
+               c.created_at DESC`;
+
   const rows = (await db
     .prepare(
       `SELECT c.*, p.name AS platform_name
@@ -113,15 +184,11 @@ couponRoutes.get('/', async (c) => {
           AND (? IS NULL OR c.category_slug IS NULL OR c.category_slug = ?)
           AND (? IS NULL OR c.title LIKE ? OR c.code LIKE ? OR c.platform_slug LIKE ?)
           AND (? = 0 OR c.code IS NOT NULL)
-        ORDER BY
-          -- A code is more useful than a bare promotion, so codes rank first,
-          -- then the ones a shopper has actually confirmed at checkout, then
-          -- whatever expires soonest (urgency is real information).
-          CASE WHEN c.code IS NOT NULL THEN 0 ELSE 1 END,
-          c.success_count DESC,
-          CASE WHEN c.expires_at IS NULL THEN 1 ELSE 0 END,
-          c.expires_at ASC,
-          c.created_at DESC
+          AND (? IS NULL OR c.deal_group = ?)
+          AND (? IS NULL OR (c.stated_price_minor IS NOT NULL AND c.stated_price_minor <= ?))
+          AND (? IS NULL OR (c.expires_at IS NOT NULL AND c.expires_at <= ?))
+          AND (? = 0 OR c.mentions_bank = 1)
+        ORDER BY ${orderBy}
         LIMIT ?`,
     )
     .all(
@@ -130,6 +197,10 @@ couponRoutes.get('/', async (c) => {
       category ?? null, category ?? null,
       q ?? null, q ? `%${q}%` : null, q ? `%${q}%` : null, q ? `%${q}%` : null,
       withCodeOnly ? 1 : 0,
+      group, group,
+      maxPriceMinor, maxPriceMinor,
+      expiringBefore, expiringBefore,
+      bankOnly ? 1 : 0,
       limit,
     )) as unknown as CouponRow[];
 
@@ -146,6 +217,57 @@ couponRoutes.get('/', async (c) => {
       rows.length === 0
         ? 'No verified discount codes for this store yet. We do not list unverified codes, because a code that fails at checkout is worse than no code at all.'
         : null,
+  });
+});
+
+/**
+ * GET /api/coupons/discover — the homepage's shelves, computed from live rows.
+ *
+ * WHY THIS IS ONE ENDPOINT AND NOT NINE.
+ * The homepage needs nine different cuts of the same feed. Nine round trips on a
+ * mid-range Android phone on Indian mobile data is a visibly slower page, so the
+ * cuts are computed here from a single query and returned together. The whole
+ * payload is ~40 offers, which is smaller than one product photo on a typical
+ * e-commerce homepage.
+ *
+ * THE RULE THAT SHAPES EVERY SECTION: **a shelf with nothing real behind it is
+ * not rendered.** Each section carries `minItems` and the client drops anything
+ * that does not clear it, so on a quiet day the homepage gets shorter instead of
+ * getting fictional. Today only three offers are genuinely under ₹99 — so the
+ * ₹99 shelf shows three, or shows nothing.
+ *
+ * Every number in the response is traceable to a sentence a merchant wrote:
+ * `statedPriceMinor` and `statedPercent` come from the offer headline via
+ * `@dealmosaic/core/offer-text`, and `percentIsCap` records whether the merchant
+ * said "up to" so the interface cannot round a ceiling up into a promise.
+ */
+couponRoutes.get('/discover', async (c) => {
+  const now = nowIso();
+  const rows = (await db
+    .prepare(
+      `SELECT c.*, p.name AS platform_name
+         FROM coupons c
+         LEFT JOIN platforms p ON p.slug = c.platform_slug
+        WHERE c.trust_state IN ('community_verified','moderator_verified')
+          AND (c.expires_at IS NULL OR c.expires_at > ?)
+          AND (c.starts_at IS NULL OR c.starts_at <= ?)
+        ORDER BY c.created_at DESC
+        LIMIT 2500`,
+    )
+    .all(now, now)) as unknown as CouponRow[];
+
+  const result = buildDiscovery(rows.map(toApi));
+
+  // A cacheable public response: the same shelves for a crawler and a shopper.
+  c.header('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
+  return c.json({
+    generatedAt: now,
+    ...result,
+    rules: {
+      statedPrices: 'Price buckets only contain offers whose own headline states a price <= the bucket.',
+      savings: 'Percentages are the store’s own published figures; "up to" is preserved as a ceiling.',
+      expiry: 'Expiry is shown only where the store supplied a date.',
+    },
   });
 });
 
@@ -256,7 +378,9 @@ couponRoutes.post('/sync', async (c) => {
     return c.json({ error: { code: 'not_configured', message: 'CUELINKS_API_KEY is not set.' } }, 503);
   }
 
-  const maxPages = Math.min(Number(c.req.query('pages') ?? 5), 20);
+  // The live feed is ~1,100 offers across 11 pages of 100; the cap leaves room
+  // to grow without letting one call run forever.
+  const maxPages = Math.min(Number(c.req.query('pages') ?? 5), 40);
   let inserted = 0;
   let updated = 0;
   let seen = 0;
@@ -284,12 +408,17 @@ couponRoutes.post('/sync', async (c) => {
           .prepare(
             `UPDATE coupons SET platform_slug = ?, code = ?, title = ?, description = ?, discount_type = ?,
                     discount_value = ?, terms = ?, tracking_url = ?, starts_at = ?, expires_at = ?,
-                    trust_state = 'moderator_verified'
+                    campaign_name = ?, categories = ?, primary_category = ?, deal_group = ?, offer_type = ?,
+                    stated_price_minor = ?, stated_price_kind = ?, stated_percent = ?, stated_percent_cap = ?,
+                    mentions_bank = ?, trust_state = 'moderator_verified'
               WHERE id = ?`,
           )
           .run(
             row.platformSlug, row.code, row.title, row.description, row.discountType,
-            row.discountValue, row.terms, row.trackingUrl, row.startsAt, row.expiresAt, existing.id,
+            row.discountValue, row.terms, row.trackingUrl, row.startsAt, row.expiresAt,
+            row.campaignName, row.categories, row.primaryCategory, row.dealGroup, row.offerType,
+            row.statedPriceMinor, row.statedPriceKind, row.statedPercent, row.statedPercentCap,
+            row.mentionsBank, existing.id,
           );
         updated++;
       } else {
@@ -297,13 +426,20 @@ couponRoutes.post('/sync', async (c) => {
           .prepare(
             `INSERT INTO coupons (id, platform_slug, code, title, description, discount_type, discount_value,
                                   max_discount_minor, min_order_minor, terms, source, trust_state,
-                                  external_id, tracking_url, starts_at, expires_at, created_at, verified_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'moderator_verified', ?, ?, ?, ?, ?, ?)`,
+                                  external_id, tracking_url, starts_at, expires_at, created_at, verified_at,
+                                  campaign_name, categories, primary_category, deal_group, offer_type,
+                                  stated_price_minor, stated_price_kind, stated_percent, stated_percent_cap,
+                                  mentions_bank)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'affiliate', 'moderator_verified', ?, ?, ?, ?, ?, ?,
+                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           )
           .run(
             newId(), row.platformSlug, row.code, row.title, row.description, row.discountType,
             row.discountValue, row.maxDiscountMinor, row.minOrderMinor, row.terms,
             row.externalId, row.trackingUrl, row.startsAt, row.expiresAt, nowIso(), nowIso(),
+            row.campaignName, row.categories, row.primaryCategory, row.dealGroup, row.offerType,
+            row.statedPriceMinor, row.statedPriceKind, row.statedPercent, row.statedPercentCap,
+            row.mentionsBank,
           );
         inserted++;
       }

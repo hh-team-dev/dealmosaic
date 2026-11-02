@@ -5,3 +5,4 @@ export * from './validate.js';
 export * from './matching.js';
 export * from './ranking.js';
 export * from './location.js';
+export * from './offer-text.js';

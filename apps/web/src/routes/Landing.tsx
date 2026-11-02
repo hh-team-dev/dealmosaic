@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
 import { DealsTicker } from '../components/DealsTicker';
+import { DiscoverShelves } from '../components/DiscoverShelves';
 import { SampleComparison } from '../components/SampleComparison';
 import { Icon } from '../components/Icon';
 import { Button } from '../components/Ui';
-import { useAuth } from '../lib/session';
 import { useToast } from '../components/Toast';
 
 const PLATFORMS = [
@@ -23,7 +23,6 @@ export default function Landing() {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
   const toast = useToast();
-  const { user } = useAuth();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -31,13 +30,12 @@ export default function Landing() {
       toast.push('Type at least two characters — try “Lay’s Classic Salted 52 g”.', 'info');
       return;
     }
-    // Comparison is members-only, so an anonymous searcher is sent to create the
-    // free account and then straight through to their results.
-    if (user) {
-      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-      return;
-    }
-    navigate(`/register?q=${encodeURIComponent(query.trim())}`);
+    // Search is public. The old flow intercepted anonymous visitors and sent
+    // them to a sign-up form, which contradicted the "no sign-up needed to
+    // compare" promise two lines below the input and lost the search entirely.
+    // A visitor now sees prices first and is only asked for an account when
+    // there is something worth saving.
+    navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   }
 
   return (
@@ -135,6 +133,11 @@ export default function Landing() {
             </div>
           </div>
         </section>
+
+        {/* ------------------------- discovery wall --------------------------- */}
+        {/* Placed above every explanatory section on purpose: a visitor should be
+            able to enjoy something real before reading anything about us. */}
+        <DiscoverShelves />
 
         {/* --------------------------- how it works --------------------------- */}
         <section className="section-tight" id="how">
@@ -288,8 +291,8 @@ export default function Landing() {
                 Stop overpaying on autopilot
               </h2>
               <p style={{ color: '#fff', margin: '0 auto 18px', maxWidth: '46ch', textShadow: '0 1px 8px rgba(69,43,94,.3)' }}>
-                Save the products you buy on repeat, get told the moment a total drops, and keep every coupon you
-                can actually use in one place. Free, and no card.
+                Keep the deals worth keeping, find them again without searching twice, and compare the exact
+                variant before you pay. Free to use, and the saved list works without an account.
               </p>
               <div className="row" style={{ justifyContent: 'center' }}>
                 <Link to="/register" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)', border: 'none' }}>

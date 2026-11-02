@@ -21,6 +21,8 @@
  * write:links) and it can be revoked from their dashboard at any time.
  */
 
+import { dealGroupOf, mentionsBankOrUpi, readStatedFacts } from '@dealmosaic/core';
+
 const BASE = 'https://developers.cuelinks.com/pub_api/v3';
 
 export function apiKey(): string | null {
@@ -108,7 +110,7 @@ export function convertLink(url: string, channelId?: number): Promise<{ data: Co
  * short of testing the code at checkout ourselves. It is still not the same as
  * having redeemed the code, so the UI must date-stamp it.
  */
-export function toCouponRow(offer: CuelinksOffer): {
+export interface CouponRow {
   externalId: string;
   platformSlug: string;
   code: string | null;
@@ -122,7 +124,20 @@ export function toCouponRow(offer: CuelinksOffer): {
   trackingUrl: string | null;
   startsAt: string | null;
   expiresAt: string | null;
-} {
+  /** Discovery fields — what the headline says, and which shelf it belongs on. */
+  campaignName: string;
+  categories: string | null;
+  primaryCategory: string | null;
+  dealGroup: string;
+  offerType: 'coupon' | 'deal';
+  statedPriceMinor: number | null;
+  statedPriceKind: string | null;
+  statedPercent: number | null;
+  statedPercentCap: number;
+  mentionsBank: number;
+}
+
+export function toCouponRow(offer: CuelinksOffer): CouponRow {
   // A coupon with a code is a code; a deal without one is a flat price cut. We do
   // not know the rupee amount of a percentage deal, so we keep the percentage and
   // let the interface show it as a claim against the merchant's price.
@@ -133,6 +148,14 @@ export function toCouponRow(offer: CuelinksOffer): {
       : offer.original_price !== null && offer.discount_price !== null
         ? Math.max(0, Math.round((offer.original_price - offer.discount_price) * 100))
         : 0;
+
+  // The feed leaves `original_price` / `discount_price` / `percent_off` empty for
+  // almost every offer (verified: 0 of 1,085 live offers carried a structured
+  // price). The number the merchant wrote in the headline is therefore the only
+  // real one, and it is read with the conservative parser in @dealmosaic/core.
+  const facts = readStatedFacts(`${offer.title ?? ''} ${offer.description ?? ''}`);
+  const categoryNames = (offer.categories ?? []).map((c) => c.name);
+  const primaryCategory = categoryNames[0] ?? null;
 
   return {
     externalId: String(offer.id),
@@ -148,5 +171,15 @@ export function toCouponRow(offer: CuelinksOffer): {
     trackingUrl: offer.tracking_url,
     startsAt: offer.start_date ? `${offer.start_date}T00:00:00.000Z` : null,
     expiresAt: offer.end_date ? `${offer.end_date}T23:59:59.000Z` : null,
+    campaignName: (offer.campaign_name ?? 'unknown').slice(0, 80),
+    categories: categoryNames.length > 0 ? categoryNames.join(', ').slice(0, 160) : null,
+    primaryCategory,
+    dealGroup: dealGroupOf(primaryCategory),
+    offerType: offer.offer_type === 'coupon' ? 'coupon' : 'deal',
+    statedPriceMinor: facts.priceMinor,
+    statedPriceKind: facts.priceKind,
+    statedPercent: facts.percent,
+    statedPercentCap: facts.percentIsCap ? 1 : 0,
+    mentionsBank: mentionsBankOrUpi(`${offer.title ?? ''} ${offer.description ?? ''}`) ? 1 : 0,
   };
 }

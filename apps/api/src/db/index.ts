@@ -190,7 +190,27 @@ export async function initDb(): Promise<void> {
   if (!(await hasColumn('coupons', 'tracking_url'))) {
     await db.exec('ALTER TABLE coupons ADD COLUMN tracking_url TEXT');
   }
+  // Deal-discovery columns. Added when the affiliate feed turned out to carry the
+  // price and category *in the headline text* rather than in structured fields.
+  for (const [column, type] of [
+    ['campaign_name', 'TEXT'],
+    ['categories', 'TEXT'],
+    ['primary_category', 'TEXT'],
+    ['deal_group', 'TEXT'],
+    ['offer_type', 'TEXT'],
+    ['stated_price_minor', 'INTEGER'],
+    ['stated_price_kind', 'TEXT'],
+    ['stated_percent', 'INTEGER'],
+    ['stated_percent_cap', 'INTEGER DEFAULT 0'],
+    ['mentions_bank', 'INTEGER DEFAULT 0'],
+  ] as const) {
+    if (!(await hasColumn('coupons', column))) {
+      await db.exec(`ALTER TABLE coupons ADD COLUMN ${column} ${type}`);
+    }
+  }
   await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupons_external ON coupons(external_id) WHERE external_id IS NOT NULL');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_group ON coupons(deal_group, trust_state, expires_at)');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupons_price ON coupons(stated_price_minor, trust_state)');
 }
 
 export const nowIso = (): string => new Date().toISOString();

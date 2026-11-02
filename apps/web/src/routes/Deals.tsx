@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
 import { Seo, breadcrumbJsonLd } from '../lib/seo';
@@ -31,12 +31,44 @@ import {
 export default function Deals() {
   const [coupons, setCoupons] = useState<CouponView[] | null>(null);
   const [merchants, setMerchants] = useState<MerchantView[]>([]);
-  const [platform, setPlatform] = useState<string>('');
+  /**
+   * The homepage shelves link here with a filter already applied
+   * (`?maxPrice=499`, `?group=grocery`, `?expiring=7`, …). Reading the URL instead
+   * of component state means the link a shopper shares, the page a crawler
+   * indexes and the page a human sees are all the same page — and the back
+   * button behaves.
+   */
+  const [params, setParams] = useSearchParams();
+  const platform = params.get('platform') ?? '';
+  const group = params.get('group') ?? '';
+  const maxPrice = Number(params.get('maxPrice') ?? '') || 0;
+  const expiring = Number(params.get('expiring') ?? '') || 0;
+  const bankOnly = params.get('bank') === '1';
+  const sortParam = (params.get('sort') ?? '') as '' | 'savings' | 'price' | 'new' | 'ending';
   const [q, setQ] = useState('');
-  const [codesOnly, setCodesOnly] = useState(false);
+  const codesOnly = params.get('codes') === '1';
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  const setParam = useCallback(
+    (key: string, value: string | null) => {
+      const next = new URLSearchParams(params);
+      if (value) next.set(key, value);
+      else next.delete(key);
+      setParams(next, { replace: true });
+    },
+    [params, setParams],
+  );
+
+  const setPlatform = useCallback((slug: string) => setParam('platform', slug || null), [setParam]);
+  const setCodesOnly = useCallback(
+    (next: boolean | ((v: boolean) => boolean)) => {
+      const value = typeof next === 'function' ? next(codesOnly) : next;
+      setParam('codes', value ? '1' : null);
+    },
+    [codesOnly, setParam],
+  );
 
   useEffect(() => {
     listMerchants()
@@ -55,7 +87,12 @@ export default function Deals() {
         platform: platform || undefined,
         q: q.trim() || undefined,
         codesOnly,
-        limit: 120,
+        group: group || undefined,
+        maxPrice: maxPrice || undefined,
+        expiring: expiring || undefined,
+        bankOnly,
+        sort: sortParam || undefined,
+        limit: 200,
         signal: controller.signal,
       })
         .then((d) => setCoupons(d.coupons))
@@ -69,7 +106,7 @@ export default function Deals() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [platform, q, codesOnly]);
+  }, [platform, q, codesOnly, group, maxPrice, expiring, bankOnly, sortParam]);
 
   const copy = useCallback(async (c: CouponView) => {
     if (!c.code) return;
@@ -104,7 +141,7 @@ export default function Deals() {
               <Icon name="tag" size={14} /> Live offers
             </span>
             <h1 className="deals-hero-title">
-              Every code here <span className="deals-hero-accent">actually works</span>
+              Every code here is <span className="deals-hero-accent">live right now</span>
             </h1>
             <p className="deals-hero-lede">
               Sourced from the stores themselves, never scraped from a coupon farm. Each one shows
@@ -177,6 +214,33 @@ export default function Deals() {
             </div>
           )}
 
+          {/* ---- Active shelf: say out loud why this list looks the way it does ---- */}
+          {(group || maxPrice || expiring || bankOnly || sortParam) && (
+            <div className="deals-active">
+              <span className="deals-active-label">
+                <Icon name="tag" size={14} />
+                {maxPrice
+                  ? `Offers with a stated price under ₹${maxPrice}`
+                  : group
+                    ? `Offers in ${group.replace(/^\w/, (m) => m.toUpperCase())}`
+                    : expiring
+                      ? `Ending within ${expiring} days`
+                      : bankOnly
+                        ? 'Bank, card and UPI offers'
+                        : sortParam === 'new'
+                          ? 'Newest offers first'
+                          : 'Biggest stated savings first'}
+              </span>
+              <button
+                type="button"
+                className="deals-chip"
+                onClick={() => setParams(new URLSearchParams(), { replace: true })}
+              >
+                Clear
+              </button>
+            </div>
+          )}
+
           {/* ---- Results ---- */}
           {error && (
             <div className="callout callout-danger">
@@ -201,14 +265,13 @@ export default function Deals() {
                 store itself, so the list is shorter than a coupon aggregator&apos;s — and unlike
                 theirs, the codes work.
               </p>
-              {(platform || q || codesOnly) && (
+              {(platform || q || codesOnly || group || maxPrice || expiring || bankOnly) && (
                 <button
                   type="button"
                   className="btn btn-quiet"
                   onClick={() => {
-                    setPlatform('');
                     setQ('');
-                    setCodesOnly(false);
+                    setParams(new URLSearchParams(), { replace: true });
                   }}
                 >
                   Clear filters
@@ -310,12 +373,16 @@ function CouponCard({
       ) : (
         <a
           className="deal-code deal-code-link"
-          href={`/?q=${encodeURIComponent(coupon.platformName)}`}
-          
+          // The offer lives at the merchant. The old target was the homepage with
+          // a query string, which is a dead end dressed as a link.
+          href={coupon.outboundUrl ?? `/deals?platform=${encodeURIComponent(coupon.platformSlug)}`}
+          {...(coupon.outboundUrl
+            ? { target: '_blank', rel: 'sponsored nofollow noopener noreferrer' }
+            : {})}
         >
           <span className="deal-code-value">See the offer</span>
           <span className="deal-code-action">
-            <Icon name="arrow-right" size={15} />
+            <Icon name="external" size={15} />
           </span>
         </a>
       )}

@@ -37,7 +37,9 @@ type IconName =
   | 'chevron-right'
   | 'star'
   | 'ban-circle'
-  | 'copy';
+  | 'copy'
+  | 'heart'
+  | 'wallet';
 
 const PATHS: Record<IconName, React.ReactNode> = {
   search: (
@@ -201,6 +203,15 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <rect x="9" y="9" width="11" height="11" rx="2.5" />
       <path d="M6.5 15H5.5A1.5 1.5 0 0 1 4 13.5v-8A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5v1" />
+    </>
+  ),
+  heart: (
+    <path d="M12 20.2s-7.5-4.6-7.5-9.4A4.4 4.4 0 0 1 12 8a4.4 4.4 0 0 1 7.5 2.8c0 4.8-7.5 9.4-7.5 9.4Z" />
+  ),
+  wallet: (
+    <>
+      <rect x="3" y="6.5" width="18" height="12.5" rx="3" />
+      <path d="M3 10.5h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H3" />
     </>
   ),
   'ban-circle': (

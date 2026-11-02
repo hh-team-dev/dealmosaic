@@ -15,6 +15,7 @@ export function SiteHeader() {
         </Link>
         <nav className="site-nav" aria-label="Sections">
           <Link to="/deals">Deals</Link>
+          <Link to="/saved">Saved</Link>
           <Link to="/browse">Browse</Link>
           <Link to="/how-we-rank">How we rank</Link>
           <Link to="/data-sources">Data sources</Link>

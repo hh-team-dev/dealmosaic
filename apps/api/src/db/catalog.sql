@@ -146,6 +146,21 @@ CREATE TABLE IF NOT EXISTS coupons (
   -- instead of duplicating, and `tracking_url` is the money-making outbound link.
   external_id        TEXT,
   tracking_url       TEXT,
+  -- What the headline itself says. The affiliate feed leaves the structured
+  -- price columns empty for most offers, so the only number that exists is the
+  -- one the merchant wrote in the sentence. Parsed at sync time (see
+  -- packages/core/src/offer-text.ts) and stored so the homepage can group by
+  -- price without re-parsing 1,000 strings per request.
+  campaign_name      TEXT,
+  categories         TEXT,
+  primary_category   TEXT,
+  deal_group         TEXT,
+  offer_type         TEXT,
+  stated_price_minor INTEGER,
+  stated_price_kind  TEXT,
+  stated_percent     INTEGER,
+  stated_percent_cap INTEGER DEFAULT 0,
+  mentions_bank      INTEGER DEFAULT 0,
   starts_at          TEXT,
   expires_at         TEXT,
   verified_at        TEXT,
@@ -153,3 +168,5 @@ CREATE TABLE IF NOT EXISTS coupons (
 );
 CREATE INDEX IF NOT EXISTS idx_coupons_platform ON coupons(platform_slug, trust_state, expires_at);
 CREATE INDEX IF NOT EXISTS idx_coupons_category ON coupons(category_slug, trust_state);
+CREATE INDEX IF NOT EXISTS idx_coupons_group ON coupons(deal_group, trust_state, expires_at);
+CREATE INDEX IF NOT EXISTS idx_coupons_price ON coupons(stated_price_minor, trust_state);
