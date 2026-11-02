@@ -140,12 +140,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
           Home
         </NavLink>
-        <span aria-disabled="true" title="Comparison engine ships in Phase 2">
+        <NavLink to="/deals" className={({ isActive }) => (isActive ? 'active' : '')}>
           <span aria-hidden="true" style={{ fontSize: '1.05rem' }}>
             ◎
           </span>
-          Compare
-        </span>
+          Deals
+        </NavLink>
         <NavLink to="/app/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
           <span aria-hidden="true" style={{ fontSize: '1.05rem' }}>
             ⚙

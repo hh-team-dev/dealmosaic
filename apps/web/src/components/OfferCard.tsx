@@ -41,7 +41,7 @@ export function OfferCard({ offer, featured = false }: { offer: OfferView; featu
         {!offer.inStock && <span className="badge badge-coral">Out of stock</span>}
         {offer.dataOrigin !== 'live' && (
           <span className="badge badge-sun" title={offer.sourceLabel}>
-            {offer.dataOrigin === 'demo' ? 'Demo data' : 'Reported'}
+            {offer.dataOrigin === 'demo' ? 'Illustrative' : 'Shopper report'}
           </span>
         )}
       </div>

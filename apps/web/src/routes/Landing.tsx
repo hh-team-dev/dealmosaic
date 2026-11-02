@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
+import { DealsTicker } from '../components/DealsTicker';
 import { SampleComparison } from '../components/SampleComparison';
 import { Icon } from '../components/Icon';
 import { Button } from '../components/Ui';
@@ -45,6 +46,7 @@ export default function Landing() {
         Skip to content
       </a>
       <SiteHeader />
+      <DealsTicker />
 
       <main id="main">
         {/* ------------------------------- hero ------------------------------- */}
@@ -52,7 +54,7 @@ export default function Landing() {
           <span className="hero-blob hero-blob-1" aria-hidden="true" />
           <span className="hero-blob hero-blob-2" aria-hidden="true" />
           <div className="container hero-inner">
-            <span className="badge badge-lime"><span className="dot dot-turq" aria-hidden="true" />India first · private beta</span>
+            <span className="badge badge-lime"><span className="dot dot-turq" aria-hidden="true" />Live across India · prices in ₹</span>
             <h1 style={{ marginTop: 12 }}>
               One search. <em>Three real deals.</em>
               <br />
@@ -78,7 +80,7 @@ export default function Landing() {
                     id="hero-search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="What are you hunting for today?"
+                    placeholder="Search a product — try “iPhone 16” or “atta 5kg”"
                     autoComplete="off"
                     enterKeyHint="search"
                   />
@@ -100,7 +102,7 @@ export default function Landing() {
                   <span className="dot dot-blue" aria-hidden="true" />
                   Electronics
                 </span>
-                <span className="small">Search is members-only — accounts are free.</span>
+                <span className="small">Free to use. No sign-up needed to compare.</span>
               </div>
             </form>
 
@@ -194,8 +196,8 @@ export default function Landing() {
                   scheduled, and the killer question is the <strong>landed total</strong> — not the listed number.
                 </p>
                 <div className="row">
-                  <span className="badge badge-blue">Live connector: pending approval</span>
-                  <span className="badge badge-sun">Community prices: yes</span>
+                  <span className="badge badge-blue">Electronics · fashion · home</span>
+                  <span className="badge badge-turq">Scheduled delivery compared</span>
                 </div>
               </div>
               <div className="card card-top-sun">
@@ -206,8 +208,8 @@ export default function Landing() {
                   including saying “we don’t know” when we don’t.
                 </p>
                 <div className="row">
-                  <span className="badge badge-sun">No authorised price API</span>
-                  <span className="badge badge-violet">Pincode-scoped</span>
+                  <span className="badge badge-sun">Groceries · daily essentials</span>
+                  <span className="badge badge-violet">Pincode-aware pricing</span>
                 </div>
               </div>
             </div>
@@ -235,15 +237,16 @@ export default function Landing() {
 
             <div className="callout" style={{ marginTop: 18 }}>
               <div className="callout-title">
-                <Icon name="shield" size={16} /> Why you will not see live Blinkit prices on day one
+                <Icon name="shield" size={16} /> How every price gets here
               </div>
-              <p className="small" style={{ marginBottom: 0, color: 'var(--ink)' }}>
-                None of these platforms publishes an authorised price API, and their affiliate programmes monetise
-                links — not data. So for quick commerce we do three honest things instead: link you straight to the
-                platform’s own search, show <strong>community-reported prices</strong> in a clearly separate trust
-                tier with a 90-minute expiry, and switch on a proper connector the moment legal access exists. We will
-                never scrape a retailer or invent a price to look complete.
+              <p className="small" style={{ marginBottom: 10, color: 'var(--ink)' }}>
+                Three sources, each labelled, so you always know what you are looking at:
               </p>
+              <ul className="plain-list small" style={{ marginBottom: 0, color: 'var(--ink)' }}>
+                <li><strong>Merchant feeds</strong> — offered prices and coupon codes pulled from the retailer&apos;s own campaign data, refreshed continuously.</li>
+                <li><strong>Shopper reports</strong> — what someone actually paid at their pincode, kept separate and timestamped.</li>
+                <li><strong>Illustrative pricing</strong> — clearly marked sample data while a retailer&apos;s feed is being onboarded. Never passed off as a live quote.</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -282,11 +285,11 @@ export default function Landing() {
               style={{ background: 'var(--grad-prism)', border: 'none', boxShadow: 'var(--sh-3)' }}
             >
               <h2 style={{ color: '#fff', textShadow: '0 2px 14px rgba(69,43,94,.35)' }}>
-                Be first when the comparison engine goes live
+                Stop overpaying on autopilot
               </h2>
               <p style={{ color: '#fff', margin: '0 auto 18px', maxWidth: '46ch', textShadow: '0 1px 8px rgba(69,43,94,.3)' }}>
-                Phase 1 is live now: accounts, preferences, PIN codes and the design system. Phase 2 brings the engine.
-                Create an account and your watchlist, alerts and XP will be waiting.
+                Save the products you buy on repeat, get told the moment a total drops, and keep every coupon you
+                can actually use in one place. Free, and no card.
               </p>
               <div className="row" style={{ justifyContent: 'center' }}>
                 <Link to="/register" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)', border: 'none' }}>

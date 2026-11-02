@@ -2743,3 +2743,157 @@ button.chip[aria-selected='true'] {
 .deals-rules strong {
   color: var(--ink);
 }
+
+/* ==========================================================================
+   LIVE DEALS TICKER
+   --------------------------------------------------------------------------
+   A slim, always-moving offer strip under the header. Height is fixed so the
+   strip can never cause a layout shift while its data loads; motion is disabled
+   entirely under prefers-reduced-motion, where it degrades to a normal
+   horizontally scrollable row.
+   ========================================================================== */
+
+.ticker {
+  display: flex;
+  align-items: stretch;
+  height: 44px;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--ink) 0%, #5a3a72 100%);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ticker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 0 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.ticker-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 0 0 rgba(184, 243, 74, 0.7);
+  animation: ticker-pulse 2.2s ease-out infinite;
+}
+
+@keyframes ticker-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(184, 243, 74, 0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(184, 243, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(184, 243, 74, 0); }
+}
+
+.ticker-viewport {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  /* Fade both ends so items enter and leave rather than being sliced. */
+  /* A mask only reads alpha, so the colour is irrelevant — using the plum
+     token instead of pure black keeps the palette rule intact. */
+  mask-image: linear-gradient(90deg, transparent 0, var(--ink) 28px, var(--ink) calc(100% - 28px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, var(--ink) 28px, var(--ink) calc(100% - 28px), transparent 100%);
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex: 0 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  animation: ticker-scroll 52s linear infinite;
+  will-change: transform;
+}
+
+/* Two copies sit side by side; sliding by exactly one copy's width loops
+   seamlessly. The gap is accounted for so there is no visible jump. */
+.ticker:hover .ticker-track,
+.ticker:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.94);
+  white-space: nowrap;
+}
+
+.ticker-item:hover .ticker-title {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ticker-store {
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.ticker-value {
+  font-weight: 800;
+  color: var(--lime);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticker-title {
+  max-width: 46ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.ticker-item::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  margin-left: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Accessibility: no animation, but the offers stay reachable by scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker-pulse { animation: none; }
+  .ticker-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ticker-viewport::-webkit-scrollbar { display: none; }
+  .ticker-track {
+    animation: none;
+  }
+  .ticker-track[aria-hidden='true'] { display: none; }
+}
+
+@media (max-width: 420px) {
+  .ticker-label { padding: 0 10px; font-size: 0.66rem; }
+  .ticker-title { max-width: 30ch; }
+}

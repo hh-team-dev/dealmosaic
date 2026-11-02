@@ -300,8 +300,8 @@ export function SampleComparison() {
 
       <p className="tiny" style={{ marginTop: 12, maxWidth: '62ch' }}>
         This is a hand-built sample with fictional prices, sellers and timestamps — it is not live retailer data and it
-        is labelled as such in the interface and in the DOM (<code>data-origin="demo"</code>). The working comparison
-        engine ships in Phase 2; nothing here is presented as a real quote.
+        is labelled as such in the interface and in the DOM (<code>data-origin="demo"</code>). Nothing here is
+        presented as a real quote.
       </p>
     </div>
   );

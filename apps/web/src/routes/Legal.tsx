@@ -299,48 +299,56 @@ export function Contact() {
       path="/contact"
       description="How to reach the DEALMOSAIC team, report a wrong price, or raise a privacy request."
     >
-      <div className="callout callout-danger">
+      <div className="callout callout-info">
         <div className="callout-title">
-          <Icon name="warn" size={16} /> There is no support inbox yet — and we would rather say so
+          <Icon name="info" size={16} /> A human reads every message
         </div>
         <p className="small" style={{ margin: 0, color: 'var(--ink)' }}>
-          The support centre (price reports, match corrections, retailer issues, feedback tickets) is scheduled for
-          Phase 4 of the build. Creating a contact form now would give you a button that quietly does nothing, which is
-          exactly what this project promised not to do.
+          Email <a href="mailto:hh.team.dev@gmail.com?subject=DEALMOSAIC%20support">hh.team.dev@gmail.com</a>.
+          Wrong prices, bad product matches, dead coupon codes, privacy requests or anything else — it all goes to the
+          same inbox, and it is answered.
         </p>
       </div>
 
-      <h2>What you can do today</h2>
+      <h2>What to include</h2>
       <ul>
         <li>
-          <strong>Fix your own account</strong> — name, PIN code, currency and notifications are editable in{' '}
+          <strong>A wrong price</strong> — the product page link, the store, and what you actually saw. A screenshot
+          helps enormously.
+        </li>
+        <li>
+          <strong>A wrong product match</strong> — the single most valuable correction you can send us. Two variants
+          that should not be compared is a bug we want to know about.
+        </li>
+        <li>
+          <strong>A dead coupon code</strong> — tell us the code. Codes that repeatedly fail are retired automatically,
+          and your report is what starts that.
+        </li>
+        <li>
+          <strong>A privacy request</strong> — export or deletion. You can also do both yourself, instantly, from{' '}
+          <Link to="/app/settings">account settings</Link>.
+        </li>
+      </ul>
+
+      <h2>Fix it yourself, faster</h2>
+      <ul>
+        <li>
+          <strong>Your details</strong> — name, pincode, currency and notifications are editable in{' '}
           <Link to="/app/settings">account settings</Link>.
         </li>
         <li>
-          <strong>Take your data with you</strong> — “Export my data” downloads everything we hold as JSON.
+          <strong>Your data</strong> — &ldquo;Export my data&rdquo; downloads everything we hold as JSON.
         </li>
         <li>
-          <strong>Leave</strong> — “Delete account” removes every row we hold, immediately.
+          <strong>Your account</strong> — &ldquo;Delete account&rdquo; removes every row we hold, immediately. No
+          retention period, no &ldquo;contact us to cancel&rdquo;.
         </li>
       </ul>
 
-      <h2>What arrives in Phase 4</h2>
-      <ul>
-        <li>Report an incorrect price, with evidence attached.</li>
-        <li>Report an incorrect product match — the single most valuable correction you can give us.</li>
-        <li>Report a retailer problem (wrong link, dead offer, misleading fee).</li>
-        <li>General feedback and feature requests, with a tracked status.</li>
-      </ul>
+      <h2>How we handle it</h2>
       <p className="small">
-        Every report will be reviewed by a human, and the rewarded ones will be the ones that actually improve the data
-        — not the ones that are merely submitted.
-      </p>
-
-      <h2>Project status</h2>
-      <p>
-        DEALMOSAIC is in an open beta build. Phase 1 (accounts, preferences, design system, mobile shell) is live. The
-        comparison engine is Phase 2, connectors Phase 3, and quick-commerce Phase 3B. Each phase ships with a written
-        status of what works and what does not.
+        Reports that change the data get priority over reports that merely describe it. If a correction changes a price
+        or a match, it is reflected in the catalogue rather than logged and forgotten.
       </p>
     </LegalPage>
   );

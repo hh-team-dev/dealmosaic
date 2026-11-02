@@ -195,10 +195,11 @@ export default function Deals() {
 
           {coupons !== null && coupons.length === 0 && !error && (
             <div className="empty-state">
-              <p className="empty-state-title">No live deals match that</p>
+              <p className="empty-state-title">Nothing live for that filter</p>
               <p>
-                We only list offers we can source from the store itself. Rather than pad this page
-                with codes we cannot stand behind, we would rather show you nothing.
+                Try a different store or clear the filters. We only list offers sourced from the
+                store itself, so the list is shorter than a coupon aggregator&apos;s — and unlike
+                theirs, the codes work.
               </p>
               {(platform || q || codesOnly) && (
                 <button

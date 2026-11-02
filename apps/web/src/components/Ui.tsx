@@ -282,7 +282,7 @@ export function useCountUp(target: number, duration = 620): number {
 
 /* ------------------------------ demo flag ------------------------------ */
 
-export function DemoFlag({ label = 'Sample data — for illustration, not live prices' }: { label?: string }) {
+export function DemoFlag({ label = 'Illustrative pricing — live feed pending' }: { label?: string }) {
   return (
     <span className="demo-flag" data-origin="demo">
       <span aria-hidden="true">◈</span> {label}
