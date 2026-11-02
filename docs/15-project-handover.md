@@ -715,8 +715,12 @@ different assertions. Both need checking.
 reports it as `state: active`. It pings `https://dealmosaic-api.onrender.com/api/health`
 every 5 minutes so Render's free tier never sleeps the API.
 
-**Not yet proven to fire.** At the time of writing, no run had been created in
-~40 minutes. GitHub schedules are best-effort and a new workflow's first run is
+**Runs correctly when invoked, but GitHub's scheduler does not fire it.** Manual
+run #1 (owner-triggered, 2026-11-02T09:02Z) succeeded in 32 s and its log shows
+`HTTP 200 {"ok":true,"database":"connected"...}` — taking 23 s because it woke a
+sleeping service, which is precisely the job. But **zero `schedule` runs appeared
+in the next 57 minutes**, so the schedule itself is not dependable. Treat the
+GitHub workflow as a backup, not the primary mechanism. GitHub schedules are best-effort and a new workflow's first run is
 often delayed, so this is not necessarily broken — but it is *unverified*, and
 should be recorded as such rather than assumed working.
 
@@ -726,10 +730,11 @@ Cold-start cost measured directly: **22.5 s** on the first request to `/api/heal
 To confirm: GitHub → repo → **Actions** → `keepalive` → **Run workflow**.
 If a banner says workflows are not being run, enable Actions for the repository.
 
-**If GitHub cron proves unreliable, the fallback is a free uptime monitor**
-(UptimeRobot free tier, 5-minute interval) pointed at the same health URL. That
-needs an account, so it is an owner action. GitHub cron is free and already
-installed, so it is tried first.
+**PRIMARY FIX: `deploy/keepalive/cloudflare-worker-keepalive.js`.** A Cloudflare
+Worker with a 5-minute Cron Trigger. No new account — the owner already has
+Cloudflare for Pages — no card, and Cron Triggers fire reliably. Install steps are
+in the file header. Alternative if preferred: UptimeRobot free tier (5-minute
+interval) pointed at the same health URL; that does need a new account.
 
 **Manual dispatch is not available to the agent:** `POST …/dispatches` returns
 403 `Resource not accessible by personal access token`, because that endpoint
