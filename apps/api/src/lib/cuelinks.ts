@@ -153,7 +153,21 @@ export function toCouponRow(offer: CuelinksOffer): CouponRow {
   // almost every offer (verified: 0 of 1,085 live offers carried a structured
   // price). The number the merchant wrote in the headline is therefore the only
   // real one, and it is read with the conservative parser in @dealmosaic/core.
-  const facts = readStatedFacts(`${offer.title ?? ''} ${offer.description ?? ''}`);
+  //
+  // TITLE FIRST, DESCRIPTION ONLY AS A FALLBACK. Measured on live data: a realme
+  // campaign headlined "Save Up to 45% Storewide" has a description ending "with
+  // up to 90% off" (about a different product line). Concatenating the two let the
+  // description's number override the headline's, which would have printed 90% on
+  // a card whose own title says 45%. The headline is the claim; the body is
+  // supporting text.
+  const titleFacts = readStatedFacts(offer.title);
+  const bodyFacts = offer.description ? readStatedFacts(offer.description) : titleFacts;
+  const facts = {
+    priceMinor: titleFacts.priceMinor ?? bodyFacts.priceMinor,
+    priceKind: titleFacts.priceMinor !== null ? titleFacts.priceKind : bodyFacts.priceKind,
+    percent: titleFacts.percent ?? bodyFacts.percent,
+    percentIsCap: titleFacts.percent !== null ? titleFacts.percentIsCap : bodyFacts.percentIsCap,
+  };
   const categoryNames = (offer.categories ?? []).map((c) => c.name);
   const primaryCategory = categoryNames[0] ?? null;
 

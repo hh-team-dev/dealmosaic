@@ -110,6 +110,19 @@ export const db = {
   },
 
   /**
+   * Many statements, one round trip.
+   *
+   * The affiliate sync used to write one row at a time. Against a remote database
+   * that is ~300 ms per row, so refreshing 1,085 offers took 8 minutes — a real
+   * problem for a job that should run hourly. Batching is not a micro-
+   * optimisation here; it is the difference between a usable sync and one that
+   * outlives its own schedule.
+   */
+  batch: async (
+    statements: Array<{ sql: string; args: InValue[] | Record<string, InValue> }>,
+  ): Promise<ResultSet[]> => client.batch(statements, 'write'),
+
+  /**
    * Interactive transaction. Unlike the old synchronous helper this must be
    * awaited, and the callback receives a transaction-scoped handle:
    *

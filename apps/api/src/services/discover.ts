@@ -115,17 +115,27 @@ export function buildDiscovery(views: CouponView[], now: Date = new Date()): Dis
     items: take(withPercent, 6, true),
   });
 
+  /**
+   * The buckets are DISJOINT on the page even though each "See all" link is an
+   * inclusive filter. Filling each shelf independently put the same six cheapest
+   * offers under ₹99, ₹199, ₹499 and ₹999 — four identical rows, which reads as a
+   * broken page. An offer now belongs to the tightest bucket it fits, and the
+   * link still shows everything up to that ceiling.
+   */
+  const spentOnPrice = new Set<string>();
   for (const cap of [99, 199, 499, 999]) {
     const pool = deals
-      .filter((d) => d.statedPriceMinor !== null && d.statedPriceMinor <= cap * 100)
-      .sort((a, b) => (a.statedPriceMinor ?? 0) - (b.statedPriceMinor ?? 0) || byUsefulness(a, b));
+      .filter((d) => d.statedPriceMinor !== null && d.statedPriceMinor <= cap * 100 && !spentOnPrice.has(d.id))
+      .sort((a, b) => (a.statedPriceMinor ?? 0) - (b.statedPriceMinor ?? 0) || byUsefulness(a, b))
+      .slice(0, 6);
+    for (const d of pool) spentOnPrice.add(d.id);
     sections.push({
       id: `under-${cap}`,
       title: `Under ₹${cap}`,
       subtitle: 'Priced from the store’s own headline.',
       href: `/deals?maxPrice=${cap}`,
       minItems: 3,
-      items: pool.slice(0, 6),
+      items: pool,
     });
   }
 

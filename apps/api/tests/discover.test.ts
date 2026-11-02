@@ -223,3 +223,24 @@ describe('totals', () => {
     });
   });
 });
+
+describe('price shelves do not repeat each other', () => {
+  it('assigns an offer to the tightest bucket it fits', () => {
+    const offers = [
+      // 12 offers spread across the buckets
+      ...Array.from({ length: 4 }, (_, i) => offer({ id: `cheap${i}`, statedPriceMinor: (30 + i) * 100 })),
+      ...Array.from({ length: 4 }, (_, i) => offer({ id: `mid${i}`, statedPriceMinor: (150 + i) * 100 })),
+      ...Array.from({ length: 4 }, (_, i) => offer({ id: `high${i}`, statedPriceMinor: (400 + i) * 100 })),
+    ];
+    const result = buildDiscovery(offers, NOW);
+    const buckets = ['under-99', 'under-199', 'under-499']
+      .map((id) => section(result, id))
+      .filter((s): s is NonNullable<typeof s> => Boolean(s));
+    const all = buckets.flatMap((b) => ids(b.items));
+    expect(new Set(all).size).toBe(all.length);
+    // The cheapest four must appear only in the tightest bucket.
+    expect(ids(section(result, 'under-99')!.items).sort()).toEqual(['cheap0', 'cheap1', 'cheap2', 'cheap3']);
+    // Nothing over its ceiling leaks downward.
+    expect(ids(section(result, 'under-199')!.items)).not.toContain('high0');
+  });
+});

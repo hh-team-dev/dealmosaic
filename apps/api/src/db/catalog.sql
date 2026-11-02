@@ -168,5 +168,7 @@ CREATE TABLE IF NOT EXISTS coupons (
 );
 CREATE INDEX IF NOT EXISTS idx_coupons_platform ON coupons(platform_slug, trust_state, expires_at);
 CREATE INDEX IF NOT EXISTS idx_coupons_category ON coupons(category_slug, trust_state);
-CREATE INDEX IF NOT EXISTS idx_coupons_group ON coupons(deal_group, trust_state, expires_at);
-CREATE INDEX IF NOT EXISTS idx_coupons_price ON coupons(stated_price_minor, trust_state);
+-- NOTE: the deal_group / stated_price_minor indexes are created in initDb() after
+-- the forward-only migrations, not here. A fresh database gets them from the
+-- columns above; an existing database does not have those columns yet at the
+-- moment this file runs, and CREATE INDEX would abort the whole schema pass.
