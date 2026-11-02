@@ -109,7 +109,7 @@ export function PriceChart({ points, label }: { points: PricePoint[]; label: str
   }
 
   const width = 320;
-  const height = 96;
+  const height = 64;
   const pad = 6;
   const prices = points.map((p) => p.priceMinor);
   const min = Math.min(...prices);

@@ -111,6 +111,55 @@ It never fills with a fictional deal.
 
 ---
 
+## 5b. The "reason to return" block — built 3 November 2026
+
+| Requested | Status | Where it lives |
+|---|---|---|
+| Price alerts | ✅ shipped, self-scheduling | `services/alerts.ts`, `routes/alerts.ts`, product page form, Dashboard list |
+| Wishlist / watchlist | ✅ shipped (device-local) | `lib/saved.ts`, `/saved` |
+| Recently viewed | ✅ shipped | `lib/saved.ts`, homepage + `/saved` |
+| Price-history charts | ✅ shipped, chart accrues daily | `services/snapshots.ts`, `ProductInsights.tsx` |
+| Pincode UI | ✅ shipped on product page | `lib/pincode.ts` (device-local PIN) |
+| Community price reports | ✅ shipped (form + list) | `CommunityPanel`, existing `/api/community-prices` |
+| Coupons on comparison pages | ✅ shipped | `CouponStrip` on `/p/:slug` |
+| Personalised deals | ⏳ not started — needs traffic to be signal rather than noise | — |
+| Cashback tracking | ⏳ not started — there is no cashback ledger to track | — |
+
+### How the alerts actually work
+
+`price_alerts` + `runAlerts()`: for every active alert, take the **cheapest in-stock
+offer for that exact variant**, and email only if it is below the shopper's target.
+One alert per variant per shopper; it fires once and closes. Ten tests assert the
+negatives — no variant, no offer, price above target, already fired — because the
+failure a person experiences is spam, not a missing feature.
+
+### How the daily job runs without a cron
+
+Three options were available, and only one was free *and* reliable:
+
+1. **GitHub Actions `schedule`** — already documented in this repo as never firing
+   on a quiet repository. Abandoned.
+2. **A second Cloudflare Cron Trigger** — correct, but the Cloudflare token in use
+   has Pages permission and not Workers: `PUT` returns *"No access to the specified
+   service"*. **Owner action if wanted:** add *Workers Scripts: Edit* to the token,
+   then `cd deploy/keepalive && npx wrangler deploy` ships the two-trigger worker
+   that is already written and committed.
+3. **Piggyback on the keep-alive ping** — what runs today. The worker that already
+   exists calls `/api/health` every five minutes; the API asks "am I due?" and runs
+   the job at most once per 20 hours. An in-DB claim prevents overlap, `job_runs`
+   records the outcome, and the health response is sent before the work starts.
+
+Measured on production: the full job (feed refresh + snapshots + alerts) takes
+**5.5 s**, and `/api/health` still answers in **0.25 s** while it runs.
+
+### What the price history can and cannot say
+
+`offer_snapshots` gains one row per offer per day, **never backfilled**. The chart
+refuses to draw a line through fewer than two points and prints *"our own record —
+not a market index"* underneath. At the time of writing the catalogue has one day
+of history, so most charts correctly say so instead of drawing a flat line and
+implying stability we never observed.
+
 ## 6. Still open, in priority order
 
 1. **Catalogue depth (the real gap).** 25 products / 46 variants / 170 offers. Browsing now works;

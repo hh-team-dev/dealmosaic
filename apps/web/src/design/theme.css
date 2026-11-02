@@ -3416,11 +3416,18 @@ button.chip[aria-selected='true'] {
   flex-direction: column;
   gap: 12px;
 }
+/* On a 390 px phone the head has four things to say (label, attributes, price,
+   action) and no room to say them in one row — the Compare button was being
+   clipped off the right edge. It stacks below 600 px and only becomes a row when
+   there is genuinely space for one. */
 .variant-head {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.variant-head > .btn {
+  align-self: flex-start;
 }
 .variant-extras {
   display: grid;
@@ -3442,25 +3449,39 @@ button.chip[aria-selected='true'] {
   gap: 6px;
 }
 .offer-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'main price'
+    'open open';
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 6px 10px;
+  padding: 9px 10px;
   border-radius: var(--r-sm);
   background: var(--surface);
   border: 1px solid var(--hairline);
 }
 .offer-row-main {
+  grid-area: main;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  flex: 1;
+}
+.offer-row-main strong {
+  font-size: 0.9rem;
+  line-height: 1.2;
 }
 .offer-row-price {
+  grid-area: price;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
+}
+.offer-row > .btn {
+  grid-area: open;
+  justify-self: start;
+  padding: 4px 10px;
 }
 .origin-tag {
   font-size: 0.58rem;
@@ -3501,6 +3522,7 @@ button.chip[aria-selected='true'] {
 .chart-svg {
   width: 100%;
   height: auto;
+
   display: block;
 }
 .chart-empty {
@@ -3607,6 +3629,18 @@ button.chip[aria-selected='true'] {
   font-size: 0.85rem;
 }
 
+@media (min-width: 600px) {
+  .variant-head {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .offer-row {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: 'main price open';
+  }
+}
+
 @media (min-width: 768px) {
   .variant-extras {
     grid-template-columns: 1fr 1fr;
@@ -3647,4 +3681,13 @@ button.chip[aria-selected='true'] {
   color: var(--ink);
   text-decoration: none;
   border-bottom: 1px solid var(--hairline-strong);
+}
+
+/* Variant label + attributes + GTIN stack vertically; inline elements in a flex
+   column otherwise run together as "10 kgsize: 10kgGTIN ...". */
+.variant-head .stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }

@@ -123,6 +123,29 @@ Plus `/saved` — a wishlist and recently-viewed board in `localStorage`, no acc
 `minItems` floor and says so in a `withheld` array. On a thin day the wall gets shorter, never
 fictional. Percentages keep the store's "up to"; prices keep "from" / "under" / "at".
 
+### 2.5 Return-visit block — added 3 November 2026
+
+| Feature | Status | Verified how |
+|---|---|---|
+| Price alerts (email) | **live** | `POST /api/alerts` → `POST /api/alerts/run` fires once, then closes |
+| Wishlist + recently viewed | **live, device-local** | `/saved`, `lib/saved.ts` |
+| Price-history chart | **live, accruing daily** | `offer_snapshots`: +170 rows/day, never backfilled |
+| Pincode control | **live** | product page → `/api/location/summary` |
+| Community price reports | **live** | form on product page → `/api/community-prices` |
+| Coupons on product pages | **live** | `CouponStrip` on `/p/:slug` |
+
+**The daily job schedules itself.** It is not a cron: the keep-alive worker already
+calls `/api/health` every five minutes, so the API asks "am I due?" on that ping and
+runs at most once per 20 hours. The claim is a conditional UPDATE in `job_runs`, so
+two pings cannot both start a run, and the outcome of every run is queryable:
+`GET /api/maintenance/daily` with the sync token. Production measurement: full job
+**5.5 s**, health response unaffected at **0.25 s**.
+
+**Owner-only, optional:** the Cloudflare token in use can read Workers but not write
+them, so the two-trigger cron worker in `deploy/keepalive` is committed but not
+deployed. Granting *Workers Scripts: Edit* would let `npx wrangler deploy` replace the
+self-scheduling trick with a real cron. Nothing is blocked while it is missing.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
