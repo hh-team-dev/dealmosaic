@@ -1,0 +1,24 @@
+name: keepalive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Wake the API
+        run: |
+          url="https://dealmosaic-api.onrender.com/api/health"
+          code=$(curl -s -o /tmp/health.json -w '%{http_code}' --max-time 90 --retry 2 --retry-delay 10 "$url")
+          echo "HTTP $code"
+          cat /tmp/health.json || true
+          # A cold start can outlast one attempt; only fail on a genuinely bad status.
+          if [ "$code" != "200" ]; then
+            echo "::warning::API health returned $code"
+          fi
