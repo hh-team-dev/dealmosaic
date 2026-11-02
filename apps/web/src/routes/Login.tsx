@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthLayout } from '../components/AuthLayout';
 import { Button, Field, PasswordInput, TextInput } from '../components/Ui';
@@ -47,6 +48,13 @@ export default function Login() {
   }
 
   return (
+      <>
+      <Seo
+        title="Sign in"
+        description="Sign in to DealMosaic to watch prices, save deals and report whether a coupon code worked."
+        path="/login"
+        index={false}
+      />
     <AuthLayout
       title="Welcome back"
       subtitle="Sign in to compare prices. Accounts are free and search is never public."
@@ -97,5 +105,6 @@ export default function Login() {
         New here? <Link to="/register">Create a free account</Link>
       </p>
     </AuthLayout>
+      </>
   );
 }

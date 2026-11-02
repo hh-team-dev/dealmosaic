@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
 import { Seo } from '../lib/seo';
+import { useAuth } from '../lib/session';
 import { ApiError } from '../lib/api';
 import { inr } from '../lib/format';
 import {
@@ -63,6 +64,7 @@ function formatMoment(iso: string): string {
 }
 
 export default function Admin() {
+  const { user } = useAuth();
   const [params, setParams] = useSearchParams();
   const tab = (params.get('tab') as Tab) ?? 'overview';
   const [denied, setDenied] = useState<'anon' | 'forbidden' | null>(null);
@@ -109,7 +111,13 @@ export default function Admin() {
             </div>
           )}
 
-          {!denied && (
+          {/*
+            Nothing loads until we know somebody is signed in. The tabs used to mount
+            for anonymous visitors and immediately fire six authenticated requests,
+            which trained the browser to log 401s on a page where 401 is the normal
+            answer — noise that hides the one 401 that would matter.
+          */}
+          {!denied && user && (
             <>
               <nav className="admin-tabs" aria-label="Control centre sections">
                 {TABS.map((t) => (

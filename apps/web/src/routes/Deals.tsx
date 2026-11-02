@@ -2,10 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
+import { ClaimBadge, ConfidenceLine } from '../components/DealFacts';
 import { Seo, breadcrumbJsonLd } from '../lib/seo';
 import {
   daysLeft,
-  discountLabel,
   listCoupons,
   listMerchants,
   type CouponView,
@@ -310,11 +310,14 @@ export default function Deals() {
               <li>
                 <strong>Only sourced offers.</strong> Every code comes from the merchant&apos;s own
                 campaign data through an affiliate network. We do not copy from coupon aggregators,
-                which is why this list is shorter than theirs — and why the codes work.
+                which is why this list is shorter than theirs. Coming from the merchant is evidence
+                that a code exists — not evidence that it works, so each card says which of the two
+                we actually know.
               </li>
               <li>
-                <strong>Failing codes retire themselves.</strong> After five failures that outweigh
-                its successes, a code is withdrawn automatically.
+                <strong>Codes mostly failing get withdrawn.</strong> Five reports from different
+                shoppers, with failures outweighing successes, take a code off the site. A person on
+                this team can also retire one directly.
               </li>
               <li>
                 <strong>We earn a commission.</strong> If you buy through a link here, the store pays
@@ -341,41 +344,18 @@ function CouponCard({
 }) {
   const days = daysLeft(coupon.expiresAt);
   const isCashback = coupon.discountType === 'cashback';
-  const isDealWithoutValue = !coupon.code && coupon.discountValue === 0;
   const urgent = days !== null && days <= 3;
 
   return (
     <article className={`deal-card${isCashback ? ' deal-card-cashback' : ''}`}>
       <div className="deal-card-top">
         <span className="deal-merchant">{coupon.platformName}</span>
-        {!isDealWithoutValue && (
-          <span className={`deal-badge${isCashback ? ' deal-badge-cashback' : ''}`}>
-            {discountLabel(coupon)}
-          </span>
-        )}
-        {/*
-          A card with a copyable code should say so. The feed leaves the structured
-          discount at 0 for most offers, so a coded card used to be labelled "Deal" —
-          technically true, and it hid the one action worth taking.
-        */}
-        {isDealWithoutValue && (
-          <span className="deal-badge deal-badge-quiet">{coupon.code ? 'Code' : 'Deal'}</span>
-        )}
-
+        <ClaimBadge coupon={coupon} />
       </div>
 
       <h3 className="deal-title">{coupon.title}</h3>
 
-      {/*
-        What we know, next to what the store claims. This page draws its own card
-        rather than reusing DealCard, which is how the evidence line went missing
-        here while appearing on the homepage shelves — one fact, two code paths, is
-        how they drift.
-      */}
-      <p className={`deal-confidence is-${coupon.confidence.level}`} title={coupon.confidence.detail}>
-        <Icon name={coupon.confidence.level === 'unreported' ? 'info' : 'shield'} size={12} />
-        {coupon.confidence.label}
-      </p>
+      <ConfidenceLine coupon={coupon} />
 
       {coupon.description && <p className="deal-desc">{coupon.description}</p>}
 

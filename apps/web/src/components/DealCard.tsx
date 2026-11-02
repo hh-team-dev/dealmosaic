@@ -10,6 +10,7 @@ import {
 } from '../lib/coupons-api';
 import { toggleSaved, useSaved, recordView } from '../lib/saved';
 import { Icon } from './Icon';
+import { ClaimBadge, CodeButton, ConfidenceLine } from './DealFacts';
 
 /**
  * THE DEAL CARD.
@@ -52,7 +53,6 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
     }
   }, [deal]);
 
-  const percent = statedPercentLabel(deal);
   const price = statedPriceLabel(deal);
   const urgency = expiryLabel(deal.expiresAt, deal.daysLeft ?? null);
   const saving = deal.discountType === 'cashback' ? discountLabel(deal) : null;
@@ -81,12 +81,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         </button>
       </div>
 
-      {percent && (
-        <span className="deal-badge">
-          {percent}
-          {deal.percentIsCap ? <span className="deal-badge-note">listed by store</span> : null}
-        </span>
-      )}
+      <ClaimBadge coupon={deal} />
 
       <h3 className="deal-card-title">{deal.title}</h3>
 
@@ -96,10 +91,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         which case the card says so in grey. Both are useful; only one is a
         reason to trust the code.
       */}
-      <p className={`deal-confidence is-${deal.confidence.level}`} title={deal.confidence.detail}>
-        <Icon name={deal.confidence.level === 'unreported' ? 'info' : 'shield'} size={12} />
-        {deal.confidence.label}
-      </p>
+      <ConfidenceLine coupon={deal} />
 
       {price && (
         <p className="deal-card-price">
@@ -116,10 +108,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
 
       <div className="deal-card-actions">
         {deal.code ? (
-          <button type="button" className="deal-code" onClick={copy} aria-label={`Copy code ${deal.code}`}>
-            <span className="deal-code-value">{deal.code}</span>
-            <span className="deal-code-hint">{copied ? 'Copied' : 'Copy'}</span>
-          </button>
+          <CodeButton code={deal.code} copied={copied} onCopy={() => void copy()} />
         ) : (
           <span className="deal-code deal-code-none">No code needed</span>
         )}

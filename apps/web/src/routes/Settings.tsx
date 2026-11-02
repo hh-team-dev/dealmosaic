@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Seo } from '../lib/seo';
 import { useNavigate } from 'react-router-dom';
 import { COUNTRIES, CURRENCIES } from '@dealmosaic/core';
 import { AppShell } from '../components/Chrome';
@@ -96,6 +97,13 @@ export default function Settings() {
   }
 
   return (
+      <>
+      <Seo
+        title="Account settings"
+        description="Your DealMosaic account settings."
+        path="/app/settings"
+        index={false}
+      />
     <AppShell>
       <div className="stack stack-lg" style={{ maxWidth: 720 }}>
         <header>
@@ -285,5 +293,6 @@ export default function Settings() {
         </div>
       </Modal>
     </AppShell>
+      </>
   );
 }

@@ -386,6 +386,33 @@ origin and that browse returns offer price and MRP as distinct fields.
 **Gates:** 270 tests · TypeScript clean · 33 design assertions · 0 secrets in 195 files ·
 53 prerendered pages · 5 routes at 390 px with zero overflow and zero console errors.
 
+### 2.15 One definition of how a deal states its facts — 3 November 2026
+
+`/deals` drew its own coupon card, separate from `DealCard` on the homepage shelves. That
+duplication is *why* the evidence line existed on one and not the other. Two cards now
+take their claim badge, evidence line and copy control from **`components/DealFacts.tsx`**,
+so they cannot disagree about how much we know.
+
+Copy corrected on the same page: *"Only sourced offers … which is why the codes work"* —
+coming from the merchant is evidence a code **exists**, not that it works. It now says so,
+and the retirement rule reads "five reports from different shoppers" instead of an
+implied automatic check nobody performs.
+
+**Page titles.** `/login`, `/register`, `/forgot-password`, `/reset-password`,
+`/verify-email`, `/app` and `/app/settings` had **no `<Seo>` at all** — the tab kept
+whatever title the previous page set, or the site default. Each now has its own title,
+description, canonical and `noindex` where it applies.
+
+**The control centre no longer fires six authenticated requests for anonymous visitors.**
+It used to mount every tab and let the 401s arrive, which trained the network log to treat
+401 as normal on a page where a 401 is the correct answer.
+
+**24-route sweep at 390 px after all of it:** one `<h1>` and one title per page, no
+horizontal overflow anywhere, zero JS errors, zero 4xx except the intentional
+`/nope-xyz` 404 and one **`/favicon.svg`** oddity: the browser's own icon request returns
+200, while a programmatic `fetch('/favicon.svg')` from the page returns 404. No user-facing
+effect, recorded here rather than silently dropped, and not yet explained.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY

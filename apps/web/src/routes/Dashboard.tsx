@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/Chrome';
 import { Icon } from '../components/Icon';
@@ -56,6 +57,13 @@ export default function Dashboard() {
   }
 
   return (
+      <>
+      <Seo
+        title="Your dashboard"
+        description="Your price alerts, saved deals and account settings."
+        path="/app"
+        index={false}
+      />
     <AppShell>
       <div className="stack stack-lg">
         <header>
@@ -215,5 +223,6 @@ export default function Dashboard() {
         </div>
       </div>
     </AppShell>
+      </>
   );
 }

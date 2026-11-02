@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthLayout } from '../components/AuthLayout';
 import { apiRequest, ApiError, setCsrfToken } from '../lib/api';
@@ -56,6 +57,13 @@ export default function VerifyEmail() {
   }, [params, navigate, setSession, toast]);
 
   return (
+      <>
+      <Seo
+        title="Verify your email"
+        description="Confirm your email address to finish setting up your DealMosaic account."
+        path="/verify-email"
+        index={false}
+      />
     <AuthLayout title={state === 'ok' ? 'You’re in' : state === 'error' ? 'That link didn’t work' : 'Confirming your email'}>
       <div
         className={`callout ${state === 'ok' ? 'callout-success' : state === 'error' ? 'callout-danger' : 'callout-info'}`}
@@ -85,5 +93,6 @@ export default function VerifyEmail() {
         </div>
       )}
     </AuthLayout>
+      </>
   );
 }

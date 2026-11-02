@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { passwordStrength, validatePassword } from '@dealmosaic/core';
 import { AuthLayout } from '../components/AuthLayout';
@@ -60,6 +61,13 @@ export default function ResetPassword() {
   }
 
   return (
+      <>
+      <Seo
+        title="Choose a new password"
+        description="Set a new password for your DealMosaic account."
+        path="/reset-password"
+        index={false}
+      />
     <AuthLayout
       title="Choose a new password"
       subtitle="Resetting your password signs you out of every device — that is deliberate."
@@ -98,5 +106,6 @@ export default function ResetPassword() {
         </Button>
       </form>
     </AuthLayout>
+      </>
   );
 }

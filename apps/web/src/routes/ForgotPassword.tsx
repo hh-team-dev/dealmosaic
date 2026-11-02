@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link } from 'react-router-dom';
 import { AuthLayout } from '../components/AuthLayout';
 import { Icon } from '../components/Icon';
@@ -29,6 +30,13 @@ export default function ForgotPassword() {
   }
 
   return (
+      <>
+      <Seo
+        title="Reset your password"
+        description="Request a password reset link for your DealMosaic account."
+        path="/forgot-password"
+        index={false}
+      />
     <AuthLayout
       title="Reset your password"
       subtitle="Enter the email on your account and we will send a single-use link that expires in 60 minutes."
@@ -86,5 +94,6 @@ export default function ForgotPassword() {
         </form>
       )}
     </AuthLayout>
+      </>
   );
 }

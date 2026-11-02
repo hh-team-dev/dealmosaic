@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Seo } from '../lib/seo';
 import { Link, useSearchParams } from 'react-router-dom';
 import { passwordStrength, validateDisplayName, validateEmail, validatePassword } from '@dealmosaic/core';
 import { AuthLayout } from '../components/AuthLayout';
@@ -125,6 +126,13 @@ export default function Register() {
   }
 
   return (
+      <>
+      <Seo
+        title="Create an account"
+        description="A free DealMosaic account watches prices for you and keeps your saved deals on any device."
+        path="/register"
+        index={false}
+      />
     <AuthLayout
       title="Create your account"
       subtitle={
@@ -229,5 +237,6 @@ export default function Register() {
         Already have an account? <Link to="/login">Sign in</Link>
       </p>
     </AuthLayout>
+      </>
   );
 }
