@@ -70,11 +70,28 @@ export default {
       return out;
     }
 
-    /* ---- 2. Static asset ---------------------------------------------- */
+    /* ---- 2. Static asset ----------------------------------------------
+       Only a 2xx counts as a hit. Pages answers a request for a directory
+       index with a 308 to the trailing-slash form; passing that through would
+       make every prerendered page a redirect instead of a page, and a redirect
+       chain is exactly what a crawler spends its budget on. We handle the
+       directory index ourselves at step 3 and answer 200 directly.           */
     const asset = await env.ASSETS.fetch(request);
-    if (asset.status !== 404) return asset;
+    if (asset.status < 300) return asset;
 
-    /* ---- 3. Client route → app shell with a real 200 ------------------ */
+    /* ---- 3. Prerendered page ------------------------------------------
+       The build writes a real HTML file per product and category at
+       <route>/index.html. Those files carry a unique title, description,
+       canonical and Product structured data — the things a crawler needs and a
+       client-side React app cannot provide in the served HTML. ASSETS.fetch()
+       does not resolve a directory index for an extensionless path, so we ask
+       for it explicitly before falling back to the app shell.                */
+    if (!pathname.endsWith('/')) {
+      const prerendered = await env.ASSETS.fetch(new URL(`${pathname}/index.html`, url));
+      if (prerendered.status !== 404) return prerendered;
+    }
+
+    /* ---- 4. Client route → app shell with a real 200 ------------------ */
     if (isSpaRoute(pathname)) {
       const shell = await env.ASSETS.fetch(new URL('/index.html', url));
       return new Response(shell.body, {
@@ -83,7 +100,7 @@ export default {
       });
     }
 
-    /* ---- 4. Anything else → real 404 ---------------------------------- */
+    /* ---- 5. Anything else → real 404 ---------------------------------- */
     const notFound = await env.ASSETS.fetch(new URL('/404.html', url));
     if (notFound.status === 404) {
       return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain' } });

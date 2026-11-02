@@ -10,7 +10,7 @@
     "dev": "node scripts/dev.mjs",
     "dev:api": "npm run dev -w @dealmosaic/api",
     "dev:web": "npm run dev -w @dealmosaic/web",
-    "build": "npm run seo && npm run build -w @dealmosaic/web",
+    "build": "npm run seo && npm run build -w @dealmosaic/web && npm run prerender",
     "preview": "npm run preview -w @dealmosaic/web",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -31,7 +31,8 @@
     "secrets:scan": "node scripts/secrets-scan.mjs",
     "db:snapshot": "node scripts/db-backup.mjs",
     "db:snapshot:private": "node scripts/db-backup.mjs --private",
-    "db:verify": "node scripts/db-backup.mjs --verify"
+    "db:verify": "node scripts/db-backup.mjs --verify",
+    "prerender": "node scripts/prerender.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
