@@ -72,7 +72,7 @@ app.get('/api/health', (c) =>
   c.json({
     ok: true,
     service: 'dealmosaic-api',
-    version: '0.2.0-phase2',
+    version: '1.0.0',
     time: new Date().toISOString(),
     database: db.open ? 'connected' : 'unavailable',
     markets: ['IN'],
