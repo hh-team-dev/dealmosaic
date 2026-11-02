@@ -251,9 +251,21 @@ Cloudflare keep-alive · documented audit.
 5. Admin moderation for submitted coupons.
 
 **Blocked on you (each is a signup, not a payment):**
-1. **eBay developer keyset** → 5,000 live calls/day.
-2. **Cuelinks or AdmitAd** → affiliate feeds + commission.
+1. **eBay developer keyset** — *applied 2 Nov, pending eBay approval (stated: at
+   least one business day).*
+2. **Cuelinks** — *applied 2 Nov. Site-ownership meta tag installed and verified
+   live on `dealmosaic.pages.dev`; awaiting their check.* AdmitAd next.
 3. **Google Search Console** verification → without it, indexing is unmeasured.
+
+**Affiliate tag:** `<meta name="cuelinks-verification" content="VERIFY-CL-3DHLX1JK">`
+lives in `apps/web/index.html`. It must be in the *static* HTML — a tag injected by
+React after load is invisible to a verifier that does not execute JavaScript.
+
+**Keep-alive: confirmed working, not assumed.** Cloudflare Worker metrics after
+installation: invocations **3 → 22**, subrequests **20**, and Render's own log
+showed **20 requests, all 2xx, averaging 245.9 ms** — warm. A sleeping instance
+answers in ~22 s, so 245 ms proves the cron is firing every 5 minutes. The GitHub
+Actions schedule never fired once in 57 minutes and remains a fallback only.
 
 ---
 
