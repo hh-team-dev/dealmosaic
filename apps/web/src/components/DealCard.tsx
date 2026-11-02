@@ -41,7 +41,8 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
   const copy = useCallback(async () => {
     if (!deal.code) return;
     try {
-      await navigator.clipboard.writeText(deal.code);
+      // Copy the code, never the padding around it.
+      await navigator.clipboard.writeText(deal.code.trim());
       setCopied(true);
       recordView(deal);
       setTimeout(() => setCopied(false), 1900);

@@ -206,7 +206,13 @@ export function toCouponRow(offer: CuelinksOffer): CouponRow {
   return {
     externalId: String(offer.id),
     platformSlug: (offer.campaign_name ?? 'unknown').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40),
-    code: offer.coupon_code,
+    /**
+     * The network does not trim its codes: live data contained "NEW200       "
+     * and "   BM5". A shopper who pastes that with the spaces into a checkout
+     * field gets "invalid code", blames us, and is right to. 56 of 282 codes
+     * were affected when this was found.
+     */
+    code: offer.coupon_code?.trim() || null,
     title: offer.title.slice(0, 200),
     description: offer.description?.slice(0, 400) ?? null,
     discountType,

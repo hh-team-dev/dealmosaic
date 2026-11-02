@@ -92,7 +92,8 @@ export function toApi(r: CouponRow) {
       r.platform_name ??
       r.campaign_name ??
       r.platform_slug.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
-    code: r.code,
+    /** Trimmed on read as well as on write — old rows predate the import fix. */
+    code: r.code ? r.code.trim() || null : null,
     title: r.title,
     description: r.description,
     discountType: r.discount_type,

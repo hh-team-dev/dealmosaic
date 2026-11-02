@@ -1,4 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
+import * as cuelinks from '../src/lib/cuelinks.js';
+import { toApi } from '../src/routes/coupons.js';
 
 process.env.DB_PATH = ':memory:';
 process.env.NODE_ENV = 'development';
@@ -196,5 +198,63 @@ describe('browser origin handling', () => {
       browserHeaders('https://dealmosaic-api.onrender.com'),
     );
     expect(res.status).toBe(201);
+  });
+});
+
+/**
+ * The network does not trim its coupon codes. Live data contained "NEW200       "
+ * and "   BM5"; a shopper who pastes that padding into a checkout field gets
+ * "invalid code" and blames us. 56 of 282 codes were affected on the day this was
+ * found, so the trim is asserted where the padding enters and where it leaves.
+ */
+describe('coupon codes are trimmed at both boundaries', () => {
+  const offer = {
+    id: 990001,
+    title: 'Flat 20% off',
+    description: null,
+    terms: null,
+    coupon_code: '   PAD20  ',
+    offer_type: 'coupon' as const,
+    campaign_id: 1,
+    campaign_name: 'Zepto',
+    categories: [],
+    tracking_url: null,
+    status: 'live',
+    start_date: null,
+    end_date: null,
+    original_price: null,
+    discount_price: null,
+    percent_off: null,
+  };
+
+  it('trims the code on import', () => {
+    expect(cuelinks.toCouponRow(offer).code).toBe('PAD20');
+  });
+
+  it('trims on the way out, so rows written before the fix are safe too', () => {
+    const view = toApi({
+      id: 'x',
+      platform_slug: 'zepto',
+      code: '   PAD20  ',
+      title: 'Flat 20% off',
+      description: null,
+      discount_type: 'percent',
+      discount_value: 20,
+      max_discount_minor: null,
+      min_order_minor: null,
+      category_slug: null,
+      terms: null,
+      source: 'affiliate',
+      trust_state: 'moderator_verified',
+      success_count: 0,
+      fail_count: 0,
+      expires_at: null,
+      verified_at: null,
+    });
+    expect(view.code).toBe('PAD20');
+  });
+
+  it('turns a whitespace-only code into no code rather than a blank button', () => {
+    expect(cuelinks.toCouponRow({ ...offer, coupon_code: '   ' }).code).toBeNull();
   });
 });
