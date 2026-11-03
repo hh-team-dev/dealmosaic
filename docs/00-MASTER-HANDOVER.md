@@ -104,7 +104,8 @@ typecheck clean across 3 packages (web, api, core)
 0 secrets in 217 scanned files
 53 prerendered pages, 52 unique <h1>, own host only (scripts/verify-prerender.mjs)
 backup verified: 259 files, all checksums match (dealmosaic_2026-11-03_11-21-07.tar.gz)
-HEAD 407a077 — pushed to origin/main, working tree clean
+HEAD: the latest commit on origin/main (a hash written into this line would be a
+commit that cannot contain its own hash — check with `git log origin/main -1`)
 ```
 
 ---
