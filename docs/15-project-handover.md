@@ -36,6 +36,15 @@ file, and `00-MASTER-HANDOVER.md` §2.5–§2.9 is the authoritative state:
   homepage body into 44 of 45 pages, and the unowned `dealmosaic.in` host was still
   emitting an `og:image` that did not resolve. Both are now impossible: the build
   verifies its own output (`scripts/verify-prerender.mjs`).
+- **Accessibility and touch pass** — duplicate gradient ids in the logo removed, the
+  28 px save heart made 40 px, ticker links made 36 px tall. Homepage sub-32 px
+  targets 126 → 12 (the rest are inline links inside sentences, which WCAG exempts).
+- **The master icon was replaced** — "Prism Tessera" → "Mosaic M", a two-polygon
+  letterform. Three real defects fixed in the same pass: `apple-touch-icon` pointed
+  at an SVG (so iOS had no home-screen icon), `manifest.webmanifest` did not exist,
+  and the logo's per-instance gradient `useId` scaffolding became unnecessary
+  because two flat fills need no ids. Reasoning, scores and asset inventory:
+  `docs/brand-identity.md`; operating summary: `00-MASTER-HANDOVER.md` §2.17.
 
 > **The 60-second version.** This is a working price-comparison web app for India.
 > It resolves a product to an exact variant, itemises the true landed cost per
@@ -138,16 +147,21 @@ dominant source of price surprise in India.
 ### 3.3 Verified numbers (reproduce with `npm run check && npm run build`)
 
 ```
-Tests          78 passing across 5 files
-               money 14 · matching 17 · ranking 16 · validate 8 · API 23
+Tests          270 passing across 19 files
 Design audit   33 assertions passing
-Build          391.36 kB JS / 119.91 kB gzip
-               42.44 kB CSS / 9.51 kB gzip
+Secrets        0 found in 217 scanned files
+Build          450 kB JS / 137 kB gzip
+               68 kB CSS / ~12 kB gzip
+Prerender      53 pages · 52 unique <h1> · own host only
 Browser        0 page errors · 0 failed requests
                0 horizontal overflow at 360/390/414/768/1024/1440/1920 px
 Database       21 tables
-Catalogue      25 products · 61 variants · 17 categories
+Catalogue      25 products · 46 variants · 17 categories
+Coupons        1,089 live, from Cuelinks
 ```
+
+(Figures re-measured on 3 November 2026. The older numbers in this section's history
+were from the first build and would understate the test suite by a factor of three.)
 
 ---
 
@@ -514,6 +528,11 @@ values. Key constraints:
   Fonts: the sandboxed preview iframe has no network, and production should not
   depend on a third party.
 - Respect `prefers-reduced-motion`.
+- **The brand mark is two polygons and four tokens.** `--brand-cobalt` aliases
+  `--blue-d`, `--brand-coral` aliases `--coral`, and the on-dark pair
+  (`#8FA6FF` / `#FF8A8A`) exists because the primary cobalt is 1.66:1 on plum.
+  `Logo.tsx` reads the variables, so re-tinting is CSS-only. See §2 of
+  `04-design-system.md` and `brand-identity.md`.
 
 `npm run audit:design` fails the build on a near-black colour, a text unsafe
 gradient, or a white-on-fill pair under 4.5:1.

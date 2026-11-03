@@ -95,13 +95,16 @@ All 20 routes were requested on 3 November; the full list is in §2.8. Represent
 
 ### 2.4 Quality gates — all green
 
+Last full run: 3 November 2026, after the brand work (§2.17).
+
 ```
-214 tests passing
+270 tests passing (19 files)
 33 design assertions passing
 typecheck clean across 3 packages (web, api, core)
-0 secrets in 184 scanned files
-52 prerendered pages, verified unique and sitemap-complete (scripts/verify-prerender.mjs)
-backup verified: 194 files, checksums match
+0 secrets in 217 scanned files
+53 prerendered pages, 52 unique <h1>, own host only (scripts/verify-prerender.mjs)
+backup verified: 259 files, all checksums match
+HEAD ec9c48c — pushed to origin/main, working tree clean
 ```
 
 ---
@@ -487,7 +490,8 @@ that is **actually a 180 px PNG** (it pointed at the SVG, so iOS produced no hom
 icon), and `<link rel="manifest">`. `manifest.webmanifest` is new — it did not exist.
 `generate-og.py` now imports the polygons from `brand.py`, so geometry has one source.
 
-**Verified in production** (`https://dealmosaic.pages.dev`, deployment after this change):
+**Verified in production** (`https://dealmosaic.pages.dev`, Cloudflare Pages deployment `8429f02f`,
+commit `48ff895`):
 
 | Check | Result |
 |---|---|
@@ -498,7 +502,7 @@ icon), and `<link rel="manifest">`. `manifest.webmanifest` is new — it did not
 | `/brand/dm-icon-192/512`, `-maskable-512`, `/og.png`, `/brand/dm-logo-horizontal.svg` | all 200, correct types |
 | Header, footer, mobile header | mark renders at 34 px / 40 px, both instances, correct colours |
 | Tab strip at 16 px, dark and light home-screen icons, maskable cropped to circle and squircle | letterform holds, nothing clipped, nothing outside the safe area |
-| Gates | `tsc` clean, **270 tests**, design **33 PASS**, **0 secrets / 209 files**, build + prerender **53 pages** |
+| Gates | `tsc` clean, **270 tests / 19 files**, design **33 PASS**, **0 secrets / 217 files**, build + prerender **53 pages** |
 
 **Deliberately not changed:** the site's decorative prism gradients (homepage CTA, aurora
 buttons, swatch strips) still use the older palette and now visibly disagree with the mark.
@@ -551,9 +555,11 @@ dealmosaic/
 ├── packages/core/              Pure logic, zero I/O, fully unit-tested
 │   └── src/                    matching, ranking, money, location, countries, validate
 ├── scripts/                    generate-seo, prerender, backup, db-backup,
-│                               audit-design, secrets-scan, vault, dev
+│                               audit-design, secrets-scan, vault, dev,
+│                               generate-og.py, brand/brand.py (identity build)
 ├── deploy/                     render.yaml, keepalive, feeds
-├── docs/                       this documentation set (25 files)
+├── docs/                       this documentation set (28 files)
+│                               + brand-identity.md + brand/concepts/ (renders)
 └── secrets/                    encrypted vault (gitignored)
 ```
 
@@ -845,7 +851,7 @@ BREVO_API_KEY, MAIL_FROM, CUELINKS_API_KEY, CUELINKS_CHANNEL_ID, SYNC_TOKEN
 ### 8.3 Backup
 
 ```bash
-npm run backup            # secrets scan + tar.gz of 172 files with checksums
+npm run backup            # secrets scan + tar.gz of 259 files with checksums
 npm run backup:verify <f> # verify checksums
 npm run db:snapshot       # public-safe SQL dump
 ```
@@ -1152,7 +1158,9 @@ Two rules learned the hard way:
 | `01-research-competitive-matrix.md` | Competitor analysis |
 | `02-connector-feasibility.md` | Per-retailer API reality |
 | `03-architecture.md` | Original architecture decisions |
-| `04-design-system.md` | Palette, contrast, layout rules |
+| `04-design-system.md` | Palette, contrast, layout rules, **the mark (§2)** |
+| **`brand-identity.md`** | **The identity: geometry, palette with HEX+RGB, the three concepts and their scores, every rejected refinement, asset inventory, verification** |
+| `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |
 | `07-test-strategy.md` | What is tested and why |

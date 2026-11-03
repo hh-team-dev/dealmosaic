@@ -5,6 +5,12 @@
 **Status:** Phase 0 complete (research + strategy). Awaiting go-ahead to execute Phase 1.
 **Source brief:** `docs/source/MASTER_BUILD_PROMPT.txt` (1,217 lines, 21 parts)
 
+> **Status note, 3 November 2026.** This charter is the Phase-0 document and is kept for
+> the record. The project shipped through Phase 16 plus a master icon and visual
+> identity; the live state, and everything that has changed since this page was
+> written, is in `00-MASTER-HANDOVER.md`. The identity itself is documented in
+> `brand-identity.md`.
+
 ---
 
 ## 1. What we are building

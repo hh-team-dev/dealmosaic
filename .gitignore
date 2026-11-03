@@ -26,3 +26,7 @@ deploy/feeds/*.csv
 
 # Public database snapshots ARE committed (db-snapshots/). Private dumps never
 # land here — scripts/db-backup.mjs writes them to ~/.config/dealmosaic/db/.
+
+# Python bytecode from scripts/brand and scripts/generate-og.py
+__pycache__/
+*.pyc

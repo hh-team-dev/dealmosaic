@@ -44,6 +44,11 @@ established players, and depend on the content and authority work in section 4.
 | Mobile-first, no horizontal scroll at any width 360 → 1920 px | verified |
 | Fast: 119.91 kB gzip JS, 9.51 kB gzip CSS, self-hosted fonts | build output |
 | No fabricated `aggregateRating` in structured data | deliberate — see §5 |
+| `favicon.svg` + real multi-resolution `favicon.ico` (16/32/48) | `scripts/brand/brand.py` |
+| `apple-touch-icon` as a **180 px PNG** — iOS cannot read SVG here | same |
+| `manifest.webmanifest` — standalone, 192 + 512 any, 512 maskable | `apps/web/public/` |
+| `Organization.logo` in JSON-LD points at a 512 px PNG, not an SVG | `seo.tsx`, `index.html` |
+| Social card rebuilt at 1200×630 from the brand geometry | `scripts/generate-og.py` |
 
 ---
 

@@ -76,14 +76,66 @@ Never apply gradient text to prices; gradient type is reserved for display headi
 
 ## 2. Logo & wordmark
 
-**Concept — "The Prism Tessera".** Three angular tiles (coral, turquoise, violet) converge into a single diamond/prism at the centre, which contains a subtle aperture/magnifier notch on its upper-right edge. Three retailers → one clear answer; the notch signals discovery. The mark is built as inline SVG geometry (no raster), so it animates: tiles drift in and lock with a 40 ms stagger, then the prism catches a shine sweep.
+> **Revised 3 November 2026.** The original "Prism Tessera" mark described in this
+> section's first draft is gone; it exists only in `backups/brand-pre-mosaic-m/`.
+> The full case for the replacement — three concepts, eight-axis scoring, nine
+> rejected refinements, the palette measurements — is `docs/brand-identity.md`.
+> This section is the working summary.
 
-- Wordmark: geometric sans, tight tracking, with the **"O" replaced by a micro-prism** — reads correctly as text, distinctive at favicon size.
-- Clear space: 0.5× mark height. Min size: 20 px (mark-only below 96 px width).
-- Mono variants: single-colour Mosaic Plum and single-colour White for print/dark.
-- Originality: no cart, no tag, no globe, no swoosh, no competitor resemblance.
+**Concept — "Mosaic M".** One letterform built from two polygons that share the
+chevron running up the centre of the letter. The left facet is Cobalt Deep
+`#2F49C9`, the right is Coral Spark `#FF6B6B`. The colour change *is* the letter's
+construction; read whole it is an M, read in parts it is two tiles joined at an
+angle.
 
-Deliverables in Phase 1: `logo.svg`, `logo-mark.svg`, `favicon.svg`, `og-cover.svg`, plus an animated component.
+```
+grid 64 x 64, mark occupies x 8..56, y 12..54, icon viewBox "3 4 58 58"
+left  facet: 8,54  8,12  20,12  32,29  32,48  20,31  20,54
+right facet: 32,29 44,12 56,12  56,54  44,54  44,31  32,48
+```
+
+- **Flat fills only.** No gradient, stroke, shadow or type inside the mark. That is
+  what keeps it hard-edged at 16 px and printable in one ink.
+- **Minimum size:** 16 px for the symbol (the tab icon is the floor, and it was
+  inspected at 8× to confirm it). 20 px is comfortable.
+- **Clear space:** the 5-unit inset in the icon viewBox — 8.6 % of the mark's
+  bounding box on every side. Do not crop tighter.
+- **Orientation:** symbol alone in favicons, avatars, PWA icons and maskable
+  plates; horizontal lockup (mark at 1.7× cap height) in the header; wordmark alone
+  in text-only contexts. The full lockup is never padded into a square icon.
+- **Wordmark:** DEALMOSAIC set in Outfit 800 at −0.04 em tracking, shipped as
+  **outlines** (`dm-wordmark.svg`) so it renders without the webfont. The full stop
+  carries `--coral-d`.
+- **Mono variants:** Mosaic Plum `#452B5E` (11.40:1 on Warm White) and cream for
+  dark surfaces. The two-facet split survives greyscale because the chevron is a
+  hard geometric edge, not a hue difference.
+- **On dark:** `#8FA6FF` / `#FF8A8A`, because the primary cobalt is only 1.66:1 on
+  plum. Re-tint through `--brand-cobalt-on-dark` / `--brand-coral-on-dark`.
+- **Originality:** no cart, tag, percentage, magnifier or currency glyph; not set
+  in a typeface; not assembled from any other company's mark.
+
+### Brand tokens (added to `theme.css`)
+
+| Token | Value | Aliases |
+|---|---|---|
+| `--brand-cobalt` | `#2F49C9` | `--blue-d` |
+| `--brand-coral` | `#FF6B6B` | `--coral` |
+| `--brand-cobalt-on-dark` | `#8FA6FF` | — |
+| `--brand-coral-on-dark` | `#FF8A8A` | — |
+
+No new hues were introduced: the identity promotes two existing tokens to brand
+roles. The SVG in `Logo.tsx` reads these variables, so re-tinting a surface is a CSS
+change, not a markup change.
+
+### Asset family
+
+Generated together by `python3 scripts/brand/brand.py` into
+`apps/web/public/brand/`: `dm-icon` (+dark, +mono, +mono-cream), the 11-size PNG set
+`dm-icon-{1024…16}.png`, `dm-icon-maskable-512` (mark constrained to the 40 % safe
+circle), `dm-icon-plate-512`, social avatars, `dm-logo-horizontal` (+dark, +mono,
++PNG), `dm-logo-compact` (+dark, +PNG), `dm-wordmark` (+mono-cream). Site files —
+`favicon.svg`, `favicon.ico` (real 16/32/48), `apple-touch-icon.png` (180),
+`manifest.webmanifest`, `og.png` — are produced from the same geometry.
 
 ---
 
