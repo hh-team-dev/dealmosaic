@@ -51,6 +51,7 @@ CORE = [
     ('04-design-system.md', 'Design system'),
     ('15-project-handover.md', 'Technical handover'),
     ('14-seo-launch-checklist.md', 'SEO launch checklist'),
+    ('27-five-agent-consolidation.md', 'Five-agent consolidation'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 
@@ -260,6 +261,11 @@ def heading_pages(pdf_path: pathlib.Path, heads) -> tuple[dict[str, int], int]:
     first_body = next((i for i, toc in enumerate(flags) if not toc), 0)
     pages = raw[first_body:]
 
+    # Long headings wrap in the PDF, so neither the line-exact nor the substring
+    # search can see them. For those, match against the page's whitespace-normalised
+    # text — safe only because a heading this long is never quoted mid-sentence.
+    joined = [' '.join(lines) for lines in pages]
+
     found: dict[str, int] = {}
     for _level, _hid, title in heads:
         needle = re.sub(r'\s+', ' ', title).strip()
@@ -269,6 +275,8 @@ def heading_pages(pdf_path: pathlib.Path, heads) -> tuple[dict[str, int], int]:
         if idx is None:
             idx = next((i for i, lines in enumerate(pages)
                         if any(needle in line for line in lines)), None)
+        if idx is None and len(needle) > 40:
+            idx = next((i for i, text in enumerate(joined) if needle in text), None)
         if idx is not None:
             found[title] = idx + first_body + 1
     doc.close()
