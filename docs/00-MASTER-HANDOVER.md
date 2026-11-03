@@ -861,6 +861,29 @@ Backups live in `backups/` and are regenerated after every milestone. Everything
 is additionally in the public GitHub repo. There is no state that exists only in
 one place.
 
+### 8.4 The handover as PDF
+
+For reading on a phone away from a code editor:
+
+```bash
+pip install markdown xhtml2pdf pypdf pymupdf
+python3 scripts/handover-pdf.py            # → ~/handover-pdf/
+python3 scripts/handover-pdf.py --all      # include the historical build reports
+python3 scripts/handover-pdf.py --only 00-MASTER-HANDOVER
+```
+
+One A4 PDF per document plus `DEALMOSAIC-handover-set.pdf` — a cover, then the
+whole set in reading order. Each file carries a contents block with **real page
+numbers**, verified by the script itself: it renders, measures where each heading
+landed, and re-renders until the numbers stop moving.
+
+The PDFs are generated artefacts and are **not committed** — a binary that can be
+rebuilt from the markdown on demand has no business in a git history. The script
+is committed, so the output is reproducible. It needs no paid tool and no
+JavaScript engine: markdown → HTML → PDF via xhtml2pdf, with the DejaVu family
+embedded (that is what makes ₹, →, ✓ and — render instead of falling back to
+Helvetica).
+
 ---
 
 ## PART 9 — BUGS FOUND, AND WHAT THEY TEACH
