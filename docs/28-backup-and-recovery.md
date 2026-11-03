@@ -37,7 +37,7 @@ Read §6 before you rely on #4. There is one gap in it that only the owner can c
 | Companion inventory | `backups/dealmosaic_2026-11-03_14-20-59.inventory.json` (same list, machine-readable, for diffing) |
 | Built-in readme | `BACKUP-README.txt` and `BACKUP-MANIFEST.json` at the archive root, so the archive explains itself even after it is moved |
 | Verification | `node scripts/backup.mjs --verify dealmosaic_2026-11-03_14-20-59.tar.gz` → **263 files, all checksums match** |
-| Scope note | this archive was taken at 14:20:59 UTC, before documents §28 and the release tag were written. Appendix A lists *its* contents exactly. The final archive of the release is named in §2.4 and is a superset |
+| Scope note | this archive was taken at 14:20:59 UTC, before documents §28 and the release tag were written. Appendix A lists *its* contents exactly. The final archive of the release is named in §2.4 and is a superset of it |
 
 ### 2.1 What is inside, by area
 
@@ -73,16 +73,24 @@ the schema plus the public data snapshot.
 | `.env`, `*.db`, `*.db-wal`, `*.db-shm` | Environment and scratch databases, per-machine | Recreated; see §6 and §7 |
 | `backups/` itself | No recursion | — |
 
-### 2.4 Final archive of the release
-
-Taken after the release tag, this dossier and the regenerated PDFs were in place, so it is the
-superset of §2 and the one to keep:
+### 2.4 Final archive of the release — the one to keep
 
 | Property | Value |
 |---|---|
-| File | see `node scripts/backup.mjs --list` — newest entry, prefix `dealmosaic_2026-11-03_14` |
-| Verified | `node scripts/backup.mjs --verify <file>` → all checksums match |
-| Note | the archive cannot contain its own hash, so the authoritative hash for any archive is the one printed by `--verify` and stored in its sibling `.manifest.json` |
+| File | **`backups/dealmosaic_2026-11-03_14-22-45.tar.gz`** |
+| Size on disk | 3,377,285 bytes (3.22 MB) |
+| Files inside | **264 tracked + 2 self-describing files = 266 entries** |
+| Uncompressed | 5,404,077 bytes (5.15 MB) |
+| SHA-256 | `ef2793770b1a720ae5a3a10913d5f1165b4037e0215d1d621cb6bf101e6bb7fa` |
+| Manifest | `backups/dealmosaic_2026-11-03_14-22-45.manifest.json` (per-file hashes) |
+| Verified | `node scripts/backup.mjs --verify dealmosaic_2026-11-03_14-22-45.tar.gz` → **264 files, all checksums match** |
+| Difference from §2 | adds this dossier, the PDF-set entry, handover §2.21 and the refreshed DB snapshots |
+
+**An honest note about self-referencing archives.** The copy of *this* document inside the archive was
+frozen at 14:22:45, which is before the table above could be filled in. So the file you are reading is
+one revision newer than the copy stored in the archive — this is unavoidable for any archive that
+describes itself, and it is why the authoritative checksum for an archive is never written inside it,
+but printed by `--verify` and stored in its sibling `.manifest.json`.
 
 ---
 
