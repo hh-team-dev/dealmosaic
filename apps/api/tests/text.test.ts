@@ -124,3 +124,47 @@ describe('splitSentences', () => {
     expect(splitSentences(once)).toBe(once);
   });
 });
+
+describe('splitSentences — clause words welded together', () => {
+  it('separates the copy that arrives with no punctuation at all', () => {
+    expect(splitSentences('Awesome prices starting from Rs. 669Offer open to all')).toBe(
+      'Awesome prices starting from Rs. 669 Offer open to all',
+    );
+    expect(splitSentences('Get 5% off with couponOrder quickly, stocks are limited')).toBe(
+      'Get 5% off with coupon. Order quickly, stocks are limited',
+    );
+    // A full stop is only ever added where a word was there; after a number the
+    // weld is a missing space and nothing more.
+    expect(splitSentences('minimum spend requiredAct fast and take advantage')).toBe(
+      'minimum spend required. Act fast and take advantage',
+    );
+    expect(splitSentences('superior sound qualityPrice starts at Rs. 2,499')).toBe(
+      'superior sound quality. Price starts at Rs. 2,499',
+    );
+    expect(splitSentences('prices as low as Rs. 79Act fast and grab yours')).toBe(
+      'prices as low as Rs. 79 Act fast and grab yours',
+    );
+    expect(splitSentences('Additional 12% OffMaximum savings up to Rs. 200Hurry, stock is limited')).toBe(
+      'Additional 12% Off. Maximum savings up to Rs. 200 Hurry, stock is limited',
+    );
+  });
+
+  it('never splits a brand name, however camel-cased', () => {
+    for (const brand of [
+      'MuscleBlaze 2kg Protein',
+      'FirstCry Exclusive: Save Up to 60%',
+      'OpenFit Earbuds – Now On Sale',
+      'SaneBox Monthly Lunch Plan',
+      'DealDrive AI Now',
+      'AutoFull C3 Pro Chair',
+      'MyMuse intimate wellness',
+      'SuperYou Protein Bars',
+      'easyJet and Ryanair',
+      'HealthKart. Enter the coupon code',
+      'TrueBasics Wellness',
+      'LuvLap Festive Extravaganza',
+    ]) {
+      expect(splitSentences(brand)).toBe(brand);
+    }
+  });
+});

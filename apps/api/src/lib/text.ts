@@ -86,10 +86,59 @@ export function decodeEntities(input: string): string {
  *                     which leaves "U.S.", "Rs.1299" and "No.5" alone
  *   - never split inside a number: "1.5", "2.99"
  */
+/**
+ * CLAUSE WORDS.
+ *
+ * The second weld class has no punctuation at all — the merchant's generator
+ * concatenated two clauses directly:
+ *
+ *   "Rs. 669Offer open to all"        → "Rs. 669 Offer open to all"
+ *   "with couponOrder quickly"        → "with coupon Order quickly"
+ *   "12% OffMaximum savings"          → "12% Off Maximum savings"
+ *   "any orderShop now to shine"      → "any order Shop now to shine"
+ *
+ * Splitting on any capital letter would break MuscleBlaze, FirstCry, MyMuse and
+ * every other brand in this feed, so the split happens only in front of a closed
+ * list of words that begin a clause in retail copy — never inside a name. If a
+ * future feed needs one more, it goes on this list and gets a test.
+ */
+const CLAUSE_WORDS = [
+  'Access', 'Act', 'Advanced', 'And', 'Affordable', 'All', 'Applicable', 'Apply', 'Available',
+  'Benefit', 'Best', 'Bonus', 'Book', 'Bring', 'Browse', 'Buy', 'Check', 'Claim',
+  'Cleaning', 'Coupon', 'Create', 'Designed', 'Discover', 'Each', 'Elevate', 'Enjoy',
+  'Enter', 'Equipped', 'Everyone', 'Everything', 'Exclusively', 'Explore', 'Features',
+  'Featuring', 'Find', 'Flexible', 'Formulated', 'Free', 'Get', 'Grab', 'Head', 'Hurry',
+  'Ideal', 'Immerse', 'Includes', 'Incredible', 'Insightful', 'Join', 'Just', 'Lifetime',
+  'Limited', 'Make', 'Maximum', 'Minimum', 'Monthly', 'Notice', 'Offer', 'Offers', 'Open',
+  'Order', 'Our', 'Pick', 'Plan', 'Plus', 'Price', 'Prices', 'Priced', 'Promo',
+  'Purchase', 'Quick', 'Receive', 'Redeem', 'Refresh', 'Save', 'Score', 'Secure',
+  'Seize', 'Shop', 'Show', 'Simply', 'Snag', 'Spend', 'Start', 'Starter', 'Starting',
+  'Suitable', 'Team',
+  'Take', 'This', 'Transform', 'Ultimate', 'Unbelievable', 'Unlock', 'Upgrade', 'Use',
+  'Valid', 'Visit',
+] as const;
+
+/**
+ * Where the weld follows a word, the merchant dropped a full stop as well as the
+ * space — "minimum spend requiredAct fast" is two sentences. There the split is a
+ * full stop; after a number or a percentage it is only ever a missing space
+ * ("Rs. 79Act fast", "70%Offers begin"), because the number ends a clause that was
+ * already punctuated or never needed it. Inventing a full stop inside a claim is
+ * the one thing this function will not do.
+ */
+const CLAUSE_AFTER_WORD = new RegExp(`(?<=[a-z])(?=(${CLAUSE_WORDS.join('|')})\\b)`, 'g');
+const CLAUSE_AFTER_VALUE = new RegExp(`(?<=[0-9%)])(?=(${CLAUSE_WORDS.join('|')})\\b)`, 'g');
+
 export function splitSentences(input: string): string {
   return input
     .replace(/([!?])(?=[A-Z])/g, '$1 ')
     .replace(/([a-z0-9)])\.(?=[A-Z][a-z])/g, '$1. ')
+    // "include:StarterProfessionalTeam" — a colon never sits against the next word.
+    .replace(/:(?=[A-Z][a-z])/g, ': ')
+    // "669Offer" / "codeHurry" — a clause word welded onto the end of the previous
+    // one. Applied after the punctuation pass so it cannot undo it.
+    .replace(CLAUSE_AFTER_WORD, '. ')
+    .replace(CLAUSE_AFTER_VALUE, ' ')
     // "Rs.1299" / "Rs.450" — a currency prefix is always followed by a space in
     // Indian retail copy, and the missing one makes the amount hard to scan.
     .replace(/\bRs\.(?=\d)/g, 'Rs. ')
