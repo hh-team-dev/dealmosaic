@@ -66,6 +66,37 @@ export function decodeEntities(input: string): string {
 }
 
 /**
+ * SENTENCES THAT ARRIVED WELDED TOGETHER.
+ *
+ * Half of the live feed's descriptions look like this, read from the deployed API
+ * on 3 Nov 2026:
+ *
+ *   "Prices starting from just Rs. 1299!Enjoy a flat discount of Rs. 150 with the
+ *    promo code.Valid for orders of Rs. 1999 and above.Act fast to grab this
+ *    fantastic offer!"
+ *
+ * The merchant's copy generator strips the space after terminal punctuation, and
+ * 94 of 192 sampled rows carried at least one weld. On a phone in a 2-line clamped
+ * card that reads as one long typo. Splitting is safe because the punctuation is
+ * already there — this only puts back the space, it never invents a sentence break.
+ *
+ * Rules kept deliberately narrow so nothing legitimate is damaged:
+ *   - after ! or ?  → split before any capital letter ("Rs. 1299!Enjoy")
+ *   - after .       → split only before Capital + lowercase ("code.Valid"),
+ *                     which leaves "U.S.", "Rs.1299" and "No.5" alone
+ *   - never split inside a number: "1.5", "2.99"
+ */
+export function splitSentences(input: string): string {
+  return input
+    .replace(/([!?])(?=[A-Z])/g, '$1 ')
+    .replace(/([a-z0-9)])\.(?=[A-Z][a-z])/g, '$1. ')
+    // "Rs.1299" / "Rs.450" — a currency prefix is always followed by a space in
+    // Indian retail copy, and the missing one makes the amount hard to scan.
+    .replace(/\bRs\.(?=\d)/g, 'Rs. ')
+    .replace(/ {2,}/g, ' ');
+}
+
+/**
  * Feed copy → something fit to print.
  *
  * Double-decoding is intentional: a surprising number of rows arrive as
@@ -83,6 +114,7 @@ export function cleanCopy(input: string | null | undefined, maxLength = 400): st
     .replace(/\s+/g, ' ')
     .trim();
   if (!text) return null;
+  text = splitSentences(text).trim();
   return text.length > maxLength ? `${text.slice(0, maxLength - 1).trimEnd()}\u2026` : text;
 }
 

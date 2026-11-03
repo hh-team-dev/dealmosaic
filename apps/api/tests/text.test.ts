@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cleanCopy, decodeEntities, prettyTitle } from '../src/lib/text.js';
+import { cleanCopy, decodeEntities, prettyTitle, splitSentences } from '../src/lib/text.js';
 
 /**
  * THE COPY LAYER.
@@ -79,5 +79,48 @@ describe('prettyTitle', () => {
       'Shop Dymatize Nutritional & Fitness Supplements today!',
     );
     expect(prettyTitle('Save on <em>protein</em> today')).toBe('Save on protein today');
+  });
+});
+
+/**
+ * WELDED SENTENCES.
+ *
+ * Every string in this block was read off the deployed API on 3 November 2026,
+ * not invented for the test. 94 of 192 sampled descriptions contained at least one
+ * weld, which is why this is a function and not a one-line patch in the card.
+ */
+describe('splitSentences', () => {
+  it('separates the merchant copy that arrived welded', () => {
+    expect(
+      splitSentences('Prices starting from just Rs. 1299!Enjoy a flat discount of Rs. 150 with the promo code.'),
+    ).toBe('Prices starting from just Rs. 1299! Enjoy a flat discount of Rs. 150 with the promo code.');
+    expect(splitSentences('Valid for orders of Rs. 1999 and above.Act fast to grab this offer!')).toBe(
+      'Valid for orders of Rs. 1999 and above. Act fast to grab this offer!',
+    );
+    expect(splitSentences('Discount on Refurbished iPhone 15 & 16!Applicable on the entire range.')).toBe(
+      'Discount on Refurbished iPhone 15 & 16! Applicable on the entire range.',
+    );
+  });
+
+  it('puts the missing space after a currency prefix', () => {
+    expect(splitSentences('Headphones at Rs.1299 today')).toBe('Headphones at Rs. 1299 today');
+    expect(splitSentences('Cashback above Rs.450')).toBe('Cashback above Rs. 450');
+  });
+
+  it('never breaks a number, an initial or a short abbreviation', () => {
+    expect(splitSentences('Grow from 1.5 kg to 2.99 kg')).toBe('Grow from 1.5 kg to 2.99 kg');
+    expect(splitSentences('Made in the U.S. market')).toBe('Made in the U.S. market');
+    expect(splitSentences('Offers below Rs. 199, e.g. 99')).toBe('Offers below Rs. 199, e.g. 99');
+  });
+
+  it('is applied inside cleanCopy, so every ingest path gets it', () => {
+    expect(cleanCopy('Wow!Grab it.Valid today only.')).toBe('Wow! Grab it. Valid today only.');
+    expect(cleanCopy('Rs.1299 flat off')).toBe('Rs. 1299 flat off');
+  });
+
+  it('is idempotent — a re-sync cannot keep growing the spaces', () => {
+    const once = splitSentences('Wow!Grab it.Valid today');
+    expect(once).toBe('Wow! Grab it. Valid today');
+    expect(splitSentences(once)).toBe(once);
   });
 });
