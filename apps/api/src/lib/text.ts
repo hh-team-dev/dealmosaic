@@ -110,7 +110,7 @@ const CLAUSE_WORDS = [
   'Featuring', 'Find', 'Flexible', 'Formulated', 'Free', 'Get', 'Grab', 'Head', 'Hurry',
   'Ideal', 'Immerse', 'Includes', 'Incredible', 'Insightful', 'Join', 'Just', 'Lifetime',
   'Limited', 'Make', 'Maximum', 'Minimum', 'Monthly', 'Notice', 'Offer', 'Offers', 'Open',
-  'Order', 'Our', 'Pick', 'Plan', 'Plus', 'Price', 'Prices', 'Priced', 'Promo',
+  'Order', 'Our', 'Pick', 'Plan', 'Plus', 'Price', 'Professional', 'Prices', 'Priced', 'Promo',
   'Purchase', 'Quick', 'Receive', 'Redeem', 'Refresh', 'Save', 'Score', 'Secure',
   'Seize', 'Shop', 'Show', 'Simply', 'Snag', 'Spend', 'Start', 'Starter', 'Starting',
   'Suitable', 'Team',
