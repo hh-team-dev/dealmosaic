@@ -147,9 +147,9 @@ dominant source of price surprise in India.
 ### 3.3 Verified numbers (reproduce with `npm run check && npm run build`)
 
 ```
-Tests          270 passing across 19 files
+Tests          283 passing across 20 files
 Design audit   43 assertions passing
-Secrets        0 found in 220 scanned files
+Secrets        0 found in 224 scanned files
 Build          450 kB JS / 137 kB gzip
                68 kB CSS / ~12 kB gzip
 Prerender      53 pages · 52 unique <h1> · own host only

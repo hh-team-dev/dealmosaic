@@ -1,6 +1,6 @@
 -- DEALMOSAIC database snapshot (PUBLIC — safe for a public repository)
 --
--- Generated: 2026-11-03T14:20:57.666Z
+-- Generated: 2026-11-03T16:31:21.223Z
 -- Source:    local file
 -- Engine:    SQLite (libSQL / Turso)
 --

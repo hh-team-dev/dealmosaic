@@ -2714,6 +2714,29 @@ input:-webkit-autofill:active {
   }
 }
 
+/*
+ * The page-level evidence note. Same words the cards would repeat 200 times, said
+ * once, where it can be read.
+ */
+.deals-evidence-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 var(--s-3);
+  padding: 11px 13px;
+  border-radius: var(--r-md);
+  background: var(--tint);
+  border: 1px solid var(--hairline);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.deals-evidence-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--ink-soft);
+}
+
 .deals-loading {
   margin: 0 0 10px;
   font-size: 0.82rem;
@@ -3867,6 +3890,10 @@ input:-webkit-autofill:active {
  * saying "unverified" would read as a warning about the store rather than a
  * statement about our own records.
  */
+.deal-card .deal-confidence {
+  margin: 0;
+  font-size: 0.72rem;
+}
 .deal-confidence {
   display: inline-flex;
   align-items: center;

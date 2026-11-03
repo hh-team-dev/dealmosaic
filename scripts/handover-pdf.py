@@ -53,6 +53,7 @@ CORE = [
     ('14-seo-launch-checklist.md', 'SEO launch checklist'),
     ('27-five-agent-consolidation.md', 'Five-agent consolidation'),
     ('28-backup-and-recovery.md', 'Backup and recovery dossier'),
+    ('29-site-tour-fixes.md', 'Site tour: 34 defects fixed'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

@@ -322,6 +322,24 @@ export default function Deals() {
             </div>
           )}
 
+          {/*
+            ONE HONEST SENTENCE INSTEAD OF 1,116 REPEATS.
+            Today every card says "Not yet reported", because no shopper has
+            confirmed anything yet. Printing the same line 200 times teaches the
+            eye to skip it, which is the opposite of what an evidence label is
+            for — so when nothing on the page has been confirmed, the page says so
+            once, in full, and the per-card line stays quiet.
+          */}
+          {coupons !== null && coupons.length > 0 && coupons.every((c) => c.successCount === 0) && (
+            <p className="deals-evidence-note">
+              <Icon name="info" size={15} />
+              <span>
+                Nobody has reported checking a code at checkout yet. Every title, discount and expiry here
+                is the store&apos;s own claim, copied from its campaign feed — not our test result.
+              </span>
+            </p>
+          )}
+
           {coupons !== null && coupons.length > 0 && (
             <div className="deals-grid">
               {coupons.map((c) => (

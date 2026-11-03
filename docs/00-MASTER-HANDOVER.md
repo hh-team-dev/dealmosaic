@@ -627,7 +627,7 @@ stops this from creeping back.
 
 **Gates:** `tsc` clean · **270 tests / 19 files** · design **40 assertions PASS** (was 33;
 the new ones are the gradient-count, the no-opaque-component-gradient and the nine
-white-on-fill pairings) · **0 secrets / 220 files** · build **53 pages / 52 unique H1** ·
+white-on-fill pairings) · **0 secrets / 224 files** · build **53 pages / 52 unique H1** ·
 backup `dealmosaic_2026-11-03_14-00-07.tar.gz`, 262 files, checksums verified.
 
 **Deployed:** Pages `c0cfe9fa`, live bundle `index-CjHs4TLB.css`. Re-read from the live
@@ -695,7 +695,7 @@ social-avatar plates, `favicon.ico`, `apple-touch-icon.png`, and `og.png` via
 wordmark, ember+coral mark, no cool tone anywhere.
 
 **Gates:** `tsc` clean · **270 tests / 19 files** · design **43 assertions PASS** (was 40;
-the new ones are the hue-window scan) · **0 secrets / 220 files** · build **53 pages /
+the new ones are the hue-window scan) · **0 secrets / 224 files** · build **53 pages /
 52 unique H1**, and the *built* stylesheet was scanned for the hue window: **0 cool
 values**.
 
@@ -731,6 +731,46 @@ record; the detail lives in **`docs/28-backup-and-recovery.md`**.
 was mode **644** — readable by any process on the machine. It is now **600**. The encrypted vault
 still does not exist, and rotating the tokens is still open; both are owner actions and both are
 written down in §6 of the dossier rather than left as a wish.
+
+---
+
+### 2.22 The site tour: 34 defects found by watching the product — 3 November 2026
+
+The owner recorded a 9-minute tour of the live site on a 390 px Android. The video was downloaded and
+read at one frame per second (567 frames, near-static stretches identified), every defect traced to the
+line that caused it, and all 34 fixed. The full table is **`docs/29-site-tour-fixes.md`**; this is the
+summary that matters.
+
+**The finding that justifies the exercise:** the coupon feed was printing raw HTML entities —
+`Nutritional &amp; Fitness Supplements` — on about one card in eight, including the card that carries
+the copyable code. There was no decoding anywhere in the pipeline. It is now decoded at the ingest
+boundary, and the 1,116 existing rows were re-written through the same path: **0 of 192 live cards**
+still contain `&amp;`.
+
+| Group | Count | Examples |
+|---|---|---|
+| Data honesty | 7 | entities; shouty titles; homepage said 49 stores while /deals said 246; filtered list under whole-table counters; two identical AJIO cards; counters blank while others were filled; an expiry claim that was not true |
+| Deals page | 10 | codes ellipsised to `ALLSTARSDIWAL…`; Android's dark selection toolbar on long-press; “Codes only” clipped off-screen; chip rail slicing a word; filter bar scrolling away; checkerboard skeletons; hero filling the first screen; “Not yet reported” ×1,116 |
+| Chrome | 6 | signed-in “Dashboard” bar half the header; `◉ ◎ ⚙` glyphs as nav icons; no route to Saved; content under the bottom nav; toast covering the next Copy button |
+| Forms/states | 5 | Chrome's lilac autofill; a loading button that looked switched off; four saturated card lids |
+| Landing | 4 | a signed-in visitor asked to create an account; 20 px inline links as navigation |
+| Product | 2 | “ILLUSTRATIVE — FEED PENDING” on every row of every variant |
+
+**Two of these are worth naming as classes, not instances.** “Filtered list, unfiltered counter” is the
+kind of error that survives review because every number on the page is individually true; the cure is
+one WHERE clause used by both queries, which is what shipped. And “the same disclosure 200 times” is not
+emphasis, it is noise that teaches the eye to skip — so the page now says it once and the cards stay
+quiet.
+
+**Gates:** 283 tests / 20 files (13 new, in `apps/api/tests/text.test.ts`, written as prohibitions),
+design 43 assertions, 0 secrets / 224 files, 53 pages / 52 unique `<h1>`. API redeployed to Render and
+verified live; the daily job re-wrote 1,107 rows through the new path in 6.5 s.
+
+**Deployed:** commit `6f3d643`, Pages `d68f6a3b`, Render deploy `dep-dbl0mghsrm7s73bcggdg` (`live`).
+
+**Verification limit, unchanged:** no browser in this environment, so these fixes are verified from the
+deployed CSS, the built bundle and the live API — not from pixels. A second tour, recorded the same way,
+is the fastest way to close the loop.
 
 ---
 
@@ -1399,6 +1439,7 @@ Two rules learned the hard way:
 | **`brand-identity.md`** | **The identity: geometry, palette with HEX+RGB, the three concepts and their scores, every rejected refinement, asset inventory, verification** |
 | **`27-five-agent-consolidation.md`** | **The five-agent decision report: what they agreed on, what was false, what shipped, what was rejected and why** |
 | **`28-backup-and-recovery.md`** | **The backup dossier: every file in the release archive with its hash, the database snapshots, the credential gap, the recovery runbook and the disaster table** |
+| **`29-site-tour-fixes.md`** | **34 defects found by watching a 9-minute phone tour, each traced to its cause and fixed, with the verification log** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

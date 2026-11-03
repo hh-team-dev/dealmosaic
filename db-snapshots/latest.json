@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-03T14:20:57.668Z",
+  "generatedAt": "2026-11-03T16:31:21.226Z",
   "source": "local file",
   "scope": "public",
   "tables": {
@@ -14,6 +14,6 @@
     "trending_queries": 2
   },
   "totalRows": 441,
-  "sha256": "564e32fd3bc86172707172130fd6c1ec5240569fbf59395909365d7d31f943fd",
+  "sha256": "d6237fc5d7c52ad7c800f0f2d09a3aa117c95da0a943694043515b2d3f5407ca",
   "bytes": 234067
 }
