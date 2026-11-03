@@ -55,7 +55,10 @@ export function Button({
   return (
     <button
       ref={ref}
-      className={`btn ${variantClass} ${size ? `btn-${size}` : ''} ${block ? 'btn-block' : ''} ${className}`}
+      className={`btn ${variantClass} ${size ? `btn-${size}` : ''} ${block ? 'btn-block' : ''}${
+        loading ? ' is-loading' : ''
+      } ${className}`}
+      aria-busy={loading || undefined}
       onPointerDown={handlePointerDown}
       onClick={onClick}
       disabled={rest.disabled || loading}

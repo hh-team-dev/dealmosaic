@@ -434,6 +434,22 @@ kbd {
 .btn:active {
   transform: translateY(0) scale(0.985);
 }
+/*
+ * A waiting button is not a disabled button. During sign-in the primary button
+ * faded to a pale washed-out pill, which reads as "this is switched off" exactly
+ * while the user is waiting for it to do something. `.is-loading` keeps the
+ * action colour, keeps the spinner, and simply refuses the second tap.
+ */
+.btn.is-loading,
+.btn[aria-busy='true'] {
+  opacity: 1;
+  cursor: progress;
+}
+.btn-primary.is-loading,
+.btn-primary[aria-busy='true'] {
+  background: var(--action-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 18px -12px rgba(194, 65, 12, 0.7);
+}
 .btn[disabled],
 .btn[aria-disabled='true'] {
   opacity: 0.55;
@@ -550,17 +566,27 @@ kbd {
   padding: 0;
   overflow: hidden;
 }
-.card-top-coral {
-  border-top: 5px solid var(--coral);
-}
-.card-top-grass {
-  border-top: 5px solid var(--grass);
-}
-.card-top-magenta {
-  border-top: 5px solid var(--magenta);
-}
+/*
+ * THE COLOURED LID.
+ *
+ * These were 5 px saturated bars across the top of every app card — magenta on
+ * one, sun-yellow on the next, grass on a settings panel. Four cards in a column
+ * therefore opened with four unrelated colours, which spends the page's colour
+ * budget on decoration and leaves nothing to signal with. The lid is now a 3 px
+ * hairline in the card's own border colour; the accent survives only where it
+ * means something, in the icon inside the card.
+ */
+.card-top-coral,
+.card-top-grass,
+.card-top-magenta,
 .card-top-sun {
-  border-top: 5px solid var(--sun);
+  border-top: 3px solid var(--hairline-strong);
+}
+.card-top-coral > .card-lid,
+.card-top-grass > .card-lid,
+.card-top-magenta > .card-lid,
+.card-top-sun > .card-lid {
+  color: var(--action);
 }
 
 /* ============================== badges ================================== */
@@ -1419,8 +1445,14 @@ kbd {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--hairline);
 }
+/*
+ * The fixed bottom navigation is 62 px plus the phone's own safe-area inset, and
+ * the last card on a settings page was sliding underneath it — the "Delete my
+ * account" button ended up half-covered by the nav. Content now reserves the same
+ * space the nav occupies, on every screen.
+ */
 .app-main {
-  padding-block: 22px 34px;
+  padding-block: 22px calc(var(--bottomnav-h) + 26px + env(safe-area-inset-bottom, 0px));
 }
 .avatar {
   width: 34px;
@@ -1555,11 +1587,21 @@ table.simple tr:last-child td {
 
 /* ============================== toast =================================== */
 
+/*
+ * TOASTS SIT AT THE TOP ON A PHONE.
+ *
+ * They were pinned just above the bottom navigation, which is exactly where a
+ * deals card keeps its Copy button — so the confirmation for copying a code
+ * covered the next code and the next Copy button. On a phone the toast now drops
+ * in under the header, where it cannot cover the thing it is confirming; on a
+ * wide screen it stays in the corner.
+ */
 .toast-wrap {
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: calc(var(--bottomnav-h) + 14px + env(safe-area-inset-bottom, 0px));
+  top: calc(var(--header-h, 56px) + 10px + env(safe-area-inset-top, 0px));
+  bottom: auto;
   z-index: 120;
   display: flex;
   flex-direction: column;
@@ -1589,7 +1631,7 @@ table.simple tr:last-child td {
 @keyframes toastIn {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.97);
+    transform: translateY(-10px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -2294,7 +2336,10 @@ button.chip[aria-selected='true'] {
 .deals-hero {
   position: relative;
   overflow: hidden;
-  padding: var(--s-6) var(--s-5);
+  /* Tightened for phones: hero + three counters + search + chips used to fill
+     almost the whole first viewport, so the first offer was below the fold on the
+     page whose entire purpose is to show offers. */
+  padding: var(--s-5) var(--s-4);
   border-radius: var(--r-lg);
   background:
     radial-gradient(120% 140% at 88% -20%, rgba(255, 79, 163, 0.18) 0%, transparent 58%),
@@ -2396,18 +2441,50 @@ button.chip[aria-selected='true'] {
 
 /* ---- Controls ---- */
 
+/*
+ * STICKY FILTERS.
+ *
+ * The hero, the three counters, the search field and the store chips pushed the
+ * first card most of a viewport down, and the filter bar then scrolled away — so
+ * changing a store meant scrolling back up through 200 offers. The bar now pins
+ * under the site header while the list scrolls beneath it, which is how every
+ * Indian shopping app behaves.
+ */
 .deals-controls {
   display: flex;
   gap: var(--s-2);
   align-items: stretch;
+  position: sticky;
+  /* --header-h is set per breakpoint below; the fallback keeps Safari old and
+     the prerendered HTML sane. */
+  top: var(--header-h, 56px);
+  z-index: 30;
+  padding: 8px 0;
+  margin-inline: -4px;
+  padding-inline: 4px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms ease;
+}
+.deals-controls:focus-within,
+.deals-controls:hover {
+  border-bottom-color: var(--hairline);
 }
 
+/*
+ * `min-width: 0` is the whole fix. A flex item defaults to min-width:auto, so the
+ * search field refused to shrink below the width of its own placeholder text and
+ * pushed the "Codes only" toggle off the right edge of a 390 px screen — a filter
+ * you cannot reach on the device the owner uses.
+ */
 .deals-search {
   position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
   flex: 1 1 auto;
+  min-width: 0;
   padding: 0 var(--s-3);
   min-height: 48px;
   background: var(--raised);
@@ -2450,6 +2527,7 @@ button.chip[aria-selected='true'] {
 .deals-toggle {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
   gap: 7px;
   padding: 0 var(--s-4);
   min-height: 48px;
@@ -2472,6 +2550,11 @@ button.chip[aria-selected='true'] {
 
 /* ---- Merchant chips ---- */
 
+/*
+ * The chip rail ends with a soft fade rather than a hard clip. Before this the
+ * last chip was cut through the middle of its label — "Muscleblaze" arrived as
+ * "Muscleblaz" against the screen edge, which reads as a rendering fault.
+ */
 .deals-chips {
   display: flex;
   gap: 8px;
@@ -2479,9 +2562,19 @@ button.chip[aria-selected='true'] {
   padding-bottom: 6px;
   margin: 0 calc(-1 * var(--s-4));
   padding-left: var(--s-4);
-  padding-right: var(--s-4);
+  /* Room to breathe at the end of the rail, so the last chip is never flush
+     against the glass. */
+  padding-right: calc(var(--s-4) + 10px);
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  /* Fade the trailing edge: a chip half-hidden by the screen edge looks broken,
+     a chip faded out by a mask reads as "there is more this way". */
+  mask-image: linear-gradient(to right, rgba(255, 255, 255, 1) calc(100% - 30px), rgba(255, 255, 255, 0) 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 1) calc(100% - 30px), rgba(255, 255, 255, 0) 100%);
+}
+.deals-chips > * {
+  scroll-snap-align: start;
 }
 
 .deals-chips::-webkit-scrollbar {
@@ -2532,6 +2625,77 @@ button.chip[aria-selected='true'] {
 
 /* ---- Grid ---- */
 
+/*
+ * HEADER ACTIONS.
+ *
+ * The premium pass raised every button to 48 px, which is right for a form and
+ * wrong for a header: on a 390 px phone the signed-in "Dashboard" button grew to
+ * roughly half the width of the bar and read as the page's primary action,
+ * competing with the hero. The header gets its own compact scale, and a signed-in
+ * visitor sees their avatar rather than a call to action they have already taken.
+ */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.header-actions .btn {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+}
+.header-actions .btn-header-ghost {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ink-muted);
+  padding-inline: 10px;
+}
+.header-actions .btn-header-ghost:hover {
+  color: var(--ink);
+  box-shadow: none;
+  transform: none;
+  background: var(--tint);
+}
+.header-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--action);
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), var(--sh-1);
+  flex: 0 0 auto;
+}
+.header-avatar:hover {
+  background: var(--action-hover);
+}
+
+/*
+ * Chrome and Samsung Internet paint autofilled fields with their own pale lilac —
+ * a cool tone that lands in the middle of a warm page and looks like a rendering
+ * defect, most visibly on the sign-in form where both fields fill at once. The
+ * inset-shadow trick is the only reliable way to override it without the browser
+ * repainting on every focus.
+ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: 0 0 0 100px var(--raised) inset, 0 0 0 1px var(--hairline-strong) inset;
+  box-shadow: 0 0 0 100px var(--raised) inset, 0 0 0 1px var(--hairline-strong) inset;
+  caret-color: var(--ink);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .deals-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -2550,8 +2714,19 @@ button.chip[aria-selected='true'] {
   }
 }
 
+.deals-loading {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+/* The placeholder now takes its height from the card it stands in for, so a
+   filtered reload no longer paints six short boxes in a two-column grid that
+   read as a broken layout. */
 .deals-skeleton {
-  height: 232px;
+  min-height: 268px;
+  height: 100%;
   border-radius: var(--r-lg);
   background: linear-gradient(100deg, var(--tint) 20%, #fff 40%, var(--tint) 60%);
   background-size: 220% 100%;
@@ -2700,13 +2875,29 @@ button.chip[aria-selected='true'] {
 
 .deal-code-value {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
-  font-size: 0.95rem;
+  /* 0.88 rem keeps a 16-character code inside 180 px; wrapping is the escape
+     hatch for the long ones the feed really does send. */
+  font-size: 0.88rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.045em;
+  line-height: 1.35;
   color: var(--ink);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  /*
+   * Long-pressing the code used to select the text, which raised Android's
+   * dark-grey selection toolbar on top of the card — a foreign, black-ish
+   * overlay in the middle of a warm page, offering Copy a second time. The
+   * button is the copy affordance; the text is not a text field.
+   */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.deal-card,
+.deal-title,
+.deal-desc {
+  -webkit-touch-callout: none;
 }
 
 .deal-code-action {
@@ -3461,6 +3652,23 @@ button.chip[aria-selected='true'] {
 }
 
 /* Hero secondary links: quieter than buttons, so the search stays the one action. */
+/*
+ * The old row was inline text at 0.85 rem with 8 px gaps and middot separators:
+ * three tap targets of about 20 px each, under half the 44 px minimum, on the
+ * screen a phone user meets first.
+ */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.hero-actions .btn {
+  min-height: 40px;
+  padding-inline: 14px;
+  font-size: 0.84rem;
+}
+
 .hero-links {
   display: flex;
   flex-wrap: wrap;
@@ -3579,6 +3787,22 @@ button.chip[aria-selected='true'] {
 .origin-demo { background: rgba(232, 51, 111, 0.16); color: var(--magenta-d); }
 
 /* ---- chart -------------------------------------------------------------- */
+/*
+ * The one-line provenance note that sits above an offer list. It replaces a badge
+ * repeated on every row — same information, one twelfth of the noise, and it reads
+ * as a disclosure rather than as decoration.
+ */
+.offer-list-origin {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  border: 1px solid var(--hairline);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
 .chart-wrap {
   display: flex;
   flex-direction: column;

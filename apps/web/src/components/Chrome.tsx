@@ -4,6 +4,7 @@ import { Button } from './Ui';
 import { useAuth } from '../lib/session';
 import { initials } from '../lib/format';
 import { useToast } from './Toast';
+import { Icon } from './Icon';
 
 export function SiteHeader() {
   const { user } = useAuth();
@@ -20,21 +21,30 @@ export function SiteHeader() {
           <Link to="/how-we-rank">How we rank</Link>
           <Link to="/data-sources">Data sources</Link>
         </nav>
+        {/*
+          Signed in: the account, not an advert. A visitor who already has an
+          account was being shown a big primary "Dashboard" button on every public
+          page — the loudest thing in the header, and a call to action they had
+          already answered. They now get their initial and a quiet link; someone
+          who is signed out gets "Sign in" plus one compact primary.
+        */}
         <div className="header-actions">
           {user ? (
-            <Link to="/app" className="btn btn-primary btn-sm">
-              Dashboard
-            </Link>
+            <>
+              <Link to="/app" className="btn btn-header-ghost" title="Your dashboard">
+                Dashboard
+              </Link>
+              <Link to="/app/settings" className="header-avatar" aria-label="Your account settings">
+                {initials(user.displayName ?? 'You')}
+              </Link>
+            </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-ghost btn-sm">
+              <Link to="/login" className="btn btn-header-ghost">
                 Sign in
               </Link>
-              <Link to="/register" className="btn btn-primary btn-sm">
+              <Link to="/register" className="btn btn-primary">
                 <span className="hide-xs">Create free account</span>
-                <span aria-hidden="true" style={{ display: 'none' }} className="show-xs">
-                  Sign up
-                </span>
                 <span className="show-xs-inline">Sign up</span>
               </Link>
             </>
@@ -134,23 +144,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
+      {/*
+        Three destinations, each with a drawn icon. They were three Unicode
+        glyphs (◉ ◎ ⚙) at 1.05 rem: a different typeface from everything else on
+        the page, a different optical size per platform, and ⚙ renders as a colour
+        emoji on some Android builds. An icon set that changes shape depending on
+        the phone's font is not an icon set.
+      */}
       <nav className="bottom-nav" aria-label="Primary">
         <NavLink to="/app" end className={({ isActive }) => (isActive ? 'active' : '')}>
-          <span aria-hidden="true" style={{ fontSize: '1.05rem' }}>
-            ◉
-          </span>
+          <Icon name="chart" size={19} />
           Home
         </NavLink>
         <NavLink to="/deals" className={({ isActive }) => (isActive ? 'active' : '')}>
-          <span aria-hidden="true" style={{ fontSize: '1.05rem' }}>
-            ◎
-          </span>
+          <Icon name="tag" size={19} />
           Deals
         </NavLink>
+        <NavLink to="/saved" className={({ isActive }) => (isActive ? 'active' : '')}>
+          <Icon name="heart" size={19} />
+          Saved
+        </NavLink>
         <NavLink to="/app/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
-          <span aria-hidden="true" style={{ fontSize: '1.05rem' }}>
-            ⚙
-          </span>
+          <Icon name="shield" size={19} />
           Settings
         </NavLink>
       </nav>

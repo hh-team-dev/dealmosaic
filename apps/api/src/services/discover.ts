@@ -34,6 +34,8 @@ export interface DiscoverySection {
 export interface DiscoveryResult {
   totals: {
     live: number;
+    /** Distinct stores behind the live offers — the honest number for "from N stores". */
+    stores: number;
     withCode: number;
     withStatedPrice: number;
     endingThisWeek: number;
@@ -205,6 +207,13 @@ export function buildDiscovery(views: CouponView[], now: Date = new Date()): Dis
   return {
     totals: {
       live: deals.length,
+      /**
+       * `deals` is the pool the shelves are built from, not the whole table, so
+       * counting merchant slugs inside it undercounted badly: the homepage said
+       * "1,112 live offers from 49 stores" while the deals page said 246 stores
+       * on the same day. The count now comes from the full live set.
+       */
+      stores: new Set(views.map((v) => v.platformSlug)).size,
       withCode: deals.filter((d) => d.code).length,
       withStatedPrice: deals.filter((d) => d.statedPriceMinor !== null).length,
       endingThisWeek: endingPool.length,

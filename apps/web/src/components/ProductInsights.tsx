@@ -41,9 +41,29 @@ export function OfferList({ offers }: { offers: VariantOffer[] }) {
       </p>
     );
   }
+  /*
+   * ONCE PER LIST, NOT ONCE PER ROW.
+   *
+   * Every row carried its own coloured "ILLUSTRATIVE — FEED PENDING" tag. Four
+   * rows deep that is the same disclaimer four times, in four badges, and the eye
+   * stops reading it — which is the opposite of what a disclosure is for. The
+   * provenance is now stated once, above the list, in full; a row is only tagged
+   * when it differs from the list it sits in.
+   */
+  const shown = offers.slice(0, 5);
+  const origins = new Set(shown.map((o) => o.dataOrigin));
+  const uniform = origins.size === 1 ? [...origins][0] : null;
   return (
-    <ul className="offer-list">
-      {offers.slice(0, 5).map((o) => (
+    <>
+      {uniform && (
+        <p className={`offer-list-origin origin-${uniform}`}>
+          {uniform === 'demo'
+            ? 'All offers below are illustrative sample prices — no live feed is connected for this store yet. They are not quotes.'
+            : `All offers below come from ${(ORIGIN_LABEL[uniform] ?? uniform).toLowerCase()}.`}
+        </p>
+      )}
+      <ul className="offer-list">
+      {shown.map((o) => (
         <li key={o.id} className="offer-row">
           <div className="offer-row-main">
             <strong>{o.platformName}</strong>
@@ -51,7 +71,9 @@ export function OfferList({ offers }: { offers: VariantOffer[] }) {
           </div>
           <div className="offer-row-price">
             <strong className="numeric">{inr(o.priceMinor)}</strong>
-            <span className={`origin-tag origin-${o.dataOrigin}`}>{ORIGIN_LABEL[o.dataOrigin] ?? o.dataOrigin}</span>
+            {!uniform && (
+              <span className={`origin-tag origin-${o.dataOrigin}`}>{ORIGIN_LABEL[o.dataOrigin] ?? o.dataOrigin}</span>
+            )}
           </div>
           <a
             className="btn btn-ghost btn-sm"
@@ -63,7 +85,8 @@ export function OfferList({ offers }: { offers: VariantOffer[] }) {
           </a>
         </li>
       ))}
-    </ul>
+      </ul>
+    </>
   );
 }
 

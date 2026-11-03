@@ -216,6 +216,14 @@ describe('totals', () => {
     );
     expect(result.totals).toEqual({
       live: 4,
+      /*
+       * Stores is the number the homepage quotes as "from N stores", and it used
+       * to be counted inside the shelf items rather than across the live set —
+       * which is how the homepage said 49 stores while the deals page said 246 on
+       * the same afternoon. Each fixture here is its own store, so the honest
+       * answer is 4.
+       */
+      stores: 4,
       withCode: 1,
       withStatedPrice: 1,
       endingThisWeek: 1,

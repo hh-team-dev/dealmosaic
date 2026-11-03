@@ -75,8 +75,14 @@ export function DiscoverShelves() {
             <span className="eyebrow">Before you even search</span>
             <h2>What’s worth buying today</h2>
             <p className="lede" style={{ marginBottom: 8 }}>
-              {data.totals.live.toLocaleString('en-IN')} live offers from {new Set(data.sections.flatMap((s) => s.items.map((i) => i.platformSlug))).size} stores, refreshed
-              every few minutes. Every percentage and price below is the store’s own number — we add no
+              {/*
+                "from N stores" used to be counted inside the *shelf items* — the
+                handful of offers on this page — so the homepage said 49 stores
+                while the deals page said 246 on the same afternoon. The server now
+                sends the real distinct-store count.
+              */}
+              {data.totals.live.toLocaleString('en-IN')} live offers from{' '}
+              {(data.totals.stores ?? 0).toLocaleString('en-IN')} stores, refreshed every few minutes. Every percentage and price below is the store’s own number — we add no
               markup, no padding and no invented countdowns.
             </p>
           </div>

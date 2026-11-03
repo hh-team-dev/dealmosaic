@@ -81,6 +81,8 @@ export interface DiscoverPayload {
   generatedAt: string;
   totals: {
     live: number;
+    /** Distinct stores across the live set — replaces a count taken from the shelves. */
+    stores: number;
     withCode: number;
     withStatedPrice: number;
     endingThisWeek: number;
@@ -100,7 +102,7 @@ export interface MerchantView {
 
 export interface CouponsPayload {
   /** Whole-table counts. Never derive a headline number from the loaded page. */
-  totals?: { live: number; withCode: number; stores: number };
+  totals?: { live: number; withCode: number; stores: number; filtered?: boolean };
   coupons: CouponView[];
   count: number;
   rules: { cashbackIsNotADiscount: string; onlyCheckedCoupons: string };

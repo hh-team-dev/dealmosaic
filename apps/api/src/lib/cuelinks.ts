@@ -22,6 +22,7 @@
  */
 
 import { dealGroupOf, mentionsBankOrUpi, readStatedFacts } from '@dealmosaic/core';
+import { cleanCopy, prettyTitle } from './text.js';
 
 const BASE = 'https://developers.cuelinks.com/pub_api/v3';
 
@@ -213,13 +214,19 @@ export function toCouponRow(offer: CuelinksOffer): CouponRow {
      * were affected when this was found.
      */
     code: offer.coupon_code?.trim() || null,
-    title: offer.title.slice(0, 200),
-    description: offer.description?.slice(0, 400) ?? null,
+    /*
+     * Decoded, de-marked and de-shouted at the ingest boundary rather than in the
+     * UI: the fix then applies to the row in the database, to search, to the
+     * ticker and to any future surface that reads it. The live feed shipped
+     * `&amp;` and `&lt;` to shoppers before this.
+     */
+    title: prettyTitle(offer.title, 200) ?? 'Untitled offer',
+    description: cleanCopy(offer.description, 400),
     discountType,
     discountValue,
     maxDiscountMinor: null,
     minOrderMinor: null,
-    terms: offer.terms?.slice(0, 400) ?? null,
+    terms: cleanCopy(offer.terms, 400),
     trackingUrl: offer.tracking_url,
     startsAt: offer.start_date ? `${offer.start_date}T00:00:00.000Z` : null,
     expiresAt: offer.end_date ? `${offer.end_date}T23:59:59.000Z` : null,

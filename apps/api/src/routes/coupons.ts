@@ -207,37 +207,66 @@ couponRoutes.get('/', async (c) => {
                c.expires_at ASC,
                c.created_at DESC`;
 
+  /**
+   * ONE WHERE CLAUSE, TWO QUERIES.
+   *
+   * The list and its counters must answer the same question. They used to be
+   * written separately: the rows were filtered, the counters were not, so
+   * tapping "Klook" showed 289 "with a copyable code" next to a list of 22
+   * Klook offers, and tapping "Codes only" left the count unchanged. That is a
+   * small lie told in a large font, which is the worst kind. The filter list and
+   * its parameter order now live in exactly one place.
+   */
+  const filters: string[] = [];
+  const filterParams: Array<string | number> = [];
+  const addFilter = (sql: string, ...params: Array<string | number>) => {
+    filters.push(sql);
+    filterParams.push(...params);
+  };
+
+  addFilter("(c.expires_at IS NULL OR c.expires_at > ?)", now);
+  addFilter("(c.starts_at IS NULL OR c.starts_at <= ?)", now);
+  if (platform) addFilter('c.platform_slug = ?', platform);
+  if (category) addFilter('(c.category_slug IS NULL OR c.category_slug = ?)', category);
+  if (q) {
+    addFilter('(c.title LIKE ? OR c.code LIKE ? OR c.platform_slug LIKE ?)', `%${q}%`, `%${q}%`, `%${q}%`);
+  }
+  if (withCodeOnly) addFilter("(c.code IS NOT NULL AND c.code <> '')");
+  if (group) addFilter('c.deal_group = ?', group);
+  if (maxPriceMinor !== null) addFilter('(c.stated_price_minor IS NOT NULL AND c.stated_price_minor <= ?)', maxPriceMinor);
+  if (expiringBefore) addFilter('(c.expires_at IS NOT NULL AND c.expires_at <= ?)', expiringBefore);
+  if (bankOnly) addFilter('c.mentions_bank = 1');
+
+  const whereSql = `c.trust_state IN ('listed','community_verified','moderator_verified')${filters.length ? ` AND ${filters.join(' AND ')}` : ''}`;
+
   const rows = (await db
     .prepare(
       `SELECT c.*, p.name AS platform_name
          FROM coupons c
          LEFT JOIN platforms p ON p.slug = c.platform_slug
-        WHERE c.trust_state IN ('listed','community_verified','moderator_verified')
-          AND (c.expires_at IS NULL OR c.expires_at > ?)
-          AND (c.starts_at IS NULL OR c.starts_at <= ?)
-          AND (? IS NULL OR c.platform_slug = ?)
-          AND (? IS NULL OR c.category_slug IS NULL OR c.category_slug = ?)
-          AND (? IS NULL OR c.title LIKE ? OR c.code LIKE ? OR c.platform_slug LIKE ?)
-          AND (? = 0 OR c.code IS NOT NULL)
-          AND (? IS NULL OR c.deal_group = ?)
-          AND (? IS NULL OR (c.stated_price_minor IS NOT NULL AND c.stated_price_minor <= ?))
-          AND (? IS NULL OR (c.expires_at IS NOT NULL AND c.expires_at <= ?))
-          AND (? = 0 OR c.mentions_bank = 1)
+        WHERE ${whereSql}
         ORDER BY ${orderBy}
         LIMIT ?`,
     )
-    .all(
-      now, now,
-      platform ?? null, platform ?? null,
-      category ?? null, category ?? null,
-      q ?? null, q ? `%${q}%` : null, q ? `%${q}%` : null, q ? `%${q}%` : null,
-      withCodeOnly ? 1 : 0,
-      group, group,
-      maxPriceMinor, maxPriceMinor,
-      expiringBefore, expiringBefore,
-      bankOnly ? 1 : 0,
-      limit,
-    )) as unknown as CouponRow[];
+    .all(...filterParams, limit)) as unknown as CouponRow[];
+
+  /**
+   * TWO CAMPAIGNS, ONE CODE.
+   *
+   * Merchants routinely ship the same coupon under two campaign names — live
+   * example: AJIO's `ALLSTARSDIWAL…` appeared twice with the same 5% claim. Two
+   * visually identical cards next to each other read as a bug to a shopper and
+   * as padding to anyone who suspects we inflate the list. First row wins,
+   * because the list is already ordered by usefulness.
+   */
+  const seenCode = new Set<string>();
+  const deduped = rows.filter((r) => {
+    if (!r.code) return true;
+    const key = `${r.platform_slug}::${r.code.toUpperCase()}`;
+    if (seenCode.has(key)) return false;
+    seenCode.add(key);
+    return true;
+  });
 
   c.header('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
   /**
@@ -248,33 +277,38 @@ couponRoutes.get('/', async (c) => {
    * there were 1,089. A wrong number on the busiest page is worse than no number:
    * it is a statement of fact that happens to be false.
    */
+  /**
+   * Counters over the *filtered* set, not the whole table. `filtered` tells the
+   * client whether to word them as "231 matching" or "231 live", so the same
+   * number is never described two ways in two places on one screen.
+   */
   const totals = (await db
     .prepare(
       `SELECT COUNT(*) AS live,
               SUM(CASE WHEN code IS NOT NULL AND code <> '' THEN 1 ELSE 0 END) AS with_code,
               COUNT(DISTINCT platform_slug) AS stores
-         FROM coupons
-        WHERE trust_state IN ('listed','community_verified','moderator_verified')
-          AND (expires_at IS NULL OR expires_at > ?)
-          AND (starts_at IS NULL OR starts_at <= ?)`,
+         FROM coupons c
+        WHERE ${whereSql}`,
     )
-    .get(now, now)) as unknown as { live: number; with_code: number | null; stores: number | null };
+    .get(...filterParams)) as unknown as { live: number; with_code: number | null; stores: number | null };
 
   return c.json({
     totals: {
       live: totals?.live ?? 0,
       withCode: totals?.with_code ?? 0,
       stores: totals?.stores ?? 0,
+      /** True when a filter is applied, so the UI can say "matching" not "live". */
+      filtered: filters.length > 2,
     },
-    coupons: rows.map(toApi),
-    count: rows.length,
+    coupons: deduped.map(toApi),
+    count: deduped.length,
     /** Stated in the API so the interface cannot drift from the policy. */
     rules: {
       cashbackIsNotADiscount: 'Cashback is returned as its own line and never subtracted from the payable total.',
       onlyCheckedCoupons: 'Coupons appear here only after a second independent report or a moderator check.',
     },
     emptyMessage:
-      rows.length === 0
+      deduped.length === 0
         ? 'No verified discount codes for this store yet. We do not list unverified codes, because a code that fails at checkout is worse than no code at all.'
         : null,
   });

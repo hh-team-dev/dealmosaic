@@ -30,7 +30,12 @@ import {
  */
 export default function Deals() {
   const [coupons, setCoupons] = useState<CouponView[] | null>(null);
-  const [totals, setTotals] = useState<{ live: number; withCode: number; stores: number } | null>(null);
+  const [totals, setTotals] = useState<{
+    live: number;
+    withCode: number;
+    stores: number;
+    filtered?: boolean;
+  } | null>(null);
   const [merchants, setMerchants] = useState<MerchantView[]>([]);
   /**
    * The homepage shelves link here with a filter already applied
@@ -129,7 +134,11 @@ export default function Deals() {
    * at 200 rows, so counting what arrived would print "200 offers live now" while
    * 1,089 were live — a confident, checkable falsehood on the busiest page.
    */
-  const withCodes = totals?.withCode ?? (coupons?.filter((c) => c.code).length ?? 0);
+  /**
+   * `filtered` is derived from the same place the request is built, so the wording
+   * can never describe a filtered list as the whole inventory.
+   */
+  const filtered = Boolean(platform || group || maxPrice || expiring || bankOnly || q.trim());
 
   return (
     <>
@@ -152,23 +161,34 @@ export default function Deals() {
             <h1 className="deals-hero-title">
               Every code here is <span className="deals-hero-accent">live right now</span>
             </h1>
+            {/*
+              Four sentences became two. The detail did not disappear — it is in the
+              rules block at the foot of the page and in the disclosure page — but a
+              hero that reads as a paragraph pushes every offer below the fold.
+            */}
             <p className="deals-hero-lede">
-              Sourced from the stores' own campaign feeds, never scraped from a coupon farm. Each
-              one shows the expiry the store published. We do not claim a code has been tested at
-              checkout unless it has — the label on the card says which.
+              Straight from the stores&apos; own campaign feeds, never scraped from a coupon farm.
+              Each expiry is the one the store published, and no code is called tested unless it was.
             </p>
+            {/*
+              The counters describe the list underneath them, filters included. They
+              used to describe the whole table, so choosing "Klook" printed 289
+              "with a copyable code" above 22 Klook offers — a true number used to
+              answer a different question, which is how a page starts lying without
+              containing a single false statement.
+            */}
             <div className="deals-hero-stats">
               <div className="deals-stat">
-                <strong>{totals ? totals.live.toLocaleString('en-IN') : coupons === null ? '—' : coupons.length}</strong>
-                <span>offers live now</span>
+                <strong>{totals ? totals.live.toLocaleString('en-IN') : '—'}</strong>
+                <span>{filtered ? 'matching offers' : 'offers live now'}</span>
               </div>
               <div className="deals-stat">
-                <strong>{coupons === null ? '—' : withCodes}</strong>
+                <strong>{totals ? totals.withCode.toLocaleString('en-IN') : '—'}</strong>
                 <span>with a copyable code</span>
               </div>
               <div className="deals-stat">
                 <strong>{totals ? totals.stores.toLocaleString('en-IN') : merchants.length || '—'}</strong>
-                <span>Indian stores</span>
+                <span>{filtered ? 'store(s) in this view' : 'Indian stores'}</span>
               </div>
             </div>
           </header>
@@ -210,7 +230,7 @@ export default function Deals() {
               >
                 All stores
               </button>
-              {merchants.slice(0, 18).map((m) => (
+              {merchants.slice(0, 24).map((m) => (
                 <button
                   key={m.slug}
                   type="button"
@@ -260,11 +280,23 @@ export default function Deals() {
           )}
 
           {coupons === null && !error && (
-            <div className="deals-grid" aria-busy="true">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="deals-skeleton" />
-              ))}
-            </div>
+            <>
+              <p className="deals-loading" role="status">
+                Loading the live list…
+              </p>
+              {/*
+                Six equal placeholders. They used to be one fixed 232 px block
+                repeated in a two-column grid, so a filtered reload painted a
+                checkerboard of unrelated boxes next to the real card heights and
+                read as a broken layout rather than a loading state. The height now
+                comes from the card itself (aspect-ratio in CSS).
+              */}
+              <div className="deals-grid" aria-busy="true" aria-live="polite">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="deals-skeleton" />
+                ))}
+              </div>
+            </>
           )}
 
           {coupons !== null && coupons.length === 0 && !error && (
@@ -355,8 +387,6 @@ function CouponCard({
 
       <h3 className="deal-title">{coupon.title}</h3>
 
-      <ConfidenceLine coupon={coupon} />
-
       {coupon.description && <p className="deal-desc">{coupon.description}</p>}
 
       {coupon.code ? (
@@ -366,6 +396,12 @@ function CouponCard({
           onClick={onCopy}
           aria-label={`Copy code ${coupon.code}`}
         >
+          {/*
+            The whole code, always. It used to be a single ellipsised line in a
+            0.95 rem monospace face, so `ALLSTARSDIWALOFFER` arrived on screen as
+            `ALLSTARSDIWAL…` — the one piece of information on the card that a
+            shopper has to copy by hand was the one being cut off. It now wraps.
+          */}
           <span className="deal-code-value">{coupon.code}</span>
           <span className="deal-code-action">
             {copied ? (
@@ -405,6 +441,7 @@ function CouponCard({
             {days === 0 ? 'Ends today' : `${days} day${days === 1 ? '' : 's'} left`}
           </span>
         )}
+        <ConfidenceLine coupon={coupon} />
         {/*
           Only the positive case earns a line here. Saying "not yet tested by
           shoppers" underneath an evidence line that already reads "Not yet

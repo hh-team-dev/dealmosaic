@@ -7,6 +7,7 @@ import { SampleComparison } from '../components/SampleComparison';
 import { Icon } from '../components/Icon';
 import { Button } from '../components/Ui';
 import { useToast } from '../components/Toast';
+import { useAuth } from '../lib/session';
 
 const PLATFORMS = [
   { name: 'Blinkit', note: 'No price API', tint: 'var(--sun)' },
@@ -56,6 +57,8 @@ export default function Landing() {
   const navigate = useNavigate();
   const toast = useToast();
   const proof = useProof();
+
+  const { user } = useAuth();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -137,19 +140,32 @@ export default function Landing() {
             {/* One primary action (the search above) plus two quiet links.
                 A third and fourth large button pushed the discovery wall below
                 the fold on a 390 px phone, which defeats the point of having one. */}
-            <div className="hero-links">
-              <a href="#discover">See today’s best deals</a>
-              <span aria-hidden="true">·</span>
-              <a href="#how">How ranking works</a>
-              <span aria-hidden="true">·</span>
-              <Link to="/saved">Your saved deals</Link>
+            {/*
+              Three 13 px inline links separated by middots: on a phone each one
+              gave a tap target roughly a third of the 44 px minimum, and the
+              separators read as punctuation rather than navigation. They are now
+              quiet buttons in a row, and "Your saved deals" only appears for
+              somebody who can actually have saved deals — a signed-in visitor.
+            */}
+            <div className="hero-actions">
+              <a className="btn btn-quiet btn-sm" href="#discover">
+                Today’s best deals
+              </a>
+              <Link className="btn btn-quiet btn-sm" to="/how-we-rank">
+                How ranking works
+              </Link>
+              {user && (
+                <Link className="btn btn-quiet btn-sm" to="/saved">
+                  Your saved deals
+                </Link>
+              )}
             </div>
 
             {proof && (
               <p className="hero-proof">
                 <strong>{proof.live.toLocaleString('en-IN')}</strong> live store offers ·{' '}
-                <strong>{proof.withCode.toLocaleString('en-IN')}</strong> with a code you can copy · every one carries
-                its expiry date
+                <strong>{proof.withCode.toLocaleString('en-IN')}</strong> with a code you can copy · every expiry shown
+                is the one the store published
               </p>
             )}
 
@@ -338,16 +354,26 @@ export default function Landing() {
                 Keep the deals worth keeping, find them again without searching twice, and compare the exact
                 variant before you pay. Free to use, and the saved list works without an account.
               </p>
+              {/*
+                A signed-in visitor was being shown "Create free account" and "I
+                already have one" — the page asking them to do the thing they had
+                already done. The block now closes the loop instead: it points at
+                the dashboard and the deals they can already save.
+              */}
               <div className="row" style={{ justifyContent: 'center' }}>
-                <Link to="/register" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)', border: 'none' }}>
-                  Create free account
+                <Link
+                  to={user ? '/app' : '/register'}
+                  className="btn btn-lg"
+                  style={{ background: '#fff', color: 'var(--ink)', border: 'none' }}
+                >
+                  {user ? 'Open your dashboard' : 'Create free account'}
                 </Link>
                 <Link
-                  to="/login"
+                  to={user ? '/saved' : '/login'}
                   className="btn btn-lg btn-ghost"
                   style={{ color: '#fff', borderColor: 'rgba(255,255,255,.6)' }}
                 >
-                  I already have one
+                  {user ? 'Deals you saved' : 'I already have one'}
                 </Link>
               </div>
             </div>
