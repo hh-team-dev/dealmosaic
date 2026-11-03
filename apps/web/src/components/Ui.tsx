@@ -10,7 +10,7 @@ import {
 
 /* ------------------------------- Button -------------------------------- */
 
-type ButtonVariant = 'primary' | 'sun' | 'quiet' | 'ghost' | 'danger';
+type ButtonVariant = 'primary' | 'quiet' | 'ghost' | 'danger';
 
 export function Button({
   variant = 'quiet',
@@ -46,9 +46,7 @@ export function Button({
   const variantClass =
     variant === 'primary'
       ? 'btn-primary'
-      : variant === 'sun'
-        ? 'btn-sun'
-        : variant === 'ghost'
+      : variant === 'ghost'
           ? 'btn-ghost'
           : variant === 'danger'
             ? 'btn-danger'

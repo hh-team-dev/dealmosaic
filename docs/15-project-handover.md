@@ -148,8 +148,8 @@ dominant source of price surprise in India.
 
 ```
 Tests          270 passing across 19 files
-Design audit   33 assertions passing
-Secrets        0 found in 217 scanned files
+Design audit   40 assertions passing
+Secrets        0 found in 220 scanned files
 Build          450 kB JS / 137 kB gzip
                68 kB CSS / ~12 kB gzip
 Prerender      53 pages · 52 unique <h1> · own host only
@@ -157,7 +157,7 @@ Browser        0 page errors · 0 failed requests
                0 horizontal overflow at 360/390/414/768/1024/1440/1920 px
 Database       21 tables
 Catalogue      25 products · 46 variants · 17 categories
-Coupons        1,089 live, from Cuelinks
+Coupons        1,116 live, from Cuelinks
 ```
 
 (Figures re-measured on 3 November 2026. The older numbers in this section's history
@@ -523,7 +523,8 @@ values. Key constraints:
   `#452B5E`** (luminance 0.038).
 - Eight accents ship in **dual tones** — a bright fill tone and a darker `-d` text
   tone — because six of the bright tones fail WCAG AA as text.
-- White text only on plum, blue-deep and `--grad-aurora-deep` fills (5.40–6.26:1).
+- White text only on plum, blue-deep and the single brand gradient `--grad-prism`
+  (5.98–7.20:1). There is one gradient token, and `audit:design` fails on a second.
 - Fonts are self-hosted `woff2` (Outfit, Plus Jakarta Sans). Never hotlink Google
   Fonts: the sandboxed preview iframe has no network, and production should not
   depend on a third party.

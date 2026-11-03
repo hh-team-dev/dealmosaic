@@ -70,24 +70,30 @@
      the old five-stop prism was not (white on #ffbe0b is 1.66:1). Coral stays a
      facet accent, never a label background. */
   --grad-prism: linear-gradient(120deg, #2f49c9 0%, #6d3be0 100%);
-  --grad-aurora: linear-gradient(120deg, #8b5cf6, #ff4fa3, #ff8a3d);
-  --grad-sunrise: linear-gradient(140deg, #ffbe0b, #ff8a3d, #ff6b6b);
-  --grad-lagoon: linear-gradient(160deg, #2ec4b6, #4361ee);
-  --grad-plum: linear-gradient(150deg, #452b5e, #6d3be0);
-  /* Interactive variant: every stop reaches >=5.1:1 against white text.
-     The vivid --grad-aurora stays for decorative surfaces only. */
-  --grad-aurora-deep: linear-gradient(120deg, #6d3be0, #c81c77, #a8490a);
-  /* Text-safe headline gradient: every stop >=5.1:1 on Warm White, so a 48 px
-     headline is comfortably above the 3:1 large-text requirement. */
-  --grad-sunrise-text: linear-gradient(120deg, #a8490a, #c0392b);
-  --grad-sunrise-deep: linear-gradient(140deg, #8a5a00, #b54f0c, #c0392b);
-  --grad-mint: linear-gradient(140deg, #b8f34a, #2ec4b6);
+  /* There is exactly one gradient token now, and it is this one.
+     The nine-stop rainbow family (aurora / sunrise / lagoon / mint / plum and
+     their "deep" and "text" variants) is gone: every one of them has been
+     replaced by a solid from the palette above. Multi-hue gradients behind type
+     are the single loudest tell of an early-stage product, and white on the old
+     amber stops measured 1.66:1. `npm run audit:design` fails the build if a
+     second gradient token reappears. */
 
-  /* ---- elevation: tinted plum, never grey ------------------------------ */
-  --sh-1: 0 2px 8px -3px rgba(69, 43, 94, 0.16);
-  --sh-2: 0 10px 26px -14px rgba(69, 43, 94, 0.22);
-  --sh-3: 0 20px 46px -22px rgba(69, 43, 94, 0.28);
-  --sh-glow: 0 10px 30px -10px rgba(139, 92, 246, 0.45);
+  /* ---- elevation: tinted plum, never grey ------------------------------
+     Two layers each: a tight contact shadow that defines the edge, and a wide
+     ambient one that lifts the plane. A single large blur is what makes a card
+     look like it is floating in fog; the pair reads as a physical sheet. */
+  --sh-1:
+    0 1px 2px rgba(69, 43, 94, 0.04),
+    0 2px 6px -2px rgba(69, 43, 94, 0.06);
+  --sh-2:
+    0 1px 2px rgba(69, 43, 94, 0.05),
+    0 10px 24px -14px rgba(69, 43, 94, 0.20);
+  --sh-3:
+    0 2px 4px rgba(69, 43, 94, 0.05),
+    0 24px 48px -26px rgba(69, 43, 94, 0.26);
+  --sh-glow: 0 8px 22px -14px rgba(47, 73, 201, 0.55);
+  /* one focus treatment, everywhere */
+  --ring: 0 0 0 3px rgba(47, 73, 201, 0.35);
 
   /* ---- geometry -------------------------------------------------------- */
   /* ---- action -----------------------------------------------------------
@@ -166,9 +172,10 @@ h4 {
 }
 
 h1 {
-  font-size: clamp(1.95rem, 7.2vw, 3.5rem);
+  font-size: clamp(2rem, 7.4vw, 3.75rem);
   font-weight: 800;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.042em;
+  line-height: 1.05;
 }
 h2 {
   font-size: clamp(1.4rem, 4.6vw, 2.1rem);
@@ -273,7 +280,7 @@ kbd {
 }
 
 .section {
-  padding-block: 44px;
+  padding-block: clamp(40px, 7vw, 68px);
 }
 .section-tight {
   padding-block: 28px;
@@ -350,10 +357,11 @@ kbd {
 }
 .eyebrow::before {
   content: '';
-  width: 22px;
-  height: 4px;
-  border-radius: 4px;
-  background: var(--grad-prism);
+  width: 24px;
+  height: 3px;
+  border-radius: 3px;
+  /* the mark's two facets, in order: cobalt then coral */
+  background: linear-gradient(90deg, var(--brand-cobalt) 0 56%, var(--brand-coral) 56% 100%);
 }
 .lede {
   font-size: 1.02rem;
@@ -374,7 +382,7 @@ kbd {
   font-feature-settings: 'tnum' 1;
 }
 .gradient-text {
-  background: var(--grad-sunrise-text);
+  background: var(--grad-prism);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -390,10 +398,10 @@ kbd {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
-  padding: 0 18px;
+  min-height: 48px;
+  padding: 0 20px;
   border-radius: var(--r-pill);
-  border: 1.5px solid var(--hairline-strong);
+  border: 1px solid var(--hairline-strong);
   background: var(--btn-bg);
   color: var(--btn-fg);
   font-family: var(--font-display);
@@ -442,24 +450,19 @@ kbd {
 .btn-primary:active {
   --btn-bg: var(--action-active);
 }
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.42) 48%, transparent 72%);
-  transform: translateX(-120%);
-  transition: transform 720ms var(--ease-out);
-  pointer-events: none;
+/* A 720 ms light sweep across every primary button on hover was the loudest
+   thing on the page and the most "template" one. Replaced with a static inner
+   highlight that gives the fill a top-lit edge — the difference between a
+   printed label and a sticker. */
+.btn-primary {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 8px 22px -14px rgba(47, 73, 201, 0.55);
 }
-.btn-primary:hover::after {
-  transform: translateX(120%);
-}
-
-.btn-sun {
-  --btn-bg: var(--grad-sunrise-deep);
-  --btn-fg: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 10px 28px -12px rgba(255, 107, 107, 0.6);
+.btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 12px 26px -14px rgba(47, 73, 201, 0.6);
 }
 
 .btn-ghost {
@@ -521,7 +524,9 @@ kbd {
 
 .card {
   background: var(--raised);
-  border: 1.5px solid var(--hairline);
+  /* 1 px, not 1.5. A heavy border reads as a wireframe; the shadow pair above does
+     the separating now, and the border only closes the edge. */
+  border: 1px solid var(--hairline);
   border-radius: var(--r-lg);
   padding: 18px;
   box-shadow: var(--sh-1);
@@ -532,7 +537,7 @@ kbd {
   box-shadow: var(--sh-2);
 }
 .card-tint {
-  background: linear-gradient(160deg, #ffffff, var(--tint));
+  background: linear-gradient(165deg, #ffffff 0%, #fffcf7 55%, var(--tint) 100%);
 }
 .card-flush {
   padding: 0;
@@ -610,9 +615,10 @@ kbd {
   padding: 6px 12px;
   border-radius: var(--r-pill);
   background: var(--raised);
-  border: 1.5px solid var(--hairline);
-  font-size: 0.8rem;
-  font-weight: 700;
+  border: 1px solid var(--hairline);
+  font-size: 0.79rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink);
   box-shadow: var(--sh-1);
   white-space: nowrap;
@@ -654,7 +660,7 @@ kbd {
   font-size: 1rem; /* ≥16px: no iOS zoom on focus */
   color: var(--ink);
   background: var(--raised);
-  border: 1.5px solid var(--hairline-strong);
+  border: 1px solid var(--hairline-strong);
   border-radius: var(--r-md);
   transition:
     border-color var(--dur-quick) var(--ease-out),
@@ -816,8 +822,8 @@ kbd {
   transition: transform var(--dur-base) var(--ease-snap);
 }
 .switch-toggle[aria-checked='true'] {
-  background: var(--grad-mint);
-  border-color: var(--turq-d);
+  background: var(--action);
+  border-color: var(--action);
 }
 .switch-toggle[aria-checked='true']::after {
   transform: translateX(22px);
@@ -948,8 +954,8 @@ kbd {
 .hero-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(46px);
-  opacity: 0.5;
+  filter: blur(64px);
+  opacity: 0.38;
   pointer-events: none;
   will-change: transform;
 }
@@ -987,7 +993,7 @@ kbd {
 }
 .hero h1 em {
   font-style: normal;
-  background: var(--grad-sunrise-text);
+  background: var(--grad-prism);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1138,14 +1144,16 @@ kbd {
   box-shadow: var(--sh-1);
 }
 .step-num-1 {
-  background: var(--grad-sunrise);
+  background: var(--action);
 }
+/* One family, three steps: cobalt, violet, coral — the brand's own axis, all at
+   or above 5.2:1 with white. The old trio (amber→lime, lagoon) was three
+   unrelated hues doing a job that only needs to say "next". */
 .step-num-2 {
-  background: var(--grad-mint);
-  color: var(--ink);
+  background: var(--violet-d);
 }
 .step-num-3 {
-  background: var(--grad-lagoon);
+  background: var(--coral-d);
 }
 
 /* ============================== offers (sample) ========================= */
@@ -1153,7 +1161,7 @@ kbd {
 .offer {
   position: relative;
   background: var(--raised);
-  border: 1.5px solid var(--hairline);
+  border: 1px solid var(--hairline);
   border-radius: var(--r-lg);
   padding: 16px;
   box-shadow: var(--sh-2);
@@ -1175,15 +1183,20 @@ kbd {
   text-transform: uppercase;
   color: #fff;
 }
+/* Rank is position, not decoration. The three rainbow fills that used to mark
+   ranks 1–3 now say only "first" — cobalt, plum, then a quiet neutral — so the
+   only saturated colour left in an offer head is the one that matters. */
 .offer-rank-1 {
-  background: var(--grad-mint);
-  color: var(--ink);
+  background: var(--action);
+  color: #fff;
 }
 .offer-rank-2 {
-  background: var(--grad-lagoon);
+  background: var(--ink);
+  color: #fff;
 }
 .offer-rank-3 {
-  background: var(--grad-aurora);
+  background: var(--ink-soft);
+  color: #fff;
 }
 .offer-head {
   display: flex;
@@ -1398,7 +1411,7 @@ kbd {
   z-index: 40;
   background: rgba(255, 249, 240, 0.92);
   backdrop-filter: blur(14px);
-  border-bottom: 1.5px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
 }
 .app-main {
   padding-block: 22px 34px;
@@ -1413,7 +1426,7 @@ kbd {
   font-weight: 800;
   font-size: 0.86rem;
   color: #fff;
-  background: var(--grad-lagoon);
+  background: var(--action);
   flex: 0 0 auto;
 }
 
@@ -1927,7 +1940,7 @@ button.chip[aria-selected='true'] {
   color: #fff;
   background: var(--ink);
 }
-.podium-gold .podium-place { background: var(--grad-sunrise-deep); }
+.podium-gold .podium-place { background: var(--sun-d); }
 .podium-silver .podium-place { background: var(--silver); }
 .podium-bronze .podium-place { background: var(--bronze); }
 .podium-label {
@@ -2077,7 +2090,7 @@ button.chip[aria-selected='true'] {
 .confidence-score { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
 .confidence-max { font-size: 0.7rem; color: var(--ink-muted); font-weight: 600; }
 .confidence-track { height: 7px; border-radius: 999px; background: var(--tint-2); overflow: hidden; }
-.confidence-fill { display: block; height: 100%; border-radius: 999px; background: var(--grad-mint); }
+.confidence-fill { display: block; height: 100%; border-radius: 999px; background: var(--turq-d); }
 .confidence-sun .confidence-fill { background: linear-gradient(90deg, var(--sun-d), var(--tang)); }
 .confidence-coral .confidence-fill { background: linear-gradient(90deg, var(--coral-d), var(--pink-d)); }
 .confidence-word { margin: 0; font-size: 0.76rem; color: var(--ink-muted); }
@@ -2157,7 +2170,7 @@ button.chip[aria-selected='true'] {
   width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center;
   font-weight: 800; font-size: 0.78rem; color: #fff; background: var(--ink-muted); flex: 0 0 auto;
 }
-.rank-1 { background: var(--grad-sunrise-deep); }
+.rank-1 { background: var(--action); }
 .rank-2 { background: var(--silver); }
 .rank-3 { background: var(--bronze); }
 .offer-platform { margin: 0; font-size: 1rem; line-height: 1.2; }
@@ -2252,7 +2265,7 @@ button.chip[aria-selected='true'] {
 .rule-card svg { color: var(--violet-d); }
 .weight-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .weight-bar { height: 6px; border-radius: 999px; background: var(--tint-2); overflow: hidden; margin-top: 4px; }
-.weight-bar span { display: block; height: 100%; background: var(--grad-lagoon); border-radius: 999px; }
+.weight-bar span { display: block; height: 100%; background: var(--action); border-radius: 999px; }
 .table-wrap { overflow-x: auto; border-radius: var(--r-md); border: 1px solid var(--hairline); }
 .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 520px; }
 .data-table th, .data-table td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
@@ -3174,7 +3187,7 @@ button.chip[aria-selected='true'] {
   gap: 5px;
   padding: 3px 9px;
   border-radius: 999px;
-  background: var(--grad-sunrise-deep);
+  background: var(--coral-d);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 800;

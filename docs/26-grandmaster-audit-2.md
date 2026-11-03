@@ -22,7 +22,7 @@ These were re-verified, not taken on trust.
 | Price history | 340 snapshots, +170/day, never backfilled |
 | Daily job | self-scheduled off the health ping; last run `lastOk: true`, 5.5 s, health unaffected at 0.25 s |
 | Auth | server-side sessions, scrypt, CSRF header, single-use tokens, rate limits |
-| Design | 33 assertions, no near-black anywhere, WCAG AA contrast |
+| Design | 33 assertions at the time of this audit (40 since the premium pass), no near-black anywhere, WCAG AA contrast |
 
 ---
 

@@ -45,7 +45,7 @@ const DATA: Dataset[] = [
         rank: 1,
         retailer: 'Amazon India',
         initials: 'az',
-        tint: 'var(--grad-lagoon)',
+        tint: 'rgba(47,73,201,.11)',
         seller: 'Appario Retail · official store',
         priceMinor: 12999900,
         delivery: 'Free · 2 days',
@@ -58,7 +58,7 @@ const DATA: Dataset[] = [
         rank: 2,
         retailer: 'Flipkart',
         initials: 'fk',
-        tint: 'var(--grad-sunrise)',
+        tint: 'rgba(192,57,43,.11)',
         seller: 'SuperComNet · marketplace seller',
         priceMinor: 13149000,
         delivery: '₹49 · 3 days',
@@ -71,7 +71,7 @@ const DATA: Dataset[] = [
         rank: 3,
         retailer: 'Croma',
         initials: 'cr',
-        tint: 'var(--grad-aurora)',
+        tint: 'rgba(109,59,224,.11)',
         seller: 'Croma · official store',
         priceMinor: 13499000,
         delivery: 'Free · same day',
@@ -110,7 +110,7 @@ const DATA: Dataset[] = [
         rank: 1,
         retailer: 'Blinkit',
         initials: 'bl',
-        tint: 'var(--grad-mint)',
+        tint: 'rgba(15,127,118,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2000,
         unitPrice: '₹38.46 / 100 g',
@@ -124,7 +124,7 @@ const DATA: Dataset[] = [
         rank: 2,
         retailer: 'Zepto',
         initials: 'zp',
-        tint: 'var(--grad-aurora)',
+        tint: 'rgba(109,59,224,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2200,
         unitPrice: '₹42.31 / 100 g',
@@ -138,7 +138,7 @@ const DATA: Dataset[] = [
         rank: 3,
         retailer: 'Swiggy Instamart',
         initials: 'in',
-        tint: 'var(--grad-lagoon)',
+        tint: 'rgba(47,73,201,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2400,
         unitPrice: '₹46.15 / 100 g',
@@ -220,7 +220,7 @@ export function SampleComparison() {
               display: 'grid',
               placeItems: 'center',
               fontSize: '1.5rem',
-              background: 'var(--grad-sunrise)',
+              background: 'var(--grad-prism)',
               flex: '0 0 auto',
               boxShadow: 'var(--sh-1)',
             }}
@@ -330,7 +330,9 @@ function OfferCard({ offer }: { offer: Offer }) {
       </span>
 
       <div className="offer-head">
-        <div className="offer-logo" style={{ background: offer.tint, color: offer.rank === 1 ? 'var(--ink)' : '#fff' }}>
+        {/* Initials sit on an 11%-wash tile in ink, not white on a saturated
+            gradient: white on the old amber stop measured 1.9:1. */}
+        <div className="offer-logo" style={{ background: offer.tint, color: 'var(--ink)', boxShadow: 'inset 0 0 0 1px rgba(69,43,94,.08)' }}>
           {offer.initials}
         </div>
         <div style={{ minWidth: 0 }}>

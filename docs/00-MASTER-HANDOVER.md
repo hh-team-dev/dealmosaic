@@ -580,6 +580,71 @@ environment, so the visual result was confirmed by reading the deployed HTML, CS
 and JS and by inspecting the regenerated social card — not by looking at the
 homepage on a phone. The owner should eyeball the hero on a device.
 
+### 2.19 Premium UI pass — 3 November 2026
+
+The brief was to look at the site "with the new listings" and upgrade the colour and
+the premiumness of the look and feel. **The premise needed correcting first, and the
+correction changed the job.**
+
+**What the data actually says.** The catalogue did not grow. Re-queried in
+production before a line of CSS was touched:
+
+| Thing | Count | Note |
+|---|---|---|
+| Catalogue products | **25** | unchanged — the ceiling is the eBay keyset, not the UI |
+| Categories / variants / offers | **17 / 46 / 170** | unchanged |
+| Coupons | **1,116** | was 1,089; +27 from a manual daily-job run on 11-03 |
+| Merchants | **246** | was 241 |
+| Discover tile values | live 1,112 · withCode 289 · withStatedPrice 381 · endingThisWeek 64 · bankOrUpi 29 | drift live |
+
+So the redesign was driven by **coupon volume and finish**, not by a bigger grid.
+Nothing was padded to meet the assumption that the catalogue had grown.
+
+**The one structural decision: one gradient.** Nine gradient tokens
+(`--grad-prism`, `--grad-aurora`, `-sunrise`, `-lagoon`, `-mint`, `-plum` and three
+"deep"/"text" variants) are now **one** — `--grad-prism`, "Mosaic Duet", cobalt → violet.
+Multi-hue gradients behind type are the loudest tell of an early-stage product, white
+on the old amber stop was 1.66:1, and the rainbow disagreed with a cobalt/coral mark.
+`npm run audit:design` now **fails the build if a second gradient token appears**, and
+fails if any component introduces an opaque `linear-gradient`. That is the guard that
+stops this from creeping back.
+
+| Change | File | Why |
+|---|---|---|
+| Step numerals 1/2/3 → cobalt / `--violet-d` / `--coral-d` | `theme.css` | Three unrelated hues were doing the job of "next" |
+| Hero `<em>` and `.gradient-text` → `--grad-prism` | `theme.css` | The hero's key word was amber-red while every button was cobalt |
+| SampleComparison logo tiles → 11 % washes, ink initials | `SampleComparison.tsx` | White on the old amber gradient measured **1.9:1** |
+| `.btn-sun` deleted (CSS + variant) | `theme.css`, `Ui.tsx` | Dead class: no caller ever passed `variant="sun"` |
+| `.avatar`, switch "on", weight bars → `--action` | `theme.css` | Identity and state are not colour stories |
+| `.deal-badge` → solid `--coral-d` | `theme.css` | One warm signal instead of a third gradient |
+| `.confidence-fill` → `--turq-d` | `theme.css` | Matches the verified-price meaning it already carried |
+| Podium gold → solid `--sun-d` | `theme.css` | Keeps the medal read, drops the gradient |
+| Borders 1.5 px → 1 px; two-layer `--sh-1/2/3`; 48 px buttons | `theme.css` | Depth from the surface, not from heavy outlines |
+| `.btn-primary` light-sweep removed → inset highlight + cobalt shadow | `theme.css` | The 720 ms sweep was a "look at me" gesture on every CTA |
+| `--ring` focus token, one treatment everywhere | `theme.css` | Keyboard users get the same affordance as pointer users |
+| CTA card: text shadows removed | `Landing.tsx` | Shadows were compensating for contrast that no longer fails |
+| `h1` `clamp(2rem, 7.4vw, 3.75rem)`, −0.042 em, 1.05 | `theme.css` | The one place the type is allowed to be loud |
+
+**Gates:** `tsc` clean · **270 tests / 19 files** · design **40 assertions PASS** (was 33;
+the new ones are the gradient-count, the no-opaque-component-gradient and the nine
+white-on-fill pairings) · **0 secrets / 220 files** · build **53 pages / 52 unique H1** ·
+backup `dealmosaic_2026-11-03_14-00-07.tar.gz`, 262 files, checksums verified.
+
+**Deployed:** Pages `c0cfe9fa`, live bundle `index-CjHs4TLB.css`. Re-read from the live
+CSS after deploy: exactly one `--grad-*` token, zero references to the retired
+gradients, zero `btn-sun`, `.step-num-1{background:var(--action)}`, `.deal-badge`
+`--coral-d`, `.offer` on a 1 px border. `/` and `/deals` both 200.
+
+**Review aid:** `docs/design-preview.html` — a single self-contained page (inline CSS,
+inline SVG mark, no network) showing header, hero, steps, offer cards, deal cards, CTA
+and the measured palette. It is a *reference render*, not the app: fonts fall back to
+the system stack, and if it ever disagrees with `theme.css`, the app is right.
+
+**Verification limit, stated plainly:** there is still no browser in this environment
+(Playwright needs system libraries it cannot install), so every claim above about how
+it *looks* is an inference from the deployed CSS, not an observation of pixels. The
+owner's 390 px Android pass remains the only real proof.
+
 ---
 
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY

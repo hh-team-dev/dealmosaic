@@ -145,17 +145,41 @@ for (const [name, hex] of Object.entries(SPARK)) {
   );
 }
 
-console.log('\n=== 4. Gradient text stops must be text-safe ===');
+console.log('\n=== 4. Exactly one gradient, and it is safe behind white text ===');
+// The rainbow family was the loudest "early-stage product" signal in the old UI,
+// and white on its amber stops measured 1.66:1. Keeping the count at one is now
+// a build gate, so a future gradient has to be argued for rather than slipped in.
 const css = readFileSync('apps/web/src/design/theme.css', 'utf8');
-const textGradients = [...css.matchAll(/--grad-[\w-]*text[\w-]*:\s*linear-gradient\(([^;]+)\);/g)];
-for (const m of textGradients) {
+const gradientTokens = [...css.matchAll(/--grad-[\w-]+:\s*([^;]+);/g)];
+checks++;
+const oneGradient = gradientTokens.length === 1;
+if (!oneGradient) failures++;
+console.log(
+  `  ${oneGradient ? '✓' : '✗'} ${gradientTokens.length} gradient token(s): ${gradientTokens
+    .map((m) => m[0].split(':')[0].trim())
+    .join(', ') || 'none'}`,
+);
+for (const m of gradientTokens) {
   checks++;
   const stops = hexesIn(m[1] ?? '');
   const worst = Math.min(...stops.map((s) => contrast(s, SURFACE)));
   const ok = worst >= 3;
   if (!ok) failures++;
-  console.log(`  ${ok ? '✓' : '✗'} ${stops.join(' → ')}  worst ${worst.toFixed(2)}:1 (large-text floor 3:1)`);
+  console.log(`  ${ok ? '✓' : '✗'} ${stops.join(' → ')}  worst ${worst.toFixed(2)}:1 on Warm White`);
 }
+
+/* any inline gradient in a component must be an opacity wash, not a hue gradient */
+checks++;
+const inlineGradients = walk('apps/web/src')
+  .filter((f) => /\.(tsx|ts)$/.test(f))
+  .flatMap((f) => [...readFileSync(f, 'utf8').matchAll(/linear-gradient\(([^)]*)\)/g)].map((m) => [f, m[1]]));
+const vivid = inlineGradients.filter(([, body]) => !/rgba?\(/.test(body));
+if (vivid.length) failures++;
+console.log(
+  `  ${vivid.length ? '✗' : '✓'} ${vivid.length} opaque gradient(s) in components${
+    vivid.length ? ': ' + vivid.map(([f, b]) => `${f} → ${b}`).join(' | ') : ''
+  }`,
+);
 
 
 console.log('\n=== 5. Phase-2 fills that carry white text must pass AA ===');
@@ -164,8 +188,13 @@ console.log('\n=== 5. Phase-2 fills that carry white text must pass AA ===');
 const WHITE_FILLS = [
   ['podium silver', '#5f6e82'],
   ['podium bronze', '#a3581f'],
-  ['rank 1 gradient', '#8a5a00'],
-  ['rank 1 gradient', '#a8490a'],
+  ['podium gold', '#8a5a00'],
+  ['rank 1 (action)', '#2f49c9'],
+  ['rank 2 (ink)', '#452b5e'],
+  ['rank 3 (ink-soft)', '#7a6b8c'],
+  ['step 2 (violet)', '#6d3be0'],
+  ['step 3 (coral)', '#c0392b'],
+  ['discount badge', '#c0392b'],
 ];
 let worstFill = Infinity;
 for (const [name, hex] of WHITE_FILLS) {

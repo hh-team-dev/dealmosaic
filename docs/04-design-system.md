@@ -63,14 +63,31 @@ Shadows are **tinted plum**, never grey: `0 10px 30px -12px rgba(69,43,94,.18)`.
 | Demo data | Tangerine hatch | `#A8490A` | Watermark + DOM `data-origin="demo"` |
 | Live data | Blue | `#2F49C9` | With "Verified source" label |
 
-### Signature gradients
-- `--grad-prism`: `135deg #FF6B6B 0%, #FFBE0B 26%, #B8F34A 50%, #2EC4B6 72%, #4361EE 100%`
-- `--grad-aurora`: `120deg #8B5CF6, #FF4FA3, #FF8A3D`
-- `--grad-sunrise`: `140deg #FFBE0B, #FF8A3D, #FF6B6B`
-- `--grad-lagoon`: `160deg #2EC4B6, #4361EE`
-- `--grad-plum`: `150deg #452B5E, #6D3BE0` (dark surface, still chromatic)
+### Gradients — there is one, and it is enforced
 
-Never apply gradient text to prices; gradient type is reserved for display headings ≥32 px on plain backgrounds.
+> **Revised 3 November 2026.** The five-stop prism and the aurora / sunrise /
+> lagoon / mint / plum family are **deleted**, along with the three `deep` and
+> `text` variants built on them. What remains is a single token:
+
+- `--grad-prism`: `linear-gradient(120deg, #2F49C9 0%, #6D3BE0 100%)` — "Mosaic Duet".
+
+Every stop clears **5.98:1** with white, so it may legally sit behind a label. It is
+used in exactly three places: the primary CTA card, the demo comparison's product tile,
+and `.gradient-text` / the hero `<em>`.
+
+Rules that are now mechanical, not stylistic:
+
+1. `npm run audit:design` fails if `theme.css` declares a second `--grad-*` token.
+2. It fails if any `.tsx`/`.ts` file contains an **opaque** `linear-gradient()` — only
+   `rgba()` washes are allowed inline, because a hue gradient in a component is how
+   the rainbow got in the first place.
+3. Never apply gradient text to prices; gradient type is reserved for display
+   headings ≥32 px on plain backgrounds.
+
+Solid replacements, for the record: step numerals → `--action` / `--violet-d` /
+`--coral-d`; avatar, switch-on, weight bars → `--action`; discount badge →
+`--coral-d`; confidence fill → `--turq-d`; podium gold → `--sun-d`; offer-initial
+tiles → 11 % `rgba` washes with ink text (white on the old amber stop was 1.9:1).
 
 ---
 

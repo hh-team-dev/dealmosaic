@@ -327,10 +327,14 @@ export default function Landing() {
               className="card card-lg center-text"
               style={{ background: 'var(--grad-prism)', border: 'none', boxShadow: 'var(--sh-3)' }}
             >
-              <h2 style={{ color: '#fff', textShadow: '0 2px 14px rgba(69,43,94,.35)' }}>
+              {/* No text-shadow: the gradient's every stop now clears 5.9:1 with
+                  white, so the shadow was compensating for a contrast problem that
+                  no longer exists — and a haze behind white type never reads as
+                  premium. */}
+              <h2 style={{ color: '#fff' }}>
                 Stop overpaying on autopilot
               </h2>
-              <p style={{ color: '#fff', margin: '0 auto 18px', maxWidth: '46ch', textShadow: '0 1px 8px rgba(69,43,94,.3)' }}>
+              <p style={{ color: '#fff', margin: '0 auto 18px', maxWidth: '46ch', opacity: 0.94 }}>
                 Keep the deals worth keeping, find them again without searching twice, and compare the exact
                 variant before you pay. Free to use, and the saved list works without an account.
               </p>
