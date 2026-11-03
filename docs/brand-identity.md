@@ -146,6 +146,7 @@ on distinctiveness and cost legibility.
 
 ### Experiments that were rendered and rejected
 
+Four refinement rounds of four variants each (16 in total), then eight colour pairs.
 Recorded because the reasoning matters more than the winner.
 
 * Gem centred on the letter's junction, with and without a cream keyline ring —

@@ -78,8 +78,8 @@ Never apply gradient text to prices; gradient type is reserved for display headi
 
 > **Revised 3 November 2026.** The original "Prism Tessera" mark described in this
 > section's first draft is gone; it exists only in `backups/brand-pre-mosaic-m/`.
-> The full case for the replacement — three concepts, eight-axis scoring, nine
-> rejected refinements, the palette measurements — is `docs/brand-identity.md`.
+> The full case for the replacement — three concepts, eight-axis scoring, sixteen
+> rejected intermediate variants, the palette measurements — is `docs/brand-identity.md`.
 > This section is the working summary.
 
 **Concept — "Mosaic M".** One letterform built from two polygons that share the

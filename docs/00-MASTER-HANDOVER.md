@@ -103,7 +103,7 @@ Last full run: 3 November 2026, after the brand work (§2.17).
 typecheck clean across 3 packages (web, api, core)
 0 secrets in 217 scanned files
 53 prerendered pages, 52 unique <h1>, own host only (scripts/verify-prerender.mjs)
-backup verified: 259 files, all checksums match (dealmosaic_2026-11-03_11-21-07.tar.gz)
+backup verified: 259 files, all checksums match (latest tarball in backups/)
 HEAD: the latest commit on origin/main (a hash written into this line would be a
 commit that cannot contain its own hash — check with `git log origin/main -1`)
 ```
@@ -460,8 +460,8 @@ right facet: 32,29 44,12 56,12  56,54  44,54  44,31  32,48
 **Concepts, scored on renders (1–10 across eight axes):** A Mosaic Discovery Prism **47**,
 B Value Portal **43**, C Mosaic Signature **49**, chosen mark **68**. The chosen mark is
 C's territory — the letterform as signature — with C's gem removed, because the gem scored
-4 on distinctiveness and cost small-size legibility. Six intermediate refinements and four
-colour pairs were rendered and rejected; the reasons are recorded so the process is
+4 on distinctiveness and cost small-size legibility. Sixteen intermediate variants across four
+refinement rounds, plus eight colour pairs, were rendered and rejected; the reasons are recorded so the process is
 checkable rather than asserted.
 
 **Palette: zero new hues.** `--brand-cobalt` aliases `--blue-d`, `--brand-coral` aliases
