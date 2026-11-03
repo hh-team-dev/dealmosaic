@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
 import { ClaimBadge, ConfidenceLine } from '../components/DealFacts';
+import { HowItWorks, ShopLink } from '../components/ShopLink';
 import { Seo, breadcrumbJsonLd } from '../lib/seo';
 import {
   daysLeft,
@@ -11,6 +12,7 @@ import {
   type CouponView,
   type MerchantView,
 } from '../lib/coupons-api';
+import { DealsTicker } from '../components/DealsTicker';
 
 /**
  * /deals — the coupon and discount page.
@@ -153,6 +155,8 @@ export default function Deals() {
       />
       <Chrome>
         <div className="container section stack-lg">
+          {/* Alive on every screen, not only the first one. */}
+          <DealsTicker />
           {/* ---- Hero: the promise, and the count that backs it ---- */}
           <header className="deals-hero">
             <span className="deals-hero-kicker">
@@ -340,6 +344,14 @@ export default function Deals() {
             </p>
           )}
 
+          {/*
+            HOW TO USE A CODE, IN THREE LINES.
+            The tour made the gap obvious: a shopper could copy a code and was then
+            on their own — no instruction, no destination, and therefore no reason
+            for the store to pay us for the visit.
+          */}
+          <HowItWorks className="deals-how" />
+
           {coupons !== null && coupons.length > 0 && (
             <div className="deals-grid">
               {coupons.map((c) => (
@@ -449,6 +461,8 @@ function CouponCard({
           </span>
         </a>
       )}
+
+      {coupon.outboundUrl && <ShopLink coupon={coupon} source="deals" compact />}
 
       <div className="deal-card-foot">
         {days === null ? (

@@ -120,6 +120,106 @@ adminRoutes.get('/overview', async (c) => {
 });
 
 /* ------------------------------------------------------------------ */
+/* Money                                                               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * GET /api/admin/revenue — what the funnel actually did.
+ *
+ * The owner asked, reasonably, where the money is. This endpoint answers with the
+ * only two things that are ours to know:
+ *
+ *   • **clicks** — measured here, to the row;
+ *   • **conversions and commission** — measured by the affiliate network, not by
+ *     us, and therefore not invented here. The response says so in `note` rather
+ *     than leaving a blank where a rupee figure would look reassuring.
+ *
+ * Clicks are reported per day, per store and per coupon, because those are the
+ * three questions that change what you do next: is the traffic growing, which
+ * merchant is worth featuring, and which card earns its place on the page.
+ */
+adminRoutes.get('/revenue', async (c) => {
+  const now = new Date();
+  const dayAgo = new Date(now.getTime() - 24 * 3600 * 1000).toISOString();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000).toISOString();
+  const monthAgo = new Date(now.getTime() - 30 * 24 * 3600 * 1000).toISOString();
+
+  const totals = (await db
+    .prepare(
+      `SELECT
+         COUNT(*) AS all_time,
+         SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) AS last_24h,
+         SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) AS last_7d,
+         SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) AS last_30d,
+         COUNT(DISTINCT coupon_id) AS coupons_clicked,
+         COUNT(DISTINCT platform_slug) AS stores_clicked,
+         COUNT(DISTINCT user_id) AS signed_in_clickers,
+         MAX(created_at) AS last_click_at
+       FROM outbound_clicks`,
+    )
+    .get(monthAgo, weekAgo, monthAgo)) as Record<string, number | string | null>;
+
+  const byStore = (await db
+    .prepare(
+      `SELECT platform_slug AS store, COUNT(*) AS clicks
+         FROM outbound_clicks
+        WHERE created_at >= ?
+        GROUP BY platform_slug
+        ORDER BY clicks DESC
+        LIMIT 12`,
+    )
+    .all(monthAgo)) as Array<{ store: string; clicks: number }>;
+
+  const byDay = (await db
+    .prepare(
+      `SELECT substr(created_at, 1, 10) AS day, COUNT(*) AS clicks
+         FROM outbound_clicks
+        WHERE created_at >= ?
+        GROUP BY day
+        ORDER BY day ASC`,
+    )
+    .all(new Date(now.getTime() - 13 * 24 * 3600 * 1000).toISOString())) as Array<{
+    day: string;
+    clicks: number;
+  }>;
+
+  const topCoupons = (await db
+    .prepare(
+      `SELECT c.id, c.platform_slug AS store, c.title, c.code, COUNT(*) AS clicks
+         FROM outbound_clicks o
+         JOIN coupons c ON c.id = o.coupon_id
+        WHERE o.created_at >= ?
+        GROUP BY o.coupon_id
+        ORDER BY clicks DESC
+        LIMIT 10`,
+    )
+    .all(monthAgo)) as Array<Record<string, unknown>>;
+
+  const byDevice = (await db
+    .prepare(
+      `SELECT device, COUNT(*) AS clicks
+         FROM outbound_clicks
+        WHERE created_at >= ?
+        GROUP BY device
+        ORDER BY clicks DESC`,
+    )
+    .all(monthAgo)) as Array<{ device: string | null; clicks: number }>;
+
+  return c.json({
+    clicks: totals,
+    byStore,
+    byDay,
+    topCoupons,
+    byDevice,
+    note:
+      'Clicks are measured here. Sales and commission are measured by the affiliate ' +
+      'network against the sub-id we send, and appear in the network’s own report — ' +
+      'this page will not invent a rupee figure it cannot see.',
+    now: nowIso(),
+  });
+});
+
+/* ------------------------------------------------------------------ */
 /* Coupons                                                             */
 /* ------------------------------------------------------------------ */
 

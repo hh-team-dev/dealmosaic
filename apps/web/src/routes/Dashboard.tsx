@@ -8,6 +8,8 @@ import { formatDate, inr } from '../lib/format';
 import { useToast } from '../components/Toast';
 import { deleteAlert, listAlerts, type AlertView } from '../lib/alerts-api';
 import { useSaved } from '../lib/saved';
+import { DealsTicker } from '../components/DealsTicker';
+import { DiscoverShelves } from '../components/DiscoverShelves';
 
 export default function Dashboard() {
   const { user, preferences } = useAuth();
@@ -66,6 +68,13 @@ export default function Dashboard() {
       />
     <AppShell>
       <div className="stack stack-lg">
+        {/*
+          THE DASHBOARD IS NOT A WAITING ROOM.
+          Signing in used to lead to a page of account settings while the live
+          wall — the reason anyone opens this site — vanished. The ticker and the
+          shelves now come with you into the app, so no screen is a dead end.
+        */}
+        <DealsTicker />
         <header>
           <span className="badge badge-lime">
             <span className="dot dot-grass" aria-hidden="true" />
@@ -221,6 +230,8 @@ export default function Dashboard() {
             </ul>
           </div>
         </div>
+
+        <DiscoverShelves />
       </div>
     </AppShell>
       </>

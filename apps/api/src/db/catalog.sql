@@ -176,3 +176,32 @@ CREATE INDEX IF NOT EXISTS idx_coupons_category ON coupons(category_slug, trust_
 -- the forward-only migrations, not here. A fresh database gets them from the
 -- columns above; an existing database does not have those columns yet at the
 -- moment this file runs, and CREATE INDEX would abort the whole schema pass.
+
+-- ============================================================================
+-- THE MONEY TRAIL.
+--
+-- Every outbound click is a rouble in someone's ledger before it is a rupee in
+-- ours: the affiliate network pays on a *converted sale it attributes to us*, and
+-- the only thing that makes attribution possible is a unique sub-id carried from
+-- our button to the merchant's checkout. Without this table the site has no way
+-- of knowing which card, which store, or which day earned anything — and no way
+-- to prove to a network that a missing commission is theirs, not ours.
+--
+-- Deliberately small and deliberately anonymised: no IP, no user agent string, no
+-- full referer. `device` is one of three words. A shopper clicking a coupon is not
+-- consenting to be profiled, and none of the extra fields would help attribution.
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS outbound_clicks (
+  id            TEXT PRIMARY KEY,
+  coupon_id     TEXT,
+  platform_slug TEXT NOT NULL,
+  user_id       TEXT REFERENCES users(id) ON DELETE SET NULL,
+  subid         TEXT NOT NULL,
+  destination   TEXT NOT NULL,
+  source        TEXT,
+  device        TEXT,
+  created_at    TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_outbound_created ON outbound_clicks(created_at);
+CREATE INDEX IF NOT EXISTS idx_outbound_coupon ON outbound_clicks(coupon_id);
+CREATE INDEX IF NOT EXISTS idx_outbound_platform ON outbound_clicks(platform_slug, created_at);

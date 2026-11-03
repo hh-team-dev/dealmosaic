@@ -37,6 +37,7 @@ type IconName =
   | 'chevron-right'
   | 'star'
   | 'ban-circle'
+  | 'globe'
   | 'copy'
   | 'heart'
   | 'wallet';
@@ -218,6 +219,15 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="8.5" />
       <path d="m6.5 17.5 11-11" />
+    </>
+  ),
+  /* The translate hint on the landing page: a drawn globe, not the 🌐 emoji, so it
+     stays the same weight and colour as every other icon on the page. */
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17" />
+      <path d="M12 3.5c2.6 2.4 4 5.4 4 8.5s-1.4 6.1-4 8.5c-2.6-2.4-4-5.4-4-8.5s1.4-6.1 4-8.5Z" />
     </>
   ),
 };

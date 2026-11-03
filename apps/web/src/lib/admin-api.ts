@@ -115,3 +115,34 @@ export const getJobs = (signal?: AbortSignal) =>
     job: { due: boolean; lastStartedAt: string | null; lastFinishedAt: string | null; lastOk: boolean | null; lastResult: string | null } | null;
     runs: Array<Record<string, unknown>>;
   }>('/api/admin/jobs', { signal });
+
+/**
+ * What the earning funnel actually did.
+ *
+ * `clicks` is measured here; `note` exists because the honest answer to "how much
+ * have we earned" is "the network knows, not this page". A dashboard that invents a
+ * rupee figure from clicks × a guessed commission rate is the most expensive kind of
+ * lie: the one you plan your life around.
+ */
+export interface AdminRevenue {
+  clicks: {
+    all_time: number | null;
+    last_24h: number | null;
+    last_7d: number | null;
+    last_30d: number | null;
+    coupons_clicked: number | null;
+    stores_clicked: number | null;
+    signed_in_clickers: number | null;
+    last_click_at: string | null;
+  };
+  byStore: Array<{ store: string; clicks: number }>;
+  byDay: Array<{ day: string; clicks: number }>;
+  topCoupons: Array<{ id: string; store: string; title: string; code: string | null; clicks: number }>;
+  byDevice: Array<{ device: string | null; clicks: number }>;
+  note: string;
+  now: string;
+}
+
+export function getRevenue(signal?: AbortSignal): Promise<AdminRevenue> {
+  return apiRequest<AdminRevenue>('/api/admin/revenue', { signal });
+}

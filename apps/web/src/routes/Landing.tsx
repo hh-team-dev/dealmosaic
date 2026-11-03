@@ -8,16 +8,30 @@ import { Icon } from '../components/Icon';
 import { Button } from '../components/Ui';
 import { useToast } from '../components/Toast';
 import { useAuth } from '../lib/session';
+import { HowItWorks } from '../components/ShopLink';
 
+/**
+ * THE STORES, SAID IN THE SHOPPER'S LANGUAGE.
+ *
+ * These chips used to read "No price API", "Affiliate only", "Gated", "Closed to
+ * new" — an engineering status board printed at a shopper. The owner was right to
+ * call it what it is: negative advertising. A visitor does not care which
+ * integration we lack; they care what the store is good for and what we will do
+ * for them there.
+ *
+ * So each chip now says what the shopper gets. Nothing was added that is not true,
+ * and where we genuinely cannot do something yet the page says so once, plainly,
+ * in the sentence below — not eight times in a row of badges.
+ */
 const PLATFORMS = [
-  { name: 'Blinkit', note: 'No price API', tint: 'var(--sun)' },
-  { name: 'Zepto', note: 'No price API', tint: 'var(--magenta)' },
-  { name: 'Swiggy Instamart', note: 'Affiliate only', tint: 'var(--tang)' },
-  { name: 'BigBasket', note: 'Affiliate only', tint: 'var(--coral)' },
-  { name: 'JioMart', note: 'Affiliate only', tint: 'var(--ember)' },
-  { name: 'Flipkart Minutes', note: 'Closed to new', tint: 'var(--pink)' },
-  { name: 'Amazon Now', note: 'Gated', tint: 'var(--grass)' },
-  { name: 'DMart Ready', note: 'No price API', tint: 'var(--lime)' },
+  { name: 'Blinkit', note: '10-minute delivery', tint: 'var(--sun)' },
+  { name: 'Zepto', note: '10-minute delivery', tint: 'var(--magenta)' },
+  { name: 'Swiggy Instamart', note: 'Groceries + offers', tint: 'var(--tang)' },
+  { name: 'BigBasket', note: 'Monthly grocery', tint: 'var(--coral)' },
+  { name: 'JioMart', note: 'Everyday essentials', tint: 'var(--ember)' },
+  { name: 'Flipkart Minutes', note: '10-minute delivery', tint: 'var(--pink)' },
+  { name: 'Amazon Now', note: '10-minute delivery', tint: 'var(--grass)' },
+  { name: 'DMart Ready', note: 'Value grocery', tint: 'var(--lime)' },
 ];
 
 /**
@@ -96,6 +110,13 @@ export default function Landing() {
               Sticker prices leave out delivery, fees and tax. We add them, match the exact pack or variant, and rank
               what is really left to pay — and where a cost is unknown, we say so instead of guessing.
             </p>
+
+            {/*
+              Three steps, above the fold, before anyone has to work anything out.
+              The tour showed a shopper being handed a copied code with no
+              instruction about what to do next.
+            */}
+            <HowItWorks className="hero-how" />
 
             <form className="searchdemo" onSubmit={handleSearch} role="search">
               <div className="searchdemo-row">
@@ -242,9 +263,9 @@ export default function Landing() {
             <span className="eyebrow">Built for India’s two shopping speeds</span>
             <h2>Marketplaces and 10-minute delivery, held to the same standard</h2>
             <p className="lede">
-              Big-ticket electronics and a packet of chips deserve the same scrutiny — but they behave completely
-              differently. Quick-commerce prices change by PIN code and by the hour, so a “national” grocery price
-              would be fiction. Here is exactly where each platform stands.
+              A laptop and a packet of chips need different answers. Electronics prices hold for days; a
+              10-minute delivery price changes by area and by the hour. We compare both — and when a store keeps
+              its prices to itself, we say so once, instead of pretending a number we do not have.
             </p>
 
             <div className="grid grid-2" style={{ marginTop: 18 }}>
@@ -294,17 +315,39 @@ export default function Landing() {
               ))}
             </div>
 
+            {/*
+              WHAT A VISITOR ACTUALLY GETS, IN SIMPLE ENGLISH.
+              Short sentences, no jargon, no "API", no "integration", no "backend".
+              Most of this audience reads English as a second or third language, so
+              the claim is one line, and the detail is folded away.
+            */}
+            <div className="grid grid-3" style={{ marginTop: 18 }}>
+              {[
+                { icon: 'tag' as const, title: 'All the stores in one place', body: 'Stop opening five apps to compare one price. Everything is on one page.' },
+                { icon: 'copy' as const, title: 'The code copies itself', body: 'Tap once. The code is copied and the store opens in a new tab. Paste it at checkout.' },
+                { icon: 'wallet' as const, title: 'Free for you. Always.', body: 'The store pays us a small commission when you buy. The price you pay stays the same.' },
+              ].map((item) => (
+                <div className="card" key={item.title}>
+                  <div style={{ color: 'var(--action-d)', marginBottom: 8 }}>
+                    <Icon name={item.icon} size={24} />
+                  </div>
+                  <h4 style={{ marginBottom: 4 }}>{item.title}</h4>
+                  <p className="small" style={{ margin: 0 }}>{item.body}</p>
+                </div>
+              ))}
+            </div>
+
             <div className="callout" style={{ marginTop: 18 }}>
               <div className="callout-title">
-                <Icon name="shield" size={16} /> How every price gets here
+                <Icon name="shield" size={16} /> Where each price comes from
               </div>
               <p className="small" style={{ marginBottom: 10, color: 'var(--ink)' }}>
-                Three sources, each labelled, so you always know what you are looking at:
+                Every number on this site carries a label, so you always know how much to trust it:
               </p>
               <ul className="plain-list small" style={{ marginBottom: 0, color: 'var(--ink)' }}>
-                <li><strong>Merchant feeds</strong> — offered prices and coupon codes pulled from the retailer&apos;s own campaign data, refreshed continuously.</li>
-                <li><strong>Shopper reports</strong> — what someone actually paid at their pincode, kept separate and timestamped.</li>
-                <li><strong>Illustrative pricing</strong> — clearly marked sample data while a retailer&apos;s feed is being onboarded. Never passed off as a live quote.</li>
+                <li><strong>From the store</strong> — the price and the code the shop itself published. This is most of the site.</li>
+                <li><strong>From a shopper</strong> — what somebody really paid, in their area, with the date on it.</li>
+                <li><strong>A sample</strong> — marked clearly while a store is being added. Never shown as a real price.</li>
               </ul>
             </div>
           </div>
@@ -332,6 +375,29 @@ export default function Landing() {
                   </p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ------------------------------ language --------------------------- */}
+        {/*
+          NOBODY SHOULD HAVE TO READ ENGLISH TO SAVE MONEY.
+          The page carries no `translate="no"`, no image-based text and no
+          canvas-drawn copy, so Chrome, Edge, Safari and Firefox can translate it
+          into any language the reader's browser offers. Saying so out loud is the
+          only way a first-time visitor discovers it.
+        */}
+        <section className="section-tight">
+          <div className="container">
+            <div className="card" style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ color: 'var(--action-d)' }}>
+                <Icon name="globe" size={22} />
+              </div>
+              <p className="small" style={{ margin: 0, flex: '1 1 320px' }}>
+                <strong>Read it in your language.</strong> This page works with your browser&apos;s translate
+                button — Chrome, Safari, Edge and Firefox all offer it. Nothing here is a picture of text, so
+                every word translates.
+              </p>
             </div>
           </div>
         </section>

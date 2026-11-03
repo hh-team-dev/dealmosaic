@@ -8,6 +8,7 @@ import { ApiError } from '../lib/api';
 import { inr } from '../lib/format';
 import {
   getJobs,
+  getRevenue,
   listAdminCoupons,
   listAudit,
   listReports,
@@ -33,10 +34,11 @@ import {
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'overview' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'overview', label: 'Overview' },
+  { id: 'revenue', label: 'Earnings' },
   { id: 'coupons', label: 'Coupons' },
   { id: 'reports', label: 'Price reports' },
   { id: 'people', label: 'People' },
@@ -134,6 +136,7 @@ export default function Admin() {
               </nav>
 
               {tab === 'overview' && <Overview onError={fail} />}
+              {tab === 'revenue' && <Revenue onError={fail} />}
               {tab === 'coupons' && <Coupons onError={fail} />}
               {tab === 'reports' && <Reports onError={fail} />}
               {tab === 'people' && <People onError={fail} />}
@@ -519,4 +522,129 @@ function pretty(raw: unknown): string {
   } catch {
     return raw;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Earnings                                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * THE PAGE THAT ANSWERS "WHERE IS THE MONEY?".
+ *
+ * It shows clicks, because clicks are what this site controls and measures. It
+ * shows them per store and per coupon, because that is what changes a decision:
+ * which merchant to feature, which card to drop, which day the traffic arrives.
+ *
+ * It deliberately does **not** multiply clicks by a commission rate and print a
+ * rupee figure. Those numbers live in the affiliate network's report against the
+ * sub-id we send on every click; until that report says "sale", a rupee figure on
+ * this page would be a guess wearing a suit.
+ */
+function Revenue({ onError }: { onError: (e: unknown) => void }) {
+  const { data, loading } = useLoader(getRevenue, [], onError);
+  if (loading && !data) return <SkeletonRows n={3} />;
+  if (!data) return null;
+
+  const c = data.clicks;
+  const n = (v: number | null | undefined) => (v == null ? '0' : v.toLocaleString('en-IN'));
+
+  const tiles: Array<[string, string, string]> = [
+    ['Clicks today', n(c.last_24h), 'taps on “Shop at store”'],
+    ['Last 7 days', n(c.last_7d), 'all stores'],
+    ['All time', n(c.all_time), c.last_click_at ? `last ${formatMoment(c.last_click_at)}` : 'no clicks yet'],
+    ['Offers clicked', n(c.coupons_clicked), 'distinct coupons'],
+    ['Stores clicked', n(c.stores_clicked), 'distinct merchants'],
+    ['Signed-in clicks', n(c.signed_in_clickers), 'distinct accounts'],
+  ];
+
+  const peak = Math.max(1, ...data.byDay.map((d) => d.clicks));
+
+  return (
+    <div className="stack stack-lg">
+      <section className="admin-tiles">
+        {tiles.map(([label, value, note]) => (
+          <div className="admin-tile" key={label}>
+            <span className="admin-tile-label">{label}</span>
+            <strong className="admin-tile-value">{value}</strong>
+            <span className="admin-tile-note">{note}</span>
+          </div>
+        ))}
+      </section>
+
+      <div className="card">
+        <div className="callout-title">
+          <Icon name="info" size={16} /> About these numbers
+        </div>
+        <p className="small" style={{ margin: 0 }}>{data.note}</p>
+      </div>
+
+      <section className="card">
+        <h2 className="h3" style={{ marginTop: 0 }}>Clicks, last 14 days</h2>
+        {data.byDay.length === 0 ? (
+          <p className="small muted" style={{ margin: 0 }}>
+            No clicks recorded yet. They appear here the first time somebody taps “Shop at store”.
+          </p>
+        ) : (
+          <div className="admin-bars">
+            {data.byDay.map((d) => (
+              <div className="admin-bar" key={d.day}>
+                <span className="admin-bar-fill" style={{ height: `${Math.round((d.clicks / peak) * 100)}%` }} />
+                <span className="admin-bar-day">{d.day.slice(5)}</span>
+                <span className="admin-bar-value">{d.clicks}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <div className="grid grid-2">
+        <section className="card">
+          <h2 className="h3" style={{ marginTop: 0 }}>Stores, last 30 days</h2>
+          {data.byStore.length === 0 ? (
+            <p className="small muted" style={{ margin: 0 }}>Nothing yet.</p>
+          ) : (
+            <ul className="plain-list small" style={{ marginBottom: 0 }}>
+              {data.byStore.map((s) => (
+                <li key={s.store} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                  <span>{s.store}</span>
+                  <strong>{s.clicks}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="card">
+          <h2 className="h3" style={{ marginTop: 0 }}>Offers that get tapped</h2>
+          {data.topCoupons.length === 0 ? (
+            <p className="small muted" style={{ margin: 0 }}>Nothing yet.</p>
+          ) : (
+            <ul className="plain-list small" style={{ marginBottom: 0 }}>
+              {data.topCoupons.map((t) => (
+                <li key={t.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                  <span>
+                    {t.store}
+                    {t.code ? ` · ${t.code}` : ''}
+                  </span>
+                  <strong>{t.clicks}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+
+      <section className="card">
+        <h2 className="h3" style={{ marginTop: 0 }}>Where the clicks come from</h2>
+        <div className="row wrap">
+          {data.byDevice.length === 0 && <span className="small muted">No data yet.</span>}
+          {data.byDevice.map((d) => (
+            <span className="chip" key={d.device ?? 'unknown'}>
+              {d.device ?? 'unknown'} · {d.clicks}
+            </span>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
 }

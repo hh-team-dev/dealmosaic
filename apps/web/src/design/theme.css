@@ -4258,3 +4258,166 @@ input:-webkit-autofill:active {
   .admin-row-actions { width: 100%; justify-content: flex-end; }
   .admin-tile strong { font-size: 1.3rem; }
 }
+
+/* ==========================================================================
+   THE GAP ON THE RIGHT OF EVERY CARD.
+   
+   Found in the owner's Android screenshots: on /deals, every coupon card stopped
+   about 90 px short of the right edge, leaving an empty column down the page.
+   
+   The cause was not spacing — it was a rule written for the homepage shelf rail
+   (`.deal-card { width: 78vw; max-width: 260px }`, correct in a horizontal
+   scroller) leaking into the vertical grid, where the same class is used. On a
+   390 px phone that is 260 px inside a 354 px track.
+   
+   The fix is to scope the rail rule to the rail and let a grid cell own its width.
+   ========================================================================== */
+.shelf-row .deal-card {
+  flex: 0 0 auto;
+  width: 78vw;
+  max-width: 260px;
+}
+
+.deals-grid,
+.saved-grid {
+  /* minmax(0, 1fr) rather than 1fr: a grid track refuses to shrink below its
+     content, and a long unbroken coupon code is exactly that content. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.deals-grid > .deal-card,
+.saved-grid > .deal-card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+@media (min-width: 620px) {
+  .deals-grid,
+  .saved-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* More columns as the screen earns them — the owner's rule: fill the width with
+   as many cards as fit, never leave a dead margin. */
+@media (min-width: 980px) {
+  .deals-grid,
+  .saved-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1360px) {
+  .deals-grid,
+  .saved-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ---- the earning button -------------------------------------------------- */
+.shop-link {
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.shop-link-sm {
+  min-height: 42px;
+  font-size: 0.9rem;
+}
+.deal-card-actions .shop-link {
+  width: auto;
+  flex: 1 1 150px;
+}
+
+/* ---- how it works -------------------------------------------------------- */
+.how-it-works {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 720px) {
+  .how-it-works {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.how-it-works li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+.how-step {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--action, #c2410c);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+.how-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.how-text strong {
+  display: block;
+  font-weight: 700;
+}
+.deals-how {
+  margin-bottom: 4px;
+}
+
+/* ---- admin: the earnings chart ------------------------------------------ */
+/* A bar chart drawn in CSS, not a library: 14 divs and one accent colour. It
+   needs no dependency, no canvas and no JavaScript layout, and it inherits the
+   palette rules for free. */
+.admin-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 150px;
+  padding-top: 8px;
+}
+.admin-bar {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+.admin-bar-fill {
+  width: 100%;
+  min-height: 3px;
+  border-radius: 4px 4px 2px 2px;
+  background: var(--action, #c2410c);
+}
+.admin-bar-day {
+  font-size: 0.62rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.admin-bar-value {
+  position: absolute;
+  top: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ink);
+}

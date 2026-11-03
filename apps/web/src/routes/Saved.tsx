@@ -5,6 +5,7 @@ import { Icon } from '../components/Icon';
 import { Seo } from '../lib/seo';
 import { clearSaved, clearViewed, toggleSaved, useSaved, useViewed, type SaveableDeal } from '../lib/saved';
 import { statedPercentLabel, statedPriceLabel, expiryLabel } from '../lib/coupons-api';
+import { DealsTicker } from '../components/DealsTicker';
 
 /**
  * /saved — the visitor's own board.
@@ -44,6 +45,8 @@ export default function Saved() {
       />
       <Chrome>
         <div className="container section stack-lg">
+          {/* Alive on every screen, not only the first one. */}
+          <DealsTicker />
           <header>
             <span className="eyebrow">
               <Icon name="heart" size={14} /> Your board
@@ -131,11 +134,11 @@ export default function Saved() {
                         {d.outboundUrl && (
                           <a
                             className="deal-go"
-                            href={d.outboundUrl}
+                            href={`/api/go/${d.id}?src=saved`}
                             target="_blank"
                             rel="sponsored nofollow noopener noreferrer"
                           >
-                            Store <Icon name="external" size={13} />
+                            Shop at store <Icon name="external" size={13} />
                           </a>
                         )}
                       </div>

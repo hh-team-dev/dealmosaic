@@ -28,7 +28,8 @@ export default function Login() {
     try {
       await login(email, password);
       toast.push('Welcome back.', 'success');
-      navigate(params.get('next') ?? '/app', { replace: true });
+      // The live deal wall, not the account page: the home screen is the product.
+      navigate(params.get('next') ?? '/', { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.code === 'email_unverified') {

@@ -112,16 +112,26 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         ) : (
           <span className="deal-code deal-code-none">No code needed</span>
         )}
+        {/*
+          Through our own redirect, not straight to the merchant. The feed's
+          tracking URL is identical for every visitor, so a direct link tells the
+          network only that somebody clicked — it cannot attribute the sale, and an
+          unattributed sale is one we are never paid for. /api/go mints a unique
+          sub-id per click. See apps/api/src/routes/go.ts.
+        */}
         {deal.outboundUrl ? (
           <a
             className="deal-go"
-            href={deal.outboundUrl}
+            href={`/api/go/${deal.id}?src=shelf`}
             target="_blank"
             rel="sponsored nofollow noopener noreferrer"
-            onClick={() => recordView(deal)}
-            aria-label={`Open ${deal.campaignName} offer in a new tab`}
+            onClick={() => {
+              recordView(deal);
+              if (deal.code) void navigator.clipboard?.writeText(deal.code.trim()).catch(() => {});
+            }}
+            aria-label={`Shop at ${deal.platformName} in a new tab`}
           >
-            Go to store <Icon name="external" size={13} />
+            Shop at store <Icon name="external" size={13} />
           </a>
         ) : null}
       </div>

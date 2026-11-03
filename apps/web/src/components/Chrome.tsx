@@ -31,6 +31,17 @@ export function SiteHeader() {
         <div className="header-actions">
           {user ? (
             <>
+              {/*
+                Only an administrator ever sees this. Until now /admin existed and
+                nothing linked to it, so the owner had no way to discover the one
+                page built for him — the feature was shipped and invisible, which
+                is indistinguishable from not shipped.
+              */}
+              {(user.role === 'admin' || user.role === 'super_admin') && (
+                <Link to="/admin" className="btn btn-header-ghost" title="Owner controls">
+                  Admin
+                </Link>
+              )}
               <Link to="/app" className="btn btn-header-ghost" title="Your dashboard">
                 Dashboard
               </Link>
