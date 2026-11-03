@@ -101,7 +101,7 @@ Last full run: 3 November 2026, after the brand work (§2.17).
 270 tests passing (19 files)
 33 design assertions passing
 typecheck clean across 3 packages (web, api, core)
-0 secrets in 218 scanned files
+0 secrets in 219 scanned files
 53 prerendered pages, 52 unique <h1>, own host only (scripts/verify-prerender.mjs)
 backup verified: 259 files, all checksums match (latest tarball in backups/)
 HEAD: the latest commit on origin/main (a hash written into this line would be a
