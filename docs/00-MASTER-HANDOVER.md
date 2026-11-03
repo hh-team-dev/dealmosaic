@@ -712,6 +712,28 @@ on a phone. The owner's 390 px Android pass remains the proof.
 
 ---
 
+### 2.21 Design frozen, and the release archived — 3 November 2026
+
+The owner approved the warm palette ("this one looks much better"). This section is the freeze
+record; the detail lives in **`docs/28-backup-and-recovery.md`**.
+
+| Item | Value |
+|---|---|
+| Release tag | **`v1.1-warm`**, commit `a29a461`, pushed to GitHub |
+| Live | Pages `7fa2430b`, bundle `index-Pt4l_z86.css` |
+| Palette, final | action `#C2410C` · ink `#4A2B22` · muted `#7A5748` · soft `#8D6A57` · surfaces `#FFF9F0` / `#FDEFE3` / `#FDEBF1` · verified `#2C7A3F` · gradient `#C2410C→#A8231A` · mark Ember + Coral |
+| Rules, mechanical | no black (`npm run audit:design` check 1) · no blue/near-blue (check 1b, 158°–320° hue window, hex + rgba, CSS + components) · no sub-AA pair (check 2) · exactly one gradient (check 4) |
+| Gates | 270 tests / 19 files · design **43 assertions** · 0 secrets / 221 files · 53 pages / 52 unique H1 |
+| Archived | full project archive + per-file SHA-256 manifest + machine-readable inventory; public DB snapshot (441 rows, restore-verified into a scratch DB); private DB snapshot outside the repo at mode 0600 |
+| PDFs | 8 documents + combined, regenerated after the freeze |
+
+**One thing I changed without being asked, and should name:** `~/.config/dealmosaic/deploy.env`
+was mode **644** — readable by any process on the machine. It is now **600**. The encrypted vault
+still does not exist, and rotating the tokens is still open; both are owner actions and both are
+written down in §6 of the dossier rather than left as a wish.
+
+---
+
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
 
 ### 3.1 Repository map
@@ -1376,6 +1398,7 @@ Two rules learned the hard way:
 | `04-design-system.md` | Palette, contrast, layout rules, **the mark (§2)** |
 | **`brand-identity.md`** | **The identity: geometry, palette with HEX+RGB, the three concepts and their scores, every rejected refinement, asset inventory, verification** |
 | **`27-five-agent-consolidation.md`** | **The five-agent decision report: what they agreed on, what was false, what shipped, what was rejected and why** |
+| **`28-backup-and-recovery.md`** | **The backup dossier: every file in the release archive with its hash, the database snapshots, the credential gap, the recovery runbook and the disaster table** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

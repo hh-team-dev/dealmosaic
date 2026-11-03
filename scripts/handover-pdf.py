@@ -52,6 +52,7 @@ CORE = [
     ('15-project-handover.md', 'Technical handover'),
     ('14-seo-launch-checklist.md', 'SEO launch checklist'),
     ('27-five-agent-consolidation.md', 'Five-agent consolidation'),
+    ('28-backup-and-recovery.md', 'Backup and recovery dossier'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 
