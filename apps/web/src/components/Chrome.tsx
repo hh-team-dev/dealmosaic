@@ -155,31 +155,40 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      {/*
-        Three destinations, each with a drawn icon. They were three Unicode
-        glyphs (◉ ◎ ⚙) at 1.05 rem: a different typeface from everything else on
-        the page, a different optical size per platform, and ⚙ renders as a colour
-        emoji on some Android builds. An icon set that changes shape depending on
-        the phone's font is not an icon set.
-      */}
-      <nav className="bottom-nav" aria-label="Primary">
-        <NavLink to="/app" end className={({ isActive }) => (isActive ? 'active' : '')}>
-          <Icon name="chart" size={19} />
-          Home
-        </NavLink>
-        <NavLink to="/deals" className={({ isActive }) => (isActive ? 'active' : '')}>
-          <Icon name="tag" size={19} />
-          Deals
-        </NavLink>
-        <NavLink to="/saved" className={({ isActive }) => (isActive ? 'active' : '')}>
-          <Icon name="heart" size={19} />
-          Saved
-        </NavLink>
-        <NavLink to="/app/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
-          <Icon name="shield" size={19} />
-          Settings
-        </NavLink>
-      </nav>
+      <BottomNav />
     </div>
+  );
+}
+
+/**
+ * THE PHONE NAVIGATION, ON EVERY SCREEN.
+ *
+ * It used to exist only inside the signed-in app shell, so a visitor browsing the
+ * public site on a phone had no way to reach Deals or Saved without scrolling to
+ * the footer. The same four destinations now appear everywhere, with drawn SVG
+ * icons rather than Unicode glyphs — ◉ ◎ ⚙ were a different typeface from the page,
+ * a different optical size on every device, and ⚙ renders as a colour emoji on
+ * some Android builds.
+ */
+export function BottomNav() {
+  return (
+    <nav className="bottom-nav" aria-label="Primary">
+      <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
+        <Icon name="chart" size={19} />
+        Home
+      </NavLink>
+      <NavLink to="/deals" className={({ isActive }) => (isActive ? 'active' : '')}>
+        <Icon name="tag" size={19} />
+        Deals
+      </NavLink>
+      <NavLink to="/browse" className={({ isActive }) => (isActive ? 'active' : '')}>
+        <Icon name="search" size={19} />
+        Browse
+      </NavLink>
+      <NavLink to="/saved" className={({ isActive }) => (isActive ? 'active' : '')}>
+        <Icon name="heart" size={19} />
+        Saved
+      </NavLink>
+    </nav>
   );
 }

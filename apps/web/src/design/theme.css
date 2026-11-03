@@ -4421,3 +4421,15 @@ input:-webkit-autofill:active {
   font-weight: 700;
   color: var(--ink);
 }
+
+/*
+ * The public pages carry the bottom navigation too, so the fixed bar must not sit
+ * on top of the footer. `body.has-bottom-nav` was written for this and then never
+ * applied by any component — the class does not exist in the markup, so the rule
+ * never fired. Padding the two main landmarks directly is the honest fix.
+ */
+@media (max-width: 879px) {
+  .public-main {
+    padding-bottom: calc(var(--bottomnav-h) + 20px + env(safe-area-inset-bottom, 0px));
+  }
+}

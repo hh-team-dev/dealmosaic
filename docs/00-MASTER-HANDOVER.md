@@ -810,6 +810,69 @@ is the fastest way to close the loop.
 
 ---
 
+### 2.23 Earning, and the admin side that was invisible — 3 November 2026
+
+The owner asked why the site does not make money and what the admin page is for. Both questions
+deserved a straight answer plus code, so both got one. The full document is
+**`docs/30-earning-and-admin.md`**; this is the summary.
+
+**The uncomfortable finding: nothing on the site was earning.** A coupon tap copied a code and stopped.
+The shopper opened the retailer themselves and bought, so the retailer was paid, the shopper saved, and
+DealMosaic appeared in neither the transaction nor the network's log. Not a philosophy — a missing route.
+
+| What was built | Where | Verified |
+|---|---|---|
+| Tracked outbound redirect with a unique sub-id per click | `apps/api/src/routes/go.ts` | live: `302 → linksredirect.com/…&subid=dmmw12wing41792fe6` |
+| Click log, no personal data (store, coupon, day, coarse device) | `outbound_clicks` | first real row written |
+| "Shop at store" — one tap copies the code **and** opens the tracked link | every coupon card | live on `/deals`, home shelves, `/saved` |
+| Three-step instruction, above the fold and above the list | `HowItWorks` | live on `/` and `/deals` |
+| Earnings dashboard: today / 7 days / all time, per store, per offer, per device | `/admin?tab=revenue` | live |
+| Admin link in the header for administrators | `Chrome.tsx` | live |
+| Owner account promoted to `super_admin` | production DB | `chawdhureprithwwiraj@gmail.com` |
+
+**Why a sub-id is the whole business.** The feed's tracking URL is identical for every visitor — linking
+to it tells the network only that *somebody* clicked, and an unattributed sale is one we are never paid
+for. The redirect mints a unique sub-id per click, which is the only handle the network can pay against.
+
+**On checkout, UPI and Razorpay — the honest answer.** Croma sells the washing machine, issues the
+invoice, carries the warranty and the returns. If we took ₹32,999 for it we would be a reseller, needing
+GST, inventory or a drop-ship agreement, gateway KYC, refunds and chargebacks, on goods we never touch.
+Every Indian retailer's affiliate terms forbid it, embedding their checkout in our page is barred by the
+programmes and by PCI rules, and Razorpay onboarding asks what you are selling. The only thing that is
+ours to sell is our own service — a Pro tier — and with 1,112 offers and no traffic a paywall would sell
+a product nobody has used. Recommendation: traffic first, then Pro.
+
+**The admin side.** It has existed for weeks and **nothing linked to it**, which is indistinguishable
+from it not existing. `/admin` now has a header link for administrators, six tabs (Overview, Earnings,
+Coupons, Price reports, People, Audit log), and the owner's account is `super_admin`. `super_admin` cannot
+be granted from the web at all — only in the database — so a stolen session cannot mint an owner.
+
+**Also fixed in the same pass**, all from the same screenshots:
+
+- **The gap on the right of every card.** `.deal-card` was sized for the homepage rail
+  (`78vw`, `max 260px`) and leaked into the `/deals` grid, so a 390 px phone showed 260 px cards in a
+  354 px track. The rail rule is now scoped to the rail; a grid cell owns its width, and the grid adds a
+  column at 620 / 980 / 1360 px.
+- **A row of negative chips.** "No price API", "Gated", "Closed to new" was an engineering status board
+  printed at a shopper. Each chip now says what the store is good for; the integration talk became three
+  plain sentences in the smallest English on the page.
+- **The landing page now says browser translation works**, and nothing on it blocks it — no `translate="no"`,
+  no text baked into images.
+- **Signing in lands on the live home**, not the account page, and the dashboard carries the ticker and
+  the shelves — the app is no longer a waiting room.
+- **The ticker runs on every page**, public ones included, and the phone navigation bar exists on public
+  pages too (it was app-shell only, so a visitor browsing on a phone had no route to Deals or Saved
+  except the footer).
+
+**Gates:** 299 tests / 20 files (9 new on the money path, including "a different sub-id for every click"
+and "an expired offer never redirects"), design 43 assertions, 0 secrets / 229 files, 53 pages.
+**Live:** Pages `44e1a333`, Render deploy `dep-dbl3abl9fdbs73co1ajg`.
+
+**Still open, in priority order:** real traffic (1,112 offers and no visitors earns nothing), Amazon and
+Flipkart affiliate approvals, a second device tour, and Pro — which is the owner's decision, not mine.
+
+---
+
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
 
 ### 3.1 Repository map
@@ -1501,6 +1564,7 @@ Two rules learned the hard way:
 | **`27-five-agent-consolidation.md`** | **The five-agent decision report: what they agreed on, what was false, what shipped, what was rejected and why** |
 | **`28-backup-and-recovery.md`** | **The backup dossier: every file in the release archive with its hash, the database snapshots, the credential gap, the recovery runbook and the disaster table** |
 | **`29-site-tour-fixes.md`** | **36 defects found by watching a 9-minute phone tour plus the PDF set it exposed, each traced to its cause and fixed, with the verification log** |
+| **`30-earning-and-admin.md`** | **How the site earns: the tracked click, the affiliate chain, why there is no embedded checkout, and how the owner runs `/admin`** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |
