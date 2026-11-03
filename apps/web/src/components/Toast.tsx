@@ -37,7 +37,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <span
               aria-hidden="true"
               style={{
-                color: toast.kind === 'error' ? 'var(--coral-d)' : toast.kind === 'info' ? 'var(--blue-d)' : 'var(--turq-d)',
+                color: toast.kind === 'error' ? 'var(--coral-d)' : toast.kind === 'info' ? 'var(--ember-d)' : 'var(--grass-d)',
                 marginTop: 1,
               }}
             >

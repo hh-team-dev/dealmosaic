@@ -62,25 +62,27 @@ const WHITE = '#FFFFFF';
 
 /** Every colour the UI uses for TEXT must clear these pairs. */
 const TEXT_PAIRS = [
-  ['--ink (Mosaic Plum)', '#452B5E', SURFACE],
-  ['--ink-muted', '#6B5280', SURFACE],
+  ['--ink (Roast)', '#4A2B22', SURFACE],
+  ['--ink-muted', '#7A5748', SURFACE],
+  ['--ink-soft', '#8D6A57', SURFACE],
+  ['--action', '#C2410C', SURFACE],
+  ['white on --action', WHITE, '#C2410C'],
+  ['white on --action-hover', WHITE, '#A8360A'],
+  ['white on --action-active', WHITE, '#8F2C08'],
   ['--coral-d', '#C0392B', SURFACE],
-  ['--blue-d', '#2F49C9', SURFACE],
-  ['--turq-d', '#0F7F76', SURFACE],
+  ['--ember-d', '#C2410C', SURFACE],
+  ['--grass-d', '#2C7A3F', SURFACE],
   ['--sun-d', '#8A5A00', SURFACE],
-  ['--violet-d', '#6D3BE0', SURFACE],
+  ['--magenta-d', '#B3245F', SURFACE],
   ['--pink-d', '#C81C77', SURFACE],
   ['--lime-d', '#4C7A00', SURFACE],
   ['--tang-d', '#A8490A', SURFACE],
-  ['white on --violet-d', WHITE, '#6D3BE0'],
-  ['white on --blue-d', WHITE, '#2F49C9'],
-  ['white on gradient stop #6d3be0', WHITE, '#6D3BE0'],
-  ['white on gradient stop #c81c77', WHITE, '#C81C77'],
-  ['white on gradient stop #a8490a', WHITE, '#A8490A'],
+  ['white on --magenta-d', WHITE, '#B3245F'],
+  ['white on --grass-d', WHITE, '#2C7A3F'],
   ['white on --coral-d', WHITE, '#C0392B'],
-  ['white on --turq-d', WHITE, '#0F7F76'],
-  ['headline gradient #a8490a', '#A8490A', SURFACE],
-  ['headline gradient #c0392b', '#C0392B', SURFACE],
+  ['white on --tang-d', WHITE, '#A8490A'],
+  ['white on gradient stop #c2410c', WHITE, '#C2410C'],
+  ['white on gradient stop #a8231a', WHITE, '#A8231A'],
 ];
 
 let failures = 0;
@@ -110,8 +112,60 @@ for (const file of files) {
 }
 console.log(
   darkHits === 0
-    ? `  ✓ ${seen.size} unique colours checked — none darker than L* 20 (darkest is Mosaic Plum at L* ${Math.min(...[...seen].map(lightness)).toFixed(1)})`
+    ? `  ✓ ${seen.size} unique colours checked — none darker than L* 20 (darkest is Roast at L* ${Math.min(...[...seen].map(lightness)).toFixed(1)})`
     : `  ✗ ${darkHits} near-black value(s) found`,
+);
+
+console.log('\n=== 1b. No blue, violet, indigo or teal anywhere ===');
+/* The owner's rule: nothing blue, nothing close to blue, nothing black. The
+   mechanical form of it is a hue window. Any colour whose HSL hue sits between
+   158deg (teal) and 320deg (violet) with real saturation is a violation, in the
+   stylesheet and in every component. The system is now warm end to end:
+   crimson -> vermilion -> coral -> amber, plus one magenta and one grass. */
+const hueOf = (r, g, b) => {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  const l = (max + min) / 2;
+  const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  let h = 0;
+  if (d !== 0) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return { h, s: s * 100 };
+};
+let hueHits = 0;
+let hueScanned = 0;
+for (const file of files) {
+  const text = readFileSync(file, 'utf8');
+  const found = [];
+  for (const hex of hexesIn(text)) {
+    const [r, g, b] = hexToRgb(hex).map((v) => v);
+    const { h, s } = hueOf(r, g, b);
+    hueScanned++;
+    if (h >= 158 && h <= 320 && s > 12) found.push(`${hex} (hue ${Math.round(h)}, sat ${Math.round(s)}%)`);
+  }
+  for (const m of text.matchAll(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g)) {
+    const [r, g, b] = [m[1], m[2], m[3]].map((v) => Number(v) / 255);
+    const { h, s } = hueOf(r, g, b);
+    hueScanned++;
+    if (h >= 158 && h <= 320 && s > 12) found.push(`${m[0]}) (hue ${Math.round(h)}, sat ${Math.round(s)}%)`);
+  }
+  if (found.length) {
+    hueHits += found.length;
+    failures += found.length;
+    console.log(`  ✗ ${file}: ${found.join(', ')}`);
+  }
+}
+checks++;
+console.log(
+  hueHits === 0
+    ? `  ✓ ${hueScanned} colour values scanned — none in the 158deg-320deg blue/violet/teal window`
+    : `  ✗ ${hueHits} blue-ish value(s) found`,
 );
 
 console.log('\n=== 2. Text contrast (WCAG 2.2 AA: 4.5:1 body, 3:1 large) ===');
@@ -126,13 +180,13 @@ for (const [label, fg, bg] of TEXT_PAIRS) {
 console.log('\n=== 3. Spark tints are decorative only ===');
 const SPARK = {
   coral: '#FF6B6B',
-  turquoise: '#2EC4B6',
+  ember: '#FF6B35',
+  grass: '#34A853',
   sunshine: '#FFBE0B',
   'candy pink': '#FF4FA3',
   lime: '#B8F34A',
   tangerine: '#FF8A3D',
-  violet: '#8B5CF6',
-  blue: '#4361EE',
+  magenta: '#E8336F',
 };
 for (const [name, hex] of Object.entries(SPARK)) {
   checks++;
@@ -186,15 +240,15 @@ console.log('\n=== 5. Phase-2 fills that carry white text must pass AA ===');
 // These are used as small badges with white numerals/labels. A near-miss here is
 // exactly the kind of thing a human eye forgives and a low-vision user cannot.
 const WHITE_FILLS = [
-  ['podium silver', '#5f6e82'],
-  ['podium bronze', '#a3581f'],
-  ['podium gold', '#8a5a00'],
-  ['rank 1 (action)', '#2f49c9'],
-  ['rank 2 (ink)', '#452b5e'],
-  ['rank 3 (ink-soft)', '#7a6b8c'],
-  ['step 2 (violet)', '#6d3be0'],
-  ['step 3 (coral)', '#c0392b'],
-  ['discount badge', '#c0392b'],
+  ['podium gold', '#8A5A00'],
+  ['podium stone', '#8A6A5C'],
+  ['podium bronze', '#A3581F'],
+  ['rank 1 (action)', '#C2410C'],
+  ['rank 2 (ink)', '#4A2B22'],
+  ['rank 3 (ink-soft)', '#8D6A57'],
+  ['step 2 (sun-d)', '#8A5A00'],
+  ['step 3 (coral-d)', '#C0392B'],
+  ['discount badge', '#C0392B'],
 ];
 let worstFill = Infinity;
 for (const [name, hex] of WHITE_FILLS) {

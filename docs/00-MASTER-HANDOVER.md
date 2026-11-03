@@ -647,6 +647,71 @@ owner's 390 px Android pass remains the only real proof.
 
 ---
 
+### 2.20 Blue out, warm in — 3 November 2026
+
+**The instruction:** "there should not be any black or blue or anything nearing blue…
+replace those with something very bright and peppy as per the psychology of colour."
+
+There was a detour worth recording. A metallic-gold / champagne concept was explored
+first, built as two rendered prototypes in `docs/palette-options.html`, and **rejected by
+the owner on sight**: "this golden thing is not looking good in any of it, neither way."
+The analysis that went with it is still the useful part, and it is why the gold never
+shipped: real metallic gold measures **1.97:1** on the page (`#D4AF37`) and **2.10:1**
+with white on it, so gold can only ever be a finish, never a type colour; and gloss on
+every button flattens hierarchy, which is the opposite of premium. The prototype set is
+kept for the record, not linked from the product.
+
+**What actually shipped: the existing premium structure, re-hued warm.** Nothing about
+layout, spacing, type, elevation or component structure changed. The palette did.
+
+| Was | Now | Why |
+|---|---|---|
+| `--action #2F49C9` (cobalt) | **`#C2410C` vermilion** | Blue is out. Vermilion is warm, urgent, 5.18:1 with white, and the most saturated thing on the page |
+| `--ink #452B5E` (plum) | **`#4A2B22` cocoa** | Plum carried a blue-violet cast. 12.09:1, still nowhere near black (L\* 21.2) |
+| `--ink-muted #6B5280` / `--ink-soft #7A6B8C` | `#7A5748` / `#8D6A57` | 6.11:1 / 4.63:1 |
+| `--violet-d #6D3BE0`, `--violet #8B5CF6` | **magenta** `#B3245F` / `#E8336F` | Violet is next to blue. Magenta is the warm equivalent and still separates from coral |
+| `--turq-d #0F7F76`, `--turq #2EC4B6` (verified) | **grass** `#2C7A3F` / `#34A853` | Teal is a blue-green. Grass reads "saving / verified" and is 5.06:1 |
+| `--blue/--blue-d` (live data) | **ember** `#FF6B35` / `#C2410C` | — |
+| `--silver #5F6E82` (podium) | `#8A6A5C` warm stone | The old silver was a blue-grey |
+| `--tint-2 #F7F1FB`, hairline `#EBDDEA` | `#FDEBF1`, `#F2DFCE` | Every surface tint was violet-tinted; now peach and blush |
+| `--grad-prism` cobalt→violet | **`--grad-ember` vermilion→crimson** | The only gradient, now inside one warm axis; 5.18:1 at its lightest stop |
+| Brand mark left facet `#2F49C9` | **`#C2410C`** | Geometry byte-identical; only the fill changed. Pre-change assets in `backups/brand-pre-ember/` |
+
+Every token and class name followed the colour: `--brand-cobalt` → `--brand-ember`,
+`badge-turq` → `badge-grass`, `card-top-violet` → `card-top-magenta`, `dot-blue` →
+`dot-ember`. A token called "blue" holding orange would have been exactly the kind of
+drift that makes a codebase look inexperienced.
+
+**New gate — and this is the important part.** `npm run audit:design` now fails the build
+if any colour, in the stylesheet or in any component, has an **HSL hue between 158° and
+320°** (teal → violet) at more than 12 % saturation. It scans hex *and* `rgba()` forms —
+**357 values on the current tree, 0 violations.** The owner's rule is now mechanical; it
+cannot be forgotten in a later pass.
+
+**Raster assets regenerated** from the single source (`scripts/brand/brand.py`, palette
+changed there, not in the exports): all 25 SVGs, the 10 PNG icon sizes, the maskable and
+social-avatar plates, `favicon.ico`, `apple-touch-icon.png`, and `og.png` via
+`scripts/generate-og.py`. The new OG card was opened and checked visually: warm cocoa
+wordmark, ember+coral mark, no cool tone anywhere.
+
+**Gates:** `tsc` clean · **270 tests / 19 files** · design **43 assertions PASS** (was 40;
+the new ones are the hue-window scan) · **0 secrets / 220 files** · build **53 pages /
+52 unique H1**, and the *built* stylesheet was scanned for the hue window: **0 cool
+values**.
+
+**Deployed:** Pages `7fa2430b`, live bundle `index-Pt4l_z86.css`. Re-read from production:
+`--action:#c2410c`, `--ink:#4a2b22`, exactly one gradient token, no `--grad-prism`, and
+0 cool values in the served CSS. `/` returns 200, `/favicon.svg` serves the ember mark.
+
+**Review aid:** `docs/design-preview.html` is re-rendered to the new palette, with the
+measured table.
+
+**Verification limit, unchanged:** still no browser here, so "how it looks" is inferred
+from the deployed CSS, the built stylesheet and the regenerated OG card — not from pixels
+on a phone. The owner's 390 px Android pass remains the proof.
+
+---
+
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
 
 ### 3.1 Repository map

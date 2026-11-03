@@ -1,8 +1,8 @@
 /**
  * The DEALMOSAIC mark — "Mosaic M".
  *
- * Two polygons, one letterform. An angular M whose left facet is Cobalt Deep and
- * whose right facet is Coral Spark; the two halves meet along the chevron that
+ * Two polygons, one letterform. An angular M whose left facet is Ember and
+ * whose right facet is Coral; the two halves meet along the chevron that
  * runs up the middle of the letter, so the colour change *is* the letter's
  * construction rather than a decoration laid over it. Read as a whole it is an M;
  * read as parts it is two tiles joined at an angle — a mosaic.
@@ -38,7 +38,7 @@ export function LogoMark({
       role="img"
       aria-label={title}
     >
-      <polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="var(--brand-cobalt)" />
+      <polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="var(--brand-ember)" />
       <polygon points="32,29 44,12 56,12 56,54 44,54 44,31 32,48" fill="var(--brand-coral)" />
     </svg>
   );

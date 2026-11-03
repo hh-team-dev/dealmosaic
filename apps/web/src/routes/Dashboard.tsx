@@ -68,7 +68,7 @@ export default function Dashboard() {
       <div className="stack stack-lg">
         <header>
           <span className="badge badge-lime">
-            <span className="dot dot-turq" aria-hidden="true" />
+            <span className="dot dot-grass" aria-hidden="true" />
             India · prices in ₹
           </span>
           <h1 style={{ fontSize: 'clamp(1.6rem, 6vw, 2.2rem)', margin: '10px 0 4px' }}>
@@ -113,7 +113,7 @@ export default function Dashboard() {
                       {a.bestPriceMinor !== null ? ` · now ${inr(a.bestPriceMinor)}${a.bestPlatform ? ` at ${a.bestPlatform}` : ''}` : ' · no live offer right now'}
                     </span>
                   </div>
-                  <span className={`badge ${a.status === 'triggered' ? 'badge-turq' : a.isBelowTarget ? 'badge-sun' : 'badge-neutral'}`}>
+                  <span className={`badge ${a.status === 'triggered' ? 'badge-grass' : a.isBelowTarget ? 'badge-sun' : 'badge-neutral'}`}>
                     {a.status === 'triggered' ? 'Sent' : a.isBelowTarget ? 'Below target' : 'Watching'}
                   </span>
                   <button
@@ -135,7 +135,7 @@ export default function Dashboard() {
         </section>
 
         <div className="grid grid-2">
-          <Link to="/saved" className="card card-top-violet" style={{ textDecoration: 'none' }}>
+          <Link to="/saved" className="card card-top-magenta" style={{ textDecoration: 'none' }}>
             <h3 style={{ marginTop: 0 }}>Your saved board</h3>
             <p className="small" style={{ marginBottom: 8 }}>
               {saved.length === 0
@@ -156,7 +156,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-2">
-          <div className="card card-top-violet">
+          <div className="card card-top-magenta">
             <h3 style={{ marginTop: 0 }}>Your comparison context</h3>
             <dl className="offer-meta" style={{ borderTop: 'none', paddingTop: 0 }}>
               <div>

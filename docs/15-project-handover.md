@@ -148,7 +148,7 @@ dominant source of price surprise in India.
 
 ```
 Tests          270 passing across 19 files
-Design audit   40 assertions passing
+Design audit   43 assertions passing
 Secrets        0 found in 220 scanned files
 Build          450 kB JS / 137 kB gzip
                68 kB CSS / ~12 kB gzip
@@ -203,7 +203,7 @@ The database is created and seeded automatically on first boot
 | Verification email never arrives | No email provider | Read the link from `GET /api/dev/outbox` |
 | `429` on register/login | Rate limiter: 10 auth attempts/IP/15 min | Wait, or restart the API (buckets are in memory) |
 | Search returns 403 `email_unverified` | Account not verified | Verify via the dev outbox link |
-| Design audit fails | A colour crossed near-black or failed contrast | Read the assertion output; it names the hex |
+| Design audit fails | A colour crossed near-black, entered the blue/violet hue window, or failed contrast | Read the assertion output; it names the hex and the hue |
 
 ---
 

@@ -45,7 +45,7 @@ const DATA: Dataset[] = [
         rank: 1,
         retailer: 'Amazon India',
         initials: 'az',
-        tint: 'rgba(47,73,201,.11)',
+        tint: 'rgba(194,65,12,.11)',
         seller: 'Appario Retail · official store',
         priceMinor: 12999900,
         delivery: 'Free · 2 days',
@@ -71,7 +71,7 @@ const DATA: Dataset[] = [
         rank: 3,
         retailer: 'Croma',
         initials: 'cr',
-        tint: 'rgba(109,59,224,.11)',
+        tint: 'rgba(232,51,111,.11)',
         seller: 'Croma · official store',
         priceMinor: 13499000,
         delivery: 'Free · same day',
@@ -110,7 +110,7 @@ const DATA: Dataset[] = [
         rank: 1,
         retailer: 'Blinkit',
         initials: 'bl',
-        tint: 'rgba(15,127,118,.11)',
+        tint: 'rgba(44,122,63,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2000,
         unitPrice: '₹38.46 / 100 g',
@@ -124,7 +124,7 @@ const DATA: Dataset[] = [
         rank: 2,
         retailer: 'Zepto',
         initials: 'zp',
-        tint: 'rgba(109,59,224,.11)',
+        tint: 'rgba(232,51,111,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2200,
         unitPrice: '₹42.31 / 100 g',
@@ -138,7 +138,7 @@ const DATA: Dataset[] = [
         rank: 3,
         retailer: 'Swiggy Instamart',
         initials: 'in',
-        tint: 'rgba(47,73,201,.11)',
+        tint: 'rgba(194,65,12,.11)',
         seller: 'Dark store · PIN 712201',
         priceMinor: 2400,
         unitPrice: '₹46.15 / 100 g',
@@ -220,7 +220,7 @@ export function SampleComparison() {
               display: 'grid',
               placeItems: 'center',
               fontSize: '1.5rem',
-              background: 'var(--grad-prism)',
+              background: 'var(--grad-ember)',
               flex: '0 0 auto',
               boxShadow: 'var(--sh-1)',
             }}
@@ -232,7 +232,7 @@ export function SampleComparison() {
             <p className="small" style={{ margin: 0 }}>
               {dataset.variant}
             </p>
-            <span className="badge badge-turq" style={{ marginTop: 6 }}>
+            <span className="badge badge-grass" style={{ marginTop: 6 }}>
               {dataset.matchNote}
             </span>
           </div>
@@ -248,7 +248,7 @@ export function SampleComparison() {
           <div className="card" style={{ background: 'var(--surface)' }}>
             <div className="row-between" style={{ marginBottom: 6 }}>
               <h4 style={{ margin: 0 }}>Price Truth — offer #1</h4>
-              <span className="badge badge-blue">Expandable in the real app</span>
+              <span className="badge badge-ember">Expandable in the real app</span>
             </div>
             <div className="pt-list">
               {dataset.truth.map((line) => (
@@ -264,7 +264,7 @@ export function SampleComparison() {
             </div>
             <div className="pt-total">
               <span>Known total</span>
-              <span className="numeric" style={{ color: 'var(--turq-d)' }}>
+              <span className="numeric" style={{ color: 'var(--grass-d)' }}>
                 {dataset.truthTotal}
               </span>
             </div>
@@ -309,8 +309,8 @@ export function SampleComparison() {
 
 function StateBadge({ state }: { state: string }) {
   const map: Record<string, string> = {
-    Confirmed: 'badge-turq',
-    Community: 'badge-violet',
+    Confirmed: 'badge-grass',
+    Community: 'badge-magenta',
     Conditional: 'badge-sun',
     'Not applicable': 'badge-neutral',
   };
@@ -323,7 +323,7 @@ function OfferCard({ offer }: { offer: Offer }) {
   return (
     <article
       className="offer"
-      style={offer.rank === 1 ? { borderColor: 'var(--turq)', boxShadow: '0 18px 40px -22px rgba(15,127,118,.45)' } : undefined}
+      style={offer.rank === 1 ? { borderColor: 'var(--grass)', boxShadow: '0 18px 40px -22px rgba(44,122,63,.45)' } : undefined}
     >
       <span className={`offer-rank offer-rank-${offer.rank}`}>
         {offer.rank === 1 ? '★ Best verified' : `#${offer.rank}`}
@@ -332,7 +332,7 @@ function OfferCard({ offer }: { offer: Offer }) {
       <div className="offer-head">
         {/* Initials sit on an 11%-wash tile in ink, not white on a saturated
             gradient: white on the old amber stop measured 1.9:1. */}
-        <div className="offer-logo" style={{ background: offer.tint, color: 'var(--ink)', boxShadow: 'inset 0 0 0 1px rgba(69,43,94,.08)' }}>
+        <div className="offer-logo" style={{ background: offer.tint, color: 'var(--ink)', boxShadow: 'inset 0 0 0 1px rgba(74,43,34,.08)' }}>
           {offer.initials}
         </div>
         <div style={{ minWidth: 0 }}>

@@ -109,12 +109,12 @@ export default function Settings() {
         <header>
           <h1 style={{ fontSize: 'clamp(1.5rem, 5.4vw, 2rem)', marginBottom: 4 }}>Account settings</h1>
           <p className="small" style={{ margin: 0 }}>
-            Signed in as {user?.email} {user?.emailVerified && <span className="badge badge-turq">Verified</span>}
+            Signed in as {user?.email} {user?.emailVerified && <span className="badge badge-grass">Verified</span>}
           </p>
         </header>
 
         {/* profile */}
-        <section className="card card-top-violet">
+        <section className="card card-top-magenta">
           <h3 style={{ marginTop: 0 }}>Profile</h3>
           <form onSubmit={saveProfile}>
             <Field label="Display name" htmlFor="displayName">
@@ -142,7 +142,7 @@ export default function Settings() {
         </section>
 
         {/* preferences */}
-        <section className="card card-top-turq">
+        <section className="card card-top-grass">
           <h3 style={{ marginTop: 0 }}>Market & prices</h3>
           <form onSubmit={savePreferences}>
             <Field label="Country market" htmlFor="country" hint="DEALMOSAIC is launching in India. Other markets are listed with the reason they are switched off.">

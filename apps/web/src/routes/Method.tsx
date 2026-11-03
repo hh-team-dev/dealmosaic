@@ -144,7 +144,7 @@ export function HowWeRank() {
 }
 
 const STATUS_COPY: Record<KnownPlatform['status'], { label: string; tone: string }> = {
-  connected: { label: 'Connected', tone: 'turq' },
+  connected: { label: 'Connected', tone: 'grass' },
   awaiting_credentials: { label: 'Waiting for API keys', tone: 'sun' },
   no_public_api: { label: 'No public API', tone: 'coral' },
   partnership_required: { label: 'Partnership required', tone: 'neutral' },
@@ -196,7 +196,7 @@ export function DataSources() {
             <div key={c.slug} className="card connector-card">
               <div className="row-between">
                 <strong>{c.displayName}</strong>
-                <span className={`badge badge-${c.status === 'live' ? 'turq' : c.status === 'demo' ? 'sun' : 'coral'}`}>
+                <span className={`badge badge-${c.status === 'live' ? 'grass' : c.status === 'demo' ? 'sun' : 'coral'}`}>
                   {c.status}
                 </span>
               </div>

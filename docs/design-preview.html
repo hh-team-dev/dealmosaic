@@ -16,24 +16,24 @@
 -->
 <style>
   :root {
-    --ink: #452b5e;
-    --ink-muted: #6b5280;
-    --ink-soft: #7a6b8c;
+    --ink: #4a2b22;
+    --ink-muted: #7a5748;
+    --ink-soft: #8d6a57;
     --surface: #fff9f0;
     --raised: #ffffff;
-    --tint: #fdf1e7;
-    --tint-2: #f7f1fb;
-    --hairline: #ebddea;
-    --hairline-strong: #dcc9dd;
-    --action: #2f49c9;
-    --action-hover: #2540b0;
-    --brand-cobalt: #2f49c9;
+    --tint: #fdefe3;
+    --tint-2: #fdebf1;
+    --hairline: #f2dfce;
+    --hairline-strong: #e4c7ad;
+    --action: #c2410c;
+    --action-hover: #a8360a;
+    --brand-ember: #c2410c;
     --brand-coral: #ff6b6b;
     --coral-d: #c0392b;
-    --turq-d: #0f7f76;
+    --turq-d: #2c7a3f;
     --sun-d: #8a5a00;
-    --violet-d: #6d3be0;
-    --grad-prism: linear-gradient(120deg, #2f49c9 0%, #6d3be0 100%);
+    --violet-d: #b3245f;
+    --grad-ember: linear-gradient(120deg, #c2410c 0%, #b3245f 100%);
     --sh-1: 0 1px 2px rgba(69, 43, 94, 0.04), 0 2px 6px -2px rgba(69, 43, 94, 0.06);
     --sh-2: 0 1px 2px rgba(69, 43, 94, 0.05), 0 10px 24px -14px rgba(69, 43, 94, 0.2);
     --sh-3: 0 2px 4px rgba(69, 43, 94, 0.05), 0 24px 48px -26px rgba(69, 43, 94, 0.26);
@@ -139,7 +139,7 @@
     display: inline-flex; align-items: center; gap: 8px; font-size: .7rem; font-weight: 800;
     letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px;
   }
-  .eyebrow::before { content: ''; width: 24px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--brand-cobalt) 0 56%, var(--brand-coral) 56% 100%); }
+  .eyebrow::before { content: ''; width: 24px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--brand-ember) 0 56%, var(--brand-coral) 56% 100%); }
 
   /* ---------- cards ---------- */
   .card { background: var(--raised); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 18px; box-shadow: var(--sh-1); }
@@ -160,7 +160,7 @@
   @media (min-width: 900px) { .offers { grid-template-columns: repeat(3, 1fr); } }
   .offer-card { position: relative; background: var(--raised); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 16px; box-shadow: var(--sh-2); display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
   .offer-card.featured { border-color: var(--hairline-strong); box-shadow: var(--sh-3); }
-  .offer-card.featured::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--grad-prism); }
+  .offer-card.featured::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--grad-ember); }
   .offer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .rank { width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center; font-weight: 800; font-size: .78rem; color: #fff; flex: 0 0 auto; }
   .rank-1 { background: var(--action); }
@@ -189,7 +189,7 @@
   .save { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-muted); display: grid; place-items: center; }
 
   /* ---------- cta ---------- */
-  .cta { background: var(--grad-prism); border-radius: var(--r-xl); padding: clamp(26px, 5vw, 44px); text-align: center; box-shadow: var(--sh-3); }
+  .cta { background: var(--grad-ember); border-radius: var(--r-xl); padding: clamp(26px, 5vw, 44px); text-align: center; box-shadow: var(--sh-3); }
   .cta h2, .cta p { color: #fff; }
   .cta p { margin: 0 auto 18px; max-width: 46ch; opacity: .94; }
   .cta .row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
@@ -211,7 +211,7 @@
     <a class="brand" href="#">
       <!-- the mark, exactly as shipped: two polygons on a 64 grid -->
       <svg class="brand-mark" viewBox="3 4 58 58" role="img" aria-label="DEALMOSAIC">
-        <polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="var(--brand-cobalt)" />
+        <polygon points="8,54 8,12 20,12 32,29 32,48 20,31 20,54" fill="var(--brand-ember)" />
         <polygon points="32,29 44,12 56,12 56,54 44,54 44,31 32,48" fill="var(--brand-coral)" />
       </svg>
       <span>
@@ -399,28 +399,34 @@
     <table>
       <thead><tr><th>Token</th><th>HEX</th><th>On Warm White</th><th>Job</th></tr></thead>
       <tbody>
-        <tr><td><span class="sw" style="background:#2f49c9"></span>--action</td><td><code>#2F49C9</code></td><td>6.88:1 · white on it 7.20:1</td><td>Every primary button. The only action colour.</td></tr>
-        <tr><td><span class="sw" style="background:#452b5e"></span>--ink</td><td><code>#452B5E</code></td><td>11.40:1</td><td>Text and headings. Darkest colour permitted.</td></tr>
-        <tr><td><span class="sw" style="background:#6b5280"></span>--ink-muted</td><td><code>#6B5280</code></td><td>6.38:1</td><td>Secondary copy.</td></tr>
-        <tr><td><span class="sw" style="background:#7a6b8c"></span>--ink-soft</td><td><code>#7A6B8C</code></td><td>4.66:1 (was 3.69)</td><td>Placeholders and micro-copy — now AA.</td></tr>
+        <tr><td><span class="sw" style="background:#c2410c"></span>--action</td><td><code>#C2410C</code></td><td>4.95:1 · white on it 5.18:1</td><td>Every primary button. Vivid vermilion — the one urgent colour.</td></tr>
+        <tr><td><span class="sw" style="background:#a8360a"></span>--action-hover</td><td><code>#A8360A</code></td><td>white on it 6.57:1</td><td>Hover and pressed states.</td></tr>
+        <tr><td><span class="sw" style="background:#4a2b22"></span>--ink</td><td><code>#4A2B22</code></td><td>12.09:1</td><td>Text and headings. Warm cocoa — not black, not blue.</td></tr>
+        <tr><td><span class="sw" style="background:#7a5748"></span>--ink-muted</td><td><code>#7A5748</code></td><td>6.11:1</td><td>Secondary copy.</td></tr>
+        <tr><td><span class="sw" style="background:#8d6a57"></span>--ink-soft</td><td><code>#8D6A57</code></td><td>4.63:1</td><td>Placeholders and micro-copy — AA.</td></tr>
         <tr><td><span class="sw" style="background:#fff9f0"></span>--surface</td><td><code>#FFF9F0</code></td><td>—</td><td>Page. Warm, not white.</td></tr>
-        <tr><td><span class="sw" style="background:#fdf1e7"></span>--tint</td><td><code>#FDF1E7</code></td><td>—</td><td>Alternating bands.</td></tr>
+        <tr><td><span class="sw" style="background:#fdefe3"></span>--tint</td><td><code>#FDEFE3</code></td><td>—</td><td>Peach band.</td></tr>
+        <tr><td><span class="sw" style="background:#fdebf1"></span>--tint-2</td><td><code>#FDEBF1</code></td><td>—</td><td>Blush band.</td></tr>
         <tr><td><span class="sw" style="background:#ff6b6b"></span>--brand-coral</td><td><code>#FF6B6B</code></td><td>2.65:1</td><td>Right facet of the mark. Never a label background.</td></tr>
-        <tr><td><span class="sw" style="background:#0f7f76"></span>--turq-d</td><td><code>#0F7F76</code></td><td>4.65:1</td><td>Verified price.</td></tr>
+        <tr><td><span class="sw" style="background:#ff6b35"></span>--ember</td><td><code>#FF6B35</code></td><td>2.71:1</td><td>Bright fill: glows, dots, illustration. Never text.</td></tr>
+        <tr><td><span class="sw" style="background:#2c7a3f"></span>--grass-d</td><td><code>#2C7A3F</code></td><td>5.06:1</td><td>Verified price — replaces the old teal.</td></tr>
         <tr><td><span class="sw" style="background:#8a5a00"></span>--sun-d</td><td><code>#8A5A00</code></td><td>5.66:1</td><td>Illustrative / unknown.</td></tr>
         <tr><td><span class="sw" style="background:#c0392b"></span>--coral-d</td><td><code>#C0392B</code></td><td>5.20:1</td><td>Expiry and errors.</td></tr>
-        <tr><td><span class="sw" style="background:linear-gradient(120deg,#2f49c9,#6d3be0)"></span>--grad-prism</td><td><code>#2F49C9 → #6D3BE0</code></td><td>6.88 / 5.98:1</td><td>The only brand gradient. Safe behind white text.</td></tr>
+        <tr><td><span class="sw" style="background:#b3245f"></span>--magenta-d</td><td><code>#B3245F</code></td><td>6.02:1 · white on it 6.30:1</td><td>Second warm accent, for "new" and community data.</td></tr>
+        <tr><td><span class="sw" style="background:linear-gradient(120deg,#c2410c,#a8231a)"></span>--grad-ember</td><td><code>#C2410C → #A8231A</code></td><td>4.95 / 6.87:1</td><td>The only gradient. Safe behind white text.</td></tr>
       </tbody>
     </table>
 
     <div class="note" style="margin-top:18px">
-      <strong>What changed in this pass.</strong> One solid action colour replaced a five-stop
-      gradient button; the rainbow was removed from every large surface that carries words;
-      the neutral borders went from 1.5 px to 1 px and the shadows became two-layer, so depth
-      comes from the surface rather than from heavy outlines; rank pills now say position
-      (cobalt → plum → quiet neutral) instead of wearing three unrelated gradients; the hero
-      headline leads with the benefit and the proof line reads live totals from the API.
-      Type, spacing and the mark are unchanged.
+      <strong>What changed in this pass.</strong> Blue and everything near it is gone: the cobalt
+      action, the violet second accent, the teal "verified" tick, the plum ink and the blue-grey
+      podium all became warm. The hue axis now runs crimson → vermilion → coral → amber, with one
+      magenta and one grass kept for meaning; the only gradient is vermilion → crimson. The hero
+      wash, the header, the bands and the card tints are peach rather than cool, so the warmth is
+      in the surfaces and the buttons stay legible. Borders are 1 px, shadows are two-layer,
+      buttons are 48 px with an inset top highlight and they depress when tapped. Rank pills say
+      position; they no longer wear three unrelated gradients. `npm run audit:design` fails the
+      build on any hue in the blue window, any second gradient, and any sub-AA pairing.
     </div>
   </div>
 </section>

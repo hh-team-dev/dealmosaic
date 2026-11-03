@@ -10,12 +10,12 @@ import { useToast } from '../components/Toast';
 
 const PLATFORMS = [
   { name: 'Blinkit', note: 'No price API', tint: 'var(--sun)' },
-  { name: 'Zepto', note: 'No price API', tint: 'var(--violet)' },
+  { name: 'Zepto', note: 'No price API', tint: 'var(--magenta)' },
   { name: 'Swiggy Instamart', note: 'Affiliate only', tint: 'var(--tang)' },
   { name: 'BigBasket', note: 'Affiliate only', tint: 'var(--coral)' },
-  { name: 'JioMart', note: 'Affiliate only', tint: 'var(--blue)' },
+  { name: 'JioMart', note: 'Affiliate only', tint: 'var(--ember)' },
   { name: 'Flipkart Minutes', note: 'Closed to new', tint: 'var(--pink)' },
-  { name: 'Amazon Now', note: 'Gated', tint: 'var(--turq)' },
+  { name: 'Amazon Now', note: 'Gated', tint: 'var(--grass)' },
   { name: 'DMart Ready', note: 'No price API', tint: 'var(--lime)' },
 ];
 
@@ -85,7 +85,7 @@ export default function Landing() {
           <span className="hero-blob hero-blob-1" aria-hidden="true" />
           <span className="hero-blob hero-blob-2" aria-hidden="true" />
           <div className="container hero-inner">
-            <span className="badge badge-lime"><span className="dot dot-turq" aria-hidden="true" />Live across India · prices in ₹</span>
+            <span className="badge badge-lime"><span className="dot dot-grass" aria-hidden="true" />Live across India · prices in ₹</span>
             <h1 style={{ marginTop: 12 }}>
               The price you’ll <em>actually</em> pay.
             </h1>
@@ -123,11 +123,11 @@ export default function Landing() {
                   India · INR ₹
                 </span>
                 <span className="chip">
-                  <span className="dot dot-violet" aria-hidden="true" />
+                  <span className="dot dot-magenta" aria-hidden="true" />
                   Groceries
                 </span>
                 <span className="chip">
-                  <span className="dot dot-blue" aria-hidden="true" />
+                  <span className="dot dot-ember" aria-hidden="true" />
                   Electronics
                 </span>
                 <span className="small">Free to use. No sign-up needed to compare.</span>
@@ -155,7 +155,7 @@ export default function Landing() {
 
             <div className="hero-trust">
               <span className="chip">
-                <span className="dot dot-turq" aria-hidden="true" />
+                <span className="dot dot-grass" aria-hidden="true" />
                 Every price timestamped
               </span>
               <span className="chip">
@@ -163,11 +163,11 @@ export default function Landing() {
                 Ranking never sold
               </span>
               <span className="chip">
-                <span className="dot dot-violet" aria-hidden="true" />
+                <span className="dot dot-magenta" aria-hidden="true" />
                 Itemised totals
               </span>
               <span className="chip">
-                <span className="dot dot-blue" aria-hidden="true" />
+                <span className="dot dot-ember" aria-hidden="true" />
                 No trackers
               </span>
             </div>
@@ -232,15 +232,15 @@ export default function Landing() {
             </p>
 
             <div className="grid grid-2" style={{ marginTop: 18 }}>
-              <div className="card card-top-violet">
+              <div className="card card-top-magenta">
                 <h3 style={{ marginTop: 0 }}>Marketplaces</h3>
                 <p className="small">
                   Amazon, Flipkart, Croma, Reliance Digital and friends. Prices are relatively stable, delivery is
                   scheduled, and the killer question is the <strong>landed total</strong> — not the listed number.
                 </p>
                 <div className="row">
-                  <span className="badge badge-blue">Electronics · fashion · home</span>
-                  <span className="badge badge-turq">Scheduled delivery compared</span>
+                  <span className="badge badge-ember">Electronics · fashion · home</span>
+                  <span className="badge badge-grass">Scheduled delivery compared</span>
                 </div>
               </div>
               <div className="card card-top-sun">
@@ -252,7 +252,7 @@ export default function Landing() {
                 </p>
                 <div className="row">
                   <span className="badge badge-sun">Groceries · daily essentials</span>
-                  <span className="badge badge-violet">Pincode-aware pricing</span>
+                  <span className="badge badge-magenta">Pincode-aware pricing</span>
                 </div>
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function Landing() {
                 { icon: 'sparkle' as const, title: 'Disguise sample data', body: 'Anything that is not live is watermarked in the UI and tagged in the DOM. You will always know what you are looking at.' },
               ].map((item) => (
                 <div className="card" key={item.title}>
-                  <div style={{ color: 'var(--violet-d)', marginBottom: 8 }}>
+                  <div style={{ color: 'var(--magenta-d)', marginBottom: 8 }}>
                     <Icon name={item.icon} size={24} />
                   </div>
                   <h4 style={{ marginBottom: 4 }}>{item.title}</h4>
@@ -325,7 +325,7 @@ export default function Landing() {
           <div className="container">
             <div
               className="card card-lg center-text"
-              style={{ background: 'var(--grad-prism)', border: 'none', boxShadow: 'var(--sh-3)' }}
+              style={{ background: 'var(--grad-ember)', border: 'none', boxShadow: 'var(--sh-3)' }}
             >
               {/* No text-shadow: the gradient's every stop now clears 5.9:1 with
                   white, so the shadow was compensating for a contrast problem that

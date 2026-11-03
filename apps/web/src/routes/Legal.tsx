@@ -365,7 +365,7 @@ export function NotFound() {
       />
       <SiteHeader />
       <main className="container section center-text" id="main">
-        <div style={{ color: 'var(--violet)', display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+        <div style={{ color: 'var(--magenta)', display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
           <Icon name="box" size={54} strokeWidth={1.5} />
         </div>
         <h1>This tile is missing from the mosaic</h1>

@@ -19,14 +19,14 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts/brand'))
-from brand import COBALT, CORAL, LEFT, RIGHT  # noqa: E402  (single source of truth)
+from brand import EMBER, CORAL, LEFT, RIGHT  # noqa: E402  (single source of truth)
 PUBLIC = ROOT / 'apps/web/public'
 OUT = PUBLIC / 'og.png'
 
 W, H = 1200, 630
 SURFACE = (255, 249, 240)
-INK = (69, 43, 94)          # Mosaic Plum
-INK_MUTED = (107, 82, 128)  # 6.4:1
+INK = (74, 43, 34)          # Roast — warm cocoa
+INK_MUTED = (122, 87, 72)   # 6.1:1
 TINT = (253, 241, 231)
 
 # The prism gradient, straight from apps/web/src/design/theme.css
@@ -43,7 +43,7 @@ def draw_mark(d, x, y, height):
     k = height / 42.0
     def place(poly):
         return [(x + (px - 8) * k, y + (py - 12) * k) for px, py in poly]
-    d.polygon(place(LEFT), fill=hex_rgb(COBALT))
+    d.polygon(place(LEFT), fill=hex_rgb(EMBER))
     d.polygon(place(RIGHT), fill=hex_rgb(CORAL))
 
 
@@ -95,7 +95,7 @@ def main():
     d.rectangle([0, H - 150, W, H], fill=TINT)
 
     # Two-tone rule across the very top: the mark's two facets, no gradient
-    d.rectangle([0, 0, W // 2, 10], fill=hex_rgb(COBALT))
+    d.rectangle([0, 0, W // 2, 10], fill=hex_rgb(EMBER))
     d.rectangle([W // 2, 0, W, 10], fill=hex_rgb(CORAL))
 
     # The mark itself, top right, flat fills at the size it can hold
@@ -121,7 +121,7 @@ def main():
            font=foot_font, fill=INK_MUTED)
 
     # The two brand facets, bottom-right
-    d.rounded_rectangle([W - 172, H - 96, W - 148, H - 72], radius=6, fill=hex_rgb(COBALT))
+    d.rounded_rectangle([W - 172, H - 96, W - 148, H - 72], radius=6, fill=hex_rgb(EMBER))
     d.rounded_rectangle([W - 142, H - 96, W - 118, H - 72], radius=6, fill=hex_rgb(CORAL))
 
     img.save(OUT, 'PNG', optimize=True)

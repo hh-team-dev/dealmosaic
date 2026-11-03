@@ -34,12 +34,14 @@ FONTS = PUBLIC / 'fonts'
 # --------------------------------------------------------------------------
 # Palette — every value is an existing site token (apps/web/src/design/theme.css).
 # --------------------------------------------------------------------------
-COBALT = '#2F49C9'        # --blue-d   "Cobalt Deep"   left facet
+# Renamed from EMBER on 3 November 2026: the owner ruled blue out of the product,
+# so the left facet became Ember. Geometry is untouched; only the fill changed.
+EMBER = '#C2410C'         # --ember-d  "Ember"         left facet
 CORAL = '#FF6B6B'         # --coral    "Coral Spark"   right facet
-INK = '#452B5E'           # --ink      "Mosaic Plum"   mono / text
+INK = '#4A2B22'           # --ink      "Roast"         mono / text
 CREAM = '#FFF9F0'         # --surface  "Warm White"    background
 WHITE = '#FFFFFF'         # --raised
-COBALT_ON_DARK = '#8FA6FF'
+EMBER_ON_DARK = '#FFA07A'
 CORAL_ON_DARK = '#FF8A8A'
 
 # --------------------------------------------------------------------------
@@ -144,12 +146,12 @@ def wordmark_group(x: float, baseline: float, cap: float, fill: str) -> tuple[st
 # --------------------------------------------------------------------------
 # SVG masters
 # --------------------------------------------------------------------------
-def icon_svg(left=COBALT, right=CORAL) -> str:
+def icon_svg(left=EMBER, right=CORAL) -> str:
     x, y, w, h = ICON_BOX
     return svg(mark_body(left, right), f'{x} {y} {w} {h}', w, h)
 
 
-def horizontal_svg(left=COBALT, right=CORAL, fill=INK) -> str:
+def horizontal_svg(left=EMBER, right=CORAL, fill=INK) -> str:
     """
     Mark + wordmark on one optical line.
 
@@ -170,7 +172,7 @@ def horizontal_svg(left=COBALT, right=CORAL, fill=INK) -> str:
     return svg(mark + wm, f'0 0 {total:.1f} 64', round(total, 1), 64)
 
 
-def compact_svg(left=COBALT, right=CORAL, fill=INK) -> str:
+def compact_svg(left=EMBER, right=CORAL, fill=INK) -> str:
     """Stacked lockup for square or centred spaces: mark above the wordmark."""
     cap = 22.0
     mark_h = cap * 2.0
@@ -200,15 +202,15 @@ def write_svg(name: str, content: str) -> None:
 
 def build_svgs() -> None:
     write_svg('dm-icon.svg', icon_svg())
-    write_svg('dm-icon-dark.svg', icon_svg(COBALT_ON_DARK, CORAL_ON_DARK))
+    write_svg('dm-icon-dark.svg', icon_svg(EMBER_ON_DARK, CORAL_ON_DARK))
     write_svg('dm-icon-mono.svg', icon_svg(INK, INK))
     write_svg('dm-icon-mono-cream.svg', icon_svg(CREAM, CREAM))
     write_svg('dm-logo-horizontal.svg', horizontal_svg())
     write_svg('dm-logo-horizontal-dark.svg',
-              horizontal_svg(COBALT_ON_DARK, CORAL_ON_DARK, CREAM))
+              horizontal_svg(EMBER_ON_DARK, CORAL_ON_DARK, CREAM))
     write_svg('dm-logo-horizontal-mono.svg', horizontal_svg(INK, INK, INK))
     write_svg('dm-logo-compact.svg', compact_svg())
-    write_svg('dm-logo-compact-dark.svg', compact_svg(COBALT_ON_DARK, CORAL_ON_DARK, CREAM))
+    write_svg('dm-logo-compact-dark.svg', compact_svg(EMBER_ON_DARK, CORAL_ON_DARK, CREAM))
     write_svg('dm-wordmark.svg', wordmark_svg())
     write_svg('dm-wordmark-mono-cream.svg', wordmark_svg(CREAM))
     # The tab icon: mark only, transparent, so it sits correctly on light and
@@ -255,34 +257,34 @@ def on_background(mark: Image.Image, bg: str) -> Image.Image:
 def export_icon_pngs() -> None:
     sizes = [1024, 512, 256, 192, 180, 128, 96, 64, 48, 32, 16]
     for s in sizes:
-        render_mark(s, s / 58, COBALT, CORAL).save(BRAND / f'dm-icon-{s}.png', optimize=True)
+        render_mark(s, s / 58, EMBER, CORAL).save(BRAND / f'dm-icon-{s}.png', optimize=True)
 
     # Maskable: the mark must survive the OS cropping to a circle. Constrain the
     # mark's half-diagonal to the 40 % safe radius, then centre it on a filled
     # square. No baked rounding — the platform does the masking.
     for size, name in [(512, 'dm-icon-maskable-512.png')]:
         k = (safe_k(size))
-        on_background(render_mark(size, k, COBALT, CORAL), CREAM).save(BRAND / name, optimize=True)
+        on_background(render_mark(size, k, EMBER, CORAL), CREAM).save(BRAND / name, optimize=True)
 
     # Any-purpose PWA icon with the cream plate (Android shows it on a launcher).
-    on_background(render_mark(512, 512 / 58 * 0.92, COBALT, CORAL), CREAM).save(
+    on_background(render_mark(512, 512 / 58 * 0.92, EMBER, CORAL), CREAM).save(
         BRAND / 'dm-icon-plate-512.png', optimize=True)
 
     # iOS home screen. Apple applies its own mask, so this one is a plain square
     # with the art inset to Apple's recommended margin.
-    on_background(render_mark(180, 180 / 58 * 0.86, COBALT, CORAL), CREAM).save(
+    on_background(render_mark(180, 180 / 58 * 0.86, EMBER, CORAL), CREAM).save(
         PUBLIC / 'apple-touch-icon.png', optimize=True)
 
     # Social avatar: square, filled (a transparent avatar turns into a hole).
-    on_background(render_mark(512, 512 / 58 * 0.82, COBALT, CORAL), CREAM).save(
+    on_background(render_mark(512, 512 / 58 * 0.82, EMBER, CORAL), CREAM).save(
         BRAND / 'dm-social-avatar-512.png', optimize=True)
 
     # Dark-surface avatar, for profiles rendered on plum.
-    on_background(render_mark(512, 512 / 58 * 0.82, COBALT_ON_DARK, CORAL_ON_DARK), INK).save(
+    on_background(render_mark(512, 512 / 58 * 0.82, EMBER_ON_DARK, CORAL_ON_DARK), INK).save(
         BRAND / 'dm-social-avatar-dark-512.png', optimize=True)
 
     # favicon.ico — 16, 32 and 48 in one file, each rendered at its own size.
-    frames = [render_mark(s, s / 58, COBALT, CORAL) for s in (16, 32, 48)]
+    frames = [render_mark(s, s / 58, EMBER, CORAL) for s in (16, 32, 48)]
     frames[-1].save(PUBLIC / 'favicon.ico', format='ICO',
                     sizes=[(16, 16), (32, 32), (48, 48)])
 
@@ -334,8 +336,8 @@ def export_lockup_pngs() -> None:
     H = int(pad * 2 + mark_h)
 
     img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    mark = render_mark(mark_h, 1, COBALT, CORAL)  # placeholder, replaced below
-    mark = _mark_at(mark_w, mark_h, COBALT, CORAL)
+    mark = render_mark(mark_h, 1, EMBER, CORAL)  # placeholder, replaced below
+    mark = _mark_at(mark_w, mark_h, EMBER, CORAL)
     img.alpha_composite(mark, (pad, pad))
     d = ImageDraw.Draw(img)
     # cap-height top aligned with the mark's optical centre
@@ -347,7 +349,7 @@ def export_lockup_pngs() -> None:
 
     # Light and dark horizontal PNGs
     dark = Image.new('RGBA', (W, H), _hex(INK) + (255,))
-    dark.alpha_composite(_mark_at(mark_w, mark_h, COBALT_ON_DARK, CORAL_ON_DARK), (pad, pad))
+    dark.alpha_composite(_mark_at(mark_w, mark_h, EMBER_ON_DARK, CORAL_ON_DARK), (pad, pad))
     dd = ImageDraw.Draw(dark)
     draw_tracked(dd, (pad + mark_w + gap, pad + (mark_h - cap_px) / 2 - asc),
                  WORD, font, _hex(CREAM) + (255,), track)
@@ -363,7 +365,7 @@ def export_lockup_pngs() -> None:
     CW = int(max(wm2, mw2) + pad * 2)
     CH = int(pad * 2 + m2 + 26 + cap2)
     ci = Image.new('RGBA', (CW, CH), (0, 0, 0, 0))
-    ci.alpha_composite(_mark_at(mw2, m2, COBALT, CORAL), (int((CW - mw2) / 2), pad))
+    ci.alpha_composite(_mark_at(mw2, m2, EMBER, CORAL), (int((CW - mw2) / 2), pad))
     dc = ImageDraw.Draw(ci)
     asc2 = font2.getbbox('D')[1]
     draw_tracked(dc, (int((CW - wm2) / 2), pad + m2 + 26 - asc2),
@@ -402,15 +404,15 @@ def contrast(a: str, b: str) -> float:
 
 def report() -> None:
     rows = [
-        ('Cobalt Deep on Warm White', COBALT, CREAM),
+        ('Ember on Warm White', EMBER, CREAM),
         ('Coral Spark on Warm White', CORAL, CREAM),
-        ('Cobalt Deep vs Coral Spark', COBALT, CORAL),
-        ('Cobalt Deep on white', COBALT, WHITE),
+        ('Ember vs Coral Spark', EMBER, CORAL),
+        ('Ember on white', EMBER, WHITE),
         ('Coral Spark on white', CORAL, WHITE),
         ('Mono ink on Warm White', INK, CREAM),
-        ('Dark facet — cobalt on plum', COBALT_ON_DARK, INK),
+        ('Dark facet — ember on cocoa', EMBER_ON_DARK, INK),
         ('Dark facet — coral on plum', CORAL_ON_DARK, INK),
-        ('Primary cobalt on plum (why a dark variant exists)', COBALT, INK),
+        ('Primary ember on cocoa (why a dark variant exists)', EMBER, INK),
     ]
     for label, a, b in rows:
         print(f'  {label:<52} {contrast(a, b):>5.2f}:1')

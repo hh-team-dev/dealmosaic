@@ -19,8 +19,8 @@ const WEIGHT_NOTE: Record<ConfidenceComponent['key'], string> = {
   seller: 'Whether the platform publishes seller ratings at all.',
 };
 
-export function confidenceTone(score: number): 'turq' | 'sun' | 'coral' {
-  if (score >= 80) return 'turq';
+export function confidenceTone(score: number): 'grass' | 'sun' | 'coral' {
+  if (score >= 80) return 'grass';
   if (score >= 60) return 'sun';
   return 'coral';
 }
@@ -170,10 +170,10 @@ export function TrustRadar({ offer, size = 132 }: { offer: OfferView; size?: num
           const [x, y] = point(i, 1);
           return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="var(--hairline)" strokeWidth="1" />;
         })}
-        <polygon points={polygon} fill="var(--radar-fill)" stroke="var(--violet-d)" strokeWidth="1.6" />
+        <polygon points={polygon} fill="var(--radar-fill)" stroke="var(--magenta-d)" strokeWidth="1.6" />
         {axes.map((a, i) => {
           const [x, y] = point(i, Math.max(0.06, a.value));
-          return <circle key={a.key} cx={x} cy={y} r="2.6" fill="var(--violet-d)" />;
+          return <circle key={a.key} cx={x} cy={y} r="2.6" fill="var(--magenta-d)" />;
         })}
       </svg>
       <ul className="radar-legend">
@@ -219,7 +219,7 @@ export function DealPassport({ offer }: { offer: OfferView }) {
       <div className="passport-head">
         <Icon name="passport" size={16} />
         <strong>Deal passport</strong>
-        <span className={`badge ${offer.dataOrigin === 'live' ? 'badge-turq' : 'badge-sun'} passport-origin`}>
+        <span className={`badge ${offer.dataOrigin === 'live' ? 'badge-grass' : 'badge-sun'} passport-origin`}>
           {offer.dataOrigin.toUpperCase()}
         </span>
       </div>

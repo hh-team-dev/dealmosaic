@@ -195,14 +195,14 @@ function CoveredChart({ win, label }: { win: HistoryWindow; label: string }) {
       <svg viewBox={`0 0 ${width} ${height}`} className="chart-svg" role="img" aria-label={`Price history for ${label}, ${win.days} days`}>
         <defs>
           <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--violet)" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="var(--violet)" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--magenta)" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="var(--magenta)" stopOpacity="0" />
           </linearGradient>
         </defs>
         <polygon points={area} fill="url(#chart-fill)" />
-        <polyline points={coords} fill="none" stroke="var(--violet-d)" strokeWidth="2" strokeLinejoin="round" />
+        <polyline points={coords} fill="none" stroke="var(--magenta-d)" strokeWidth="2" strokeLinejoin="round" />
         {points.map((p, i) => (
-          <circle key={p.observedAt} cx={pad + i * stepX} cy={y(p.priceMinor)} r="2.4" fill="var(--violet-d)" />
+          <circle key={p.observedAt} cx={pad + i * stepX} cy={y(p.priceMinor)} r="2.4" fill="var(--magenta-d)" />
         ))}
       </svg>
       <p className="tiny muted" style={{ margin: 0 }}>
@@ -639,7 +639,7 @@ export function CommunityPanel({
           </button>
         </div>
         {message && (
-          <p className="tiny" style={{ margin: '8px 0 0', color: state === 'error' ? 'var(--coral-d)' : 'var(--turq-d)' }}>
+          <p className="tiny" style={{ margin: '8px 0 0', color: state === 'error' ? 'var(--coral-d)' : 'var(--grass-d)' }}>
             {message}
           </p>
         )}

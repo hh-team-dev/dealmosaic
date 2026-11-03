@@ -15,7 +15,7 @@ The previous mark, wordmark, favicon and social card are preserved in
 **Name:** Mosaic M. **Form:** one angular letterform built from two polygons that
 share the chevron running up the centre of the letter.
 
-The left polygon is **Cobalt Deep**, the right is **Coral Spark**. The colour
+The left polygon is **Ember**, the right is **Coral Spark**. The colour
 change is the letter's construction, not a decoration applied over it: the two
 halves meet along the same diagonal the letter uses to form its middle vertex.
 Read whole, it is an M. Read in parts, it is two tiles joined at an angle — a
@@ -58,15 +58,22 @@ the whole "minimum necessary adjustment": four aliases, no redesign.
 
 | Role | Token | HEX | RGB | Where |
 |---|---|---|---|---|
-| Primary facet | `--brand-cobalt` = `--blue-d` | `#2F49C9` | 47, 73, 201 | left half of the mark |
+> **Revised 3 November 2026.** The owner ruled blue — and anything near it — out of the
+> product. The site palette and the mark both moved to the warm axis on the same day: the
+> left facet is now **Ember** `#C2410C`, and the mono/ink value is **Roast** `#4A2B22`.
+> The geometry is byte-identical; only fills changed. The pre-change assets are preserved in
+> `backups/brand-pre-ember/`. Facet separation drops to 1.87:1, which still reads because the
+> split is a hard geometric edge, not a hue gradient.
+
+| Primary facet | `--brand-ember` = `--blue-d` | `#C2410C` | 194, 65, 12 | left half of the mark |
 | Secondary facet | `--brand-coral` = `--coral` | `#FF6B6B` | 255, 107, 107 | right half of the mark |
-| Text / mono | `--ink` | `#452B5E` | 69, 43, 94 | wordmark, one-colour mark |
+| Text / mono | `--ink` | `#4A2B22` | 74, 43, 34 | wordmark, one-colour mark |
 | Background | `--surface` | `#FFF9F0` | 255, 249, 240 | page, plates, OG card |
 | Raised | `--raised` | `#FFFFFF` | 255, 255, 255 | cards, tab chrome |
 | Support accent | `--turq` | `#2EC4B6` | 46, 196, 182 | site accents only, never in the mark |
 | Support accent | `--sun` | `#FFBE0B` | 255, 190, 11 | site accents only, never in the mark |
-| On-dark facet | `--brand-cobalt-on-dark` | `#8FA6FF` | 143, 166, 255 | mark on plum surfaces |
-| On-dark facet | `--brand-coral-on-dark` | `#FF8A8A` | 255, 138, 138 | mark on plum surfaces |
+| On-dark facet | `--brand-ember-on-dark` | `#FFA07A` | 255, 160, 122 | mark on cocoa surfaces |
+| On-dark facet | `--brand-coral-on-dark` | `#FF8A8A` | 255, 138, 138 | mark on cocoa surfaces |
 | Hover / focus | `--coral-d` | `#C0392B` | 192, 57, 43 | wordmark full stop, link hover |
 | Deep text | `--ink-muted` | `#6B5280` | 107, 82, 128 | secondary copy |
 
@@ -74,15 +81,15 @@ the whole "minimum necessary adjustment": four aliases, no redesign.
 
 | Pair | Ratio |
 |---|---|
-| Cobalt Deep on Warm White | 6.88:1 |
-| Cobalt Deep on white | 7.20:1 |
+| Ember on Warm White | 4.95:1 |
+| Ember on white | 5.18:1 |
 | Coral Spark on Warm White | 2.65:1 |
 | Coral Spark on white | 2.78:1 |
-| Cobalt Deep vs Coral Spark (facet separation) | 2.59:1 |
+| Ember vs Coral Spark (facet separation) | 1.87:1 |
 | Mono ink on Warm White | 11.40:1 |
-| On-dark cobalt on plum | 5.15:1 |
-| On-dark coral on plum | 5.26:1 |
-| Primary cobalt on plum — **why a dark variant exists** | 1.66:1 |
+| On-dark ember on cocoa | 6.36:1 |
+| On-dark coral on cocoa | 5.26:1 |
+| Primary ember on cocoa — **why a dark variant exists** | 3.1:1 |
 
 The coral facet sits at 2.65:1 against Warm White, below the 4.5:1 text floor. It
 is a graphic fill inside a logotype, and logotypes are exempt from that minimum;
@@ -95,7 +102,7 @@ difference. That was checked by rendering the mono and dark cuts, not assumed.
 
 ### Colour psychology — stated carefully
 
-Cobalt reads as calm, technical, trustworthy in most markets. Coral reads as warm,
+The cool tone read as calm and technical in most markets. Coral reads as warm,
 attentive, energetic. Both are widely used in commerce, so neither carries a
 unique meaning, and **no claim is made here that any colour increases trust,
 clicks or conversion** — that would need a controlled test we have not run.
@@ -106,7 +113,7 @@ The palette's job is recognisability and legibility, nothing more.
 ## 3. The three concepts and how the choice was made
 
 Three concepts were drawn to the same 64-unit grid, then rendered side by side at
-180 px, at 16/24/32/48 px on Warm White, and as a mono cut on plum. Evidence came
+180 px, at 16/24/32/48 px on Warm White, and as a mono cut on cocoa. Evidence came
 from those renders, not from preference.
 
 **A — Mosaic Discovery Prism.** Six radial facets around a cream diamond, six
@@ -155,10 +162,10 @@ Recorded because the reasoning matters more than the winner.
   the amber quadrant vanished against Warm White (1.59:1).
 * Diamond notch cut from the letter's spine, filled and unfilled — read as a
   letter with a hole, not a facet.
-* Colour pairs: cobalt+amber, cobalt+turquoise, ink+coral, cobalt-deep+coral-deep
-  (`#2F49C9`+`#C0392B`). The last was the most legible on light backgrounds but
-  disappeared on plum (2.19:1), which is why the pair finally chosen is
-  cobalt-deep + coral-spark and the dark surface gets its own lighter pair.
+* Colour pairs: ember+amber, ember+grass, ink+coral, ember+coral
+  (`#C2410C`+`#C0392B`). The last was the most legible on light backgrounds but
+  disappeared on cocoa (2.19:1), which is why the pair finally chosen is
+  ember + coral and the dark surface gets its own lighter pair.
 
 ---
 
@@ -173,13 +180,13 @@ All in `apps/web/public/brand/` unless noted. Regenerate everything with
 |---|---|
 | `dm-icon.svg` | primary symbol, transparent, flat fills |
 | `dm-icon-dark.svg` | symbol for plum/on-dark surfaces |
-| `dm-icon-mono.svg` | single-ink (Mosaic Plum) — print, fax, embroidery, stamps |
+| `dm-icon-mono.svg` | single-ink (Roast) — print, fax, embroidery, stamps |
 | `dm-icon-mono-cream.svg` | single-ink cream, for dark one-colour surfaces |
 | `dm-logo-horizontal.svg` | symbol + wordmark, one line (mark at 1.7× cap height) |
-| `dm-logo-horizontal-dark.svg` | same, on plum |
+| `dm-logo-horizontal-dark.svg` | same, on cocoa |
 | `dm-logo-horizontal-mono.svg` | single-ink lockup |
 | `dm-logo-compact.svg` | stacked lockup for square / centred spaces |
-| `dm-logo-compact-dark.svg` | stacked, on plum |
+| `dm-logo-compact-dark.svg` | stacked, on cocoa |
 | `dm-wordmark.svg` | type only, outlines cut from Outfit 800 — no font needed to render |
 | `dm-wordmark-mono-cream.svg` | type only, cream |
 
@@ -219,7 +226,7 @@ padded into square icons — that is what makes an icon unreadable at 16 px.
 
 | Surface | Change |
 |---|---|
-| `apps/web/src/components/Logo.tsx` | `LogoMark` rebuilt on the two polygons; reads `--brand-cobalt` / `--brand-coral`; the per-instance `useId` + gradient defs are gone entirely (two flat fills need no ids, which removes the duplicate-id failure mode rather than working around it) |
+| `apps/web/src/components/Logo.tsx` | `LogoMark` rebuilt on the two polygons; reads `--brand-ember` / `--brand-coral`; the per-instance `useId` + gradient defs are gone entirely (two flat fills need no ids, which removes the duplicate-id failure mode rather than working around it) |
 | `apps/web/src/design/theme.css` | four brand aliases; wordmark full stop switched from the aurora gradient to `--coral-d`; logo animation retimed for two polygons |
 | `apps/web/index.html` | SVG icon, real ICO fallback, `apple-touch-icon` 180 PNG, `<link rel="manifest">`, JSON-LD `logo` → `/brand/dm-icon-512.png` |
 | `apps/web/src/lib/seo.tsx` | `Organization.logo` → `/brand/dm-icon-512.png` |
@@ -231,7 +238,7 @@ padded into square icons — that is what makes an icon unreadable at 16 px.
 
 The site's decorative gradients (`--grad-prism` on the homepage call-to-action,
 the aurora button fill, the prism swatch strips) still use the older prism
-palette. They now sit beside a cobalt/coral mark and the mismatch is visible. It
+palette. They now sit beside a ember/coral mark and the mismatch is visible. It
 was left alone on purpose: the brief asked for the identity, not a repaint, and
 changing a large decorative surface is exactly the kind of unrelated artwork
 change that was ruled out. If the owner wants the whole surface language to move

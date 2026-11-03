@@ -23,53 +23,59 @@
 
 :root {
   /* ---- foundation ------------------------------------------------------ */
-  --ink: #452b5e;            /* Mosaic Plum — replaces Deep Ink. 11.4:1 on surface */
-  --ink-muted: #6b5280;      /* 6.4:1 */
-  --ink-soft: #7a6b8c;       /* 4.66:1 — was #8a7c9b at 3.69:1, which fails AA for text */
+  --ink: #4a2b22;            /* "Roast" — warm cocoa, 12.1:1 on the surface. */
+  --ink-muted: #7a5748;      /* 6.1:1 */
+  --ink-soft: #8d6a57;       /* 4.63:1 — placeholders and micro-copy, AA */
   --surface: #fff9f0;        /* Warm White */
   --raised: #ffffff;
-  --tint: #fdf1e7;           /* warm band */
-  --tint-2: #f7f1fb;         /* violet band */
-  --hairline: #ebddea;
-  --hairline-strong: #dcc9dd;
+  --tint: #fdefe3;           /* peach band */
+  --tint-2: #fdebf1;         /* blush band */
+  --hairline: #f2dfce;
+  --hairline-strong: #e4c7ad;
 
   /* ---- brand mark ------------------------------------------------------
-     The mark's two facets. Cobalt Deep is --blue-d and Coral Spark is --coral,
-     so the identity introduces no new hues; these aliases exist so the SVG can
-     be re-pointed per surface without editing markup. The on-dark pair clears
-     3:1 against Mosaic Plum, which the primary cobalt does not (1.66:1).
-     Documented in docs/brand-identity.md. */
-  --brand-cobalt: #2f49c9;
+     The mark's two facets: Ember (deep vermilion) and Coral. Both are warm and
+     both live inside the site palette, so the identity introduces no new hues.
+     These aliases exist so the SVG can be re-pointed per surface without editing
+     markup. The on-dark pair clears 3:1 against the cocoa ink; the primary ember
+     does not. Documented in docs/brand-identity.md.
+     The mark was cobalt + coral until 3 November 2026. The cobalt facet became
+     ember when the owner ruled blue out of the product entirely. Geometry is
+     untouched — only the fill changed. */
+  --brand-ember: #c2410c;
   --brand-coral: #ff6b6b;
-  --brand-cobalt-on-dark: #8fa6ff;
+  --brand-ember-on-dark: #ffa07a;
   --brand-coral-on-dark: #ff8a8a;
 
   /* ---- spark (decorative fills) --------------------------------------- */
   --coral: #ff6b6b;
-  --blue: #4361ee;
-  --turq: #2ec4b6;
+  --ember: #ff6b35;
+  --grass: #34a853;
   --sun: #ffbe0b;
-  --violet: #8b5cf6;
+  --magenta: #e8336f;
   --pink: #ff4fa3;
   --lime: #b8f34a;
   --tang: #ff8a3d;
 
   /* ---- deep (AA text-safe) -------------------------------------------- */
   --coral-d: #c0392b;
-  --blue-d: #2f49c9;
-  --turq-d: #0f7f76;
+  --ember-d: #c2410c;
+  --grass-d: #2c7a3f;
   --sun-d: #8a5a00;
-  --violet-d: #6d3be0;
+  --magenta-d: #b3245f;
   --pink-d: #c81c77;
   --lime-d: #4c7a00;
   --tang-d: #a8490a;
+  --stone: #8a6a5c;          /* replaces the blue-grey podium silver */
 
   /* ---- gradients ------------------------------------------------------- */
-  /* "Mosaic Duet" — the mark's own axis: cobalt facet → violet → back to cobalt.
-     Every stop clears 5.9:1 with white text, so it is safe behind labels, which
-     the old five-stop prism was not (white on #ffbe0b is 1.66:1). Coral stays a
-     facet accent, never a label background. */
-  --grad-prism: linear-gradient(120deg, #2f49c9 0%, #6d3be0 100%);
+  /* "Ember Duet" — the only gradient in the system. Vermilion → crimson, and
+     every stop clears 5.1:1 with a white label, so it can sit behind text.
+     There is no blue and no violet left anywhere in the palette: the whole hue
+     axis now runs crimson → orange → amber, plus one magenta and one grass for
+     meaning. `npm run audit:design` fails the build on a second gradient token
+     and on any hue in the blue/violet band. */
+  --grad-ember: linear-gradient(120deg, #c2410c 0%, #a8231a 100%);
   /* There is exactly one gradient token now, and it is this one.
      The nine-stop rainbow family (aurora / sunrise / lagoon / mint / plum and
      their "deep" and "text" variants) is gone: every one of them has been
@@ -83,27 +89,28 @@
      ambient one that lifts the plane. A single large blur is what makes a card
      look like it is floating in fog; the pair reads as a physical sheet. */
   --sh-1:
-    0 1px 2px rgba(69, 43, 94, 0.04),
-    0 2px 6px -2px rgba(69, 43, 94, 0.06);
+    0 1px 2px rgba(74, 43, 34, 0.04),
+    0 2px 6px -2px rgba(74, 43, 34, 0.06);
   --sh-2:
-    0 1px 2px rgba(69, 43, 94, 0.05),
-    0 10px 24px -14px rgba(69, 43, 94, 0.20);
+    0 1px 2px rgba(74, 43, 34, 0.05),
+    0 10px 24px -14px rgba(74, 43, 34, 0.20);
   --sh-3:
-    0 2px 4px rgba(69, 43, 94, 0.05),
-    0 24px 48px -26px rgba(69, 43, 94, 0.26);
-  --sh-glow: 0 8px 22px -14px rgba(47, 73, 201, 0.55);
+    0 2px 4px rgba(74, 43, 34, 0.05),
+    0 24px 48px -26px rgba(74, 43, 34, 0.26);
+  --sh-glow: 0 8px 22px -14px rgba(194, 65, 12, 0.55);
   /* one focus treatment, everywhere */
-  --ring: 0 0 0 3px rgba(47, 73, 201, 0.35);
+  --ring: 0 0 0 3px rgba(194, 65, 12, 0.35);
 
   /* ---- geometry -------------------------------------------------------- */
   /* ---- action -----------------------------------------------------------
      One colour for primary actions, and it is not a gradient. The old primary
-     button was --grad-aurora-deep, a five-stop rainbow whose lighter stops drop
-     white labels below 3:1; it also disagreed with the cobalt/coral mark. White
-     on #2f49c9 is 7.20:1, on the hover 8.61:1, on active 9.84:1. */
-  --action: #2f49c9;
-  --action-hover: #2540b0;
-  --action-active: #24399b;
+     button was a five-stop rainbow whose lighter stops dropped white labels
+     below 3:1. Now: a vivid vermilion, warm and urgent, the single most
+     saturated thing on the page, so the eye finds the next step with nothing
+     else competing. White on #c2410c is 5.18:1, hover 6.57:1, active 8.29:1. */
+  --action: #c2410c;
+  --action-hover: #a8360a;
+  --action-active: #8f2c08;
 
   --r-xs: 8px;
   --r-sm: 10px;
@@ -196,12 +203,12 @@ p {
 }
 
 a {
-  color: var(--blue-d);
+  color: var(--ember-d);
   text-decoration-thickness: 1.5px;
   text-underline-offset: 2px;
 }
 a:hover {
-  color: var(--violet-d);
+  color: var(--magenta-d);
 }
 
 ul,
@@ -214,7 +221,7 @@ li {
   margin-bottom: 0.4rem;
 }
 li::marker {
-  color: var(--violet);
+  color: var(--magenta);
 }
 
 strong {
@@ -229,7 +236,7 @@ kbd {
   border: 1px solid var(--hairline);
   border-radius: 6px;
   padding: 0.1em 0.38em;
-  color: var(--violet-d);
+  color: var(--magenta-d);
 }
 
 ::selection {
@@ -238,7 +245,7 @@ kbd {
 }
 
 :focus-visible {
-  outline: 3px solid var(--violet-d);
+  outline: 3px solid var(--magenta-d);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -360,8 +367,8 @@ kbd {
   width: 24px;
   height: 3px;
   border-radius: 3px;
-  /* the mark's two facets, in order: cobalt then coral */
-  background: linear-gradient(90deg, var(--brand-cobalt) 0 56%, var(--brand-coral) 56% 100%);
+  /* the mark's two facets, in order: ember then coral */
+  background: linear-gradient(90deg, var(--brand-ember) 0 56%, var(--brand-coral) 56% 100%);
 }
 .lede {
   font-size: 1.02rem;
@@ -382,7 +389,7 @@ kbd {
   font-feature-settings: 'tnum' 1;
 }
 .gradient-text {
-  background: var(--grad-prism);
+  background: var(--grad-ember);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -442,7 +449,7 @@ kbd {
   --btn-bg: var(--action);
   --btn-fg: #ffffff;
   border-color: transparent;
-  box-shadow: 0 10px 26px -14px rgba(47, 73, 201, 0.55);
+  box-shadow: 0 10px 26px -14px rgba(194, 65, 12, 0.55);
 }
 .btn-primary:hover {
   --btn-bg: var(--action-hover);
@@ -457,12 +464,12 @@ kbd {
 .btn-primary {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 8px 22px -14px rgba(47, 73, 201, 0.55);
+    0 8px 22px -14px rgba(194, 65, 12, 0.55);
 }
 .btn-primary:hover {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 12px 26px -14px rgba(47, 73, 201, 0.6);
+    0 12px 26px -14px rgba(194, 65, 12, 0.6);
 }
 
 .btn-ghost {
@@ -537,7 +544,7 @@ kbd {
   box-shadow: var(--sh-2);
 }
 .card-tint {
-  background: linear-gradient(165deg, #ffffff 0%, #fffcf7 55%, var(--tint) 100%);
+  background: linear-gradient(165deg, #ffffff 0%, #fffaf3 55%, var(--tint) 100%);
 }
 .card-flush {
   padding: 0;
@@ -546,11 +553,11 @@ kbd {
 .card-top-coral {
   border-top: 5px solid var(--coral);
 }
-.card-top-turq {
-  border-top: 5px solid var(--turq);
+.card-top-grass {
+  border-top: 5px solid var(--grass);
 }
-.card-top-violet {
-  border-top: 5px solid var(--violet);
+.card-top-magenta {
+  border-top: 5px solid var(--magenta);
 }
 .card-top-sun {
   border-top: 5px solid var(--sun);
@@ -576,25 +583,25 @@ kbd {
   color: var(--sun-d);
   border-color: #f3dda6;
 }
-.badge-turq {
-  background: #e5faf4;
-  color: var(--turq-d);
-  border-color: #bfeae2;
+.badge-grass {
+  background: #e9f8ed;
+  color: var(--grass-d);
+  border-color: #c8e8d2;
 }
-.badge-violet {
-  background: #f4edff;
-  color: var(--violet-d);
-  border-color: #dcd0f8;
+.badge-magenta {
+  background: #fdeaf1;
+  color: var(--magenta-d);
+  border-color: #f5d9e6;
 }
 .badge-coral {
   background: #ffeeec;
   color: var(--coral-d);
   border-color: #f8cdc7;
 }
-.badge-blue {
-  background: #edf1ff;
-  color: var(--blue-d);
-  border-color: #ccd5f8;
+.badge-ember {
+  background: #fff1e6;
+  color: var(--ember-d);
+  border-color: #f6ddcb;
 }
 .badge-neutral {
   background: var(--tint);
@@ -672,14 +679,14 @@ kbd {
 }
 .input:hover,
 .select:hover {
-  border-color: var(--violet);
+  border-color: var(--magenta);
 }
 .input:focus,
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: var(--violet-d);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18);
+  border-color: var(--magenta-d);
+  box-shadow: 0 0 0 4px rgba(232, 51, 111, 0.18);
 }
 .input[aria-invalid='true'] {
   border-color: var(--coral-d);
@@ -742,7 +749,7 @@ kbd {
   width: 22px;
   height: 22px;
   margin: 0;
-  accent-color: var(--violet-d);
+  accent-color: var(--magenta-d);
   flex: 0 0 auto;
   cursor: pointer;
 }
@@ -768,7 +775,7 @@ kbd {
   background: var(--sun);
 }
 .strength-bar.on-3 {
-  background: var(--turq);
+  background: var(--grass);
 }
 .strength-bar.on-4 {
   background: var(--lime);
@@ -842,16 +849,16 @@ kbd {
   margin-bottom: 0;
 }
 .callout-info {
-  border-left-color: var(--blue);
-  background: linear-gradient(100deg, #f1f4ff, #f7f5ff);
+  border-left-color: var(--ember);
+  background: linear-gradient(100deg, #fdefe6, #fdeee9);
 }
 .callout-danger {
   border-left-color: var(--coral);
   background: linear-gradient(100deg, #fff1f0, #fff6f4);
 }
 .callout-success {
-  border-left-color: var(--turq);
-  background: linear-gradient(100deg, #eefbf7, #f4fdf9);
+  border-left-color: var(--grass);
+  background: linear-gradient(100deg, #f1fbf4, #f5fcf7);
 }
 .callout-title {
   font-family: var(--font-display);
@@ -892,7 +899,7 @@ kbd {
   width: 34px;
   height: 34px;
   flex: 0 0 auto;
-  filter: drop-shadow(0 4px 10px rgba(69, 43, 94, 0.25));
+  filter: drop-shadow(0 4px 10px rgba(74, 43, 34, 0.25));
 }
 .brand-word {
   font-family: var(--font-display);
@@ -968,12 +975,11 @@ kbd {
   animation: drift 19s ease-in-out infinite;
 }
 .hero-blob-2 {
-  /* Cobalt, not turquoise. The hero wash sat behind a cobalt/coral mark while
-     being coral + turquoise — three colours from two different palettes in the
-     first viewport. Coral and cobalt are the mark's own facets. */
+  /* Ember, matching the mark's own facet. The second blob used to be a cool
+     tone, which put three colours from two palettes in the first viewport. */
   width: 250px;
   height: 250px;
-  background: var(--blue);
+  background: var(--ember);
   top: -70px;
   right: -80px;
   animation: drift 23s ease-in-out infinite reverse;
@@ -993,7 +999,7 @@ kbd {
 }
 .hero h1 em {
   font-style: normal;
-  background: var(--grad-prism);
+  background: var(--grad-ember);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1150,7 +1156,7 @@ kbd {
    or above 5.2:1 with white. The old trio (amber→lime, lagoon) was three
    unrelated hues doing a job that only needs to say "next". */
 .step-num-2 {
-  background: var(--violet-d);
+  background: var(--magenta-d);
 }
 .step-num-3 {
   background: var(--coral-d);
@@ -1370,7 +1376,7 @@ kbd {
   flex-direction: column;
   background:
     radial-gradient(1000px 460px at 12% -10%, #ffe9e4 0%, transparent 60%),
-    radial-gradient(880px 420px at 92% 4%, #e6fbf7 0%, transparent 58%), var(--surface);
+    radial-gradient(880px 420px at 92% 4%, #eaf7ee 0%, transparent 58%), var(--surface);
 }
 .auth-top {
   padding: 14px 18px;
@@ -1463,7 +1469,7 @@ kbd {
   text-align: center;
 }
 .bottom-nav a.active {
-  color: var(--violet-d);
+  color: var(--magenta-d);
   background: var(--tint-2);
 }
 .bottom-nav span[aria-disabled='true'] {
@@ -1538,7 +1544,7 @@ table.simple tr:last-child td {
   font-weight: 600;
 }
 .footer-links a:hover {
-  color: var(--violet-d);
+  color: var(--magenta-d);
   text-decoration: underline;
 }
 @media (min-width: 760px) {
@@ -1567,7 +1573,7 @@ table.simple tr:last-child td {
   gap: 10px;
   background: var(--raised);
   border: 1.5px solid var(--hairline-strong);
-  border-left: 5px solid var(--turq);
+  border-left: 5px solid var(--grass);
   border-radius: var(--r-md);
   padding: 12px 14px;
   box-shadow: var(--sh-3);
@@ -1578,7 +1584,7 @@ table.simple tr:last-child td {
   border-left-color: var(--coral);
 }
 .toast-info {
-  border-left-color: var(--blue);
+  border-left-color: var(--ember);
 }
 @keyframes toastIn {
   from {
@@ -1606,7 +1612,7 @@ table.simple tr:last-child td {
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(69, 43, 94, 0.42);
+  background: rgba(74, 43, 34, 0.42);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: flex-end;
@@ -1702,7 +1708,7 @@ table.simple tr:last-child td {
   flex: 0 0 auto;
 }
 .spinner-ink {
-  border-color: rgba(69, 43, 94, 0.25);
+  border-color: rgba(74, 43, 34, 0.25);
   border-top-color: var(--ink);
 }
 @keyframes spin {
@@ -1777,10 +1783,10 @@ button.chip[aria-selected='true'] {
   flex: 0 0 auto;
 }
 .dot-coral { background: var(--coral); }
-.dot-blue { background: var(--blue); }
-.dot-turq { background: var(--turq); }
+.dot-ember { background: var(--ember); }
+.dot-grass { background: var(--grass); }
 .dot-sun { background: var(--sun); }
-.dot-violet { background: var(--violet); }
+.dot-magenta { background: var(--magenta); }
 .dot-pink { background: var(--pink); }
 .dot-lime { background: var(--lime); }
 .dot-tang { background: var(--tang); }
@@ -1808,18 +1814,18 @@ button.chip[aria-selected='true'] {
 
 :root {
   /* radar area fill: violet at low alpha, still legible on the warm white */
-  --radar-fill: rgba(139, 92, 246, 0.22);
-  /* Podium medal colours. Silver is #5f6e82 rather than a lighter grey because
-     it carries white digits at small size — an earlier #6b7a8f measured 4.37:1
+  --radar-fill: rgba(232, 51, 111, 0.22);
+  /* Podium medal colours. Silver is #8a6a5c rather than a lighter grey because
+     it carries white digits at small size — an earlier #8d6a57 measured 4.37:1
      and failed AA. Bronze and the gold gradient are white-text safe as they are. */
-  --silver: #5f6e82;
+  --stone: #8a6a5c;
   --bronze: #a3581f;
 }
 
 /* ---------- public nav ---------- */
 .site-nav { display: none; gap: 18px; margin-left: 8px; }
 .site-nav a { font-size: 0.88rem; font-weight: 600; color: var(--ink-muted); text-decoration: none; }
-.site-nav a:hover { color: var(--violet-d); }
+.site-nav a:hover { color: var(--magenta-d); }
 @media (min-width: 860px) {
   .site-header-inner { display: flex; align-items: center; }
   .site-nav { display: flex; }
@@ -1842,7 +1848,7 @@ button.chip[aria-selected='true'] {
   width: 100%;
   margin: 0 auto;
 }
-.search-field:focus-within { border-color: var(--violet); box-shadow: var(--sh-glow); }
+.search-field:focus-within { border-color: var(--magenta); box-shadow: var(--sh-glow); }
 .search-field-icon { color: var(--ink-muted); display: flex; }
 .search-field-input {
   flex: 1;
@@ -1872,7 +1878,7 @@ button.chip[aria-selected='true'] {
   background: var(--tint-2);
   border: 1px solid var(--hairline);
 }
-.saving-summary strong { font-size: 1.5rem; color: var(--violet-d); }
+.saving-summary strong { font-size: 1.5rem; color: var(--magenta-d); }
 
 /* ---------- podium ---------- */
 .podium { display: flex; flex-direction: column; gap: 16px; }
@@ -1941,7 +1947,7 @@ button.chip[aria-selected='true'] {
   background: var(--ink);
 }
 .podium-gold .podium-place { background: var(--sun-d); }
-.podium-silver .podium-place { background: var(--silver); }
+.podium-silver .podium-place { background: var(--stone); }
 .podium-bronze .podium-place { background: var(--bronze); }
 .podium-label {
   font-size: 0.7rem;
@@ -1952,12 +1958,12 @@ button.chip[aria-selected='true'] {
 }
 .podium-platform { font-weight: 700; font-size: 0.98rem; }
 .podium-total { font-size: 1.65rem; color: var(--ink); line-height: 1.1; }
-.podium-gold .podium-total { color: var(--violet-d); }
+.podium-gold .podium-total { color: var(--magenta-d); }
 .podium-itemprice { font-size: 0.76rem; color: var(--ink-muted); }
 .podium-itemprice-warn { color: var(--sun-d); font-weight: 700; }
 .podium-cta { margin-top: 6px; width: 100%; justify-content: center; }
 .podium-link { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-muted); text-decoration: none; }
-.podium-link:hover { color: var(--blue-d); text-decoration: underline; }
+.podium-link:hover { color: var(--ember-d); text-decoration: underline; }
 /* On phones the podium is a quick read: place, platform, total, verification.
    The detailed card below already carries the break-up, so repeating two large
    buttons per row just doubles the page length. */
@@ -2035,7 +2041,7 @@ button.chip[aria-selected='true'] {
   border-radius: 4px;
   cursor: help;
 }
-.line-state-turq { background: rgba(46, 196, 182, 0.18); color: var(--turq-d); }
+.line-state-grass { background: rgba(52, 168, 83, 0.18); color: var(--grass-d); }
 .line-state-sun { background: rgba(255, 190, 11, 0.22); color: var(--sun-d); }
 .line-state-coral { background: rgba(255, 107, 107, 0.2); color: var(--coral-d); }
 .line-state-neutral { background: var(--tint-2); color: var(--ink-muted); }
@@ -2075,7 +2081,7 @@ button.chip[aria-selected='true'] {
   color: var(--ink);
 }
 .hidden-cost strong { color: var(--tang-d); }
-.hidden-cost-none { background: rgba(46, 196, 182, 0.13); color: var(--ink); }
+.hidden-cost-none { background: rgba(52, 168, 83, 0.13); color: var(--ink); }
 
 /* ---------- deal confidence ---------- */
 .confidence { display: flex; flex-direction: column; gap: 5px; }
@@ -2086,21 +2092,21 @@ button.chip[aria-selected='true'] {
   background: var(--raised); color: var(--ink-muted); font-size: 0.6rem; font-weight: 800;
   line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0;
 }
-.info-dot:hover { border-color: var(--violet); color: var(--violet-d); }
+.info-dot:hover { border-color: var(--magenta); color: var(--magenta-d); }
 .confidence-score { font-size: 1.02rem; font-weight: 800; color: var(--ink); }
 .confidence-max { font-size: 0.7rem; color: var(--ink-muted); font-weight: 600; }
 .confidence-track { height: 7px; border-radius: 999px; background: var(--tint-2); overflow: hidden; }
-.confidence-fill { display: block; height: 100%; border-radius: 999px; background: var(--turq-d); }
+.confidence-fill { display: block; height: 100%; border-radius: 999px; background: var(--grass-d); }
 .confidence-sun .confidence-fill { background: linear-gradient(90deg, var(--sun-d), var(--tang)); }
 .confidence-coral .confidence-fill { background: linear-gradient(90deg, var(--coral-d), var(--pink-d)); }
 .confidence-word { margin: 0; font-size: 0.76rem; color: var(--ink-muted); }
-.confidence-details summary { font-size: 0.78rem; cursor: pointer; color: var(--violet-d); font-weight: 600; }
+.confidence-details summary { font-size: 0.78rem; cursor: pointer; color: var(--magenta-d); font-weight: 600; }
 .confidence-parts { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .confidence-parts li { display: flex; flex-direction: column; gap: 2px; }
 .part-name { display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 600; }
 .part-weight { color: var(--ink-muted); font-weight: 500; font-size: 0.72rem; }
 .part-bar { height: 5px; border-radius: 999px; background: var(--tint-2); overflow: hidden; }
-.part-bar span { display: block; height: 100%; background: var(--violet-d); border-radius: 999px; }
+.part-bar span { display: block; height: 100%; background: var(--magenta-d); border-radius: 999px; }
 .part-detail { color: var(--ink-muted); }
 
 /* ---------- trust radar ---------- */
@@ -2108,7 +2114,7 @@ button.chip[aria-selected='true'] {
 .radar svg { flex: 0 0 auto; }
 .radar-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; font-size: 0.78rem; flex: 1; min-width: 130px; }
 .radar-legend li { display: grid; grid-template-columns: 8px auto; grid-template-rows: auto auto; column-gap: 6px; align-items: center; }
-.radar-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--violet-d); grid-row: 1 / span 2; }
+.radar-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--magenta-d); grid-row: 1 / span 2; }
 .radar-dot.is-empty { background: var(--hairline-strong); }
 .radar-name { font-weight: 600; }
 .radar-note { grid-column: 2; }
@@ -2163,7 +2169,7 @@ button.chip[aria-selected='true'] {
   box-shadow: var(--sh-1);
   height: 100%;
 }
-.offer-card-featured { border-color: var(--violet); box-shadow: 0 14px 34px -22px rgba(109, 59, 224, 0.5); }
+.offer-card-featured { border-color: var(--magenta); box-shadow: 0 14px 34px -22px rgba(232, 51, 111, 0.5); }
 .offer-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .offer-rank { display: flex; gap: 9px; align-items: center; }
 .rank-pill {
@@ -2171,7 +2177,7 @@ button.chip[aria-selected='true'] {
   font-weight: 800; font-size: 0.78rem; color: #fff; background: var(--ink-muted); flex: 0 0 auto;
 }
 .rank-1 { background: var(--action); }
-.rank-2 { background: var(--silver); }
+.rank-2 { background: var(--stone); }
 .rank-3 { background: var(--bronze); }
 .offer-platform { margin: 0; font-size: 1rem; line-height: 1.2; }
 .offer-seller { margin: 0; }
@@ -2185,7 +2191,7 @@ button.chip[aria-selected='true'] {
   padding: 7px 4px; font: inherit; font-size: 0.72rem; font-weight: 600;
   color: var(--ink-muted); cursor: pointer; min-height: 38px;
 }
-.offer-tab.is-active { background: var(--raised); color: var(--violet-d); box-shadow: var(--sh-1); }
+.offer-tab.is-active { background: var(--raised); color: var(--magenta-d); box-shadow: var(--sh-1); }
 .offer-tab .tab-label-full { display: none; }
 .offer-tab .tab-label-short { display: inline; }
 @media (min-width: 640px) {
@@ -2199,7 +2205,7 @@ button.chip[aria-selected='true'] {
 /* ---------- misc comparison blocks ---------- */
 .comparison-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .comparison-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.unit-price { font-size: 1.3rem; font-weight: 800; color: var(--turq-d); margin: 0; }
+.unit-price { font-size: 1.3rem; font-weight: 800; color: var(--grass-d); margin: 0; }
 .stat-list { margin: 0; display: flex; flex-direction: column; }
 .stat-list > div { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--hairline); font-size: 0.85rem; }
 .stat-list dt { color: var(--ink-muted); margin: 0; }
@@ -2223,7 +2229,7 @@ button.chip[aria-selected='true'] {
   font: inherit;
   cursor: pointer;
 }
-.variant-option:hover { border-color: var(--violet); background: var(--tint-2); }
+.variant-option:hover { border-color: var(--magenta); background: var(--tint-2); }
 .variant-label { font-weight: 700; color: var(--ink); }
 .variant-attrs { grid-column: 1; }
 .variant-option svg { grid-column: 2; grid-row: 1 / span 2; color: var(--ink-muted); }
@@ -2246,8 +2252,8 @@ button.chip[aria-selected='true'] {
   text-decoration: none; color: inherit; padding: 16px;
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
-.product-tile:hover { transform: translateY(-2px); box-shadow: var(--sh-2); border-color: var(--violet); }
-.tile-brand { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; color: var(--violet-d); }
+.product-tile:hover { transform: translateY(-2px); box-shadow: var(--sh-2); border-color: var(--magenta); }
+.tile-brand { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; color: var(--magenta-d); }
 .tile-title { font-size: 0.98rem; line-height: 1.3; }
 .tile-price { margin-top: auto; padding-top: 8px; font-weight: 800; color: var(--ink); font-size: 0.95rem; }
 .variant-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
@@ -2262,7 +2268,7 @@ button.chip[aria-selected='true'] {
 .rule-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
 @media (min-width: 720px) { .rule-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .rule-card { display: flex; flex-direction: column; gap: 6px; }
-.rule-card svg { color: var(--violet-d); }
+.rule-card svg { color: var(--magenta-d); }
 .weight-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .weight-bar { height: 6px; border-radius: 999px; background: var(--tint-2); overflow: hidden; margin-top: 4px; }
 .weight-bar span { display: block; height: 100%; background: var(--action); border-radius: 999px; }
@@ -2273,7 +2279,7 @@ button.chip[aria-selected='true'] {
 .data-table tbody tr:last-child th, .data-table tbody tr:last-child td { border-bottom: 0; }
 .connector-card { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
 .price-from { font-size: 1.1rem; color: var(--ink); }
-.price-from strong { font-size: 1.5rem; color: var(--turq-d); }
+.price-from strong { font-size: 1.5rem; color: var(--grass-d); }
 
 /* ==========================================================================
    DEALS / COUPON PAGE
@@ -2292,7 +2298,7 @@ button.chip[aria-selected='true'] {
   border-radius: var(--r-lg);
   background:
     radial-gradient(120% 140% at 88% -20%, rgba(255, 79, 163, 0.18) 0%, transparent 58%),
-    radial-gradient(110% 130% at 6% 8%, rgba(67, 97, 238, 0.16) 0%, transparent 55%),
+    radial-gradient(110% 130% at 6% 8%, rgba(255, 107, 53, 0.16) 0%, transparent 55%),
     linear-gradient(168deg, #fffdf9 0%, var(--tint) 100%);
   border: 1px solid var(--hairline);
 }
@@ -2412,8 +2418,8 @@ button.chip[aria-selected='true'] {
 }
 
 .deals-search:focus-within {
-  border-color: var(--violet);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+  border-color: var(--magenta);
+  box-shadow: 0 0 0 3px rgba(232, 51, 111, 0.16);
 }
 
 .deals-search input {
@@ -2499,7 +2505,7 @@ button.chip[aria-selected='true'] {
 }
 
 .deals-chip:hover {
-  border-color: var(--violet);
+  border-color: var(--magenta);
   color: var(--ink);
 }
 
@@ -2514,7 +2520,7 @@ button.chip[aria-selected='true'] {
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 999px;
-  background: rgba(69, 43, 94, 0.1);
+  background: rgba(74, 43, 34, 0.1);
   color: var(--ink-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -2572,22 +2578,22 @@ button.chip[aria-selected='true'] {
   padding: var(--s-4);
   background: var(--raised);
   border: 1px solid var(--hairline);
-  border-top: 3px solid var(--violet);
+  border-top: 3px solid var(--magenta);
   border-radius: var(--r-lg);
-  box-shadow: 0 1px 2px rgba(69, 43, 94, 0.05);
+  box-shadow: 0 1px 2px rgba(74, 43, 34, 0.05);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 .deal-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 26px -14px rgba(69, 43, 94, 0.34);
+  box-shadow: 0 10px 26px -14px rgba(74, 43, 34, 0.34);
   border-color: var(--hairline-strong);
   border-top-color: var(--pink);
 }
 
 /* Cashback gets its own edge colour so it is never mistaken for a price cut. */
 .deal-card-cashback {
-  border-top-color: var(--turq);
+  border-top-color: var(--grass);
 }
 
 .deal-card-top {
@@ -2619,9 +2625,9 @@ button.chip[aria-selected='true'] {
 }
 
 .deal-badge-cashback {
-  color: var(--turq-d);
-  background: rgba(46, 196, 182, 0.13);
-  border-color: rgba(46, 196, 182, 0.3);
+  color: var(--grass-d);
+  background: rgba(52, 168, 83, 0.13);
+  border-color: rgba(52, 168, 83, 0.3);
 }
 
 .deal-badge-quiet {
@@ -2680,16 +2686,16 @@ button.chip[aria-selected='true'] {
 }
 
 .deal-code:hover {
-  border-color: var(--violet);
+  border-color: var(--magenta);
   background:
-    repeating-linear-gradient(90deg, rgba(139, 92, 246, 0.3) 0 10px, transparent 10px 20px) top / 100% 1px no-repeat,
-    rgba(139, 92, 246, 0.07);
+    repeating-linear-gradient(90deg, rgba(232, 51, 111, 0.3) 0 10px, transparent 10px 20px) top / 100% 1px no-repeat,
+    rgba(232, 51, 111, 0.07);
 }
 
 .deal-code.is-copied {
-  border-color: var(--turq);
+  border-color: var(--grass);
   border-style: solid;
-  background: rgba(46, 196, 182, 0.1);
+  background: rgba(52, 168, 83, 0.1);
 }
 
 .deal-code-value {
@@ -2712,11 +2718,11 @@ button.chip[aria-selected='true'] {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--violet-d);
+  color: var(--magenta-d);
 }
 
 .deal-code.is-copied .deal-code-action {
-  color: var(--turq-d);
+  color: var(--grass-d);
 }
 
 .deal-code-link .deal-code-value {
@@ -2751,7 +2757,7 @@ button.chip[aria-selected='true'] {
 }
 
 .deal-meta-good {
-  color: var(--turq-d);
+  color: var(--grass-d);
 }
 
 .deal-cashback-note {
@@ -2759,8 +2765,8 @@ button.chip[aria-selected='true'] {
   padding: 8px 10px;
   font-size: 0.74rem;
   line-height: 1.45;
-  color: var(--turq-d);
-  background: rgba(46, 196, 182, 0.08);
+  color: var(--grass-d);
+  background: rgba(52, 168, 83, 0.08);
   border-radius: var(--r-sm);
 }
 
@@ -2815,7 +2821,7 @@ button.chip[aria-selected='true'] {
   align-items: stretch;
   height: 44px;
   overflow: hidden;
-  background: linear-gradient(90deg, var(--ink) 0%, #5a3a72 100%);
+  background: linear-gradient(90deg, var(--ink) 0%, #6b3a2b 100%);
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -3057,7 +3063,7 @@ button.chip[aria-selected='true'] {
 .shelf-all {
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--violet-d);
+  color: var(--magenta-d);
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 999px;
@@ -3144,9 +3150,9 @@ button.chip[aria-selected='true'] {
 }
 .deal-monogram-0 { background: rgba(255, 107, 107, 0.22); }
 .deal-monogram-1 { background: rgba(255, 190, 11, 0.26); }
-.deal-monogram-2 { background: rgba(46, 196, 182, 0.22); }
-.deal-monogram-3 { background: rgba(139, 92, 246, 0.20); }
-.deal-monogram-4 { background: rgba(67, 97, 238, 0.18); }
+.deal-monogram-2 { background: rgba(52, 168, 83, 0.22); }
+.deal-monogram-3 { background: rgba(232, 51, 111, 0.20); }
+.deal-monogram-4 { background: rgba(255, 107, 53, 0.18); }
 .deal-monogram-5 { background: rgba(184, 243, 74, 0.38); }
 
 .deal-save {
@@ -3219,7 +3225,7 @@ button.chip[aria-selected='true'] {
   font-family: 'Outfit', system-ui, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--turq-d);
+  color: var(--grass-d);
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -3235,7 +3241,7 @@ button.chip[aria-selected='true'] {
 .deal-card-cashback {
   margin: 0;
   font-size: 0.66rem;
-  color: var(--violet-d);
+  color: var(--magenta-d);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -3266,7 +3272,7 @@ button.chip[aria-selected='true'] {
   min-width: 0;
 }
 .deal-code:hover {
-  border-color: var(--violet);
+  border-color: var(--magenta);
   background: var(--tint-2);
 }
 .deal-code-value {
@@ -3280,7 +3286,7 @@ button.chip[aria-selected='true'] {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--violet-d);
+  color: var(--magenta-d);
 }
 .deal-code-none {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -3307,7 +3313,7 @@ button.chip[aria-selected='true'] {
   white-space: nowrap;
 }
 .deal-go:hover {
-  background: var(--violet-d);
+  background: var(--magenta-d);
 }
 .deal-card-foot {
   display: flex;
@@ -3465,14 +3471,14 @@ button.chip[aria-selected='true'] {
   color: var(--ink-soft);
 }
 .hero-links a {
-  color: var(--violet-d);
+  color: var(--magenta-d);
   font-weight: 700;
   text-decoration: none;
   border-bottom: 2px solid transparent;
   padding-bottom: 1px;
 }
 .hero-links a:hover {
-  border-bottom-color: var(--violet);
+  border-bottom-color: var(--magenta);
 }
 
 /* ==========================================================================
@@ -3567,10 +3573,10 @@ button.chip[aria-selected='true'] {
   border-radius: 999px;
   white-space: nowrap;
 }
-.origin-live { background: rgba(46, 196, 182, 0.18); color: var(--turq-d); }
-.origin-feed { background: rgba(67, 97, 238, 0.14); color: var(--blue-d); }
+.origin-live { background: rgba(52, 168, 83, 0.18); color: var(--grass-d); }
+.origin-feed { background: rgba(255, 107, 53, 0.14); color: var(--ember-d); }
 .origin-community { background: rgba(255, 190, 11, 0.22); color: var(--sun-d); }
-.origin-demo { background: rgba(139, 92, 246, 0.16); color: var(--violet-d); }
+.origin-demo { background: rgba(232, 51, 111, 0.16); color: var(--magenta-d); }
 
 /* ---- chart -------------------------------------------------------------- */
 .chart-wrap {
@@ -3592,7 +3598,7 @@ button.chip[aria-selected='true'] {
   font-weight: 700;
   color: var(--ink-muted);
 }
-.chart-delta.is-down { color: var(--turq-d); }
+.chart-delta.is-down { color: var(--grass-d); }
 .chart-delta.is-up { color: var(--coral-d); }
 .chart-svg {
   width: 100%;
@@ -3648,7 +3654,7 @@ button.chip[aria-selected='true'] {
 }
 .deal-confidence.is-community,
 .deal-confidence.is-moderated {
-  color: var(--turq-d);
+  color: var(--grass-d);
 }
 .deal-confidence.is-thin {
   color: var(--coral-d);
@@ -3664,7 +3670,7 @@ button.chip[aria-selected='true'] {
   color: var(--ink-muted);
 }
 .coupon-chip-body .coupon-conf.is-community,
-.coupon-chip-body .coupon-conf.is-moderated { color: var(--turq-d); }
+.coupon-chip-body .coupon-conf.is-moderated { color: var(--grass-d); }
 .coupon-chip-body .coupon-conf.is-thin { color: var(--coral-d); }
 
 .coupon-chip-cla {

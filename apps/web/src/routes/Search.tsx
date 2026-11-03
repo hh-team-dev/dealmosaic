@@ -209,7 +209,7 @@ function SearchSkeleton() {
 function VariantChoice({ data, onChoose }: { data: NeedsSelection; onChoose: (id: string) => void }) {
   return (
     <section className="card card-lg stack variant-choice" aria-labelledby="variant-title">
-      <span className="badge badge-violet">
+      <span className="badge badge-magenta">
         <Icon name="info" size={13} /> Which one exactly?
       </span>
       <h1 id="variant-title" className="h3">
@@ -316,7 +316,7 @@ function ComparisonView({ comparison }: { comparison: Comparison }) {
           </div>
           <h1 className="h2">{comparison.product.title}</h1>
           <div className="row wrap">
-            <span className="badge badge-blue">{comparison.variant.label}</span>
+            <span className="badge badge-ember">{comparison.variant.label}</span>
             {comparison.variant.gtin && <span className="badge badge-neutral">GTIN {comparison.variant.gtin}</span>}
             {comparison.variant.netQuantity && (
               <span className="badge badge-neutral">

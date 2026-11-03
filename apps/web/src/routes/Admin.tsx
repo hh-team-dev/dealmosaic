@@ -451,7 +451,7 @@ function People({ onError }: { onError: (e: unknown) => void }) {
           </div>
           <div className="admin-row-actions">
             {u.role === 'super_admin' ? (
-              <span className="badge badge-violet">super admin</span>
+              <span className="badge badge-magenta">super admin</span>
             ) : (
               <button
                 type="button"

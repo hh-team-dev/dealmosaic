@@ -11,9 +11,9 @@ import { Icon } from './Icon';
 
 const STATE_META: Record<
   PriceLine['state'],
-  { label: string; tone: 'turq' | 'sun' | 'coral' | 'neutral'; hint: (line: PriceLine) => string }
+  { label: string; tone: 'grass' | 'sun' | 'coral' | 'neutral'; hint: (line: PriceLine) => string }
 > = {
-  confirmed: { label: 'confirmed', tone: 'turq', hint: (l) => (l.note ? l.note : 'Reported by the store for this exact item.') },
+  confirmed: { label: 'confirmed', tone: 'grass', hint: (l) => (l.note ? l.note : 'Reported by the store for this exact item.') },
   estimated: { label: 'estimated', tone: 'sun', hint: (l) => (l.note ? l.note : 'Derived, not published by the store.') },
   not_available: {
     label: 'not available',
@@ -31,7 +31,7 @@ const STATE_META: Record<
 export function VerificationBadge({ state, compact = false }: { state: PriceTruth['verificationState']; compact?: boolean }) {
   if (state === 'complete') {
     return (
-      <span className="badge badge-turq trust-badge">
+      <span className="badge badge-grass trust-badge">
         <Icon name="check" size={13} />
         {compact ? 'Total verified' : 'TOTAL FULLY VERIFIED'}
       </span>

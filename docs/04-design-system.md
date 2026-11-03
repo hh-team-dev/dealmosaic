@@ -1,67 +1,70 @@
 # Part 3 — Brand & Visual Design System (v1.0, locked)
 
-## 0. The constraint that shapes everything
+## 0. The constraints that shape everything
 
-**Owner instruction: never use black or anything close to black.** This supersedes the brief's Deep Ink `#24243B` and bans `#000`, `#111`, near-black, neutral dark grey, and untinted grey shadows.
+**Owner instruction, 3 November 2026: never use black, and never use blue or anything
+close to blue.** Combined with the original "no near-black" rule, the palette has no cool
+hue left in it. `npm run audit:design` enforces both mechanically:
 
-I verified the brief's palette numerically before designing with it. Two findings:
+- nothing darker than L\* 20 anywhere (darkest shipped value: **Roast** `#4A2B22`, L\* 21.2);
+- **no colour whose hue falls in the 158°–320° window** (teal → violet) at more than 12 %
+  saturation, checked in `theme.css` *and* in every `.tsx` file, hex and `rgba()` alike.
+  That window is one line of the audit, so a stray blue cannot creep back in.
 
-1. `#24243B` is a near-black (14.4:1 on warm white) → **removed**.
-2. Six of the eight accents fail WCAG AA **as text** on Warm White:
+Everything below is measured. The hue axis now runs **crimson → vermilion → coral →
+amber**, with exactly one magenta and one grass kept because they carry meaning.
 
-| Token | Value | Contrast on `#FFF9F0` | Verdict |
-|---|---|---|---|
-| Coral | `#FF6B6B` | 2.65 | Decorative only |
-| Electric Blue | `#4361EE` | 4.80 | ✅ Text-safe |
-| Turquoise | `#2EC4B6` | 2.07 | Decorative only |
-| Sunshine | `#FFBE0B` | 1.59 | Decorative only |
-| Violet | `#8B5CF6` | 4.04 | Decorative (near-miss) |
-| Candy Pink | `#FF4FA3` | 2.91 | Decorative only |
-| Electric Lime | `#B8F34A` | 1.26 | Decorative only |
-| Tangerine | `#FF8A3D` | 2.24 | Decorative only |
-
-So the palette is re-engineered into a **dual-tone system**: each hue has a **Spark** tint (vivid, for fills, gradients, glows, badges, motion) and a **Deep** tint (AA-compliant, for text and icons). This is how the site stays wildly colourful while every price, product name and comparison figure stays legible.
-
----
-
-## 1. Colour tokens
-
-### Foundation (never black)
+### Foundation
 | Token | Hex | Contrast on Warm White | Use |
 |---|---|---|---|
-| `--ink` **Mosaic Plum** | `#452B5E` | **11.40** | Primary text, headings — replaces Deep Ink |
-| `--ink-muted` | `#6B5280` | **6.38** | Secondary text, labels |
-| `--ink-soft` | `#8A7C9B` | 4.10 | Decorative micro-copy only (never body text) |
+| `--ink` **Roast** | `#4A2B22` | **12.09** | Primary text, headings |
+| `--ink-muted` | `#7A5748` | **6.11** | Secondary text, labels |
+| `--ink-soft` | `#8D6A57` | **4.63** | Placeholders, micro-copy (AA) |
 | `--surface` **Warm White** | `#FFF9F0` | — | App background |
-| `--surface-raised` | `#FFFFFF` | — | Cards |
-| `--surface-tint` | `#FDF1E7` | — | Alternating bands, table stripes |
-| `--hairline` | `#EBDDEA` | — | Borders (violet-tinted, never grey) |
+| `--raised` | `#FFFFFF` | — | Cards |
+| `--tint` | `#FDEFE3` | — | Peach band |
+| `--tint-2` | `#FDEBF1` | — | Blush band |
+| `--hairline` / `--hairline-strong` | `#F2DFCE` / `#E4C7AD` | — | Borders, warm — never grey, never violet |
 
-Shadows are **tinted plum**, never grey: `0 10px 30px -12px rgba(69,43,94,.18)`. Focus rings are `--violet-deep` at 3 px with 2 px offset.
+Shadows are **tinted cocoa**, never grey: `0 1px 2px rgba(74,43,34,.05), 0 10px 24px -14px rgba(74,43,34,.2)`.
+The focus ring is vermilion: `0 0 0 3px rgba(194,65,12,.35)`.
+
+### Action
+| Token | Hex | White label |
+|---|---|---|
+| `--action` | `#C2410C` | 5.18:1 |
+| `--action-hover` | `#A8360A` | 6.57:1 |
+| `--action-active` | `#8F2C08` | 8.29:1 |
+
+One action colour, solid, and the most saturated thing on the page.
 
 ### Hue pairs (Spark → Deep)
 | Family | Spark (fills/gradients) | Deep (text/AA) | Deep contrast |
 |---|---|---|---|
 | Coral | `#FF6B6B` | `#C0392B` | 5.20 |
-| Blue | `#4361EE` | `#2F49C9` | 6.88 |
-| Turquoise | `#2EC4B6` | `#0F7F76` | 4.65 |
+| Ember | `#FF6B35` | `#C2410C` | 4.95 |
+| Magenta | `#E8336F` | `#B3245F` | 6.02 |
 | Sunshine | `#FFBE0B` | `#8A5A00` | 5.66 |
-| Violet | `#8B5CF6` | `#6D3BE0` | 5.98 |
-| Pink | `#FF4FA3` | `#C81C77` | 5.16 |
-| Lime | `#B8F34A` | `#4C7A00` | 4.90 |
 | Tangerine | `#FF8A3D` | `#A8490A` | 5.54 |
+| Pink | `#FF4FA3` | `#C81C77` | 5.16 |
+| Grass | `#34A853` | `#2C7A3F` | 5.06 |
+| Lime | `#B8F34A` | `#4C7A00` | 4.90 |
 
-**Ratio rule:** Spark : Deep ≈ 70 : 30 on any given screen. Big colour fields (hero, podium, section bands) use Spark; type always uses Ink or Deep.
+**Retired on 3 November 2026** (blue family, all gone): `--blue #4361EE`, `--blue-d #2F49C9`,
+`--violet #8B5CF6`, `--violet-d #6D3BE0`, `--turq #2EC4B6`, `--turq-d #0F7F76`, the blue-grey
+podium `--silver #5F6E82`, and the plum ink `#452B5E`. Their jobs were taken by Ember, Magenta,
+Grass and Roast. The four "spark" tones that remain are decorative only — every one of them is
+below 4.5:1 on Warm White, which check 3 of the audit prints on every run.
 
 ### Semantic (never colour-only — always paired with icon + text)
 | Meaning | Spark | Deep | Notes |
 |---|---|---|---|
-| Best verified price | Turquoise | `#0F7F76` | Podium #1, "Lowest verified" chip |
+| Best verified price | Grass | `#2C7A3F` | Podium #1, "Lowest verified" chip |
 | Cheap but unverified | Sunshine | `#8A5A00` | "Total not fully verified" |
 | Rising / higher price | Coral | `#C0392B` | Used with ▲ and words |
 | Saving discovered | Lime | `#4C7A00` | Success animation |
 | Demo data | Tangerine hatch | `#A8490A` | Watermark + DOM `data-origin="demo"` |
-| Live data | Blue | `#2F49C9` | With "Verified source" label |
+| Live data | Ember | `#C2410C` | With "Verified source" label |
 
 ### Gradients — there is one, and it is enforced
 
@@ -69,11 +72,12 @@ Shadows are **tinted plum**, never grey: `0 10px 30px -12px rgba(69,43,94,.18)`.
 > lagoon / mint / plum family are **deleted**, along with the three `deep` and
 > `text` variants built on them. What remains is a single token:
 
-- `--grad-prism`: `linear-gradient(120deg, #2F49C9 0%, #6D3BE0 100%)` — "Mosaic Duet".
+- `--grad-ember`: `linear-gradient(120deg, #C2410C 0%, #A8231A 100%)` — "Ember Duet".
 
-Every stop clears **5.98:1** with white, so it may legally sit behind a label. It is
+Every stop clears **5.18:1** with white, so it may legally sit behind a label. It is
 used in exactly three places: the primary CTA card, the demo comparison's product tile,
-and `.gradient-text` / the hero `<em>`.
+and `.gradient-text` / the hero `<em>`. The gradient is now inside the warm axis, so it
+reads as one material changing temperature rather than two unrelated colours.
 
 Rules that are now mechanical, not stylistic:
 
@@ -100,8 +104,8 @@ tiles → 11 % `rgba` washes with ink text (white on the old amber stop was 1.9:
 > This section is the working summary.
 
 **Concept — "Mosaic M".** One letterform built from two polygons that share the
-chevron running up the centre of the letter. The left facet is Cobalt Deep
-`#2F49C9`, the right is Coral Spark `#FF6B6B`. The colour change *is* the letter's
+chevron running up the centre of the letter. The left facet is Ember
+`#C2410C`, the right is Coral Spark `#FF6B6B`. The colour change *is* the letter's
 construction; read whole it is an M, read in parts it is two tiles joined at an
 angle.
 
@@ -123,37 +127,38 @@ right facet: 32,29 44,12 56,12  56,54  44,54  44,31  32,48
 - **Wordmark:** DEALMOSAIC set in Outfit 800 at −0.04 em tracking, shipped as
   **outlines** (`dm-wordmark.svg`) so it renders without the webfont. The full stop
   carries `--coral-d`.
-- **Mono variants:** Mosaic Plum `#452B5E` (11.40:1 on Warm White) and cream for
+- **Mono variants:** Roast `#4A2B22` (12.09:1 on Warm White) and cream for
   dark surfaces. The two-facet split survives greyscale because the chevron is a
   hard geometric edge, not a hue difference.
-- **On dark:** `#8FA6FF` / `#FF8A8A`, because the primary cobalt is only 1.66:1 on
-  plum. Re-tint through `--brand-cobalt-on-dark` / `--brand-coral-on-dark`.
+- **On dark:** `#FFA07A` / `#FF8A8A` (6.36:1 and 5.58:1 on cocoa), because the primary
+  ember is only 3.1:1 there. Re-tint through `--brand-ember-on-dark` /
+  `--brand-coral-on-dark`.
 - **Originality:** no cart, tag, percentage, magnifier or currency glyph; not set
   in a typeface; not assembled from any other company's mark.
 
 ### Action colour (one, and it is not a gradient)
 
-`--action #2F49C9` is the only primary-action colour: solid fill, white label
-7.20:1, hover `#2540B0` 8.61:1, active `#24399B` 9.84:1. The previous primary was
-`--grad-aurora-deep` (violet → pink → brown), whose lighter stops dropped white
-text below 3:1 and which contradicted the cobalt/coral mark.
+`--action #C2410C` is the only primary-action colour: solid fill, white label
+5.18:1, hover `#A8360A` 6.57:1, active `#8F2C08` 8.29:1. It is a vivid vermilion —
+warm, urgent, and the single most saturated thing on any page, so the eye finds the
+next step with nothing else competing.
 
-The only brand gradient is `--grad-prism`, now **"Mosaic Duet"**
-`linear-gradient(120deg, #2F49C9 0%, #6D3BE0 100%)` — every stop clears 5.9:1 with
-white, so it can legally sit behind a label. The old five-stop rainbow was 1.66:1
-at its amber stop. Coral remains a facet accent and is never a label background.
+The only brand gradient is `--grad-ember` **"Ember Duet"**
+`linear-gradient(120deg, #C2410C 0%, #A8231A 100%)` — every stop clears 5.18:1 with
+white, so it can legally sit behind a label. Coral remains a facet accent and is
+never a label background.
 
-`--ink-soft` was `#8A7C9B` (measured **3.69:1**, not the 4.10:1 previously
-documented) and is now `#7A6B8C` at **4.66:1** — it is used for placeholders and
-micro-copy, which are text and therefore must clear AA.
+`--ink` moved from the plum `#452B5E` to **Roast `#4A2B22`** (12.09:1) when blue was
+ruled out: the plum carried a blue-violet cast. `--ink-soft` is `#8D6A57` at
+**4.63:1** — placeholders and micro-copy are text, so they must clear AA.
 
 ### Brand tokens (added to `theme.css`)
 
 | Token | Value | Aliases |
 |---|---|---|
-| `--brand-cobalt` | `#2F49C9` | `--blue-d` |
+| `--brand-ember` | `#C2410C` | `--ember-d` / `--action` |
 | `--brand-coral` | `#FF6B6B` | `--coral` |
-| `--brand-cobalt-on-dark` | `#8FA6FF` | — |
+| `--brand-ember-on-dark` | `#FFA07A` | — |
 | `--brand-coral-on-dark` | `#FF8A8A` | — |
 
 No new hues were introduced: the identity promotes two existing tokens to brand
