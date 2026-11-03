@@ -101,7 +101,7 @@ Last full run: 3 November 2026, after the brand work (§2.17).
 270 tests passing (19 files)
 33 design assertions passing
 typecheck clean across 3 packages (web, api, core)
-0 secrets in 217 scanned files
+0 secrets in 218 scanned files
 53 prerendered pages, 52 unique <h1>, own host only (scripts/verify-prerender.mjs)
 backup verified: 259 files, all checksums match (latest tarball in backups/)
 HEAD: the latest commit on origin/main (a hash written into this line would be a
@@ -518,6 +518,67 @@ test exists, and an A/B against the old mark would need traffic the site does no
 are in `backups/brand-pre-mosaic-m/` (a working copy — `backups/` is outside git), and the
 same files are recoverable from history with `git show 1a355f8:apps/web/public/favicon.svg`
 and friends.
+
+### 2.18 Five-agent consolidation — 3 November 2026
+
+Five external AI reports were supplied and read in full. The decision layer — what
+was adopted, rejected and found missing — is `docs/27-five-agent-consolidation.md`.
+This is what changed in the product.
+
+**The reports' headline finding was false.** All five open with "unknown visitors
+cannot search without an account" (401/403) and rank it Critical. Verified against
+production before any code was written:
+
+```
+POST /api/search (anonymous) → 200 {"kind":"needs_selection", ...}
+App.tsx: RequireAuth wraps /app and /app/settings only
+```
+
+Search has been public since before the handover that told them otherwise. Two of
+their other "critical" items — cookie-free analytics with no consent banner needed,
+and the coupon "did it work?" report flow — are also already shipped. **Nothing was
+built for those three items.** A note in the report explains why five agreeing
+reports built from one document are one observation, not five.
+
+One structural finding is recorded there too: two of the five PDFs are the same
+report under different filenames (0.94 Jaccard similarity on extracted text; every
+other pair ≤0.004).
+
+**Shipped:**
+
+| Change | File | Why |
+|---|---|---|
+| Primary button solid `--action #2F49C9`, hover `#2540B0`, active `#24399B` | `theme.css` | The old primary was `--grad-aurora-deep`, violet→pink→brown; white text fell below 3:1 on its lighter stops. Now 7.20 / 8.61 / 9.84:1 |
+| `--grad-prism` is "Mosaic Duet" `#2F49C9 → #6D3BE0` | `theme.css` | The five-stop rainbow was 1.66:1 with white at its amber stop, and disagreed with the cobalt/coral mark. Every new stop clears 5.9:1 with white |
+| Hero blob 2 retinted turquoise → cobalt | `theme.css` | First viewport was carrying coral + turquoise next to a cobalt + coral mark: three colours, two palettes |
+| `--ink-soft #8A7C9B` → `#7A6B8C` | `theme.css` | Measured 3.69:1, below the documented 4.10:1 and below AA. Now **4.66:1** |
+| Save control 40 → 44 px, ink-muted colour | `theme.css` | 48 px hit area via padding on a card corner that cannot afford a 48 px circle |
+| H1 → **"The price you'll actually pay."** + new lede | `Landing.tsx` | Brand-first headline was the loudest complaint and it was right |
+| **Live proof strip** under the search | `Landing.tsx` | Fetches `/api/coupons/discover`; renders nothing when the API is cold. A hard-coded count goes stale — the feed moved from 1,089 to 1,085 during this session |
+| Commission line above the offer list | `Product.tsx` | It was in a policy card further down. A disclosure below the fold is not a disclosure |
+| Header sub-line → "Real totals · Honest ranks" | `Logo.tsx` | The old one repeated "three real deals", the claim the hero just stopped making |
+| OG card, `og:title`, description, `og:image:alt`, JSON-LD slogan | `generate-og.py`, `index.html`, `seo.tsx` | The shared link must say what the page says |
+| Prerendered homepage `<h1>` and `<title>` | `prerender.mjs` | A crawler-visible H1 that differs from the React H1 is two different promises on one URL |
+
+**Rejected, with reasons in the report:** full dark mode (a palette redesign, not a
+polish item), the 60/30/10 accent purge (the accents *are* the evidence language),
+a 1.25 type scale, a `FAQPage` schema for a page that does not exist, competitor
+scores (nobody opened a competitor), and three items premised on the stale 401.
+
+**Deliberately not done yet:** the sticky mobile CTA bar. Three of five recommended
+it, it is the strongest remaining conversion idea, and it needs one pass on a real
+390 px Android device before it ships — which is an owner test, not a coding task.
+
+**Gates:** `tsc` clean, **270 tests / 19 files**, design **33 PASS**, **0 secrets /
+218 files**, build + prerender **53 pages / 52 unique H1**. Deployed to Cloudflare
+Pages; routes `/`, `/deals`, `/browse`, `/p/aashirvaad-atta`, `/c/staples`,
+`/how-we-rank`, `/data-sources`, `/saved`, `/contact` all 200 in production, and the
+new strings confirmed present in the deployed bundle and CSS.
+
+**Verification limit, stated plainly:** no browser was available in this
+environment, so the visual result was confirmed by reading the deployed HTML, CSS
+and JS and by inspecting the regenerated social card — not by looking at the
+homepage on a phone. The owner should eyeball the hero on a device.
 
 ---
 
@@ -1184,6 +1245,7 @@ Two rules learned the hard way:
 | `03-architecture.md` | Original architecture decisions |
 | `04-design-system.md` | Palette, contrast, layout rules, **the mark (§2)** |
 | **`brand-identity.md`** | **The identity: geometry, palette with HEX+RGB, the three concepts and their scores, every rejected refinement, asset inventory, verification** |
+| **`27-five-agent-consolidation.md`** | **The five-agent decision report: what they agreed on, what was false, what shipped, what was rejected and why** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

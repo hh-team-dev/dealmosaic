@@ -25,7 +25,7 @@
   /* ---- foundation ------------------------------------------------------ */
   --ink: #452b5e;            /* Mosaic Plum — replaces Deep Ink. 11.4:1 on surface */
   --ink-muted: #6b5280;      /* 6.4:1 */
-  --ink-soft: #8a7c9b;       /* decorative micro-copy only */
+  --ink-soft: #7a6b8c;       /* 4.66:1 — was #8a7c9b at 3.69:1, which fails AA for text */
   --surface: #fff9f0;        /* Warm White */
   --raised: #ffffff;
   --tint: #fdf1e7;           /* warm band */
@@ -65,7 +65,11 @@
   --tang-d: #a8490a;
 
   /* ---- gradients ------------------------------------------------------- */
-  --grad-prism: linear-gradient(135deg, #ff6b6b 0%, #ffbe0b 26%, #b8f34a 50%, #2ec4b6 72%, #4361ee 100%);
+  /* "Mosaic Duet" — the mark's own axis: cobalt facet → violet → back to cobalt.
+     Every stop clears 5.9:1 with white text, so it is safe behind labels, which
+     the old five-stop prism was not (white on #ffbe0b is 1.66:1). Coral stays a
+     facet accent, never a label background. */
+  --grad-prism: linear-gradient(120deg, #2f49c9 0%, #6d3be0 100%);
   --grad-aurora: linear-gradient(120deg, #8b5cf6, #ff4fa3, #ff8a3d);
   --grad-sunrise: linear-gradient(140deg, #ffbe0b, #ff8a3d, #ff6b6b);
   --grad-lagoon: linear-gradient(160deg, #2ec4b6, #4361ee);
@@ -86,6 +90,15 @@
   --sh-glow: 0 10px 30px -10px rgba(139, 92, 246, 0.45);
 
   /* ---- geometry -------------------------------------------------------- */
+  /* ---- action -----------------------------------------------------------
+     One colour for primary actions, and it is not a gradient. The old primary
+     button was --grad-aurora-deep, a five-stop rainbow whose lighter stops drop
+     white labels below 3:1; it also disagreed with the cobalt/coral mark. White
+     on #2f49c9 is 7.20:1, on the hover 8.61:1, on active 9.84:1. */
+  --action: #2f49c9;
+  --action-hover: #2540b0;
+  --action-active: #24399b;
+
   --r-xs: 8px;
   --r-sm: 10px;
   --r-md: 14px;
@@ -418,15 +431,16 @@ kbd {
 }
 
 .btn-primary {
-  --btn-bg: var(--grad-aurora-deep);
+  --btn-bg: var(--action);
   --btn-fg: #ffffff;
   border-color: transparent;
-  box-shadow: var(--sh-glow);
-  background-size: 160% 160%;
-  background-position: 0% 50%;
+  box-shadow: 0 10px 26px -14px rgba(47, 73, 201, 0.55);
 }
 .btn-primary:hover {
-  background-position: 100% 50%;
+  --btn-bg: var(--action-hover);
+}
+.btn-primary:active {
+  --btn-bg: var(--action-active);
 }
 .btn-primary::after {
   content: '';
@@ -948,9 +962,12 @@ kbd {
   animation: drift 19s ease-in-out infinite;
 }
 .hero-blob-2 {
+  /* Cobalt, not turquoise. The hero wash sat behind a cobalt/coral mark while
+     being coral + turquoise — three colours from two different palettes in the
+     first viewport. Coral and cobalt are the mark's own facets. */
   width: 250px;
   height: 250px;
-  background: var(--turq);
+  background: var(--blue);
   top: -70px;
   right: -80px;
   animation: drift 23s ease-in-out infinite reverse;
@@ -980,6 +997,25 @@ kbd {
   flex-direction: column;
   gap: 10px;
   margin-top: 22px;
+}
+.commission-line {
+  margin: 8px 0 10px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+  border-left: 3px solid var(--hairline-strong);
+  padding-left: 9px;
+}
+
+.hero-proof {
+  margin: 14px 0 0;
+  font-size: 0.86rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.hero-proof strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .hero-trust {
   display: flex;
@@ -3105,12 +3141,12 @@ button.chip[aria-selected='true'] {
    * 40 px, not 28. The save heart sits in the corner of every card on the wall, it
    * is the only control there, and 28 px is a miss on a phone in one hand.
    */
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--hairline);
   background: var(--surface);
-  color: var(--ink-soft);
+  color: var(--ink-muted);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -131,7 +131,7 @@ export function organizationJsonLd(): Record<string, unknown> {
     description:
       'DEALMOSAIC compares the true landed cost of a product across Indian stores — item price, delivery, fees and taxes — and shows at most three ranked, commission-blind offers.',
     areaServed: { '@type': 'Country', name: 'India' },
-    slogan: 'One search. Three real deals. Zero price surprises.',
+    slogan: 'The price you’ll actually pay.',
   };
 }
 

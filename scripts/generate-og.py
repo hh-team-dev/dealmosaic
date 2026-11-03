@@ -113,8 +113,8 @@ def main():
     d.text((70, 196), 'DEALMOSAIC', font=title_font, fill=INK)
 
     # Tagline, two deliberate lines
-    d.text((76, 340), 'One search. Three real deals.', font=tag_font, fill=INK)
-    d.text((76, 396), 'Zero price surprises.', font=tag_font, fill=INK)
+    d.text((76, 340), 'Delivery, fees and tax counted in.', font=tag_font, fill=INK)
+    d.text((76, 396), 'Unknown stays unknown.', font=tag_font, fill=INK)
 
     # Footer promise — a fact about how the product works, not a claim of partners
     d.text((76, H - 104), 'Grocery  ·  Quick commerce  ·  Everyday electronics',

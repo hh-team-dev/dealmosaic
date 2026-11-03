@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
 import { DealsTicker } from '../components/DealsTicker';
@@ -19,10 +19,43 @@ const PLATFORMS = [
   { name: 'DMart Ready', note: 'No price API', tint: 'var(--lime)' },
 ];
 
+/**
+ * Live totals for the proof strip.
+ *
+ * Fetched rather than written into the markup: a hard-coded "1,089 offers" is
+ * wrong the next time the feed runs, and a stale number on the first screen is
+ * the exact kind of over-claim the rest of the site refuses to make. If the
+ * request fails the strip simply does not render — no number is better than an
+ * unverified one.
+ */
+type Proof = { live: number; withCode: number };
+
+function useProof(): Proof | null {
+  const [proof, setProof] = useState<Proof | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetch('/api/coupons/discover')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!live || !d?.totals) return;
+        const { live: count, withCode } = d.totals as Proof;
+        if (typeof count === 'number' && count > 0) setProof({ live: count, withCode });
+      })
+      .catch(() => {
+        /* offline or a cold API: leave the strip out rather than invent a number */
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+  return proof;
+}
+
 export default function Landing() {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
   const toast = useToast();
+  const proof = useProof();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -54,14 +87,11 @@ export default function Landing() {
           <div className="container hero-inner">
             <span className="badge badge-lime"><span className="dot dot-turq" aria-hidden="true" />Live across India · prices in ₹</span>
             <h1 style={{ marginTop: 12 }}>
-              One search. <em>Three real deals.</em>
-              <br />
-              Zero price surprises.
+              The price you’ll <em>actually</em> pay.
             </h1>
             <p className="lede" style={{ maxWidth: '56ch' }}>
-              DEALMOSAIC checks India’s marketplaces and 10-minute delivery apps, matches the exact variant, adds up
-              delivery, fees and discounts — then ranks at most three offers and tells you <em>why</em> each one sits
-              where it does.
+              Sticker prices leave out delivery, fees and tax. We add them, match the exact pack or variant, and rank
+              what is really left to pay — and where a cost is unknown, we say so instead of guessing.
             </p>
 
             <form className="searchdemo" onSubmit={handleSearch} role="search">
@@ -114,6 +144,14 @@ export default function Landing() {
               <span aria-hidden="true">·</span>
               <Link to="/saved">Your saved deals</Link>
             </div>
+
+            {proof && (
+              <p className="hero-proof">
+                <strong>{proof.live.toLocaleString('en-IN')}</strong> live store offers ·{' '}
+                <strong>{proof.withCode.toLocaleString('en-IN')}</strong> with a code you can copy · every one carries
+                its expiry date
+              </p>
+            )}
 
             <div className="hero-trust">
               <span className="chip">

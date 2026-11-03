@@ -172,7 +172,13 @@ export default function Product() {
                     </Link>
                   </div>
 
-                  {/* The offers behind the number, each labelled with its origin. */}
+                  {/* The offers behind the number, each labelled with its origin.
+                      The commission line sits here, above the buttons it applies to,
+                      rather than in a policy card further down the page. A disclosure
+                      below the fold is not a disclosure. */}
+                  <p className="commission-line">
+                    Some store links earn us a commission. It never changes the order — ranking is commission-blind.
+                  </p>
                   <OfferList offers={offersByVariant?.[v.id] ?? []} />
 
                   <div className="variant-extras">

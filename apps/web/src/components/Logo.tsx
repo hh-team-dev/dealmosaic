@@ -52,7 +52,7 @@ export function Wordmark({ sub = false }: { sub?: boolean }) {
         <span className="brand-word">
           DEALMOSAIC<span>.</span>
         </span>
-        {sub && <span className="brand-sub">One search · Three real deals</span>}
+        {sub && <span className="brand-sub">Real totals · Honest ranks</span>}
       </span>
     </span>
   );

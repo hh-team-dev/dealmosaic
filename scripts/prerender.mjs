@@ -183,9 +183,10 @@ function homeBody(discovery) {
 
   return `
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
-      <h1>DEALMOSAIC — one search, three real deals</h1>
-      <p>Compare the true landed cost of any product across Indian stores: item price,
-      delivery, fees and tax, ranked by what you actually pay.</p>
+      <h1>The price you’ll actually pay</h1>
+      <p>Sticker prices leave out delivery, fees and tax. We add them, match the exact pack or
+      variant, and rank what is really left to pay across Indian stores — and where a cost is
+      unknown, we say so instead of guessing.</p>
       <p><a href="/deals">Every live coupon and deal</a> ·
          <a href="/browse">Browse every product we compare</a> ·
          <a href="/how-we-rank">How we rank offers</a> ·
@@ -550,7 +551,7 @@ async function main() {
     /* an API outage must not fail the build; the shelves simply stay client-side */
   }
 
-  page({ title: 'DEALMOSAIC — one search, three real deals', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody(discovery) });
+  page({ title: 'DEALMOSAIC — the price you’ll actually pay', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody(discovery) });
   count++;
 
   page({

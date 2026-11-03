@@ -114,6 +114,22 @@ right facet: 32,29 44,12 56,12  56,54  44,54  44,31  32,48
 - **Originality:** no cart, tag, percentage, magnifier or currency glyph; not set
   in a typeface; not assembled from any other company's mark.
 
+### Action colour (one, and it is not a gradient)
+
+`--action #2F49C9` is the only primary-action colour: solid fill, white label
+7.20:1, hover `#2540B0` 8.61:1, active `#24399B` 9.84:1. The previous primary was
+`--grad-aurora-deep` (violet → pink → brown), whose lighter stops dropped white
+text below 3:1 and which contradicted the cobalt/coral mark.
+
+The only brand gradient is `--grad-prism`, now **"Mosaic Duet"**
+`linear-gradient(120deg, #2F49C9 0%, #6D3BE0 100%)` — every stop clears 5.9:1 with
+white, so it can legally sit behind a label. The old five-stop rainbow was 1.66:1
+at its amber stop. Coral remains a facet accent and is never a label background.
+
+`--ink-soft` was `#8A7C9B` (measured **3.69:1**, not the 4.10:1 previously
+documented) and is now `#7A6B8C` at **4.66:1** — it is used for placeholders and
+micro-copy, which are text and therefore must clear AA.
+
 ### Brand tokens (added to `theme.css`)
 
 | Token | Value | Aliases |
