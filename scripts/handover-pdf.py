@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import pathlib
+import html as html_lib
 import re
 import sys
 
@@ -53,7 +54,7 @@ CORE = [
     ('14-seo-launch-checklist.md', 'SEO launch checklist'),
     ('27-five-agent-consolidation.md', 'Five-agent consolidation'),
     ('28-backup-and-recovery.md', 'Backup and recovery dossier'),
-    ('29-site-tour-fixes.md', 'Site tour: 34 defects fixed'),
+    ('29-site-tour-fixes.md', 'Site tour: 36 defects fixed'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 
@@ -226,13 +227,21 @@ def convert(text: str) -> tuple[str, list[tuple[int, str, str]]]:
         extension_configs={'toc': {'toc_depth': '2-3', 'anchorlink': False}},
     )
     html = md.convert(text)
-    heads = [(int(h['level']), h['id'], re.sub('<[^>]+>', '', h['name']))
+    # `&amp;` inside a heading arrives escaped in the token name; left escaped it
+    # printed as "&amp;" in the contents block *and* never matched the rendered
+    # page, so those entries lost their page number.
+    def title_of(name: str) -> str:
+        return html_lib.unescape(re.sub('<[^>]+>', '', name))
+
+    heads = [(int(h['level']), h['id'], title_of(h['name']))
              for h in md.toc_tokens]
     flat: list[tuple[int, str, str]] = []
-    for level, hid, name in heads:
+    # Walk the tokens themselves rather than looking a decoded title back up in a
+    # list of encoded ones — that lookup is what broke on "Logo &amp; wordmark".
+    for token, (level, hid, name) in zip(md.toc_tokens, heads):
         flat.append((level, hid, name))
-        for sub in md.toc_tokens[[t['name'] for t in md.toc_tokens].index(name)]['children']:
-            flat.append((3, sub['id'], re.sub('<[^>]+>', '', sub['name'])))
+        for sub in token['children']:
+            flat.append((3, sub['id'], title_of(sub['name'])))
     return html, flat
 
 
@@ -241,7 +250,7 @@ def _is_toc_page(lines: list[str]) -> bool:
     body = [l for l in lines if l.strip()]
     if not body:
         return False
-    marked = sum(1 for l in body if '·  p. ' in l)
+    marked = sum(1 for l in body if re.search(r'·\s+p\.\s*\d+', l))
     return marked / len(body) >= 0.5
 
 
@@ -250,39 +259,47 @@ def heading_pages(pdf_path: pathlib.Path, heads) -> tuple[dict[str, int], int]:
     (page each heading starts on, number of contents pages) — measured in a render
     that already contains the contents block.
 
-    A heading occupies its own line, so matching whole lines avoids crediting a
-    cross-reference in a sentence. Contents pages are skipped, otherwise every
-    heading would be "found" on the page that lists it.
+    The old version skipped every page that looked like a contents page. That is
+    wrong for a document whose contents block ends mid-page and whose first heading
+    starts on the same page — which is exactly what 00-MASTER-HANDOVER does. Those
+    headings silently lost their page number in the PDF's contents.
+
+    Contents entries are now excluded *by line* instead: a line ending in `· p. N`
+    is a table of contents entry, never a heading, so no page has to be skipped and
+    a mixed page is measured correctly. A heading occupies its own line, so matching
+    whole lines avoids crediting a cross-reference inside a sentence.
     """
     import pymupdf
 
-    doc = pymupdf.open(str(pdf_path))
-    raw = [[re.sub(r'\s+', ' ', line).strip() for line in p.get_text().splitlines()]
-           for p in doc]
-    flags = [_is_toc_page(lines) for lines in raw]
-    first_body = next((i for i, toc in enumerate(flags) if not toc), 0)
-    pages = raw[first_body:]
+    def clean(text: str) -> str:
+        # \xa0 arrives from the &nbsp; in the contents block and \s+ does not fold it.
+        return re.sub(r'\s+', ' ', text.replace('\u00a0', ' ')).strip()
 
+    doc = pymupdf.open(str(pdf_path))
+    raw = [[clean(line) for line in p.get_text().splitlines()] for p in doc]
+    toc_pages = sum(1 for lines in raw if _is_toc_page(lines))
+
+    body = [[line for line in lines if not re.search(r'·\s*p\.\s*\d+$', line)] for lines in raw]
     # Long headings wrap in the PDF, so neither the line-exact nor the substring
-    # search can see them. For those, match against the page's whitespace-normalised
-    # text — safe only because a heading this long is never quoted mid-sentence.
-    joined = [' '.join(lines) for lines in pages]
+    # search can see them. For those, match against the page's normalised text —
+    # safe only because a heading this long is never quoted mid-sentence.
+    joined = [' '.join(lines) for lines in body]
 
     found: dict[str, int] = {}
     for _level, _hid, title in heads:
-        needle = re.sub(r'\s+', ' ', title).strip()
+        needle = clean(title)
         if not needle:
             continue
-        idx = next((i for i, lines in enumerate(pages) if needle in lines), None)
+        idx = next((i for i, lines in enumerate(body) if needle in lines), None)
         if idx is None:
-            idx = next((i for i, lines in enumerate(pages)
+            idx = next((i for i, lines in enumerate(body)
                         if any(needle in line for line in lines)), None)
         if idx is None and len(needle) > 40:
             idx = next((i for i, text in enumerate(joined) if needle in text), None)
         if idx is not None:
-            found[title] = idx + first_body + 1
+            found[title] = idx + 1
     doc.close()
-    return found, first_body
+    return found, toc_pages
 
 
 def contents_block(heads, pages: dict[str, int] | None = None) -> str:

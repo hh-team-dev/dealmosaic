@@ -15,7 +15,7 @@ of importance:
 
 | # | What | Where it is | Contains |
 |---|---|---|---|
-| 1 | Source archive | `backups/dealmosaic_2026-11-03_14-20-59.tar.gz` | the entire codebase, docs, brand SVG/PNG masters, public DB snapshot — 265 files, 5.15 MB uncompressed |
+| 1 | Source archive | **`backups/dealmosaic_2026-11-03_18-42-30.tar.gz`** (§2.4) | the entire codebase, docs, brand SVG/PNG masters, public DB snapshot — 265 files, 5.15 MB uncompressed |
 | 2 | Git history | `github.com/hh-team-dev/dealmosaic` @ `v1.1-warm` | every commit, the deployed tree, and the workflow that keeps Render awake |
 | 3 | Live data | Turso (hosted libSQL) + `db-snapshots/dealmosaic-public-2026-11-03.sql` | 441 rows of catalogue/offers/price history, in the archive and in the repo |
 | 4 | Credentials | `~/.config/dealmosaic/deploy.env` (mode **600**) + the owner's password manager | API tokens. **Not** in the archive, by design |
@@ -25,6 +25,9 @@ Read §6 before you rely on #4. There is one gap in it that only the owner can c
 ---
 
 ## 2. The project archive in detail
+
+The detail below was written against the 14:20:59 archive. The archive to keep is the one in §2.4;
+it is the same scope, plus everything the site-tour work added.
 
 | Property | Value |
 |---|---|
@@ -77,20 +80,22 @@ the schema plus the public data snapshot.
 
 | Property | Value |
 |---|---|
-| File | **`backups/dealmosaic_2026-11-03_14-22-45.tar.gz`** |
-| Size on disk | 3,377,285 bytes (3.22 MB) |
-| Files inside | **264 tracked + 2 self-describing files = 266 entries** |
-| Uncompressed | 5,404,077 bytes (5.15 MB) |
-| SHA-256 | `ef2793770b1a720ae5a3a10913d5f1165b4037e0215d1d621cb6bf101e6bb7fa` |
-| Manifest | `backups/dealmosaic_2026-11-03_14-22-45.manifest.json` (per-file hashes) |
-| Verified | `node scripts/backup.mjs --verify dealmosaic_2026-11-03_14-22-45.tar.gz` → **264 files, all checksums match** |
-| Difference from §2 | adds this dossier, the PDF-set entry, handover §2.21 and the refreshed DB snapshots |
+| File | **`backups/dealmosaic_2026-11-03_18-42-30.tar.gz`** |
+| Size on disk | 3,403,509 bytes (3.25 MB) |
+| Tracked files inside | **269** (checked against the tree by the manifest) |
+| SHA-256 | `eca43487987a38c29b6edf8058088791cbeccae8956b8eb502a8f37ab87fde57` |
+| Manifest | `backups/dealmosaic_2026-11-03_18-42-30.manifest.json` (per-file hashes) |
+| Verified | `node scripts/backup.mjs --verify dealmosaic_2026-11-03_18-42-30.tar.gz` → **269 files, all checksums match** |
+| Difference from the previous release archive (`14-22-45`) | the site-tour work: `docs/29-site-tour-fixes.md`, `apps/api/src/lib/text.ts` with `splitSentences()`, `scripts/reclean-copy.ts`, `scripts/verify-pdfs.py`, the 290-test suite and the corrected handover §2.22 |
 
 **An honest note about self-referencing archives.** The copy of *this* document inside the archive was
-frozen at 14:22:45, which is before the table above could be filled in. So the file you are reading is
+frozen at 18:42:30, which is before the table above could be filled in. So the file you are reading is
 one revision newer than the copy stored in the archive — this is unavoidable for any archive that
 describes itself, and it is why the authoritative checksum for an archive is never written inside it,
 but printed by `--verify` and stored in its sibling `.manifest.json`.
+
+**Four archives are kept, rotating.** Each `npm run backup` writes a new one and prunes the oldest; the
+one named above is the release archive for `v1.2-tour`.
 
 ---
 

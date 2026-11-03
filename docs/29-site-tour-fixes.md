@@ -6,14 +6,16 @@ at one frame per second — 567 frames — with the near-static stretches identi
 paused on were inspected at full resolution. Nothing below is inferred from the source code alone: each
 item was seen happening, then traced to the line that caused it.
 
-**Result:** 34 defects found, 34 fixed. Two were data defects that were invisible in the code and only
+**Result:** 36 defects found, 36 fixed. Two were data defects that were invisible in the code and only
 appeared in the live feed. One was a violation of the owner's palette rule that the design audit could
 not catch. Nine were layout faults at 390 px. Three were instances of the interface telling a small
 lie, which the project treats as the most serious category.
 
-**Shipped:** commit `6f3d643`, Pages `d68f6a3b`, Render API redeployed (deploy `dep-dbl0mghsrm7s73bcggdg`,
-status `live`). Gates: **283 tests / 20 files**, design **43 assertions**, 0 secrets / 224 files,
-53 pages / 52 unique `<h1>`.
+**Shipped:** commits `6f3d643` (30 interface fixes) and `c8c179a` (this document), then `0f3dc1b` and
+`e193ac1` (defect 35 and its last clause word). Pages `d68f6a3b`, later rebuilt and re-deployed from the
+corrected tree; Render deploys `dep-dbl0mghsrm7s73bcggdg` then `dep-dbl2jjtbedkc73etj520`, both `live`.
+Gates: **290 tests / 20 files**, design **43 assertions**, 0 secrets / 224 files, 53 pages / 52 unique
+`<h1>`.
 
 ---
 
@@ -107,10 +109,28 @@ Verified after the fix: **0 of 192 live cards contain `&amp;`.**
 
 ---
 
-## 7. What was checked before shipping
+## 7. The copy itself, and the PDF set (2)
+
+| # | Defect, as seen | Root cause | Fix |
+|---|---|---|---|
+| 35 | Card descriptions ran two or three sentences into one: `Prices starting from just Rs. 1299!Enjoy a flat discount…promo code.Valid for orders of Rs. 1999 and above.Act fast…`; and with no punctuation at all — `Rs. 669Offer open to all`, `superior sound qualityPrice starts at Rs. 2,499` | The merchant's copy generator emits a whole paragraph with the separators stripped. Nothing in the pipeline put them back, and the card clamps to two lines, so it read as one long typo. **94 of 192 sampled live descriptions** carried at least one weld | `splitSentences()` in `apps/api/src/lib/text.ts`, called from `cleanCopy` so title, description and terms all get it. Space after `!`/`?`; space after `.` **only** before Capital+lowercase (so `U.S.`, `1.5`, `No.5` survive); a split in front of one of 98 clause words (so `MuscleBlaze`, `FirstCry`, `MyMuse`, `OpenFit`, `SaneBox` are never touched — each has a test); after a word a missing **full stop**, after a number only a missing space, so no merchant's claim is ever re-punctuated. `Rs.1299` → `Rs. 1299` |
+
+**Why this needed a script as well as a function.** `POST /api/coupons/sync` only re-writes rows the feed
+*still returns*. It repaired 1,103 of 1,105 rows and left two cards still printing
+`Rs. 67,399!Applicable on the entire…`, because those two had dropped out of the feed while staying live
+on the site. **`scripts/reclean-copy.ts`** walks the `coupons` table and re-runs the same functions in
+place — it imports `text.ts` rather than copying the rules — and it is idempotent: a second run reports
+**0 rows would change**. It rewrote **118 rows**. Verified after: **0 welds in 192 sampled live rows**,
+table-wide **0 rows out of step** with the rules.
+
+| 36 | **The handover PDFs' own contents pages were wrong.** A heading in the last section of a document carried no page number at all; `&amp;` in a heading printed literally (`2. Logo &amp; wordmark`) and, because the escaped string never matched the rendered page, every such entry lost its number; and headings that begin on the page where the contents block ends were not found at all | `scripts/handover-pdf.py` skipped *any page that looked like a contents page*, which is exactly what `00-MASTER-HANDOVER` does on page 2, and it matched headings against HTML-escaped names. Non-breaking spaces (`\xa0`) from `&nbsp;` also stopped contents pages being recognised at all | Contents entries are excluded **by line** (`· p. N`) instead of by skipping pages, so a mixed page measures correctly; entities are decoded before matching; and **`scripts/verify-pdfs.py`** now asserts that every heading appears in the contents block and that its number is the page it is really printed on — **227 headings across 10 PDFs, 0 defects**. Exit code 1 on any mismatch, so it can gate a release |
+
+---
+
+## 8. What was checked before shipping
 
 ```
-npm run check   → tsc clean · 283 tests / 20 files · design 43 assertions · 0 secrets / 224 files
+npm run check   → tsc clean · 290 tests / 20 files · design 43 assertions · 0 secrets / 224 files
 npm run build   → 53 pages · 52 unique <h1> · own host only
 Render API      → deploy dep-dbl0mghsrm7s73bcggdg → live
 daily job       → 1,107 offers re-written through the new cleaning path in 6.5 s
@@ -120,6 +140,10 @@ live API        → /api/coupons totals {live 1112, withCode 289, stores 246, fi
                → 0 of 192 rows contain '&amp;' · 0 duplicate store+code pairs
 live CSS        → user-select:none, position:sticky, .header-avatar, .deals-loading,
                   .is-loading, .offer-list-origin, input:-webkit-autofill all present
+live copy       → 0 welded sentences in 192 sampled rows; scripts/reclean-copy.ts
+                  reports 0 of 1,116 rows out of step with the rules
+PDF set        → python3 scripts/verify-pdfs.py: 227 headings, 10 PDFs, 0 contents
+                  defects (every entry points at the page it is printed on)
 ```
 
 **Verification limit, stated plainly:** there is still no browser in this environment — Playwright needs
@@ -129,7 +153,7 @@ and a second tour recorded the same way is the fastest way to close the loop.
 
 ---
 
-## 8. Deliberately not changed
+## 9. Deliberately not changed
 
 - **The 25-product catalogue.** The tour shows a comparison engine built for a catalogue the feed cannot
   yet fill; padding it would be the exact dishonesty this project refuses.
@@ -141,11 +165,11 @@ and a second tour recorded the same way is the fastest way to close the loop.
 
 ---
 
-## 9. Open, and honest about it
+## 10. Open, and honest about it
 
 1. **No code has ever been reported working.** 289 codes, 0 confirmations. The page now says so once,
    plainly. The fix is a working "did it work?" loop with real traffic — not a redesign.
 2. **The catalogue ceiling is the eBay keyset**, not the interface.
 3. **Token rotation** from `deploy.env` is still outstanding (see `docs/28-backup-and-recovery.md` §6).
-4. **A second device tour** is the only way to confirm items 8–28 landed as intended on the owner's
+4. **A second device tour** is the only way to confirm the layout items (8–28) landed as intended on the owner's
    screen; everything in that list is CSS, so it should, but "should" is not "does".

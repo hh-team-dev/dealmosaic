@@ -727,6 +727,11 @@ record; the detail lives in **`docs/28-backup-and-recovery.md`**.
 | Archived | full project archive + per-file SHA-256 manifest + machine-readable inventory; public DB snapshot (441 rows, restore-verified into a scratch DB); private DB snapshot outside the repo at mode 0600 |
 | PDFs | 8 documents + combined, regenerated after the freeze |
 
+**Superseded on 3 November 2026 by the site-tour release (`v1.2-tour`).** The archive to keep is now
+`dealmosaic_2026-11-03_18-42-30.tar.gz` (269 files, `--verify` clean) — see §2.4 of the dossier and §2.22
+below. The freeze above is still the record of what the palette and the design audit are, and those did
+not change; only the code and the documentation moved.
+
 **One thing I changed without being asked, and should name:** `~/.config/dealmosaic/deploy.env`
 was mode **644** — readable by any process on the machine. It is now **600**. The encrypted vault
 still does not exist, and rotating the tokens is still open; both are owner actions and both are
@@ -734,11 +739,11 @@ written down in §6 of the dossier rather than left as a wish.
 
 ---
 
-### 2.22 The site tour: 34 defects found by watching the product — 3 November 2026
+### 2.22 The site tour: 36 defects found by watching the product — 3 November 2026
 
 The owner recorded a 9-minute tour of the live site on a 390 px Android. The video was downloaded and
 read at one frame per second (567 frames, near-static stretches identified), every defect traced to the
-line that caused it, and all 34 fixed. The full table is **`docs/29-site-tour-fixes.md`**; this is the
+line that caused it, and all 36 fixed. The full table is **`docs/29-site-tour-fixes.md`**; this is the
 summary that matters.
 
 **The finding that justifies the exercise:** the coupon feed was printing raw HTML entities —
@@ -762,11 +767,42 @@ one WHERE clause used by both queries, which is what shipped. And “the same di
 emphasis, it is noise that teaches the eye to skip — so the page now says it once and the cards stay
 quiet.
 
-**Gates:** 283 tests / 20 files (13 new, in `apps/api/tests/text.test.ts`, written as prohibitions),
-design 43 assertions, 0 secrets / 224 files, 53 pages / 52 unique `<h1>`. API redeployed to Render and
-verified live; the daily job re-wrote 1,107 rows through the new path in 6.5 s.
+### The last one found, and why it needed a script of its own
 
-**Deployed:** commit `6f3d643`, Pages `d68f6a3b`, Render deploy `dep-dbl0mghsrm7s73bcggdg` (`live`).
+The 35th defect was not visible in any single screenshot: **the merchant's sentences arrive welded.**
+`Prices starting from just Rs. 1299!Enjoy a flat discount…promo code.Valid for orders of Rs. 1999`, or
+with no punctuation at all — `Rs. 669Offer open to all`, `superior sound qualityPrice starts at Rs. 2,499`.
+**94 of 192 sampled live descriptions** carried at least one weld, and the card clamps to two lines, so it
+read as one long typo.
+
+It is one function, `splitSentences()` in `apps/api/src/lib/text.ts`, called from `cleanCopy` so every
+ingest path gets it. The rules are deliberately narrow, because splitting on any capital letter would
+break `MuscleBlaze`, `FirstCry`, `MyMuse`, `OpenFit`, `SaneBox` and the rest of this feed:
+
+| Weld | Rule | Never touched |
+|---|---|---|
+| `Rs. 1299!Enjoy` | space after `!` or `?` before any capital | — |
+| `promo code.Valid` | space after `.` only before Capital+lowercase | `U.S.`, `1.5`, `No.5` |
+| `qualityPrice starts` | split in front of one of 98 clause words | every brand tail in the feed |
+| `requiredAct fast` | after a word the weld is a missing **full stop** | — |
+| `Rs. 79Act fast` | after a number only a missing space — never a re-punctuated claim | — |
+
+**The backfill needed its own script, and that is the interesting part.** `POST /api/coupons/sync`
+re-writes every row the feed *currently returns* — which repaired 1,103 of 1,105 rows and left two rows
+still printing `Rs. 67,399!Applicable on the entire…`, because they had dropped out of the feed but were
+still live on the site. **`scripts/reclean-copy.ts`** walks the `coupons` table instead and re-runs the
+same functions in place; it imports `apps/api/src/lib/text.ts` rather than reimplementing it, and it is
+idempotent (reaching **0 rows would change** when the table matches the rules). It rewrote **118 rows**.
+That is the general lesson: a fix at ingest only reaches what ingest still sees.
+
+**Gates:** 290 tests / 20 files (16 of them in `apps/api/tests/text.test.ts`, written as prohibitions and
+built from strings read off the live API), design 43 assertions, 0 secrets / 224 files, 53 pages / 52
+unique `<h1>`. API redeployed to Render and verified live; the daily job re-wrote 1,107 rows through the
+new path in 6.5 s.
+
+**Deployed:** commits `6f3d643` (30 interface fixes), `c8c179a` (the findings document), `0f3dc1b`
+(sentence splitting), `e193ac1` (the last clause word) · Pages `d68f6a3b`, then rebuilt and re-deployed
+from the fixed tree · Render `dep-dbl0mghsrm7s73bcggdg`, then `dep-dbl2jjtbedkc73etj520` (`live`).
 
 **Verification limit, unchanged:** no browser in this environment, so these fixes are verified from the
 deployed CSS, the built bundle and the live API — not from pixels. A second tour, recorded the same way,
@@ -810,9 +846,12 @@ dealmosaic/
 │   └── src/                    matching, ranking, money, location, countries, validate
 ├── scripts/                    generate-seo, prerender, backup, db-backup,
 │                               audit-design, secrets-scan, vault, dev,
-│                               generate-og.py, brand/brand.py (identity build)
+│                               reclean-copy.ts (re-run the copy rules over rows
+│                               the feed no longer returns), handover-pdf.py,
+│                               generate-og.py, brand/brand.py (identity build),
+│                               verify-pdfs.py (contents-page assertions)
 ├── deploy/                     render.yaml, keepalive, feeds
-├── docs/                       this documentation set (28 files)
+├── docs/                       this documentation set (29 files)
 │                               + brand-identity.md + brand/concepts/ (renders)
 └── secrets/                    encrypted vault (gitignored)
 ```
@@ -1123,12 +1162,34 @@ pip install markdown xhtml2pdf pypdf pymupdf
 python3 scripts/handover-pdf.py            # → ~/handover-pdf/
 python3 scripts/handover-pdf.py --all      # include the historical build reports
 python3 scripts/handover-pdf.py --only 00-MASTER-HANDOVER
+python3 scripts/verify-pdfs.py             # assert the contents, don't trust it
 ```
 
 One A4 PDF per document plus `DEALMOSAIC-handover-set.pdf` — a cover, then the
 whole set in reading order. Each file carries a contents block with **real page
 numbers**, verified by the script itself: it renders, measures where each heading
 landed, and re-renders until the numbers stop moving.
+
+```bash
+python3 scripts/verify-pdfs.py   # 227 headings across 10 PDFs, every entry checked
+```
+
+That check exists because the numbers were wrong and nobody could see it. Three
+defects, found on 3 November 2026 by measuring rather than reading:
+
+* a heading in a document's last section carried **no page number at all**;
+* `&amp;` in a heading printed literally in the contents block, and because the
+  escaped string never matched the rendered page, **every such entry lost its
+  number**;
+* headings beginning on the same page where the contents block ends were **not
+  found at all**, because the matcher skipped any page that looked like a contents
+  page — which is exactly what `00-MASTER-HANDOVER` does on page 2.
+
+The fixes: entities are decoded before matching, and contents entries are excluded
+*by line* (`· p. N`) instead of by skipping pages, so a mixed page is measured
+correctly. `verify-pdfs.py` asserts that every heading appears in the contents and
+that the number beside it is the page it is actually printed on. It exits non-zero
+on any mismatch.
 
 The PDFs are generated artefacts and are **not committed** — a binary that can be
 rebuilt from the markdown on demand has no business in a git history. The script
@@ -1439,7 +1500,7 @@ Two rules learned the hard way:
 | **`brand-identity.md`** | **The identity: geometry, palette with HEX+RGB, the three concepts and their scores, every rejected refinement, asset inventory, verification** |
 | **`27-five-agent-consolidation.md`** | **The five-agent decision report: what they agreed on, what was false, what shipped, what was rejected and why** |
 | **`28-backup-and-recovery.md`** | **The backup dossier: every file in the release archive with its hash, the database snapshots, the credential gap, the recovery runbook and the disaster table** |
-| **`29-site-tour-fixes.md`** | **34 defects found by watching a 9-minute phone tour, each traced to its cause and fixed, with the verification log** |
+| **`29-site-tour-fixes.md`** | **36 defects found by watching a 9-minute phone tour plus the PDF set it exposed, each traced to its cause and fixed, with the verification log** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |
