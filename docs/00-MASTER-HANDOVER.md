@@ -1,6 +1,6 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **2.2.0 hospitality release:** see [37-hotels-and-dining.md](37-hotels-and-dining.md) for Hotels, Dining, the universal dock, nine-region discovery scope, verification and recovery. Earlier release evidence below is historical.
+> **Current 2.3.0 expansion:** see [38-expanded-destinations.md](38-expanded-destinations.md) for 17 selectable destinations in both Hotels and Dining, local restaurant/fast-food discovery, verification and recovery. Earlier release sections below are historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
@@ -8,7 +8,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **4 November 2026** · Version **2.2.0** · Current release evidence is in document 37.
+Last updated: **4 November 2026** · Version **2.3.0** · Current release evidence is in document 38.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -20,11 +20,13 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — PWA and website 2.2.0
+## Current live release — PWA and website 2.3.0
 
-Hotels and Dining are live at `/stays` and `/dining`, with a universal Shop/Hotels/Dining/Deals/Saved dock and nine selected city regions. These are discovery, provider-offer and input-based planning experiences, not a claim of live room inventory, native bookings or verified outlet coverage. Runtime source/tag: `882b6b3` / `pwa-v2.2.0`; Pages: `07ae339c`; build: `2.2.0-81b6e3913008`. Backend remains `00711ad` / `dep-dblhapnf3r2c73a5csa0`.
+Hotels and Dining now have 17 selectable destinations, with Hyderabad retained once and independent Gurugram/Noida choices alongside the overlapping Delhi NCR grouping. Dining includes external city-specific discovery for local restaurants, vegetarian restaurants, cafés/bakeries and fast food, plus official links and city searches for the nine named chains. This is discovery, not a comprehensive verified venue inventory, native booking service or live room-price comparison.
 
-Document **37** records the implementation, limits, operating tour, 479 unit tests, 45 PWA-build and 45 classic-build hospitality scenarios, 51 real-worker PWA scenarios, 39 persistent-control scenarios, 46 production-built shopping flows, 69 clean live public states, six live hospitality states and six live PWA states. Counts overlap; they are not additive unique user journeys. Physical phone testing remains a distinct owner walkthrough.
+Runtime source/tag: `e6baee3` / `pwa-v2.3.0`; Pages: `76a560fc`; build: `2.3.0-33240826e285`. Backend remains `00711ad` / `dep-dblhapnf3r2c73a5csa0`. The shopping design, global navigation and install/deals bar remain intact. No paid API or embedded Google map was added; Maps is an explicit external search destination only.
+
+Document **38** records the expansion, limits, phone tour, 514 unit tests, 57 hospitality cases on each deployable flavor, 51 real-worker PWA cases, 39 persistent-control cases, 46 production-built shopping cases and the separate live verification ledger. Counts overlap; physical-device testing remains distinct. Document 37 retains the preceding 2.2.0 evidence and hospitality architecture.
 
 ## Previous verified release — PWA and website 2.0.1
 

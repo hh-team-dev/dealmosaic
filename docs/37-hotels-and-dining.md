@@ -1,6 +1,8 @@
 # DealMosaic 2.2.0 — Hotels, Dining and the universal destination dock
 
-**Date:** 4 November 2026. **Release scope:** one DealMosaic website, one shared PWA/classic application, two new hospitality destinations. This document supersedes document 36 as the current enhancement handover; documents 35–36 retain the install/offline architecture and preceding release evidence.
+> **Current 2.3.0 expansion:** see [38-expanded-destinations.md](38-expanded-destinations.md) for 17 selectable destinations in both Hotels and Dining, local restaurant/fast-food discovery, verification and recovery. Earlier release sections below are historical.
+
+**Date:** 4 November 2026. **Release scope:** one DealMosaic website, one shared PWA/classic application, two new hospitality destinations. This document records the 2.2.0 enhancement; the later expansion is in document 38, while documents 35–36 retain the install/offline architecture and preceding release evidence.
 
 ## 1. Approved scope and the launch boundary
 

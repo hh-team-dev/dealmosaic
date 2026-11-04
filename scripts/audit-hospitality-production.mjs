@@ -21,6 +21,9 @@ for(const [engine,type,viewport]of [['chromium-320',chromium,{width:320,height:7
   const cityChecks=[];
   for(const city of cities){await page.getByLabel('City region').selectOption(city.id);
    if(route==='dining'){
+    // selectOption dispatches the native change before React's route transition commits in WebKit.
+    // Require the exact final query for every link; do not certify the previous city's render.
+    await page.waitForFunction(destination=>{const links=[...document.querySelectorAll('.hospitality-local-grid a')];return links.length===4&&links.every(a=>new URL(a.href).searchParams.get('query').endsWith(destination));},city.id==='delhi-ncr'?'Delhi NCR, India':city.query);
     assert.equal(await page.locator('.hospitality-brand-card').count(),9);
     const local=await page.locator('.hospitality-local-grid a').evaluateAll(links=>links.map(a=>a.href));assert.equal(local.length,4);
     for(const href of local){const u=new URL(href);assert.equal(u.origin,'https://www.google.com');assert.equal(u.searchParams.get('api'),'1');assert.ok(u.searchParams.get('query').endsWith(city.id==='delhi-ncr'?'Delhi NCR, India':city.query));}

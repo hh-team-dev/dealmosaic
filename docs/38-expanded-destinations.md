@@ -37,6 +37,8 @@ Provider URLs are not a transaction certification. Search results identified the
 
 ## 5. Phone-sized walkthrough
 
+If an already-open app shows the earlier release, use **Update this window** when offered and when your current form is safe to leave. Do not clear browser data or saved lists.
+
 1. Open **Dining** from the bottom dock, then choose a destination. Try Siliguri: searches should name West Bengal.
 2. Choose **Local restaurants**, or refine with a neighbourhood. A labelled external search opens only when selected.
 3. Scroll to the chains. Their official links remain; **Find [brand] in [city]** opens the separate city search. A search is not proof of a branch.
@@ -60,4 +62,29 @@ Runtime source/tag: `e6baee38e84da6b5ef4822ecad398d4295c2b1f8` / `pwa-v2.3.0`. P
 - Classic archive SHA-256: `ae0ea060ff85c1878eb8545cda606aacb7f53d6949974a22c425c91b44db0263`.
 - The existing main-bundle advisory remains about 503 KB raw / 153 KB gzip; no warning threshold was raised. The lazy hospitality module is about 35.5 KB raw / 11.7 KB gzip, with about 10.4 KB CSS raw.
 
-Live verification and recovery completion are recorded below only after publication.
+Live publication and recovery details follow below.
+
+
+The first live audit's fast WebKit city loop read the preceding render immediately after native selection. A focused reproduction confirmed all 17 exact queries after the React route transition committed. The live harness now waits for the exact destination suffix on all four local-search links before its assertions, rather than accepting stale links or adding retries. Application/release bytes are unchanged by this audit-only correction.
+
+
+## 7. Published release and live checks
+
+- Live pages: **https://dealmosaic.pages.dev/stays** and **https://dealmosaic.pages.dev/dining**.
+- Cloudflare Pages deployment: **76a560fc**; immutable URL: **https://76a560fc.dealmosaic.pages.dev**. Public release metadata matches **2.3.0-33240826e285**.
+- **6/6 live hospitality route/viewport states** passed across Chromium 320px, desktop and WebKit 390px. All **17 selections in each section** were exercised in each engine/viewport, with exact city-specific local/chain queries checked on Dining, secure outgoing links, one dock, no overflow and no accessibility violations.
+- **6/6 live PWA online/offline states** passed across Chromium/WebKit, with 14 safe static entries, zero API entries and no Chromium installability errors.
+- **42/42 persistent-bar states** passed at top and bottom, including both hospitality routes and the real 404 page.
+- **69 public rendering/accessibility states, zero findings**. Rendering coverage is not transaction certification; suites overlap.
+- Read-only Render verification confirms the unchanged live backend **dep-dblhapnf3r2c73a5csa0** / **00711adc7557ac6882a890c7436875232cc7d656**. Public direct-shop state remains products `[]`, seller `null`. No production test product, order, email, payment or push was created.
+- Live mobile and desktop layouts were visually reviewed. A separate 390px viewport check confirmed the local-discovery anchor leaves the title below the fixed top controls. All screenshots were deleted; local test servers were stopped.
+- Evidence: `docs/audits/2026-11-04-expansion-*.json`. Physical-device/provider handoff remains outside these automated checks.
+
+## 8. Recovery and handover
+
+Retain both 2.3.0 deployable archives, their `SHA256SUMS`, the source archive and the complete-history `backups/pwa-v2.3.0.bundle` with its SHA-256 sidecar. Keep the older recovery points too. Serve the classic removal worker at the same origin if reverting to online-only operation; do not reset the backend or clear user storage.
+
+The source archive contains application source, paired-build evidence, live audit results and the audit timing correction. The final Git bundle also includes subsequent archive/PDF bookkeeping and the PDF validation report. Printable delivery is `38-expanded-destinations.pdf` plus the regenerated full `DEALMOSAIC-handover-set.pdf`; `scripts/validate-handover-pdfs.py` checks contents-page references and text bounds throughout the set.
+
+
+**Verified 2.3.0 source archive:** `backups/dealmosaic_2026-11-04_15-49-31.tar.gz` — 360 checksum-verified files, 1,943,811 bytes; SHA-256 `ef595dd2c5f7b5678f39be4bcbc9ef87a7af6e8ed8b1cd7ce38bc507595445f2`. Final self-referential archive notes and PDF verification follow this archive and are retained in the complete-history 2.3.0 Git bundle.

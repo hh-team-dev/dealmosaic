@@ -1,0 +1,1106 @@
+{
+  "at": "2026-11-04T15:45:09.297Z",
+  "base": "https://dealmosaic.pages.dev",
+  "build": "2.3.0-33240826e285",
+  "coverage": "Six live route/viewport states, each at top and bottom, plus all 17 selections on each route and city-specific local/chain map query checks. Real browser engines, not physical devices. No provider/affiliate navigation, sign-in, booking, order, payment, message or notification.",
+  "results": [
+    {
+      "engine": "chromium-320",
+      "route": "stays",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 5,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 740,
+          "viewportHeight": 740,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 60,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 740,
+          "viewportHeight": 740,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 60,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "/api/go/810a125d-e8a4-45e2-b647-0fea38f4488d?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/7c287475-b412-4fb1-b009-68068555fb0a?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/9eaa5ff9-74be-4929-95d0-689c116f3b23?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/ff9f2c49-2e82-4a72-97e7-a22569fea773?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/54b20ca7-1255-4e48-aab8-53a9d8844391?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "https://www.makemytrip.com/hotels/noida-hotels.html",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.cleartrip.com/hotels",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.itchotels.com/in/en",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-320",
+      "route": "dining",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 0,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 740,
+          "viewportHeight": 740,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 60,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 740,
+          "viewportHeight": 740,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 60,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 60,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=vegetarian+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=cafes+and+bakeries+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=fast+food+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.kfc.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=KFC+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.mcdonaldsindia.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=McDonald%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.dominos.co.in/store-location",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Domino%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.pizzahut.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Pizza+Hut+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.wowmomo.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Wow%21+Momo+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.speciality.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Mainland+China+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.thechinesewok.com/locate",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Chinese+Wok+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.tacobell.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Taco+Bell+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.barbequenation.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Barbeque+Nation+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-desktop",
+      "route": "stays",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 5,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 888,
+          "viewportHeight": 900,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 85.609375,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 888,
+          "viewportHeight": 900,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 85.609375,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "/api/go/810a125d-e8a4-45e2-b647-0fea38f4488d?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/7c287475-b412-4fb1-b009-68068555fb0a?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/9eaa5ff9-74be-4929-95d0-689c116f3b23?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/ff9f2c49-2e82-4a72-97e7-a22569fea773?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/54b20ca7-1255-4e48-aab8-53a9d8844391?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "https://www.makemytrip.com/hotels/noida-hotels.html",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.cleartrip.com/hotels",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.itchotels.com/in/en",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    {
+      "engine": "chromium-desktop",
+      "route": "dining",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 0,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 888,
+          "viewportHeight": 900,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 85.609375,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 888,
+          "viewportHeight": 900,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 85.609375,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 85.59375,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=vegetarian+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=cafes+and+bakeries+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=fast+food+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.kfc.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=KFC+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.mcdonaldsindia.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=McDonald%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.dominos.co.in/store-location",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Domino%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.pizzahut.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Pizza+Hut+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.wowmomo.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Wow%21+Momo+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.speciality.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Mainland+China+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.thechinesewok.com/locate",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Chinese+Wok+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.tacobell.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Taco+Bell+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.barbequenation.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Barbeque+Nation+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    {
+      "engine": "webkit-390",
+      "route": "stays",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 5,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 844,
+          "viewportHeight": 844,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 74,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 844,
+          "viewportHeight": 844,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": "page",
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 74,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "/api/go/810a125d-e8a4-45e2-b647-0fea38f4488d?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/7c287475-b412-4fb1-b009-68068555fb0a?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/9eaa5ff9-74be-4929-95d0-689c116f3b23?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/ff9f2c49-2e82-4a72-97e7-a22569fea773?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "/api/go/54b20ca7-1255-4e48-aab8-53a9d8844391?src=hospitality-stays",
+          "rel": "sponsored nofollow noopener noreferrer"
+        },
+        {
+          "href": "https://www.makemytrip.com/hotels/noida-hotels.html",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.cleartrip.com/hotels",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.itchotels.com/in/en",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    },
+    {
+      "engine": "webkit-390",
+      "route": "dining",
+      "cityChecks": [
+        "delhi-ncr",
+        "mumbai",
+        "bengaluru",
+        "chennai",
+        "hyderabad",
+        "kolkata",
+        "pune",
+        "ahmedabad",
+        "jaipur",
+        "mysuru",
+        "bhubaneswar",
+        "visakhapatnam",
+        "jamshedpur",
+        "siliguri",
+        "haridwar",
+        "gurugram",
+        "noida"
+      ],
+      "status": 200,
+      "offers": 0,
+      "states": [
+        {
+          "position": "top",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 844,
+          "viewportHeight": 844,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 74,
+              "height": 54
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "overflow": false,
+          "docks": 1,
+          "legacyBars": 0,
+          "barTop": 0,
+          "dockBottom": 844,
+          "viewportHeight": 844,
+          "links": [
+            {
+              "text": "Shop",
+              "href": "/",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Hotels",
+              "href": "/stays?city=jaipur",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Dining",
+              "href": "/dining?city=jaipur",
+              "active": "page",
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Deals",
+              "href": "/deals",
+              "active": null,
+              "width": 74,
+              "height": 54
+            },
+            {
+              "text": "Saved",
+              "href": "/saved",
+              "active": null,
+              "width": 74,
+              "height": 54
+            }
+          ]
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "sources": [
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=vegetarian+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=cafes+and+bakeries+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=fast+food+restaurants+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.kfc.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=KFC+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.mcdonaldsindia.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=McDonald%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.dominos.co.in/store-location",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Domino%E2%80%99s+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.pizzahut.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Pizza+Hut+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://restaurants.wowmomo.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Wow%21+Momo+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.speciality.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Mainland+China+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.thechinesewok.com/locate",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Chinese+Wok+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.tacobell.co.in/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Taco+Bell+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.barbequenation.com/",
+          "rel": "noopener noreferrer"
+        },
+        {
+          "href": "https://www.google.com/maps/search/?api=1&query=Barbeque+Nation+in+Noida%2C+Uttar+Pradesh%2C+India",
+          "rel": "noopener noreferrer"
+        }
+      ]
+    }
+  ]
+}
