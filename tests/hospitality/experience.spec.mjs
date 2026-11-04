@@ -133,8 +133,9 @@ test("distinct warm pages, one h1, original illustrations, canonical and accessi
     await expect(page.locator(".hospitality")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByLabel("City region")).toHaveValue("jaipur");
-    expect(await page.locator("link[rel=canonical]").getAttribute("href")).toBe(
-      "http://127.0.0.1:5173" + path,
+    // Prerender uses the public origin; await the runtime SEO effect on the local preview.
+    await expect(page.locator("link[rel=canonical]")).toHaveAttribute(
+      "href", "http://127.0.0.1:5173" + path,
     );
     await expect(page.locator(".hospitality-art")).toBeVisible();
     await geometry(page);
