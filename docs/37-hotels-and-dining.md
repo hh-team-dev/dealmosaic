@@ -76,7 +76,7 @@ Offer panels refresh after five minutes and when the document becomes visible; h
 
 City/brand selections can appear in the URL. **Copy city link** constructs a clean link with only those selections, excluding dates, child ages and calculator values. Dates and entered amounts stay in page memory and are not stored in the DealMosaic account, local storage or backend. Search details reach the named hotel provider only when its link is chosen. No location permission is automatically requested.
 
-Official directory links are non-affiliate. Separately labelled provider-feed offer buttons reuse the existing `/api/go/{id}` tracking route and `sponsored nofollow noopener noreferrer` protections. No private affiliate approval is assumed, no new campaign application was submitted, and commission does not control directory order. Existing backend tracking/approval rules still apply.
+Official directory links are non-affiliate. Separately labelled provider-feed offer buttons reuse the existing `/api/go/{id}` tracking route and `sponsored nofollow noopener noreferrer` protections. No private affiliate approval is assumed, no new campaign application was submitted, and commission does not control directory order. Existing backend tracking/approval rules still apply. A read-only check of existing cached campaign records found Cleartrip Hotels and ITC Hotels marked `open`, last synced on 2 November 2026. This is not a live payout test, direct partnership announcement or hotel inventory API approval; campaign eligibility and validation still govern any earnings.
 
 Privacy, terms and disclosure were updated in both React and no-JavaScript prerender content. The warm design audit includes the new stylesheet and five additional AA text pairs. The site remains usable without motion; no hospitality animation, false urgency, reviews, ratings or fabricated prices were added.
 
@@ -99,7 +99,7 @@ Privacy, terms and disclosure were updated in both React and no-JavaScript prere
 
 The source preserves existing brand artwork; new illustrations are editable SVG markup in the repository. No paid asset, API or infrastructure was added. Backend/DB schema and direct-sales settings are unchanged. Never replace Turso with D1 as part of recovery.
 
-Release verification, deployment identifiers and archive checksums are recorded in section 9 once publishing checks complete. Recovery retains the prior verified 2.1.1 PWA/classic pair, source tag and Git bundle, as well as earlier 2.0.1 and original website references. The current-feature classic archive must retain hospitality functionality while removing the offline worker safely at the same origin.
+Release verification, deployment identifiers and archive checksums are recorded in section 9. Recovery retains the prior verified 2.1.1 PWA/classic pair, source tag and Git bundle, as well as earlier 2.0.1 and original website references. The current-feature classic archive must retain hospitality functionality while removing the offline worker safely at the same origin.
 
 ## 7. Phone-sized owner tour
 
@@ -123,8 +123,54 @@ Release verification, deployment identifiers and archive checksums are recorded 
 
 ## 9. Verification and publication ledger
 
-**Implementation checks completed before packaging:** 479 unit tests across 32 files; TypeScript checks; 48 warm-design assertions; 39 hospitality interaction scenarios across Chromium 320px/desktop and WebKit 390px; 48 existing shopping/owner interaction scenarios on the Vite preview. Final production-built and deployment evidence will be appended after those checks, not inferred from these development results.
+**Implementation checks completed before packaging:** 479 unit tests across 32 files; TypeScript checks; 48 warm-design assertions; 39 hospitality interaction scenarios across Chromium 320px/desktop and WebKit 390px; 48 existing shopping/owner interaction scenarios on the Vite preview. Production-built and live results are recorded separately below; these development results are not substituted for them.
 
 All mutation-oriented business tests use the isolated local test database. The initial simultaneous API/fixture startup hit a SQLite lock; it was resolved by stopping the test API, seeding fixtures separately and restarting it. The first hospitality test pass also exposed test locator/hydration timing and currency-format expectations, corrected with accessible combobox roles, awaited rendered state and integer-friendly INR formatting. The full subsequent development suites passed without retries or skips. Screenshots were reviewed and deleted.
 
 The production-built WebKit failure-injection checks initially bypassed page-level request mocks after the service worker took control, returning the real local empty feed instead. The hospitality interaction harness now blocks service workers for deterministic mocked API scenarios. The separate PWA suite keeps real workers enabled, including dedicated cold-offline checks on both hospitality routes; live read-only checks also use normal workers. This separates UI failure injection from actual worker certification rather than claiming a mocked request exercised the worker.
+
+The classic-build cross-engine check also required awaiting React’s canonical-metadata effect on the local preview: prerender intentionally starts with the real public canonical, then the local runtime updates it. The assertion still requires the exact correct URL, but now waits for that effect instead of treating an intermediate hydration frame as final. This post-build test-harness refinement does not change the release application bytes.
+
+### Production build and interaction gates
+
+- Runtime source/tag: `882b6b31bb49c72f0fa948e5e860ea79449af5e0` / `pwa-v2.2.0`. The paired archives were generated from a clean tree (`workingTreeChanged: false`). Subsequent audit/handover commits retain the final evidence and test-harness refinements without changing application code.
+- PWA build: **2.2.0-81b6e3913008**, **767,853 bytes** of safe static precache data; 14 static assets and no API data.
+- Classic build: **2.2.0-60ef862eb530**, the same hospitality/commerce behavior with the network-only removal worker. Metadata lists 765,843 static bytes; this is not a classic offline cache.
+- **57 HTML files per flavor**, 56 unique h1 values, 54 prerendered pages and 53 sitemap URLs. There are two new canonical hospitality pages, not nine duplicate location pages.
+- **45/45 production-built hospitality cases**, **39/39 persistent-control cases**, **51/51 real-worker PWA cases**, **46/46 production-built shopping/owner flows**. No failures, skipped cases or retries in these final runs. Suites overlap; do not add them together as distinct user journeys.
+- The 48-case Vite shopping run includes two component-injection cases intentionally excluded from the 46-case static-build run.
+- PWA/classic parity compares hospitality JavaScript and CSS separately, alongside existing direct-commerce code, identity and cache-safety contracts.
+- Vite reports a main-bundle advisory at roughly 503 KB raw / 153 KB gzip. Hospitality itself remains a lazy module (about 30 KB raw / 10 KB gzip plus 9.5 KB CSS raw / 2.3 KB gzip). No warning was hidden by raising a limit. Further splitting of legacy eager routes is a performance opportunity, not a claim of a measured user-facing failure.
+
+### Paired deployable archives
+
+Directory: `/home/user/releases/dealmosaic-2.2.0/`. Both archive checksums were verified with `sha256sum -c SHA256SUMS`.
+
+- PWA SHA-256: `f30a8e808e43c2db8bc52de1e20a12ce5b600ce083a29108502e8becab08e8aa`.
+- Classic SHA-256: `9cd2cf448446e58ae07ebf56fd9f72bb1a72efd8823ca65d7705dc16c3c8d448`.
+
+Keep the 2.1.1, 2.0.1 and original website recovery bundles. Do not deploy old website files alone over a PWA: use the appropriate classic archive/removal worker and preserve the backend and user storage.
+
+### Published release and live verification
+
+- Published at **https://dealmosaic.pages.dev**, with **/stays** and **/dining**. Cloudflare Pages deployment **07ae339c**, immutable URL **https://07ae339c.dealmosaic.pages.dev**. Live metadata matches **2.2.0-81b6e3913008**.
+- The first immediate post-deployment check still saw the preceding 2.1.1 metadata and stopped, rather than certifying the wrong release. A subsequent read confirmed the new build before the complete live checks ran. No redundant deployment or application rollback was needed.
+- **45/45 classic hospitality interaction cases** also passed, with no skipped/flaky cases. Both deployable flavors retain the same new features.
+- **6/6 live hospitality route/viewport states**, checked at top and bottom in Chromium 320px, Chromium desktop and WebKit 390px: one five-link dock, correct selected city/canonical, truthful offer labels, secure outgoing-link attributes, no overflow, no JavaScript errors and no accessibility violations. Five currently eligible hotel-feed listings were visible in these dated checks; no dining inventory count was invented.
+- **42/42 live persistent-bar route/viewport states**, each at top and bottom, including Hotels, Dining and the real 404 page.
+- **6/6 live PWA online/offline states** across Chromium and WebKit, 14 safe static cache entries, **zero API cache entries**, and no Chromium installability errors.
+- **69 live public rendering/accessibility states, zero findings**, including the 53 sitemap URLs and additional account/error/install entry states. This is read-only rendering coverage, not a claim of 69 separate transactional tests.
+- Backend remains Render **dep-dblhapnf3r2c73a5csa0** / **00711adc7557ac6882a890c7436875232cc7d656**. The direct shop remains paused/empty; no production test products, orders, payment references, email probes or push notifications were created.
+- Evidence is in `docs/audits/2026-11-04-hospitality-*.json`. Physical Android/iPhone OS installation, keyboard behavior and real provider/app handoff are not certified by these browser checks.
+
+### Recovery artifacts and final housekeeping
+
+The source backup and complete-history Git bundle described in the recovery dossier accompany the paired deployment archives. Final handover/PDF bookkeeping may follow the source archive; the final Git bundle includes those subsequent documentation commits. All screenshots are reviewed then deleted, and isolated test servers are stopped.
+
+The final PDF audit exposed several pre-existing long command lines and table-code fragments running past the page edge in older handover chapters. The shared renderer now wraps preformatted lines for visual display and wraps long table words; the Markdown remains the authoritative unaltered code. `scripts/validate-handover-pdfs.py` checks every contents entry against its actual page and checks text bounds in all individual documents and the combined set. This is a documentation fix only; no additional frontend deployment is required.
+
+**Verified 2.2.0 source archive:** `backups/dealmosaic_2026-11-04_15-15-37.tar.gz` — 348 files, 1,872,272 bytes; SHA-256 `b87da9aa98a91ce205c96d3b188c0734cba05efd10fcabc40f54ffc0756240a2`. The archive contains application source, final test/live evidence, the PDF wrapping fix and the first complete PDF validation. Final backup notes and PDF bookkeeping follow the archive and are included in the final Git history/bundle.
+
+**Complete-history recovery bundle:** `backups/pwa-v2.2.0.bundle`, with `.bundle.sha256`; it preserves the runtime tag and final documentation commits. The preceding source bundles and paired deployment packages are retained.
+
+**PDF delivery:** `37-hotels-and-dining.pdf` plus the fully regenerated `DEALMOSAIC-handover-set.pdf`; 18 PDFs in the set. All contents entries and text bounds are checked by the committed validator.

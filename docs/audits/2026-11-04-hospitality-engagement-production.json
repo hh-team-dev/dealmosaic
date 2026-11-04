@@ -1,0 +1,805 @@
+{
+  "at": "2026-11-04T15:06:44.109Z",
+  "base": "https://dealmosaic.pages.dev",
+  "coverage": "42 read-only live viewport/route states, each checked at top and bottom; not physical-device certification.",
+  "results": [
+    {
+      "engine": "chromium-320",
+      "path": "/",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/stays",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/dining",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/deals",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/saved",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/browse",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/search?q=rice",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/privacy",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/login",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/register",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/install",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/admin?tab=shop",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/handcrafted",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-320",
+      "path": "/this-page-does-not-exist",
+      "status": 404,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/stays",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/dining",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/deals",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/saved",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/browse",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/search?q=rice",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/privacy",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/login",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/register",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/install",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/admin?tab=shop",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/handcrafted",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "chromium-desktop",
+      "path": "/this-page-does-not-exist",
+      "status": 404,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 52,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 0,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/stays",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/dining",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/deals",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/saved",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/browse",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/search?q=rice",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/privacy",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/login",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/register",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/install",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/admin?tab=shop",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/handcrafted",
+      "status": 200,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit-390",
+      "path": "/this-page-does-not-exist",
+      "status": 404,
+      "top": {
+        "bars": 1,
+        "tickers": 1,
+        "y": 0,
+        "height": 96,
+        "install": "Install app ↗",
+        "overflow": false
+      },
+      "bottom": {
+        "y": 0,
+        "tickerY": 52,
+        "overflow": false
+      },
+      "errors": []
+    }
+  ]
+}

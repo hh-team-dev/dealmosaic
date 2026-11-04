@@ -127,6 +127,8 @@ th {{
   font-size: 7.9pt;
 }}
 td {{
+  overflow-wrap: anywhere;
+  word-break: break-all;
   padding: 3pt 4pt;
   border: 0.5pt solid {HAIRLINE};
   vertical-align: top;
@@ -235,6 +237,18 @@ def convert(text: str) -> tuple[str, list[tuple[int, str, str]]]:
         extension_configs={'toc': {'toc_depth': '2-3', 'anchorlink': False}},
     )
     html = md.convert(text)
+    # xhtml2pdf does not reliably wrap preformatted long commands. Wrap only
+    # their visual PDF lines; authoritative Markdown/code stays unchanged.
+    import textwrap
+    def wrap_pre(match):
+        raw = html_lib.unescape(match.group(2))
+        lines = []
+        for line in raw.splitlines():
+            lines.extend(textwrap.wrap(line, width=100, replace_whitespace=False,
+                                       drop_whitespace=False, break_on_hyphens=False,
+                                       subsequent_indent='  ') or [''])
+        return '<pre><code' + match.group(1) + '>' + html_lib.escape('\n'.join(lines)) + '</code></pre>'
+    html = re.sub(r'<pre><code([^>]*)>([\s\S]*?)</code></pre>', wrap_pre, html)
     # `&amp;` inside a heading arrives escaped in the token name; left escaped it
     # printed as "&amp;" in the contents block *and* never matched the rendered
     # page, so those entries lost their page number.

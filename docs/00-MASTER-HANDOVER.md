@@ -20,6 +20,12 @@ Earlier dated release sections below are retained as history.
 
 ---
 
+## Current live release — PWA and website 2.2.0
+
+Hotels and Dining are live at `/stays` and `/dining`, with a universal Shop/Hotels/Dining/Deals/Saved dock and nine selected city regions. These are discovery, provider-offer and input-based planning experiences, not a claim of live room inventory, native bookings or verified outlet coverage. Runtime source/tag: `882b6b3` / `pwa-v2.2.0`; Pages: `07ae339c`; build: `2.2.0-81b6e3913008`. Backend remains `00711ad` / `dep-dblhapnf3r2c73a5csa0`.
+
+Document **37** records the implementation, limits, operating tour, 479 unit tests, 45 PWA-build and 45 classic-build hospitality scenarios, 51 real-worker PWA scenarios, 39 persistent-control scenarios, 46 production-built shopping flows, 69 clean live public states, six live hospitality states and six live PWA states. Counts overlap; they are not additive unique user journeys. Physical phone testing remains a distinct owner walkthrough.
+
 ## Previous verified release — PWA and website 2.0.1
 
 **Source/tag:** `2faf8e3` / `pwa-v2.0.1`; **Pages:** `eaa528a8`; **build:** `2.0.1-ca9abf43ff28`. The backend is unchanged at Render `dep-dblhapnf3r2c73a5csa0` / `00711ad`. **409 tests**, **48 PWA scenarios**, **46 production-built business flows**, **67 live public states** and **6 live PWA states** passed their checks. Physical Android/iPhone OS installation remains a device-specific confirmation, not a claimed automated test.

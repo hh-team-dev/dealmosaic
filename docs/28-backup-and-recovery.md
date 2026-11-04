@@ -6,7 +6,14 @@
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
-## Latest recovery point — PWA / website 2.1.1
+## Current recovery point — PWA / website 2.2.0
+
+- Runtime tag: `pwa-v2.2.0` at `882b6b31bb49c72f0fa948e5e860ea79449af5e0`.
+- Paired packages: `/home/user/releases/dealmosaic-2.2.0/`; PWA build `2.2.0-81b6e3913008`, classic build `2.2.0-60ef862eb530`. Both SHA-256 checks pass and both hospitality interaction suites passed 45/45 cases.
+- Pages deployment: `07ae339c`; current enhancement/phone tour: `37-hotels-and-dining.md`.
+- The preceding 2.1.1, 2.0.1 and original website bundles/packages below remain recovery references. Do not replace the backend or database to switch frontend flavors.
+
+## Previous recovery point — PWA / website 2.1.1
 
 - Live source `d608712436c056f6b9880a394c8319ea32f86997`, tag `pwa-v2.1.1`, Pages `1a0b443a`.
 - **Verified source archive:** `backups/dealmosaic_2026-11-04_13-29-18.tar.gz`, **325 files**, **1,769,832 bytes**, SHA-256 `fcfc9e203f8b684c9eb7d47d4c0c4c603e5857637463d8d0be0682db7364d355`. It contains source and final test/live evidence. This self-referential archive note and final cleanup bookkeeping follow the archive and are included in the final Git bundle/PDFs.
@@ -630,3 +637,9 @@ npm run secrets:scan
 | `secrets/README.md` | 733 | `e0164276ec793f0f` |
 | `tsconfig.base.json` | 358 | `b6a3fdcef09292a2` |
 | `vitest.config.ts` | 220 | `24507a09b7d4b500` |
+
+**Verified 2.2.0 source archive:** `backups/dealmosaic_2026-11-04_15-15-37.tar.gz` — 348 files, 1,872,272 bytes; SHA-256 `b87da9aa98a91ce205c96d3b188c0734cba05efd10fcabc40f54ffc0756240a2`. The archive contains application source, final test/live evidence, the PDF wrapping fix and the first complete PDF validation. Final backup notes and PDF bookkeeping follow the archive and are included in the final Git history/bundle.
+
+**Complete-history recovery bundle:** `backups/pwa-v2.2.0.bundle`, with `.bundle.sha256`; it preserves the runtime tag and final documentation commits. The preceding source bundles and paired deployment packages are retained.
+
+**PDF delivery:** `37-hotels-and-dining.pdf` plus the fully regenerated `DEALMOSAIC-handover-set.pdf`; 18 PDFs in the set. All contents entries and text bounds are checked by the committed validator.

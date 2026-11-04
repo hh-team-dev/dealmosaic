@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-04",
+  "release": "2.2.0",
+  "validatedHeadings": 357,
+  "files": [
+    {
+      "file": "00-MASTER-HANDOVER.pdf",
+      "pages": 33,
+      "bytes": 1437156,
+      "outOfPageSpans": 0,
+      "headings": 86
+    },
+    {
+      "file": "brand-identity.pdf",
+      "pages": 5,
+      "bytes": 321388,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "04-design-system.pdf",
+      "pages": 6,
+      "bytes": 397618,
+      "outOfPageSpans": 0,
+      "headings": 15
+    },
+    {
+      "file": "15-project-handover.pdf",
+      "pages": 19,
+      "bytes": 922480,
+      "outOfPageSpans": 0,
+      "headings": 58
+    },
+    {
+      "file": "14-seo-launch-checklist.pdf",
+      "pages": 4,
+      "bytes": 244859,
+      "outOfPageSpans": 0,
+      "headings": 15
+    },
+    {
+      "file": "27-five-agent-consolidation.pdf",
+      "pages": 6,
+      "bytes": 338642,
+      "outOfPageSpans": 0,
+      "headings": 12
+    },
+    {
+      "file": "28-backup-and-recovery.pdf",
+      "pages": 17,
+      "bytes": 961013,
+      "outOfPageSpans": 0,
+      "headings": 24
+    },
+    {
+      "file": "29-site-tour-fixes.pdf",
+      "pages": 6,
+      "bytes": 346257,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "30-earning-and-admin.pdf",
+      "pages": 4,
+      "bytes": 262012,
+      "outOfPageSpans": 0,
+      "headings": 13
+    },
+    {
+      "file": "31-affiliate-applications.pdf",
+      "pages": 4,
+      "bytes": 244983,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "32-direct-sales-blueprint.pdf",
+      "pages": 7,
+      "bytes": 318528,
+      "outOfPageSpans": 0,
+      "headings": 17
+    },
+    {
+      "file": "33-direct-shop-release.pdf",
+      "pages": 6,
+      "bytes": 323481,
+      "outOfPageSpans": 0,
+      "headings": 16
+    },
+    {
+      "file": "34-sitewide-audit.pdf",
+      "pages": 6,
+      "bytes": 306561,
+      "outOfPageSpans": 0,
+      "headings": 9
+    },
+    {
+      "file": "35-pwa-handover.pdf",
+      "pages": 9,
+      "bytes": 435253,
+      "outOfPageSpans": 0,
+      "headings": 23
+    },
+    {
+      "file": "36-persistent-install-and-deals.pdf",
+      "pages": 5,
+      "bytes": 271344,
+      "outOfPageSpans": 0,
+      "headings": 12
+    },
+    {
+      "file": "37-hotels-and-dining.pdf",
+      "pages": 7,
+      "bytes": 283542,
+      "outOfPageSpans": 0,
+      "headings": 17
+    },
+    {
+      "file": "00-executive-summary.pdf",
+      "pages": 4,
+      "bytes": 259204,
+      "outOfPageSpans": 0,
+      "headings": 7
+    },
+    {
+      "file": "DEALMOSAIC-handover-set.pdf",
+      "pages": 149,
+      "bytes": 7718299,
+      "outOfPageSpans": 0
+    }
+  ]
+}
