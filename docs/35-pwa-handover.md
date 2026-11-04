@@ -103,6 +103,8 @@ The manifest retains **id `/`, scope `/`, start URL `/?source=pwa`** and the exi
 7. A connection loss during an open sensitive task keeps its entered fields in memory but locks interaction. Reconnection does not submit anything or silently reload; the customer chooses to reload current information, with a warning about unsaved fields.
 8. Saved deals are labelled snapshots even online. Offline the list is read-only and store links are absent. Copying an old code remains possible with the explicit stale-data warning.
 
+The cache identity hashes the worker source as well as the version, flavor and static asset bytes, so a worker-only fix cannot overwrite the active cache during installation. A cleared/evicted cache gets a small, self-contained branded connection page rather than a broken blank screen. Saved-record validation is used by both direct reads and the subscribed React hooks; the offline browser regression checks malformed entries.
+
 The build fails if the static precache exceeds **4 MiB**. After activation it retains the current and one preceding DealMosaic cache so a recently opened tab can still request an earlier lazy chunk. Caches from other applications are not deleted. This bounded retention is not an indefinite guarantee for arbitrarily old tabs after many releases.
 
 ### Controlled updates

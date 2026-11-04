@@ -1,11 +1,13 @@
 /** Fails release packaging if the two flavors drift in identity or commerce code. */
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
 const root=process.argv[2]||'/tmp/dealmosaic-pwa-packages';
 const version=JSON.parse(readFileSync('package.json','utf8')).version;
 for(const mode of ['pwa','classic']) {
  const dir=join(root,mode),release=JSON.parse(readFileSync(join(dir,'pwa-release.json'),'utf8'));
+ const hash=createHash('sha256').update(mode).update(version).update(readFileSync(mode==='classic'?'apps/web/pwa/classic-worker.js':'apps/web/pwa/worker.js'));for(const path of release.assets)hash.update(path).update(readFileSync(join(dir,path)));assert.equal(release.build,version+'-'+hash.digest('hex').slice(0,12),'Worker logic must participate in cache identity');
  assert.equal(release.mode,mode);assert.equal(release.version,version);assert.ok(release.precacheBytes<=4*1024*1024);
  for(const path of release.assets){assert.ok(/^\/(pwa-shell\.html|assets\/[^/]+\.(js|css)|fonts\/[^/]+\.woff2|brand\/dm-icon[^/]*\.png|favicon\.svg|apple-touch-icon\.png)$/.test(path),`Unsafe precache entry ${path}`);assert.ok(existsSync(join(dir,path)));}
  const shell=readFileSync(join(dir,'pwa-shell.html'),'utf8');assert.ok(shell.includes('window.__DM_OFFLINE_SHELL__=true'));assert.ok(shell.includes('noindex,nofollow'));

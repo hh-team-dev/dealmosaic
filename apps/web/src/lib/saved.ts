@@ -194,10 +194,10 @@ export function clearSaved(): void {
 }
 
 /** Subscribes to changes in the given list. Returns the current value. */
-function useStoredList<T>(key: string): T[] {
+function useStoredList<T>(key: string, readValid: () => T[]): T[] {
   const [items, setItems] = useState<T[]>([]);
   useEffect(() => {
-    const sync = (): void => setItems(read<T>(key));
+    const sync = (): void => setItems(readValid());
     sync();
     listeners.add(sync);
     // Another tab saving a deal should light up this tab too.
@@ -209,14 +209,14 @@ function useStoredList<T>(key: string): T[] {
       listeners.delete(sync);
       window.removeEventListener('storage', onStorage);
     };
-  }, [key]);
+  }, [key, readValid]);
   return items;
 }
 
 export function useSaved(): SavedDeal[] {
-  return useStoredList<SavedDeal>(SAVED_KEY);
+  return useStoredList<SavedDeal>(SAVED_KEY, readSaved);
 }
 
 export function useViewed(): ViewedDeal[] {
-  return useStoredList<ViewedDeal>(VIEWED_KEY);
+  return useStoredList<ViewedDeal>(VIEWED_KEY, readViewed);
 }

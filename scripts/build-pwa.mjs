@@ -24,7 +24,8 @@ const assets = ['/pwa-shell.html', ...readdirSync(join(root,'assets')).filter(f=
   '/brand/dm-icon-192.png','/brand/dm-icon-512.png','/brand/dm-icon-maskable-512.png'];
 const bytes = assets.reduce((n,path)=>n+statSync(join(root,path)).size,0);
 if(bytes>4*1024*1024) throw new Error('Offline release exceeds the 4 MiB budget');
-const hash=createHash('sha256');for(const path of assets) hash.update(path).update(readFileSync(join(root,path)));
+const workerTemplate=readFileSync(mode==='classic'?'apps/web/pwa/classic-worker.js':'apps/web/pwa/worker.js','utf8');
+const hash=createHash('sha256');hash.update(mode).update(version).update(workerTemplate);for(const path of assets) hash.update(path).update(readFileSync(join(root,path)));
 const build=version+'-'+hash.digest('hex').slice(0,12);
 const config={version,build,mode,assets,precacheBytes:bytes,cachePolicy:'static-only; API/network-only; no mutation replay'};
 const worker = mode==='classic' ? readFileSync('apps/web/pwa/classic-worker.js','utf8') : readFileSync('apps/web/pwa/worker.js','utf8').replace('__DM_PWA_CONFIG__',JSON.stringify(config));

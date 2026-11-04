@@ -21,7 +21,11 @@ export const usePwa = () => useSyncExternalStore(fn => { listeners.add(fn); retu
 export const sensitiveTask = (path: string) => /^\/(admin|buy|direct-orders|app|login|register|verify-email|reset-password|forgot-password)(\/|$)/.test(path);
 
 async function offlineReady() {
-  try { patch({ ready: Boolean(registration?.active) && (await caches.keys()).some(key => key.startsWith(CACHE_PREFIX)) }); }
+  try {
+    const names = (await caches.keys()).filter(key => key.startsWith(CACHE_PREFIX));
+    const shells = await Promise.all(names.map(async name => Boolean(await (await caches.open(name)).match('/pwa-shell.html'))));
+    patch({ ready: Boolean(registration?.active) && shells.some(Boolean) });
+  }
   catch { patch({ ready: false }); }
 }
 async function register() {

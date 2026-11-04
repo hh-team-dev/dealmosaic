@@ -57,8 +57,8 @@ async function navigation(request) {
   } catch {
     const shell = await (await caches.open(CACHE)).match('/pwa-shell.html');
     if (shell) return shell;
-    return new Response('DealMosaic needs a connection to open for the first time. Reconnect and try again.', {
-      status: 503, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' },
+    return new Response('<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Reconnect to open DealMosaic</title></head><body style="margin:0;background:#FFF9F0;color:#4A2B22;font:18px/1.6 system-ui"><main style="max-width:640px;padding:32px;margin:auto"><p>DealMosaic</p><h1>Reconnect to open DealMosaic</h1><p>The offline app files are unavailable. Your browser may have cleared them. Live prices, orders and payments need a connection; nothing has been queued.</p><p>Reconnect, then reopen the website to prepare offline access again.</p><a href="/" style="display:inline-block;padding:12px;color:#4A2B22">Open the website</a></main></body></html>', {
+      status: 503, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },
     });
   } finally { clearTimeout(timer); }
 }
