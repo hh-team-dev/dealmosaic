@@ -458,7 +458,7 @@ function privacyBody() {
       <p>No third-party advertising trackers, no cross-site profiles, no selling of data.
       A pincode is not an identity — it is shared by tens of thousands of people.</p>
       <h2>Offline app files</h2>
-      <p>Supported browsers store public app code, fonts and icons for offline access, not API responses, private orders or payment details. Purchases and payments are never queued. Install & app settings lets you select online-only mode without clearing saves or cookies. Browser eviction or clearing site data can remove local files and notes. Installation requests no notification, location, camera or microphone permission.</p>
+      <p>Supported browsers store public app code, fonts and icons for offline access, not API responses, private orders or payment details. Purchases and payments are never queued. Install & app settings lets you select online-only mode without clearing saves or cookies. The install/deals bar stores your optional pause-animation preference only in this browser, not on the server. Browser eviction or clearing site data can remove local files and notes. Installation requests no notification, location, camera or microphone permission.</p>
       <h2>Direct-order information</h2>
       <p>Direct checkout records your name, email, phone, delivery address, product, price,
       shipping selection and payment references. The seller shares necessary delivery details
