@@ -1,6 +1,6 @@
 # DealMosaic 2.4.0 — Pet-friendly stays and dining
 
-**4 November 2026.** One implementation for the website, installable PWA and current-feature classic fallback. Publication and recovery evidence is appended below after the release gates; the preceding live release is recorded in document 38.
+**4 November 2026.** One implementation for the website, installable PWA and current-feature classic fallback. **Published and production-checked.** Exact release/recovery evidence follows below; document 38 records the preceding release.
 
 ## 1. Delivered scope and honest limits
 
@@ -25,7 +25,7 @@ The checklist asks about species, weight, breed/count limits, permitted areas, r
 
 The cost calculator requires all five monetary fields, including an explicit zero where appropriate. It uses integer paise and separates actual expense, refundable deposit and upfront payment. Blank or unknown charges are never silently zero. A discount exceeding eligible entered cost is rejected. Switching venues clears entered costs; changing destination clears the planning entries, as disclosed. Local back/contact links and the existing global dock protect unsaved planning input. This is not a promise to preserve values across refresh, every browser navigation, or an explicit destination/venue reset.
 
-Destination/type sharing excludes pet details, weight, count and costs. Planning values remain in page memory; no new storage or server endpoint was added. The public CSV contains venue facts only, is generated from the authoritative JSON, quotes fields and neutralizes formula-leading content. Offline source/map/offer/download actions are disabled; the PWA's cached reference interface does not certify current admission. Classic remains online-only, as documented previously.
+Destination/type sharing excludes pet details, weight, count and costs. Planning values remain in page memory; no new storage or server endpoint was added. The public CSV contains venue facts only, is generated from the authoritative JSON, quotes fields and neutralizes formula-leading content. An already-open directory remains reference-only after connection loss, with source/map/offer/download actions disabled. A cold offline launch of this route uses the existing saved-list safety screen, not an offline venue catalogue; the requested URL is retained. Classic remains online-only, as documented previously.
 
 ## 4. Phone-sized tour
 
@@ -56,3 +56,42 @@ The development candidate passed **613 unit tests across 33 files**, typechecks,
 A real rapid-selection defect was corrected: successive destination/type changes now read the current browser query rather than a stale React-render snapshot, so a quick second selection cannot discard the first. The same URL-construction correction applies to the hospitality handler. Browser tests exercise all 17 destinations with both pet place types. Separate initial test failures were harness issues: nested-label option/textarea contents made exact/partial label selectors ambiguous; tests now use the controls' semantic role and accessible name.
 
 Browser and accessibility checks are not the owner's physical Android/iOS walkthrough, a venue-policy confirmation, complete inventory certification or a live booking/coupon-redemption test. No real products, orders, messages, payments or push probes were created. Direct commerce remains paused and its private seller/banking/shipping gates are unchanged. Backend and database need no change for this frontend release.
+
+## 7. Published release and final verification
+
+- Live directory: **https://dealmosaic.pages.dev/pet-friendly**; public download: **https://dealmosaic.pages.dev/pet-friendly-directory.csv**.
+- Runtime source: **`151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05`**; immutable tag **`pwa-v2.4.0`**.
+- Pages: **`316dae5b`**; immutable deployment **https://316dae5b.dealmosaic.pages.dev**.
+- PWA: **`2.4.0-6a89cd91fc88`**, 17 safe static assets, **828,754 bytes**. Classic: **`2.4.0-16ea84c91465`**, 826,744 metadata static bytes. The classic worker removes the PWA cache; these metadata bytes are not an offline-cache claim for classic.
+- Backend read-only status confirmed unchanged: Render **`dep-dblhapnf3r2c73a5csa0`**, commit **`00711adc7557ac6882a890c7436875232cc7d656`**, live. No API/schema deployment was needed.
+- Packages were built from the committed runtime source with **`workingTreeChanged: false`**. Subsequent documentation, evidence and test-harness changes do not modify the deployed application.
+
+| Gate | Result |
+|---|---|
+| Unit/type/design | 613 tests / 33 files; typechecks; 48 design assertions |
+| Project dependency audit | 0 reported vulnerabilities |
+| Development hospitality | 81 passed across three browser/viewport projects |
+| Packaged PWA hospitality | 81 passed |
+| Packaged classic hospitality | 81 passed |
+| Real-worker PWA regressions | 51 passed, including cold pet-route safety fallback |
+| Persistent install/deals controls | 39 passed |
+| Built shopping regressions | 46 passed; 2 development-only source-import probes explicitly skipped |
+| Live pet directory | 3 browser/viewport states; all 17 destinations × 2 types in each; exact venue IDs, CSV, source links, no automatic external calls, accessibility and offline action locking |
+| Live Hotels/Dining | 6 states, each covering all 17 choices |
+| Live PWA | 8 states across Chromium/WebKit, including cold pet-route safety fallback; no API cache |
+| Live persistent controls | 45 route/viewport states at both scroll positions |
+| Live public pages | 70 states; no recorded layout, runtime, API-5xx or accessibility findings |
+| Build/SEO/recovery packages | Shared-chunk parity and both archive SHA-256 checks passed; 58 HTML pages / 57 unique h1 texts / 54 sitemap URLs |
+
+Counts overlap and must not be totalled as unique scenarios. Machine-readable evidence is `docs/audits/2026-11-04-pets-*.json`; the release summary records exact metadata. A follow-up audit initially assumed a cold offline pet route rendered venue cards. That expectation was incorrect: the established PWA safety boundary deliberately shows the saved-list fallback. The audit was corrected to test the actual safety contract, then all eight live states passed. No runtime change or unsupported offline-catalogue claim was made. The development-only component probe now automatically skips when Vite source imports are unavailable instead of failing a built deployment for lacking development endpoints.
+
+The existing main-chunk size and static/dynamic-import build advisories remain; this is not a performance-budget certification. Pet-specific UI/data is lazy-loaded. A 390px visual review was completed and its screenshot deleted.
+
+## 8. Matched packages and recovery
+
+Directory: `/home/user/releases/dealmosaic-2.4.0/`. Retain both archives, `release.json`, `SHA256SUMS` and `README.txt`:
+
+- `dealmosaic-2.4.0-pwa.tar.gz`: SHA-256 **`43dbb62f4024376ec5b1ae2535628ac5a3c5b2c7262b4629815702137be8f564`**.
+- `dealmosaic-2.4.0-classic.tar.gz`: SHA-256 **`7860afb14e923fca7113cc582d6c60cb109abff235cd274f9ac9dcd281acd47f`**.
+
+Classic preserves current customer/owner features while retiring the service worker at the same origin; do not reset the backend or clear account/saved-list storage. Retain earlier release recovery points, the original website baseline and original brand vectors. The full source/history bundle and verified source archive are recorded below. Offline users cannot be recalled instantly; the usual explicit update/reconnect rules still apply.

@@ -1,6 +1,8 @@
 # DealMosaic 2.3.0 — More destinations and local dining
 
-**Date: 4 November 2026.** Shared website / PWA / classic release. This is the current expansion handover; document 37 retains the preceding hospitality implementation and its dated verification.
+> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
+
+**Date: 4 November 2026.** Shared website / PWA / classic release. This records the preceding destination expansion; document 37 retains the preceding hospitality implementation and its dated verification.
 
 ## 1. What changed
 

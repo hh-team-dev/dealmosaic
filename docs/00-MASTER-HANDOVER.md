@@ -1,6 +1,6 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **Current 2.3.0 expansion:** see [38-expanded-destinations.md](38-expanded-destinations.md) for 17 selectable destinations in both Hotels and Dining, local restaurant/fast-food discovery, verification and recovery. Earlier release sections below are historical.
+> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
@@ -8,7 +8,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **4 November 2026** · Version **2.3.0** · Current release evidence is in document 38.
+Last updated: **4 November 2026** · Version **2.4.0** · Current release evidence is in document 39.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -20,7 +20,13 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — PWA and website 2.3.0
+## Current live release — PWA and website 2.4.0
+
+The actual pet-friendly directory adds 41 sourced entries (23 stays, 18 dining places), visible without deals. Hotels cover all 17 destination choices; restaurant evidence gaps remain in Haridwar and Jamshedpur. It is explicitly non-exhaustive. Sources, dates, species, restrictions and conflicts are exposed. Separate eligible-offer panels currently contain zero established current offers, not invented travel coupons. Private unsent questions, cost/deposit separation, public CSV and city/type sharing are included. The website, PWA and classic fallback share the implementation.
+
+Runtime/tag: `151bc4d` / `pwa-v2.4.0`; Pages: `316dae5b`; PWA build: `2.4.0-6a89cd91fc88`. Backend remains `00711ad` / `dep-dblhapnf3r2c73a5csa0`. Document **39** records exact release gates, live checks, recovery and phone tour; document 38 preserves the preceding expansion. No merchant was contacted, no booking/payment was made and no paid service was added. Physical-device testing remains distinct.
+
+## Previous verified release — PWA and website 2.3.0
 
 Hotels and Dining now have 17 selectable destinations, with Hyderabad retained once and independent Gurugram/Noida choices alongside the overlapping Delhi NCR grouping. Dining includes external city-specific discovery for local restaurants, vegetarian restaurants, cafés/bakeries and fast food, plus official links and city searches for the nine named chains. This is discovery, not a comprehensive verified venue inventory, native booking service or live room-price comparison.
 

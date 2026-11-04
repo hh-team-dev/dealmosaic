@@ -1,6 +1,6 @@
 # DealMosaic 2.1.1 — persistent install invitation and floating deals
 
-> **Current 2.3.0 expansion:** see [38-expanded-destinations.md](38-expanded-destinations.md) for 17 selectable destinations in both Hotels and Dining, local restaurant/fast-food discovery, verification and recovery. Earlier release sections below are historical.
+> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 **Date:** 4 November 2026. **Scope:** the same enhancement in website, PWA and current-feature classic builds. This records the preceding enhancement; `35-pwa-handover.md` preserves the earlier 2.0.1 architecture and recovery history.
 

@@ -91,6 +91,8 @@ test('delete dialog keeps typing focus, traps keyboard focus and Escape restores
   await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0); await expect(opener).toBeFocused();
 });
 test('shared busy button cannot be re-enabled by disabled=false', async ({page}) => {
+  // This component-mount probe requires Vite source imports. Built-page flows below do not.
+  test.skip((await page.request.get('/src/components/Ui.tsx')).status() !== 200, 'Development-only source-import probe; use the built interaction scenarios for release validation.');
   await page.goto('/login');
   await page.evaluate(async()=>{
     const React=await import('/node_modules/.vite/deps/react.js');

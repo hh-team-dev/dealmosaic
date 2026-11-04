@@ -1,0 +1,553 @@
+{
+  "at": "2026-11-04T16:39:55.426Z",
+  "base": "https://dealmosaic.pages.dev",
+  "build": "2.4.0-6a89cd91fc88",
+  "sourceEntries": 41,
+  "csvRows": 41,
+  "results": [
+    {
+      "engine": "chromium-320",
+      "status": 200,
+      "entries": 41,
+      "selections": [
+        {
+          "city": "delhi-ncr",
+          "kind": "hotel",
+          "count": 5
+        },
+        {
+          "city": "delhi-ncr",
+          "kind": "restaurant",
+          "count": 5
+        },
+        {
+          "city": "mumbai",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "mumbai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "chennai",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "chennai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "mysuru",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "mysuru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "siliguri",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "siliguri",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "haridwar",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "haridwar",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "gurugram",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "gurugram",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "restaurant",
+          "count": 2
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "automaticExternalRequests": [],
+      "offlineActionsDisabled": true
+    },
+    {
+      "engine": "chromium-desktop",
+      "status": 200,
+      "entries": 41,
+      "selections": [
+        {
+          "city": "delhi-ncr",
+          "kind": "hotel",
+          "count": 5
+        },
+        {
+          "city": "delhi-ncr",
+          "kind": "restaurant",
+          "count": 5
+        },
+        {
+          "city": "mumbai",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "mumbai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "chennai",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "chennai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "mysuru",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "mysuru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "siliguri",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "siliguri",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "haridwar",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "haridwar",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "gurugram",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "gurugram",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "restaurant",
+          "count": 2
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "automaticExternalRequests": [],
+      "offlineActionsDisabled": true
+    },
+    {
+      "engine": "webkit-390",
+      "status": 200,
+      "entries": 41,
+      "selections": [
+        {
+          "city": "delhi-ncr",
+          "kind": "hotel",
+          "count": 5
+        },
+        {
+          "city": "delhi-ncr",
+          "kind": "restaurant",
+          "count": 5
+        },
+        {
+          "city": "mumbai",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "mumbai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bengaluru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "chennai",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "chennai",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "hyderabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "kolkata",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "pune",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "ahmedabad",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jaipur",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "mysuru",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "mysuru",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "bhubaneswar",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "visakhapatnam",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "jamshedpur",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "siliguri",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "siliguri",
+          "kind": "restaurant",
+          "count": 1
+        },
+        {
+          "city": "haridwar",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "haridwar",
+          "kind": "restaurant",
+          "count": 0
+        },
+        {
+          "city": "gurugram",
+          "kind": "hotel",
+          "count": 1
+        },
+        {
+          "city": "gurugram",
+          "kind": "restaurant",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "hotel",
+          "count": 2
+        },
+        {
+          "city": "noida",
+          "kind": "restaurant",
+          "count": 2
+        }
+      ],
+      "violations": [],
+      "errors": [],
+      "automaticExternalRequests": [],
+      "offlineActionsDisabled": true
+    }
+  ],
+  "limits": "Read-only browser checks, not physical-device, venue-policy, booking, offer-redemption or comprehensive-inventory certification."
+}

@@ -1,0 +1,160 @@
+{
+  "checkedAt": "2026-11-04T16:47:08.618674+00:00",
+  "version": "2.4.0",
+  "runtimeCommit": "151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05",
+  "runtimeTag": "pwa-v2.4.0",
+  "pages": "316dae5b",
+  "immutableUrl": "https://316dae5b.dealmosaic.pages.dev",
+  "backend": {
+    "id": "dep-dblhapnf3r2c73a5csa0",
+    "status": "live",
+    "commit": "00711adc7557ac6882a890c7436875232cc7d656"
+  },
+  "packages": {
+    "version": "2.4.0",
+    "createdAt": "2026-11-04T16:29:56.975Z",
+    "sourceCommit": "151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05",
+    "workingTreeChanged": false,
+    "files": [
+      {
+        "mode": "pwa",
+        "file": "dealmosaic-2.4.0-pwa.tar.gz",
+        "sha256": "43dbb62f4024376ec5b1ae2535628ac5a3c5b2c7262b4629815702137be8f564",
+        "release": {
+          "version": "2.4.0",
+          "build": "2.4.0-6a89cd91fc88",
+          "mode": "pwa",
+          "assets": [
+            "/pwa-shell.html",
+            "/assets/DirectShop-Dl2ErnmA.js",
+            "/assets/Hospitality-CSGIWTEy.js",
+            "/assets/PetFriendly-B_sDNWQR.js",
+            "/assets/PetFriendly-mk-h50He.css",
+            "/assets/ShopControl-Bh2Gxn8H.js",
+            "/assets/hospitality-D6rRKM0o.css",
+            "/assets/hospitality-YiMYhH8n.js",
+            "/assets/index-CYa8OZiq.css",
+            "/assets/index-Dsqvp7jv.js",
+            "/fonts/Outfit.woff2",
+            "/fonts/Plus-Jakarta-Sans.woff2",
+            "/favicon.svg",
+            "/apple-touch-icon.png",
+            "/brand/dm-icon-192.png",
+            "/brand/dm-icon-512.png",
+            "/brand/dm-icon-maskable-512.png"
+          ],
+          "precacheBytes": 828754,
+          "cachePolicy": "static-only; API/network-only; no mutation replay"
+        }
+      },
+      {
+        "mode": "classic",
+        "file": "dealmosaic-2.4.0-classic.tar.gz",
+        "sha256": "7860afb14e923fca7113cc582d6c60cb109abff235cd274f9ac9dcd281acd47f",
+        "release": {
+          "version": "2.4.0",
+          "build": "2.4.0-16ea84c91465",
+          "mode": "classic",
+          "assets": [
+            "/pwa-shell.html",
+            "/assets/DirectShop-TXQBR_9V.js",
+            "/assets/Hospitality-B352v5hg.js",
+            "/assets/PetFriendly-B9Yaq-pe.js",
+            "/assets/PetFriendly-mk-h50He.css",
+            "/assets/ShopControl-BIk4-I8U.js",
+            "/assets/hospitality-D6rRKM0o.css",
+            "/assets/hospitality-YiMYhH8n.js",
+            "/assets/index-CYa8OZiq.css",
+            "/assets/index-D9CH8EQT.js",
+            "/fonts/Outfit.woff2",
+            "/fonts/Plus-Jakarta-Sans.woff2",
+            "/favicon.svg",
+            "/apple-touch-icon.png",
+            "/brand/dm-icon-192.png",
+            "/brand/dm-icon-512.png",
+            "/brand/dm-icon-maskable-512.png"
+          ],
+          "precacheBytes": 826744,
+          "cachePolicy": "static-only; API/network-only; no mutation replay"
+        }
+      }
+    ]
+  },
+  "unitTests": 613,
+  "unitFiles": 33,
+  "designAssertions": 48,
+  "dependencyAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "browser": {
+    "development": {
+      "startTime": "2026-11-04T16:23:06.208Z",
+      "duration": 209480.989,
+      "expected": 81,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "built": {
+      "startTime": "2026-11-04T16:30:09.197Z",
+      "duration": 152525.72900000002,
+      "expected": 81,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "classic": {
+      "startTime": "2026-11-04T16:32:42.481Z",
+      "duration": 152387.068,
+      "expected": 81,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "pwa": {
+      "startTime": "2026-11-04T16:35:15.806Z",
+      "duration": 54889.647,
+      "expected": 51,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "engagement": {
+      "startTime": "2026-11-04T16:36:12.270Z",
+      "duration": 112469.451,
+      "expected": 39,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "shopping-built": {
+      "startTime": "2026-11-04T16:38:06.195Z",
+      "duration": 45328.085,
+      "expected": 46,
+      "skipped": 2,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "live": {
+    "petEngines": 3,
+    "petDestinationTypeSelections": 102,
+    "hospitalityStates": 6,
+    "pwaStates": 8,
+    "persistentBarStates": 45,
+    "publicPageStates": 70
+  },
+  "limits": [
+    "Non-exhaustive sourced inventory; not direct venue confirmation.",
+    "Haridwar and Jamshedpur restaurant evidence gap.",
+    "No eligible current offer established.",
+    "No physical-device, booking, coupon-redemption or live financial test.",
+    "Already-open directory disables external actions offline; cold offline route shows saved-list safety screen.",
+    "Two Vite-only source-import probes skipped on built pages; 46 built shopping flows passed."
+  ]
+}

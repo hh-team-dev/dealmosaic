@@ -1,12 +1,19 @@
 # 28 — Backup and recovery dossier
 
-> **Current 2.3.0 expansion:** see [38-expanded-destinations.md](38-expanded-destinations.md) for 17 selectable destinations in both Hotels and Dining, local restaurant/fast-food discovery, verification and recovery. Earlier release sections below are historical.
+> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
-## Current recovery point — PWA / website 2.3.0
+## Current recovery point — PWA / website 2.4.0
+
+- Runtime tag: `pwa-v2.4.0` at `151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05`.
+- Paired packages: `/home/user/releases/dealmosaic-2.4.0/`; PWA `2.4.0-6a89cd91fc88`, classic `2.4.0-16ea84c91465`. Both archive checksums and shared-chunk parity pass; hospitality scenarios pass 81/81 on each flavor.
+- Pages deployment: `316dae5b`; current evidence, source-backup and bundle ledger: `39-pet-friendly-directory.md`.
+- Retain the prior release recovery points. No backend/database replacement is required; classic uses the same-origin removal worker and preserves saved-list/account storage.
+
+## Previous recovery point — PWA / website 2.3.0
 
 - Runtime tag: `pwa-v2.3.0` at `e6baee38e84da6b5ef4822ecad398d4295c2b1f8`.
 - Paired packages: `/home/user/releases/dealmosaic-2.3.0/`; PWA `2.3.0-33240826e285`, classic `2.3.0-b9f48fc99d99`. Both archive checksums and source-flavor parity pass; hospitality scenarios pass 57/57 on each flavor.
