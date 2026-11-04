@@ -1,23 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { CouponView } from './coupons-api';
 
-/**
- * THINGS THE SHOPPER KEEPS — WITHOUT AN ACCOUNT.
- *
- * A wishlist that requires registration before it works is a wishlist nobody
- * uses. These two lists therefore live in `localStorage` and work for a first-
- * time visitor on a phone, with no sign-up, no cookie banner and no server round
- * trip. That is also the cheapest possible implementation, which matters here.
- *
- * What is stored is deliberately **only what the deal card already showed**:
- * the title, the store, the code, the stated price and percentage, and the
- * expiry. No browsing history of third-party sites, no search queries, no
- * identifiers, nothing that could be joined to a person. When a shopper clears
- * their browser the record is gone, which is the correct behaviour for data that
- * was never given to us in the first place.
- *
- * `price_alerts` (a real, growing-price notification with email delivery) needs
- * a verified address, so that stays a signed-in feature — see docs/25.
+/** Device-first saved notes. Signed-in deal IDs are mirrored best-effort for
+ * eligible opted-in reminders; the local board is not hydrated across devices.
+ * Clearing site data removes the local records. No offline mutation queue exists.
  */
 
 const SAVED_KEY = 'dealmosaic.saved.v1';
@@ -63,7 +49,7 @@ function read<T>(key: string): T[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(key);
-    if (!raw) return [];
+    if (!raw || raw.length > 1024 * 1024) return [];
     const parsed: unknown = JSON.parse(raw);
     return Array.isArray(parsed) ? (parsed as T[]) : [];
   } catch {
@@ -86,11 +72,26 @@ function write<T>(key: string, value: T[]): boolean {
 }
 
 export function readSaved(): SavedDeal[] {
-  return read<SavedDeal>(SAVED_KEY);
+  return read<unknown>(SAVED_KEY).filter((value): value is SavedDeal => {
+    if (!value || typeof value !== 'object') return false;
+    const d = value as SavedDeal;
+    return ['id', 'title', 'merchant', 'merchantSlug', 'savedAt', 'group'].every(key => typeof (d as unknown as Record<string, unknown>)[key] === 'string')
+      && d.id.length > 0 && d.id.length <= 128 && !Number.isNaN(Date.parse(d.savedAt))
+      && (d.code === null || typeof d.code === 'string') && (d.outboundUrl === null || typeof d.outboundUrl === 'string')
+      && (d.statedPriceMinor === null || (Number.isSafeInteger(d.statedPriceMinor) && d.statedPriceMinor >= 0))
+      && (d.statedPercent === null || (typeof d.statedPercent === 'number' && Number.isFinite(d.statedPercent)))
+      && typeof d.percentIsCap === 'boolean' && (d.expiresAt === null || typeof d.expiresAt === 'string');
+  }).slice(0, MAX_SAVED);
 }
 
 export function readViewed(): ViewedDeal[] {
-  return read<ViewedDeal>(VIEWED_KEY);
+  return read<unknown>(VIEWED_KEY).filter((value): value is ViewedDeal => {
+    if (!value || typeof value !== 'object') return false;
+    const d = value as ViewedDeal;
+    return ['id', 'title', 'merchant', 'merchantSlug', 'viewedAt'].every(key => typeof (d as unknown as Record<string, unknown>)[key] === 'string')
+      && d.id.length > 0 && !Number.isNaN(Date.parse(d.viewedAt))
+      && (d.statedPercent === null || (typeof d.statedPercent === 'number' && Number.isFinite(d.statedPercent)));
+  }).slice(0, MAX_VIEWED);
 }
 
 export function isSaved(id: string): boolean {

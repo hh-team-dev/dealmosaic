@@ -60,6 +60,7 @@ CORE = [
     ('32-direct-sales-blueprint.md', 'Direct-sales design and roadmap'),
     ('33-direct-shop-release.md', 'Direct shop: implementation and operating guide'),
     ('34-sitewide-audit.md', 'Site-wide audit: fixes, tests and remaining gates'),
+    ('35-pwa-handover.md', 'PWA 2.0.0: install, shared website, safety and fallback'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

@@ -21,6 +21,15 @@ describe('API failure recovery', () => {
     await vi.advanceTimersByTimeAsync(45_001);
     await pending;
   });
+  it('never uses the HTTP cache for API reads', async () => {
+    const fetcher = vi.fn().mockResolvedValue(new Response('{}')); vi.stubGlobal('fetch', fetcher);
+    await apiRequest('/api/test'); expect(fetcher.mock.calls[0][1].cache).toBe('no-store');
+  });
+  it('fails offline mutations immediately without calling fetch or queueing', async () => {
+    const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher); vi.stubGlobal('navigator', { onLine: false });
+    await expect(apiRequest('/api/test', { method: 'POST', body: {} })).rejects.toMatchObject({ code: 'offline' });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
   it('sends CSRF and same-origin credentials with mutations', async () => {
     const fetcher = vi.fn().mockResolvedValue(new Response('{}'));
     vi.stubGlobal('fetch', fetcher); setCsrfToken('isolated-token');

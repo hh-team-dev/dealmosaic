@@ -1,3 +1,4 @@
+import { usePwa } from '../lib/pwa';
 import { useToast } from '../components/Toast';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,21 +9,11 @@ import { clearSaved, clearViewed, toggleSaved, useSaved, useViewed, type Saveabl
 import { statedPercentLabel, statedPriceLabel, expiryLabel } from '../lib/coupons-api';
 import { DealsTicker } from '../components/DealsTicker';
 
-/**
- * /saved — the visitor's own board.
- *
- * This is the "reason to return" page, and it works with **no account at all**:
- * the list lives in this browser only. That is a deliberate trade. A saved list
- * that demands an email before it saves anything converts nobody; a local list
- * works on the first visit and costs nothing to run.
- *
- * The honest limit is stated on the page rather than discovered later: these
- * items are on *this* device, and clearing site data removes them. Turning that
- * into a synced account list plus real price-drop email is a server feature
- * (`price_alerts` already exists in the schema) and is the next step.
- */
+/** Device-local snapshots, with honest server-mirror and offline-read-only limits. */
 export default function Saved() {
   const toast = useToast();
+  const app = usePwa();
+  const offline = app.disconnected;
   const saved = useSaved();
   const viewed = useViewed();
   const [copied, setCopied] = useState<string | null>(null);
@@ -48,17 +39,18 @@ export default function Saved() {
       <Chrome>
         <div className="container section stack-lg">
           {/* Alive on every screen, not only the first one. */}
-          <DealsTicker />
+          {!offline && <DealsTicker />}
           <header>
             <span className="eyebrow">
               <Icon name="heart" size={14} /> Your board
             </span>
             <h1>Saved deals</h1>
             <p className="lede" style={{ maxWidth: '56ch' }}>
-              Kept on this device only — no account, no tracking, nothing sent to our servers. Clear your browser data
-              and the list goes with it.
+              This board is kept in this browser. When signed in, saved deal IDs are also sent to your account for eligible, opted-in email reminders. Clearing site data removes this local board; it does not automatically sync between devices.
             </p>
           </header>
+
+          <div className="callout"><strong>{offline ? 'Offline · saved notes only' : 'Saved details are a snapshot'}</strong><p>Prices, codes and availability may have changed since saving. {offline ? 'Reconnect before visiting a retailer or changing your list. Nothing is queued for later.' : 'Check the retailer’s current total before paying.'}</p><Link to="/install">Install & offline help</Link></div>
 
           {saved.length === 0 ? (
             <div className="card card-lg center-text">
@@ -79,6 +71,7 @@ export default function Saved() {
                 <button
                   type="button"
                   className="btn btn-quiet btn-sm"
+                  disabled={offline}
                   onClick={() => {
                     clearSaved();
                     setTick(tick + 1);
@@ -104,6 +97,7 @@ export default function Saved() {
                         <button
                           type="button"
                           className="deal-save is-saved"
+                          disabled={offline}
                           aria-label={`Remove ${d.title} from saved deals`}
                           onClick={() => {
                             // Re-saving with the same id removes it — the same
@@ -133,10 +127,10 @@ export default function Saved() {
                         ) : (
                           <span className="deal-code deal-code-none">No code needed</span>
                         )}
-                        {d.outboundUrl && (
+                        {d.outboundUrl && !offline && (
                           <a
                             className="deal-go"
-                            href={`/api/go/${d.id}?src=saved`}
+                            href={`/api/go/${encodeURIComponent(d.id)}?src=saved`}
                             target="_blank"
                             rel="sponsored nofollow noopener noreferrer"
                           >
@@ -163,6 +157,7 @@ export default function Saved() {
                 <button
                   type="button"
                   className="btn btn-quiet btn-sm"
+                  disabled={offline}
                   onClick={() => {
                     clearViewed();
                     setTick(tick + 1);

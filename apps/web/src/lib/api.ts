@@ -43,6 +43,9 @@ interface RequestOptions {
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const method = options.method ?? 'GET';
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new ApiError(0, 'offline', 'You are offline. Reconnect and try again. No action has been queued.');
+  }
   const headers: Record<string, string> = { accept: 'application/json', ...options.headers };
 
   if (options.body !== undefined) headers['content-type'] = 'application/json';
@@ -59,7 +62,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   let text: string;
   try {
     res = await fetch(path, {
-      method, headers, credentials: 'same-origin',
+      method, headers, credentials: 'same-origin', cache: 'no-store',
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
       signal: controller.signal,
     });

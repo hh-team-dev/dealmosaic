@@ -201,8 +201,8 @@ function savedBody() {
   return `
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
       <h1>Your saved deals</h1>
-      <p>Tap the heart on any deal and it is kept on this device — no account, no
-      tracking, nothing sent to our servers. Recently viewed offers appear here too.</p>
+      <p>Tap the heart on any deal to keep a note in this browser. Signed-in saved deal IDs are also sent to your account, best effort, for eligible opted-in reminders. This board does not automatically sync between devices. Prices and codes are snapshots, not current quotes.</p>
+      <p><a href="/install">Install DealMosaic and manage offline access</a></p>
       <p><a href="/deals">Find something worth saving</a> ·
          <a href="/browse">Browse every product we compare</a></p>
     </main>`;
@@ -457,6 +457,8 @@ function privacyBody() {
       <h2>What we do not collect</h2>
       <p>No third-party advertising trackers, no cross-site profiles, no selling of data.
       A pincode is not an identity — it is shared by tens of thousands of people.</p>
+      <h2>Offline app files</h2>
+      <p>Supported browsers store public app code, fonts and icons for offline access, not API responses, private orders or payment details. Purchases and payments are never queued. Install & app settings lets you select online-only mode without clearing saves or cookies. Browser eviction or clearing site data can remove local files and notes. Installation requests no notification, location, camera or microphone permission.</p>
       <h2>Direct-order information</h2>
       <p>Direct checkout records your name, email, phone, delivery address, product, price,
       shipping selection and payment references. The seller shares necessary delivery details

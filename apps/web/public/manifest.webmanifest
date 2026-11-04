@@ -1,20 +1,77 @@
 {
-  "name": "DEALMOSAIC — every price, honestly compared",
+  "name": "DEALMOSAIC \u2014 every price, honestly compared",
   "short_name": "DEALMOSAIC",
-  "description": "One search, three real deals. Itemised prices, delivery times and cashback shown separately, so the price you see is the price you pay.",
+  "description": "Honest product comparisons, deals and your saved list. Live prices, availability and checkout require a connection.",
   "id": "/",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#FFF9F0",
   "theme_color": "#FFF9F0",
   "lang": "en-IN",
   "dir": "ltr",
-  "categories": ["shopping", "productivity"],
+  "categories": [
+    "shopping",
+    "productivity"
+  ],
   "icons": [
-    { "src": "/brand/dm-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/brand/dm-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/brand/dm-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/brand/dm-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/dm-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/dm-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Deals",
+      "short_name": "Deals",
+      "url": "/deals?source=app-shortcut",
+      "icons": [
+        {
+          "src": "/brand/dm-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Saved deals",
+      "short_name": "Saved deals",
+      "url": "/saved?source=app-shortcut",
+      "icons": [
+        {
+          "src": "/brand/dm-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Browse",
+      "short_name": "Browse",
+      "url": "/browse?source=app-shortcut",
+      "icons": [
+        {
+          "src": "/brand/dm-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }

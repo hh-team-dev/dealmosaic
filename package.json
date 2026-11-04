@@ -1,7 +1,7 @@
 {
   "name": "dealmosaic",
   "private": true,
-  "version": "0.1.0",
+  "version": "2.0.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -10,7 +10,7 @@
     "dev": "node scripts/dev.mjs",
     "dev:api": "npm run dev -w @dealmosaic/api",
     "dev:web": "npm run dev -w @dealmosaic/web",
-    "build": "npm run seo && npm run build -w @dealmosaic/web && npm run prerender && node scripts/verify-prerender.mjs",
+    "build": "npm run seo && npm run build -w @dealmosaic/web && node scripts/build-pwa.mjs && npm run prerender && node scripts/verify-prerender.mjs",
     "preview": "npm run preview -w @dealmosaic/web",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -34,7 +34,10 @@
     "db:verify": "node scripts/db-backup.mjs --verify",
     "prerender": "node scripts/prerender.mjs",
     "audit:browser": "node scripts/audit-browser.mjs",
-    "audit:interactions": "playwright test"
+    "audit:interactions": "playwright test",
+    "build:classic": "VITE_PWA_MODE=classic npm run build",
+    "test:pwa": "playwright test -c playwright.pwa.config.mjs",
+    "package:pwa": "node scripts/package-pwa.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

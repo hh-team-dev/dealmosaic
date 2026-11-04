@@ -24,6 +24,7 @@ const SPA_ROUTES = [
   /^\/browse\/?$/,
   /^\/deals\/?$/,
   /^\/saved\/?$/,
+  /^\/install\/?$/,
   /^\/handcrafted\/?$/,
   /^\/buy\/[a-f0-9-]{36}\/?$/,
   /^\/direct-orders\/[a-f0-9-]{36}\/?$/,

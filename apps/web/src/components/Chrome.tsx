@@ -100,6 +100,7 @@ export function SiteFooter() {
             <Link to="/data-sources">Where our prices come from</Link>
             <Link to="/deals">Today's deals and coupons</Link>
             <Link to="/browse">Browse every product</Link>
+            <Link to="/install">Install & app settings</Link>
           </div>
           <p className="tiny" style={{ marginTop: 14 }}>
             Built for India first · Your data stays yours · No trackers, no ad networks, no selling of personal data.
@@ -156,6 +157,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
+      <p className="container small"><Link to="/install">Install & app settings</Link></p>
       <BottomNav />
     </div>
   );

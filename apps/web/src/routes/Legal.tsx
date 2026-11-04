@@ -108,6 +108,11 @@ export function Privacy() {
         records may be retained for fulfilment, disputes and legal obligations; they are not used to enrol you
         in marketing automatically.</p>
 
+      <h2>Saved deals and offline app files</h2>
+      <p>Saved deal notes and recently viewed offers are kept in this browser. Signed-in saved deal IDs are also sent to your account, best effort, for eligible reminders when you have opted in. The local board does not automatically move between browsers, installed-app storage containers or devices.</p>
+      <p>In supported browsers, DealMosaic prepares public app code, fonts and icons for offline access. It does not put API responses, private orders, shipping quotes or payment details in the offline app cache, and it never queues purchases or payments. Saved prices and codes are historical notes, not current quotes.</p>
+      <p>Install & app settings lets you select online-only mode; that preference is stored locally. This removes only offline app files, not your saved notes or account cookie. Your browser may evict offline files, and clearing site data can remove local notes and private order-link storage. Installation does not request notification, location, camera or microphone access.</p>
+
       <h2>Cookies</h2>
       <p>
         Exactly one cookie is set: <code>dm_session</code>, which keeps you signed in. It is <code>HttpOnly</code>,{' '}

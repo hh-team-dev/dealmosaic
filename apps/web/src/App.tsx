@@ -17,6 +17,8 @@ import Browse from './routes/Browse';
 import Deals from './routes/Deals';
 import Admin from './routes/Admin';
 import Saved from './routes/Saved';
+import Install from './routes/Install';
+import { PwaExperience } from './components/PwaExperience';
 import { DataSources, HowWeRank } from './routes/Method';
 
 const DirectCollection = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectCollection})));
@@ -68,8 +70,10 @@ export default function App() {
       <AuthProvider>
         <ToastProvider>
           <ScrollToTop />
+          <PwaExperience>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/install" element={<Install />} />
             <Route path="/search" element={<Search />} />
             <Route path="/browse" element={<Browse />} />
             <Route path="/deals" element={<Deals />} />
@@ -109,6 +113,7 @@ export default function App() {
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </PwaExperience>
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>

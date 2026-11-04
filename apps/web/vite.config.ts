@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { readFileSync } from 'node:fs';
+const RELEASE_VERSION = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version as string;
 
 /**
  * Canonical URLs, og:url and og:image are absolute and must match the domain the
@@ -18,6 +20,7 @@ const siteUrlPlugin = () => ({
 
 export default defineConfig({
   plugins: [react(), siteUrlPlugin()],
+  define: { 'import.meta.env.VITE_RELEASE_VERSION': JSON.stringify(RELEASE_VERSION) },
   server: {
     host: '0.0.0.0',
     port: 5173,

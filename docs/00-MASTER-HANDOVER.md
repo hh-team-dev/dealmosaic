@@ -1,8 +1,10 @@
 # DEALMOSAIC — MASTER HANDOVER
 
+> **PWA / website release 2.0.0 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For current deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
+
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **4 November 2026** · Version **1.0.0** · All figures verified live
+Last updated: **4 November 2026** · Version **2.0.0** · All figures verified live
 against production at the time of writing, not recalled from memory.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -14,9 +16,9 @@ against production at the time of writing, not recalled from memory.
 
 ---
 
-## 4 November 2026 — site-wide audit and recovery fixes
+## 4 November 2026 — preceding site-wide audit and recovery fixes
 
-**Current audit and deployment evidence: [34-sitewide-audit.md](34-sitewide-audit.md).**
+**Pre-PWA audit and deployment evidence: [34-sitewide-audit.md](34-sitewide-audit.md).**
 Production code **`00711ad`**, Pages **`48e99231`**, Render **`dep-dblhapnf3r2c73a5csa0`**
 were verified live. **381 tests / 27 files**, **48 phone/desktop interaction scenarios**,
 **45 authenticated/layout states**, **66 clean live public page states**, 43 design
