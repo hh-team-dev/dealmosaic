@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { keepOrderAccess, readOrderAccess } from "../lib/order-access";
 import { Chrome } from "../components/PublicChrome";
 import { DirectCard } from "../components/DirectShelf";
 import { Seo } from "../lib/seo";
@@ -27,7 +28,9 @@ export function DirectCollection() {
     ReturnType<typeof getDirectProducts>
   > | null>(null);
   const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
+    setError("");
     const c = new AbortController();
     getDirectProducts(c.signal)
       .then(setData)
@@ -35,7 +38,7 @@ export function DirectCollection() {
         if (e.name !== "AbortError") setError(e.message);
       });
     return () => c.abort();
-  }, []);
+  }, [attempt]);
   return (
     <Chrome>
       <Seo
@@ -51,6 +54,7 @@ export function DirectCollection() {
           Explore the details. Choose your fit. Check delivery before paying.
         </p>
         <ErrorBox message={error} />
+        {error && <button className="btn btn-primary" onClick={() => setAttempt((n) => n + 1)}>Try again</button>}
         {!data && !error && <p role="status">Loading the collection…</p>}
         {data && !data.products.length && (
           <div className="card card-lg">
@@ -139,10 +143,10 @@ export function DirectProductPage() {
     setBusy(true);
     setError("");
     try {
-      let token = sessionStorage.getItem(`dm-checkout-${quote.id}`);
+      let token = readOrderAccess(`dm-checkout-${quote.id}`);
       if (!token) {
         token = newOrderToken();
-        sessionStorage.setItem(`dm-checkout-${quote.id}`, token);
+        keepOrderAccess(`dm-checkout-${quote.id}`, token);
       }
       const r = await apiRequest<{ order: DirectOrderView }>(
         "/api/direct/orders",
@@ -160,7 +164,7 @@ export function DirectProductPage() {
           },
         },
       );
-      sessionStorage.setItem(`dm-order-${r.order.id}`, token);
+      keepOrderAccess(`dm-order-${r.order.id}`, token);
       navigate(`/direct-orders/${r.order.id}#access=${token}`);
     } catch (e) {
       setError((e as Error).message);
@@ -489,14 +493,15 @@ export function DirectOrderPage() {
   const [reference, setReference] = useState("");
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [token] = useState(() => {
-    const fromHash = new URLSearchParams(window.location.hash.slice(1)).get(
+  const { hash } = useLocation();
+  const token = useMemo(() => {
+    const fromHash = new URLSearchParams(hash.slice(1)).get(
       "access",
     );
-    const t = fromHash ?? sessionStorage.getItem(`dm-order-${id}`) ?? "";
-    if (/^[a-f0-9]{64}$/.test(t)) sessionStorage.setItem(`dm-order-${id}`, t);
+    const t = fromHash ?? readOrderAccess(`dm-order-${id}`) ?? "";
+    if (/^[a-f0-9]{64}$/.test(t)) keepOrderAccess(`dm-order-${id}`, t);
     return t;
-  });
+  }, [id, hash]);
   async function load() {
     setBusy(true);
     setError("");

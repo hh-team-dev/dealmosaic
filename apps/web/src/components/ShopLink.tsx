@@ -56,7 +56,7 @@ export function ShopLink({
       target="_blank"
       rel="sponsored nofollow noopener noreferrer"
       onClick={() => void onTap()}
-      aria-label={`Shop at ${coupon.platformName} in a new tab${coupon.code ? `, code ${coupon.code} copied` : ''}`}
+      aria-label={`Shop at ${coupon.platformName} in a new tab${coupon.code ? `, offer code ${coupon.code}` : ''}`}
     >
       {label ?? `Shop at ${coupon.platformName}`}
       <Icon name="external" size={14} />
@@ -79,7 +79,7 @@ export function HowItWorks({ className = '' }: { className?: string }) {
       <li>
         <span className="how-step">1</span>
         <span className="how-text">
-          <strong>Tap Shop at store.</strong> The code is copied for you, and the store opens.
+          <strong>Tap Shop at store.</strong> The store opens. If copying is blocked, long-press the code to copy it.
         </span>
       </li>
       <li>

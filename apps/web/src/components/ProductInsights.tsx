@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { CommunityPrice, HistoryWindow, ProductCoupon, VariantHistory, VariantOffer } from '../lib/search-api';
 import { createAlert } from '../lib/alerts-api';
@@ -412,7 +412,7 @@ export function CouponStrip({ coupons }: { coupons: ProductCoupon[] }) {
       setCopied(c.id);
       setTimeout(() => setCopied((p) => (p === c.id ? null : p)), 1800);
     } catch {
-      /* clipboard may be blocked; the code is visible */
+      setError(`Copy was blocked. Long-press the code ${c.code} to copy it manually.`);
     }
   }
 
@@ -533,7 +533,8 @@ export function CommunityPanel({
   const [price, setPrice] = useState('');
   const [state, setState] = useState<'idle' | 'saving' | 'done' | 'error'>('idle');
   const [message, setMessage] = useState<string | null>(null);
-  const { data: location } = useLocationSummary(pincode);
+  const { data: location, loading: locationLoading, error: locationError } = useLocationSummary(pincode);
+  useEffect(() => setDraftPin(pincode ?? ''), [pincode]);
 
   const visible = pincode ? reports.filter((r) => r.pincode === pincode) : reports;
 
@@ -596,7 +597,10 @@ export function CommunityPanel({
         <button
           type="button"
           className="btn btn-ghost btn-sm"
-          onClick={() => setPincode(/^[1-9][0-9]{5}$/.test(draftPin) ? draftPin : null)}
+          onClick={() => {
+            if (draftPin && !/^[1-9][0-9]{5}$/.test(draftPin)) { setState('error'); setMessage('Enter a valid 6-digit pincode.'); return; }
+            setState('idle'); setMessage(null); setPincode(draftPin || null);
+          }}
         >
           {pincode ? 'Update' : 'Use this pincode'}
         </button>
@@ -604,7 +608,7 @@ export function CommunityPanel({
           <span className="tiny muted">
             {location?.location
               ? `${location.location.city ?? ''}${location.location.state ? `, ${location.location.state}` : ''}`
-              : 'looking up…'}
+              : locationError ?? (locationLoading ? 'Checking location…' : 'Location details unavailable')}
           </span>
         )}
       </div>

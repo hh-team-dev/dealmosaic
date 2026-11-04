@@ -1,5 +1,8 @@
 # DEALMOSAIC — Complete Project Handover
 
+> **4 November 2026 audit:** read `34-sitewide-audit.md` for current fixes, test
+> coverage and deployment evidence. Older counts below are historical.
+>
 > **4 November 2026 update:** for the new direct-shop routes, data model, operating
 > guide and actual implementation limits, read `33-direct-shop-release.md` and the
 > latest master handover first. The historical technical description below predates

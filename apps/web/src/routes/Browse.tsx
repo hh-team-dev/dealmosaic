@@ -15,10 +15,12 @@ export default function Browse() {
   const [products, setProducts] = useState<ProductSummary[] | null>(null);
   const [categories, setCategories] = useState<Category[] | null>(null);
   const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let alive = true;
     setProducts(null);
+    setError(false);
     Promise.all([listProducts({ category: slug, limit: 120 }), listCategories()])
       .then(([p, c]) => {
         if (!alive) return;
@@ -29,7 +31,7 @@ export default function Browse() {
     return () => {
       alive = false;
     };
-  }, [slug]);
+  }, [slug, attempt]);
 
   const active = categories?.find((c) => c.slug === slug);
   const heading = slug ? (active?.name ?? 'Category') : 'Every product we compare';
@@ -83,6 +85,7 @@ export default function Browse() {
             <div className="empty-state card stack">
               <Icon name="warn" size={24} />
               <p>The catalogue did not load. Please try again.</p>
+              <button className="btn btn-primary" onClick={() => setAttempt((value) => value + 1)}>Try again</button>
             </div>
           )}
 

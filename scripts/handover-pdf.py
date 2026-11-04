@@ -18,7 +18,7 @@ Requirements (installed with pip, no paid tools):
     pip install markdown xhtml2pdf pypdf
     DejaVu fonts (already present on any Debian/Ubuntu image)
 
-The palette is the site's own: Mosaic Plum for text, Warm White for code panels,
+The palette is the site's own: warm Roast for text, Warm White for code panels,
 no black anywhere — the same rule `npm run audit:design` enforces for the app.
 """
 from __future__ import annotations
@@ -59,6 +59,7 @@ CORE = [
     ('31-affiliate-applications.md', 'Affiliate applications'),
     ('32-direct-sales-blueprint.md', 'Direct-sales design and roadmap'),
     ('33-direct-shop-release.md', 'Direct shop: implementation and operating guide'),
+    ('34-sitewide-audit.md', 'Site-wide audit: fixes, tests and remaining gates'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

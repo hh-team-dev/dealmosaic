@@ -1,5 +1,7 @@
 # 33 — Owner-operated products, pricing and delivery
 
+> **Later same-day audit:** see [34-sitewide-audit.md](34-sitewide-audit.md) for cross-site recovery, accessibility, private-order storage fixes and newer release evidence. Commercial gates below remain in force.
+
 **4 November 2026 · implementation and operating handover**
 
 ## Exact release state

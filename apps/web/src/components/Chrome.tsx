@@ -42,8 +42,9 @@ export function SiteHeader() {
                   Admin
                 </Link>
               )}
-              <Link to="/app" className="btn btn-header-ghost" title="Your dashboard">
-                Dashboard
+              <Link to="/app" className="btn btn-header-ghost header-dashboard" title="Your dashboard" aria-label="Your dashboard">
+                <span className="header-dashboard-label">Dashboard</span>
+                <span className="header-dashboard-icon" aria-hidden="true"><Icon name="chart" size={18} /></span>
               </Link>
               <Link to="/app/settings" className="header-avatar" aria-label="Your account settings">
                 {initials(user.displayName ?? 'You')}

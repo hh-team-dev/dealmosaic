@@ -1,0 +1,541 @@
+{
+  "coverage": "Isolated browser interactions; production mutations forbidden",
+  "stats": {
+    "startTime": "2026-11-04T11:18:50.381Z",
+    "duration": 76226.621,
+    "expected": 48,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "results": [
+    {
+      "test": "signed-out owner controls explain access and preserve the requested shop tab",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1192
+        }
+      ]
+    },
+    {
+      "test": "non-admin account receives a clear forbidden explanation",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 649
+        }
+      ]
+    },
+    {
+      "test": "invalid admin tab falls back to overview and all seven tabs load",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2269
+        }
+      ]
+    },
+    {
+      "test": "admin failure has a functional retry",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1004
+        }
+      ]
+    },
+    {
+      "test": "search retries the same query after an API error",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 816
+        }
+      ]
+    },
+    {
+      "test": "catalogue retries and resets error state",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 996
+        }
+      ]
+    },
+    {
+      "test": "product network failure is not misreported as a missing product and retry works",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 776
+        }
+      ]
+    },
+    {
+      "test": "sign-in works; password toggle, field hints and account settings persist",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1803
+        }
+      ]
+    },
+    {
+      "test": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2261
+        }
+      ]
+    },
+    {
+      "test": "shared busy button cannot be re-enabled by disabled=false",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1029
+        }
+      ]
+    },
+    {
+      "test": "save, reopen and remove a device-only deal",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1971
+        }
+      ]
+    },
+    {
+      "test": "blocked storage gives feedback instead of claiming a save",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1149
+        }
+      ]
+    },
+    {
+      "test": "clipboard failure explains the manual fallback",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1065
+        }
+      ]
+    },
+    {
+      "test": "PIN follows cross-tab changes and clears pending loading cleanly",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2982
+        }
+      ]
+    },
+    {
+      "test": "keyboard users can focus the scrollable table on /how-we-rank",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 662
+        }
+      ]
+    },
+    {
+      "test": "keyboard users can focus the scrollable table on /data-sources",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 989
+        }
+      ]
+    },
+    {
+      "test": "owner shop tabs and product editor open without missing controls or phone overflow",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2304
+        }
+      ]
+    },
+    {
+      "test": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 12686
+        }
+      ]
+    },
+    {
+      "test": "deals failure can be retried without changing filters",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 955
+        }
+      ]
+    },
+    {
+      "test": "direct collection failure has a working retry",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 954
+        }
+      ]
+    },
+    {
+      "test": "invalid and unknown delivery PINs do not create a payable order",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1775
+        }
+      ]
+    },
+    {
+      "test": "account export downloads parseable data and notification preference persists",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1303
+        }
+      ]
+    },
+    {
+      "test": "owner coupon reject and restore buttons persist state",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1417
+        }
+      ]
+    },
+    {
+      "test": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+      "project": "phone",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1208
+        }
+      ]
+    },
+    {
+      "test": "signed-out owner controls explain access and preserve the requested shop tab",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 814
+        }
+      ]
+    },
+    {
+      "test": "non-admin account receives a clear forbidden explanation",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 562
+        }
+      ]
+    },
+    {
+      "test": "invalid admin tab falls back to overview and all seven tabs load",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1853
+        }
+      ]
+    },
+    {
+      "test": "admin failure has a functional retry",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 779
+        }
+      ]
+    },
+    {
+      "test": "search retries the same query after an API error",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 727
+        }
+      ]
+    },
+    {
+      "test": "catalogue retries and resets error state",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 673
+        }
+      ]
+    },
+    {
+      "test": "product network failure is not misreported as a missing product and retry works",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 677
+        }
+      ]
+    },
+    {
+      "test": "sign-in works; password toggle, field hints and account settings persist",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1639
+        }
+      ]
+    },
+    {
+      "test": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 2084
+        }
+      ]
+    },
+    {
+      "test": "shared busy button cannot be re-enabled by disabled=false",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 427
+        }
+      ]
+    },
+    {
+      "test": "save, reopen and remove a device-only deal",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 857
+        }
+      ]
+    },
+    {
+      "test": "blocked storage gives feedback instead of claiming a save",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 597
+        }
+      ]
+    },
+    {
+      "test": "clipboard failure explains the manual fallback",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 537
+        }
+      ]
+    },
+    {
+      "test": "PIN follows cross-tab changes and clears pending loading cleanly",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1777
+        }
+      ]
+    },
+    {
+      "test": "keyboard users can focus the scrollable table on /how-we-rank",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 351
+        }
+      ]
+    },
+    {
+      "test": "keyboard users can focus the scrollable table on /data-sources",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 384
+        }
+      ]
+    },
+    {
+      "test": "owner shop tabs and product editor open without missing controls or phone overflow",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1553
+        }
+      ]
+    },
+    {
+      "test": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 7075
+        }
+      ]
+    },
+    {
+      "test": "deals failure can be retried without changing filters",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 599
+        }
+      ]
+    },
+    {
+      "test": "direct collection failure has a working retry",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 765
+        }
+      ]
+    },
+    {
+      "test": "invalid and unknown delivery PINs do not create a payable order",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 1218
+        }
+      ]
+    },
+    {
+      "test": "account export downloads parseable data and notification preference persists",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 768
+        }
+      ]
+    },
+    {
+      "test": "owner coupon reject and restore buttons persist state",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 637
+        }
+      ]
+    },
+    {
+      "test": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+      "project": "desktop",
+      "status": "expected",
+      "runs": [
+        {
+          "status": "passed",
+          "durationMs": 543
+        }
+      ]
+    }
+  ]
+}

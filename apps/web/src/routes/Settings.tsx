@@ -19,6 +19,8 @@ export default function Settings() {
   const [pincode, setPincode] = useState(preferences?.pincode ?? '');
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPrefs, setSavingPrefs] = useState(false);
+  const [savingNotification, setSavingNotification] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
@@ -53,29 +55,30 @@ export default function Settings() {
   }
 
   async function toggleNotification(key: 'notifyInApp' | 'notifyEmail', value: boolean) {
+    setSavingNotification(true);
     try {
       await updatePreferences({ [key]: value } as never);
       toast.push('Notification preference updated.', 'info');
     } catch {
       toast.push('Could not update that preference.', 'error');
-    }
+    } finally { setSavingNotification(false); }
   }
 
   async function handleExport() {
+    setExporting(true);
     try {
-      const res = await fetch('/api/me/export', { credentials: 'same-origin' });
-      if (!res.ok) throw new Error('failed');
-      const blob = await res.blob();
+      const data = await apiRequest('/api/me/export');
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `dealmosaic-data-${user?.id.slice(0, 8)}.json`;
       a.click();
-      URL.revokeObjectURL(url);
-      toast.push('Your data export has been downloaded.', 'success');
+      window.setTimeout(() => URL.revokeObjectURL(url), 5000);
+      toast.push('Your account-data download is ready.', 'success');
     } catch {
       toast.push('Export failed. Please try again.', 'error');
-    }
+    } finally { setExporting(false); }
   }
 
   async function handleDelete() {
@@ -86,7 +89,7 @@ export default function Settings() {
         method: 'DELETE',
         body: { password: deletePassword, confirmation: deleteConfirm },
       });
-      toast.push('Account deleted. Everything we held is gone.', 'info');
+      toast.push('Account deleted. Direct-shop order records are handled separately under our privacy policy.', 'info');
       await logout().catch(() => undefined);
       navigate('/', { replace: true });
     } catch (err) {
@@ -125,7 +128,7 @@ export default function Settings() {
                 autoComplete="name"
               />
             </Field>
-            <Field label="Phone number" htmlFor="phone" optional hint="Only used for account recovery. Blank is fine — we will never require it.">
+            <Field label="Phone number" htmlFor="phone" optional hint="Optional contact detail. Sign-in and password recovery use your email, not this number.">
               <TextInput
                 id="phone"
                 value={phone}
@@ -205,6 +208,7 @@ export default function Settings() {
             <button
               className="switch-toggle"
               role="switch"
+              disabled={savingNotification}
               aria-checked={preferences?.notifyInApp ?? true}
               aria-label="In-app notifications"
               onClick={() => void toggleNotification('notifyInApp', !(preferences?.notifyInApp ?? true))}
@@ -222,6 +226,7 @@ export default function Settings() {
             <button
               className="switch-toggle"
               role="switch"
+              disabled={savingNotification}
               aria-checked={preferences?.notifyEmail ?? true}
               aria-label="Email notifications"
               onClick={() => void toggleNotification('notifyEmail', !(preferences?.notifyEmail ?? true))}
@@ -233,11 +238,10 @@ export default function Settings() {
         <section className="card card-top-coral" id="danger">
           <h3 style={{ marginTop: 0 }}>Privacy & data</h3>
           <p className="small">
-            Export everything we hold on you, or delete the account and every related row. Deletion is immediate and
-            irreversible — sessions, preferences, PIN code and search history included.
+            Export your account data, or permanently delete your account and its related records. Direct-shop orders are separate and retained as explained in our privacy policy. Clear device-only saved deals from Your list.
           </p>
           <div className="row" style={{ gap: 8 }}>
-            <Button variant="quiet" size="sm" onClick={handleExport}>
+            <Button variant="quiet" size="sm" loading={exporting} onClick={handleExport}>
               <Icon name="download" size={15} /> Export my data
             </Button>
             <Button variant="danger" size="sm" onClick={() => setDeleteOpen(true)}>
@@ -249,8 +253,7 @@ export default function Settings() {
 
       <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account">
         <p className="small">
-          This removes your profile, preferences, PIN code, sessions and any saved data immediately. It cannot be
-          undone, and we keep no shadow copy.
+          This permanently removes your account profile, preferences, sessions and account-linked data. It does not remove device-only saved deals or separately retained direct-shop order records.
         </p>
         {deleteError && (
           <div className="callout callout-danger" role="alert" style={{ marginBottom: 12 }}>

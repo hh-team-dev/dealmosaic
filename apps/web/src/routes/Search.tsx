@@ -23,6 +23,7 @@ import { DealsTicker } from '../components/DealsTicker';
 export default function Search() {
   const [params, setParams] = useSearchParams();
   const query = params.get('q') ?? '';
+  const [attempt, setAttempt] = useState(0);
   const variantId = params.get('v') ?? undefined;
 
   const [state, setState] = useState<
@@ -62,7 +63,7 @@ export default function Search() {
       });
 
     return () => controller.abort();
-  }, [query, variantId]);
+  }, [query, variantId, attempt]);
 
   const chooseVariant = useCallback(
     (id: string) => {
@@ -136,7 +137,7 @@ export default function Search() {
                   </Link>
                 </div>
               ) : (
-                <button type="button" className="btn btn-ghost" onClick={() => setParams(new URLSearchParams(params))}>
+                <button type="button" className="btn btn-ghost" onClick={() => setAttempt((value) => value + 1)}>
                   Try again
                 </button>
               )}

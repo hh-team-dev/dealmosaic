@@ -221,3 +221,39 @@ describe('admin actions are reversible and attributed', () => {
     expect(res.status).toBe(400);
   });
 });
+
+describe('community moderation regression', () => {
+  it('loads the report list using the actual schema timestamp', async () => {
+    const variant = await db.prepare('SELECT id FROM product_variants LIMIT 1').get();
+    const date = new Date().toISOString();
+    await db.prepare("INSERT INTO community_prices(id,variant_id,platform_slug,pincode,price_minor,reported_at) VALUES('audit-report',?,'croma','700001',10000,?)").run(variant.id,date);
+    const result = await request('GET','/api/admin/community');
+    expect(result.status).toBe(200);
+    expect(result.body.reports.find((r: any) => r.id==='audit-report').observed_at).toBe(date);
+  });
+  it('rejects coupon-only states before a community database CHECK error', async () => {
+    const result = await request('POST','/api/admin/community/audit-report/state',{trustState:'expired'},{'x-csrf-token':csrf});
+    expect(result.status).toBe(400);
+  });
+  it('moderates an actual report with audit attribution', async () => {
+    const result = await request('POST','/api/admin/community/audit-report/state',{trustState:'moderator_verified'},{'x-csrf-token':csrf});
+    expect(result.status).toBe(200);
+    expect(await db.prepare("SELECT trust_state FROM community_prices WHERE id='audit-report'").get()).toMatchObject({trust_state:'moderator_verified'});
+  });
+});
+
+describe('coupon filters and honest restoration', () => {
+  it('excludes rejected coupons from Live and With a code', async () => {
+    await request('POST','/api/admin/coupons/admin-test-coupon/state',{trustState:'rejected'},{'x-csrf-token':csrf});
+    for (const state of ['live','codes']) {
+      const r=await request('GET',`/api/admin/coupons?state=${state}`);
+      expect(r.status).toBe(200);
+      expect(r.body.coupons.some((c:any)=>c.id==='admin-test-coupon')).toBe(false);
+    }
+  });
+  it('restores to listed without manufacturing verification evidence',async()=>{
+    const r=await request('POST','/api/admin/coupons/admin-test-coupon/state',{trustState:'listed'},{'x-csrf-token':csrf});
+    expect(r.status).toBe(200);
+    expect(r.body.trustState).toBe('listed');
+  });
+});

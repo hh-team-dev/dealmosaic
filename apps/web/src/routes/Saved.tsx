@@ -1,3 +1,4 @@
+import { useToast } from '../components/Toast';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
@@ -21,6 +22,7 @@ import { DealsTicker } from '../components/DealsTicker';
  * (`price_alerts` already exists in the schema) and is the next step.
  */
 export default function Saved() {
+  const toast = useToast();
   const saved = useSaved();
   const viewed = useViewed();
   const [copied, setCopied] = useState<string | null>(null);
@@ -32,9 +34,9 @@ export default function Saved() {
       setCopied(id);
       setTimeout(() => setCopied((prev) => (prev === id ? null : prev)), 1800);
     } catch {
-      // The code is visible on the card; a clipboard failure is not an error.
+      toast.push(`Copy was blocked. Long-press the code ${code} to copy it manually.`, 'info');
     }
-  }, []);
+  }, [toast]);
 
   return (
     <>

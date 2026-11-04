@@ -141,3 +141,23 @@ describe('GET /api/go/:couponId', () => {
     expect((await click(id)).headers.get('cache-control')).toBe('no-store');
   });
 });
+
+
+describe('redirect safety at click time', () => {
+  it.each(['2000-01-01T00:00:00.000Z', 'not-a-date'])('blocks elapsed or invalid expiry %s even while the feed still says listed', async (expiry) => {
+    const id = await seedCoupon();
+    await dbModule.db.prepare('UPDATE coupons SET expires_at=? WHERE id=?').run(expiry, id);
+    expect((await click(id)).status).toBe(410);
+    expect(await dbModule.db.prepare('SELECT COUNT(*) AS n FROM outbound_clicks WHERE coupon_id=?').get(id)).toMatchObject({ n: 0 });
+  });
+  it('allows a valid future expiry', async () => {
+    const id = await seedCoupon();
+    await dbModule.db.prepare('UPDATE coupons SET expires_at=? WHERE id=?').run(new Date(Date.now()+86400000).toISOString(), id);
+    expect((await click(id)).status).toBe(302);
+  });
+  it.each(['javascript:alert(1)', 'data:text/html,test', 'file:///etc/passwd', '//example.com', 'https://user:pass@example.com', 'broken link'])('blocks unsafe destination %s without recording a click', async (tracking_url) => {
+    const id = await seedCoupon({ tracking_url });
+    expect((await click(id)).status).toBe(410);
+    expect(await dbModule.db.prepare('SELECT COUNT(*) AS n FROM outbound_clicks WHERE coupon_id=?').get(id)).toMatchObject({ n: 0 });
+  });
+});

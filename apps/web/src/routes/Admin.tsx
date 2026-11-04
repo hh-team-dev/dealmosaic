@@ -69,15 +69,20 @@ function formatMoment(iso: string): string {
 }
 
 export default function Admin() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [params, setParams] = useSearchParams();
-  const tab = (params.get('tab') as Tab) ?? 'overview';
-  const [denied, setDenied] = useState<'anon' | 'forbidden' | null>(null);
+  const tab = TABS.find((item) => item.id === params.get('tab'))?.id ?? 'overview';
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const [apiDenied, setDenied] = useState<'anon' | 'forbidden' | null>(null);
+
+  const denied = loading ? null : !user ? 'anon' : !['admin', 'super_admin'].includes(user.role) ? 'forbidden' : apiDenied;
+  useEffect(() => setDenied(null), [user?.id]);
 
   const fail = useCallback((err: unknown) => {
     if (err instanceof ApiError && err.status === 401) setDenied('anon');
     else if (err instanceof ApiError && err.status === 403) setDenied('forbidden');
-    else setDenied(null);
+    else setLoadError(err instanceof Error ? err.message : 'The controls could not load. Please retry.');
   }, []);
 
   return (
@@ -94,6 +99,11 @@ export default function Admin() {
             </p>
           </header>
 
+          {loadError && !denied && <div className="callout callout-danger" role="alert">
+            <p>{loadError}</p>
+            <button className="btn btn-primary" onClick={() => { setLoadError(null); setAttempt((value) => value + 1); }}>Try again</button>
+          </div>}
+          {loading && <p role="status">Checking your access…</p>}
           {denied && (
             <div className="card card-lg stack">
               <Icon name="lock" size={28} />
@@ -106,7 +116,7 @@ export default function Admin() {
                   : 'Being signed in is not enough — the role is checked on the server for every request.'}
               </p>
               <div className="row wrap">
-                <Link className="btn btn-primary" to="/login?next=/admin">
+                <Link className="btn btn-primary" to={`/login?next=${encodeURIComponent(`/admin?tab=${tab}`)}`}>
                   Sign in
                 </Link>
                 <Link className="btn btn-ghost" to="/">
@@ -122,7 +132,7 @@ export default function Admin() {
             which trained the browser to log 401s on a page where 401 is the normal
             answer — noise that hides the one 401 that would matter.
           */}
-          {!denied && user && (
+          {!loading && !denied && user && (
             <>
               <nav className="admin-tabs" aria-label="Control centre sections">
                 {TABS.map((t) => (
@@ -131,7 +141,7 @@ export default function Admin() {
                     type="button"
                     className={`chip${tab === t.id ? ' chip-active' : ''}`}
                     aria-current={tab === t.id ? 'page' : undefined}
-                    onClick={() => setParams({ tab: t.id })}
+                    onClick={() => { setLoadError(null); setParams({ tab: t.id }); }}
                   >
                     {t.label}
                   </button>
@@ -139,12 +149,12 @@ export default function Admin() {
               </nav>
 
               {tab === 'shop' && <Suspense fallback={<p role="status">Loading shop controls…</p>}><ShopControl /></Suspense>}
-              {tab === 'overview' && <Overview onError={fail} />}
-              {tab === 'revenue' && <Revenue onError={fail} />}
-              {tab === 'coupons' && <Coupons onError={fail} />}
-              {tab === 'reports' && <Reports onError={fail} />}
-              {tab === 'people' && <People onError={fail} />}
-              {tab === 'audit' && <Audit onError={fail} />}
+              {tab === 'overview' && <Overview key={attempt} onError={fail} />}
+              {tab === 'revenue' && <Revenue key={attempt} onError={fail} />}
+              {tab === 'coupons' && <Coupons key={attempt} onError={fail} />}
+              {tab === 'reports' && <Reports key={attempt} onError={fail} />}
+              {tab === 'people' && <People key={attempt} onError={fail} />}
+              {tab === 'audit' && <Audit key={attempt} onError={fail} />}
             </>
           )}
         </div>
@@ -162,9 +172,9 @@ function useLoader<T>(load: (signal: AbortSignal) => Promise<T>, deps: unknown[]
     const controller = new AbortController();
     setLoading(true);
     load(controller.signal)
-      .then((d) => setData(d))
+      .then((d) => { if (!controller.signal.aborted) setData(d); })
       .catch((err: unknown) => {
-        if ((err as Error).name !== 'AbortError') onError(err);
+        if (!controller.signal.aborted && (err as Error).name !== 'AbortError') onError(err);
       })
       .finally(() => setLoading(false));
     return () => controller.abort();
@@ -290,9 +300,8 @@ function Coupons({ onError }: { onError: (e: unknown) => void }) {
     setBusy(id);
     try {
       await setCouponState(id, trustState);
-      setData((prev) =>
-        prev ? { ...prev, coupons: prev.coupons.map((c) => (c.id === id ? { ...c, trust_state: trustState } : c)) } : prev,
-      );
+      const refreshed = await listAdminCoupons(state, q);
+      setData(refreshed);
     } catch (err) {
       onError(err);
     } finally {
@@ -305,7 +314,7 @@ function Coupons({ onError }: { onError: (e: unknown) => void }) {
       <div className="admin-controls">
         <label className="admin-field">
           <span className="tiny muted">Show</span>
-          <select className="input-sm" value={state} onChange={(e) => setState(e.target.value)}>
+          <select className="input-sm" disabled={Boolean(busy)} value={state} onChange={(e) => setState(e.target.value)}>
             <option value="live">Live</option>
             <option value="codes">With a code</option>
             <option value="expired">Expired</option>
@@ -318,6 +327,7 @@ function Coupons({ onError }: { onError: (e: unknown) => void }) {
           <input
             className="input-sm"
             type="search"
+            disabled={Boolean(busy)}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Store, title or code"
@@ -348,14 +358,14 @@ function Coupons({ onError }: { onError: (e: unknown) => void }) {
               </div>
               <div className="admin-row-actions">
                 <span className={`badge ${c.trust_state === 'rejected' ? 'badge-red' : 'badge-green'}`}>
-                  {c.trust_state === 'rejected' ? 'rejected' : 'live'}
+                  {c.trust_state === 'rejected' ? 'rejected' : c.trust_state === 'expired' || (c.expires_at && Date.parse(c.expires_at) <= Date.now()) ? 'expired' : 'live'}
                 </span>
                 {c.trust_state === 'rejected' ? (
-                  <button type="button" className="btn btn-ghost btn-sm" disabled={busy === c.id} onClick={() => act(c.id, 'moderator_verified')}>
+                  <button type="button" className="btn btn-ghost btn-sm" disabled={Boolean(busy)} onClick={() => act(c.id, 'listed')}>
                     Restore
                   </button>
                 ) : (
-                  <button type="button" className="btn btn-ghost btn-sm" disabled={busy === c.id} onClick={() => act(c.id, 'rejected')}>
+                  <button type="button" className="btn btn-ghost btn-sm" disabled={Boolean(busy)} onClick={() => act(c.id, 'rejected')}>
                     Reject
                   </button>
                 )}
@@ -405,16 +415,16 @@ function Reports({ onError }: { onError: (e: unknown) => void }) {
               {r.title ?? 'Unknown product'} {r.variant_label ? `· ${r.variant_label}` : ''}
             </strong>
             <span className="tiny muted">
-              {inr(r.price_minor / 100)} at {r.platform_slug} · PIN {r.pincode ?? 'not given'} ·{' '}
+              {inr(r.price_minor)} at {r.platform_slug} · PIN {r.pincode ?? 'not given'} ·{' '}
               {r.observed_at ? formatDay(r.observed_at) : 'no date'}
             </span>
           </div>
           <div className="admin-row-actions">
             <span className="badge badge-neutral">{r.trust_state}</span>
-            <button type="button" className="btn btn-ghost btn-sm" disabled={busy === r.id} onClick={() => act(r.id, 'community_verified')}>
+            <button type="button" className="btn btn-ghost btn-sm" disabled={Boolean(busy)} onClick={() => act(r.id, 'moderator_verified')}>
               Confirm
             </button>
-            <button type="button" className="btn btn-ghost btn-sm" disabled={busy === r.id} onClick={() => act(r.id, 'rejected')}>
+            <button type="button" className="btn btn-ghost btn-sm" disabled={Boolean(busy)} onClick={() => act(r.id, 'rejected')}>
               Reject
             </button>
           </div>
@@ -463,7 +473,7 @@ function People({ onError }: { onError: (e: unknown) => void }) {
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
-                disabled={busy === u.id}
+                disabled={Boolean(busy)}
                 onClick={() => act(u.id, u.role === 'admin' ? 'user' : 'admin')}
               >
                 {u.role === 'admin' ? 'Remove admin' : 'Make admin'}

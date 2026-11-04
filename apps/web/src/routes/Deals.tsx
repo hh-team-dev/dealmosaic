@@ -1,3 +1,4 @@
+import { useToast } from '../components/Toast';
 import { DirectShelf } from '../components/DirectShelf';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -32,6 +33,7 @@ import { DealsTicker } from '../components/DealsTicker';
  *     manipulation and urgency that is real is information.
  */
 export default function Deals() {
+  const toast = useToast();
   const [coupons, setCoupons] = useState<CouponView[] | null>(null);
   const [totals, setTotals] = useState<{
     live: number;
@@ -57,6 +59,7 @@ export default function Deals() {
   const [q, setQ] = useState('');
   const codesOnly = params.get('codes') === '1';
   const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [copied, setCopied] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -83,7 +86,7 @@ export default function Deals() {
     listMerchants()
       .then((m) => setMerchants(m.merchants))
       .catch(() => setMerchants([]));
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     abortRef.current?.abort();
@@ -118,7 +121,7 @@ export default function Deals() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [platform, q, codesOnly, group, maxPrice, expiring, bankOnly, sortParam]);
+  }, [platform, q, codesOnly, group, maxPrice, expiring, bankOnly, sortParam, attempt]);
 
   const copy = useCallback(async (c: CouponView) => {
     if (!c.code) return;
@@ -127,10 +130,9 @@ export default function Deals() {
       setCopied(c.id);
       setTimeout(() => setCopied((prev) => (prev === c.id ? null : prev)), 1800);
     } catch {
-      // Clipboard needs a secure context and permission; the code is visible
-      // anyway, so a failure here is not worth an error dialog.
+      toast.push(`Copy was blocked. Long-press the code ${c.code} to copy it manually.`, 'info');
     }
-  }, []);
+  }, [toast]);
 
   /**
    * Counts come from the server over the whole table. The page request is capped
@@ -282,6 +284,7 @@ export default function Deals() {
             <div className="callout callout-danger">
               <p className="callout-title">Deals unavailable</p>
               <p>{error}</p>
+              <button className="btn btn-primary" onClick={() => setAttempt((value) => value + 1)}>Try again</button>
             </div>
           )}
 

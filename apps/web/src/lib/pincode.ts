@@ -54,7 +54,7 @@ export function writePincode(value: string | null): void {
     if (value) window.localStorage.setItem(KEY, value);
     else window.localStorage.removeItem(KEY);
   } catch {
-    /* storage can be blocked; the feature degrades to "not set" */
+    window.dispatchEvent(new Event('dealmosaic:storage-error'));
   }
   for (const fn of listeners) fn();
 }
@@ -65,8 +65,11 @@ export function usePincode(): [string | null, (v: string | null) => void] {
     const sync = (): void => setValue(readPincode());
     sync();
     listeners.add(sync);
+    const storageSync = (event: StorageEvent): void => { if (event.key === KEY || event.key === null) sync(); };
+    window.addEventListener('storage', storageSync);
     return () => {
       listeners.delete(sync);
+      window.removeEventListener('storage', storageSync);
     };
   }, []);
   return [value, writePincode];
@@ -86,21 +89,25 @@ export function useLocationSummary(pincode: string | null): {
     if (!pincode) {
       setData(null);
       setError(null);
+      setLoading(false);
       return;
     }
     const controller = new AbortController();
     setLoading(true);
+    setData(null);
+    setError(null);
     apiRequest<LocationSummary>(`/api/location/summary?pincode=${pincode}`, { signal: controller.signal })
       .then((d) => {
+        if (controller.signal.aborted) return;
         setData(d);
         setError(null);
       })
       .catch((err: unknown) => {
-        if ((err as Error).name === 'AbortError') return;
+        if (controller.signal.aborted || (err as Error).name === 'AbortError') return;
         setData(null);
         setError(err instanceof Error ? err.message : 'Could not check that pincode.');
       })
-      .finally(() => setLoading(false));
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, [pincode]);
 

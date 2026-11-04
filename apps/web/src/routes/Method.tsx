@@ -79,7 +79,7 @@ export function HowWeRank() {
             Most price-comparison mistakes are not arithmetic — they are identity mistakes: comparing a 256 GB phone to a
             512 GB one because the titles look alike. We resolve identity with an explicit ladder and keep the reason.
           </p>
-          <div className="table-wrap">
+          <div className="table-wrap" tabIndex={0} role="region" aria-label="Scrollable comparison table">
             <table className="data-table">
               <caption className="sr-only">Matching ladder with confidence values</caption>
               <thead>
@@ -210,7 +210,7 @@ export function DataSources() {
           ))}
 
           <h2 className="h2">Platforms we know about and cannot read yet</h2>
-          <div className="table-wrap">
+          <div className="table-wrap" tabIndex={0} role="region" aria-label="Scrollable comparison table">
             <table className="data-table">
               <caption className="sr-only">Platform access status</caption>
               <thead>

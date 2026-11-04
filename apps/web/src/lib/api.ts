@@ -48,39 +48,47 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   if (options.body !== undefined) headers['content-type'] = 'application/json';
   if (method !== 'GET' && csrfToken) headers['x-csrf-token'] = csrfToken;
 
+  const controller = new AbortController();
+  let timedOut = false;
+  const cancel = () => controller.abort();
+  if (options.signal?.aborted) controller.abort();
+  else options.signal?.addEventListener('abort', cancel, { once: true });
+  // Leave room for a free-host cold start, but never leave a form busy forever.
+  const timer = setTimeout(() => { timedOut = true; controller.abort(); }, 45_000);
   let res: Response;
+  let text: string;
   try {
     res = await fetch(path, {
-      method,
-      headers,
-      credentials: 'same-origin',
+      method, headers, credentials: 'same-origin',
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
-      signal: options.signal,
+      signal: controller.signal,
     });
+    text = await res.text();
   } catch (err) {
-    if ((err as Error).name === 'AbortError') throw err;
+    if (timedOut) throw new ApiError(0, 'timeout', 'This is taking too long. Please try again.');
+    if (options.signal?.aborted || (err as Error).name === 'AbortError') throw err;
     throw new ApiError(0, 'network', 'We could not reach DEALMOSAIC. Check your connection and try again.');
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener('abort', cancel);
   }
-
-  const text = await res.text();
   let data: Record<string, unknown> | null = null;
-  if (text) {
-    try {
-      data = JSON.parse(text) as Record<string, unknown>;
-    } catch {
-      data = null;
-    }
-  }
-
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (parsed && typeof parsed === 'object') data = parsed as Record<string, unknown>;
+  } catch { /* Invalid/HTML responses are handled below, not passed to views as success. */ }
   if (!res.ok) {
-    const errorBody = (data?.error ?? {}) as { code?: string; message?: string; fields?: Record<string, string> };
+    const errorBody = (typeof data?.error === 'object' && data.error ? data.error : {}) as { code?: string; message?: string; fields?: Record<string, string> };
     throw new ApiError(
       res.status,
-      errorBody.code ?? 'error',
-      errorBody.message ?? 'Something went wrong. Please try again.',
+      errorBody.code ?? (typeof data?.error === 'string' ? data.error : 'error'),
+      errorBody.message ?? (typeof data?.message === 'string' ? data.message : 'Something went wrong. Please try again.'),
       errorBody.fields,
       data ?? undefined,
     );
+  }
+  if (data === null && res.status !== 204) {
+    throw new ApiError(502, 'invalid_response', 'The service returned an unreadable response. Please try again.');
   }
 
   return data as T;

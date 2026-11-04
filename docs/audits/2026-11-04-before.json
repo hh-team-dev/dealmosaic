@@ -1,0 +1,1149 @@
+{
+  "at": "2026-11-04T10:58:49.880Z",
+  "base": "https://dealmosaic.pages.dev",
+  "coverage": "Read-only rendering/accessibility; interaction tests are separate.",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "DEALMOSAIC \u2014 the price you\u2019ll actually pay",
+      "h1": [
+        "The price you\u2019ll actually pay."
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 141,
+      "linkCount": 132
+    },
+    {
+      "path": "/browse",
+      "status": 200,
+      "title": "Browse products and compare real prices \u00b7 DEALMOSAIC",
+      "h1": [
+        "Every product we compare"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/browse"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 73
+    },
+    {
+      "path": "/deals",
+      "status": 200,
+      "title": "Today's best coupon codes and deals across Indian stores \u00b7 DEALMOSAIC",
+      "h1": [
+        "Every code here is live right now"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/deals"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 218,
+      "linkCount": 223
+    },
+    {
+      "path": "/saved",
+      "status": 200,
+      "title": "Your saved deals and recently viewed offers \u00b7 DEALMOSAIC",
+      "h1": [
+        "Saved deals"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/saved"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 31
+    },
+    {
+      "path": "/search",
+      "status": 200,
+      "title": "Search prices \u00b7 DEALMOSAIC",
+      "h1": [
+        "What are you buying?"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/search"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 1,
+      "linkCount": 34
+    },
+    {
+      "path": "/search?q=iphone",
+      "status": 200,
+      "title": "iphone \u2014 price comparison \u00b7 DEALMOSAIC",
+      "h1": [
+        "Apple iPhone 16"
+      ],
+      "canonical": [],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 3,
+      "linkCount": 30
+    },
+    {
+      "path": "/search?q=unfindable-test-query-742",
+      "status": 200,
+      "title": "unfindable-test-query-742 \u2014 price comparison \u00b7 DEALMOSAIC",
+      "h1": [
+        "No match for \u201cunfindable-test-query-742\u201d"
+      ],
+      "canonical": [],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 1,
+      "linkCount": 36
+    },
+    {
+      "path": "/how-we-rank",
+      "status": 200,
+      "title": "How we rank deals \u2014 the rules, in full \u00b7 DEALMOSAIC",
+      "h1": [
+        "We show three deals. Here is exactly how they are ordered."
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/how-we-rank"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": [
+            {
+              "target": [
+                ".table-wrap"
+              ],
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ],
+      "buttonCount": 0,
+      "linkCount": 17
+    },
+    {
+      "path": "/data-sources",
+      "status": 200,
+      "title": "Where our prices come from \u00b7 DEALMOSAIC",
+      "h1": [
+        "Where our prices come from \u2014 including the gaps"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/data-sources"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": [
+            {
+              "target": [
+                ".table-wrap"
+              ],
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ]
+        }
+      ],
+      "buttonCount": 0,
+      "linkCount": 18
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "title": "Sign in \u00b7 DEALMOSAIC",
+      "h1": [
+        "Welcome back"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/login"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 2,
+      "linkCount": 6
+    },
+    {
+      "path": "/register",
+      "status": 200,
+      "title": "Create an account \u00b7 DEALMOSAIC",
+      "h1": [
+        "Create your account"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/register"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 3,
+      "linkCount": 7
+    },
+    {
+      "path": "/forgot-password",
+      "status": 200,
+      "title": "Reset your password \u00b7 DEALMOSAIC",
+      "h1": [
+        "Reset your password"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/forgot-password"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 1,
+      "linkCount": 5
+    },
+    {
+      "path": "/reset-password",
+      "status": 200,
+      "title": "DEALMOSAIC \u2014 the price you\u2019ll actually pay",
+      "h1": [
+        "That link is incomplete"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 5
+    },
+    {
+      "path": "/verify-email",
+      "status": 200,
+      "title": "Verify your email \u00b7 DEALMOSAIC",
+      "h1": [
+        "That link didn\u2019t work"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/verify-email"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 6
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "title": "Privacy policy \u00b7 DEALMOSAIC",
+      "h1": [
+        "Privacy policy"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/privacy"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 13
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "title": "Terms of use \u00b7 DEALMOSAIC",
+      "h1": [
+        "Terms of use"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/terms"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 14
+    },
+    {
+      "path": "/disclosure",
+      "status": 200,
+      "title": "Affiliate disclosure \u00b7 DEALMOSAIC",
+      "h1": [
+        "Affiliate disclosure"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/disclosure"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 13
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "title": "Contact & support \u00b7 DEALMOSAIC",
+      "h1": [
+        "Contact & support"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/contact"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 16
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "title": "Control centre \u00b7 DEALMOSAIC",
+      "h1": [
+        "Control centre"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/admin"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 16
+    },
+    {
+      "path": "/admin?tab=shop",
+      "status": 200,
+      "title": "Control centre \u00b7 DEALMOSAIC",
+      "h1": [
+        "Control centre"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/admin"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 16
+    },
+    {
+      "path": "/handcrafted",
+      "status": 200,
+      "title": "Handcrafted finds \u00b7 DEALMOSAIC",
+      "h1": [
+        "Handcrafted finds"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/handcrafted"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 17
+    },
+    {
+      "path": "/app",
+      "status": 200,
+      "title": "Sign in \u00b7 DEALMOSAIC",
+      "h1": [
+        "Welcome back"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/login"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 2,
+      "linkCount": 6
+    },
+    {
+      "path": "/app/settings",
+      "status": 200,
+      "title": "Sign in \u00b7 DEALMOSAIC",
+      "h1": [
+        "Welcome back"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/login"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 2,
+      "linkCount": 6
+    },
+    {
+      "path": "/this-page-does-not-exist",
+      "status": 404,
+      "title": "Page not found \u2014 DEALMOSAIC",
+      "h1": [
+        "That page isn\u2019t here"
+      ],
+      "canonical": [],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 2
+    },
+    {
+      "path": "/c/smartphones",
+      "status": 200,
+      "title": "Smartphones price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Smartphones"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/smartphones"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 51
+    },
+    {
+      "path": "/c/audio",
+      "status": 200,
+      "title": "Audio price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Audio"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/audio"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 50
+    },
+    {
+      "path": "/c/computers",
+      "status": 200,
+      "title": "Computers price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Computers"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/computers"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/home-appliances",
+      "status": 200,
+      "title": "Home Appliances price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Home Appliances"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/home-appliances"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 50
+    },
+    {
+      "path": "/c/kitchen",
+      "status": 200,
+      "title": "Kitchen price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Kitchen"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/kitchen"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/footwear",
+      "status": 200,
+      "title": "Footwear price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Footwear"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/footwear"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/clothing",
+      "status": 200,
+      "title": "Clothing price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Clothing"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/clothing"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/books",
+      "status": 200,
+      "title": "Books price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Books"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/books"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/personal-care",
+      "status": 200,
+      "title": "Personal Care price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Personal Care"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/personal-care"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 50
+    },
+    {
+      "path": "/c/dairy",
+      "status": 200,
+      "title": "Dairy price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Dairy"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/dairy"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/snacks",
+      "status": 200,
+      "title": "Snacks price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Snacks"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/snacks"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 50
+    },
+    {
+      "path": "/c/staples",
+      "status": 200,
+      "title": "Staples price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Staples"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/staples"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 51
+    },
+    {
+      "path": "/c/household",
+      "status": 200,
+      "title": "Household price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Household"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/household"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/sports",
+      "status": 200,
+      "title": "Sports price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Sports"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/sports"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/toys",
+      "status": 200,
+      "title": "Toys price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Toys"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/toys"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/furniture",
+      "status": 200,
+      "title": "Furniture price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Furniture"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/furniture"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/c/beauty",
+      "status": 200,
+      "title": "Beauty price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Beauty"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/c/beauty"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 0,
+      "linkCount": 49
+    },
+    {
+      "path": "/p/samsung-galaxy-s25-ultra",
+      "status": 200,
+      "title": "Samsung Galaxy S25 Ultra price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Samsung Galaxy S25 Ultra"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/samsung-galaxy-s25-ultra"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 11,
+      "linkCount": 53
+    },
+    {
+      "path": "/p/apple-iphone-16",
+      "status": 200,
+      "title": "Apple iPhone 16 price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Apple iPhone 16"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/apple-iphone-16"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/oneplus-13r",
+      "status": 200,
+      "title": "OnePlus 13R price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "OnePlus 13R"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/oneplus-13r"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/sony-wh-1000xm5",
+      "status": 200,
+      "title": "Sony WH-1000XM5 Wireless Headphones price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Sony WH-1000XM5 Wireless Headphones"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/sony-wh-1000xm5"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/boat-rockerz-450",
+      "status": 200,
+      "title": "boAt Rockerz 450 Bluetooth Headphones price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "boAt Rockerz 450 Bluetooth Headphones"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/boat-rockerz-450"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 40
+    },
+    {
+      "path": "/p/lenovo-ideapad-slim-3",
+      "status": 200,
+      "title": "Lenovo IdeaPad Slim 3 Laptop price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Lenovo IdeaPad Slim 3 Laptop"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/lenovo-ideapad-slim-3"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/lg-1-5-ton-split-ac",
+      "status": 200,
+      "title": "LG 1.5 Ton 5 Star Inverter Split AC price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "LG 1.5 Ton 5 Star Inverter Split AC"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/lg-1-5-ton-split-ac"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 41
+    },
+    {
+      "path": "/p/havells-pedestal-fan",
+      "status": 200,
+      "title": "Havells Pedestal Fan price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Havells Pedestal Fan"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/havells-pedestal-fan"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 40
+    },
+    {
+      "path": "/p/prestige-pressure-cooker-3l",
+      "status": 200,
+      "title": "Prestige Deluxe Pressure Cooker price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Prestige Deluxe Pressure Cooker"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/prestige-pressure-cooker-3l"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 45
+    },
+    {
+      "path": "/p/nike-revolution-running-shoes",
+      "status": 200,
+      "title": "Nike Revolution Running Shoes price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Nike Revolution Running Shoes"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/nike-revolution-running-shoes"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/levis-511-slim-jeans",
+      "status": 200,
+      "title": "Levi's 511 Slim Fit Jeans price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Levi's 511 Slim Fit Jeans"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/levis-511-slim-jeans"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/atomic-habits",
+      "status": 200,
+      "title": "Atomic Habits price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Atomic Habits"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/atomic-habits"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 40
+    },
+    {
+      "path": "/p/dettol-original-soap",
+      "status": 200,
+      "title": "Dettol Original Bathing Soap price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Dettol Original Bathing Soap"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/dettol-original-soap"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 11,
+      "linkCount": 53
+    },
+    {
+      "path": "/p/amul-taaza-milk",
+      "status": 200,
+      "title": "Amul Taaza Toned Milk price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Amul Taaza Toned Milk"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/amul-taaza-milk"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/lays-classic-salted",
+      "status": 200,
+      "title": "Lay's Classic Salted Potato Chips price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Lay's Classic Salted Potato Chips"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/lays-classic-salted"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 11,
+      "linkCount": 53
+    },
+    {
+      "path": "/p/aashirvaad-atta",
+      "status": 200,
+      "title": "Aashirvaad Shudh Chakki Atta price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Aashirvaad Shudh Chakki Atta"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/aashirvaad-atta"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/tata-salt",
+      "status": 200,
+      "title": "Tata Salt Iodised price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Tata Salt Iodised"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/tata-salt"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 41
+    },
+    {
+      "path": "/p/maggi-masala-noodles",
+      "status": 200,
+      "title": "Maggi 2-Minute Masala Noodles price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Maggi 2-Minute Masala Noodles"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/maggi-masala-noodles"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/fortune-sunflower-oil",
+      "status": 200,
+      "title": "Fortune Sunlite Refined Sunflower Oil price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Fortune Sunlite Refined Sunflower Oil"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/fortune-sunflower-oil"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/colgate-strong-teeth",
+      "status": 200,
+      "title": "Colgate Strong Teeth Toothpaste price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Colgate Strong Teeth Toothpaste"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/colgate-strong-teeth"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/surf-excel-matic",
+      "status": 200,
+      "title": "Surf Excel Matic Front Load Detergent price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Surf Excel Matic Front Load Detergent"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/surf-excel-matic"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 47
+    },
+    {
+      "path": "/p/yonex-badminton-racket",
+      "status": 200,
+      "title": "Yonex Nanoray Badminton Racket price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Yonex Nanoray Badminton Racket"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/yonex-badminton-racket"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 40
+    },
+    {
+      "path": "/p/lego-classic-bricks",
+      "status": 200,
+      "title": "LEGO Classic Medium Creative Brick Box price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "LEGO Classic Medium Creative Brick Box"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/lego-classic-bricks"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 5,
+      "linkCount": 39
+    },
+    {
+      "path": "/p/wakefit-mattress",
+      "status": 200,
+      "title": "Wakefit Orthopaedic Memory Foam Mattress price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Wakefit Orthopaedic Memory Foam Mattress"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/wakefit-mattress"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 43
+    },
+    {
+      "path": "/p/forest-essentials-shampoo",
+      "status": 200,
+      "title": "Forest Essentials Ayurvedic Herb Shampoo price comparison in India \u00b7 DEALMOSAIC",
+      "h1": [
+        "Forest Essentials Ayurvedic Herb Shampoo"
+      ],
+      "canonical": [
+        "https://dealmosaic.pages.dev/p/forest-essentials-shampoo"
+      ],
+      "overflow": false,
+      "errors": [],
+      "failed": [],
+      "violations": [],
+      "buttonCount": 8,
+      "linkCount": 45
+    }
+  ]
+}

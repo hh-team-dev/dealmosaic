@@ -73,14 +73,16 @@ function read<T>(key: string): T[] {
   }
 }
 
-function write<T>(key: string, value: T[]): void {
-  if (typeof window === 'undefined') return;
+function write<T>(key: string, value: T[]): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // Ignore: a full quota is not worth an error dialog.
+    window.dispatchEvent(new Event('dealmosaic:storage-error'));
+    return false;
   }
   notify();
+  return true;
 }
 
 export function readSaved(): SavedDeal[] {
@@ -138,11 +140,11 @@ function mirrorToServer(dealId: string, saved: boolean): void {
   })();
 }
 
-export function toggleSaved(deal: SaveableDeal): boolean {
+export function toggleSaved(deal: SaveableDeal): boolean | null {
   const existing = readSaved();
   const without = existing.filter((d) => d.id !== deal.id);
   if (without.length !== existing.length) {
-    write(SAVED_KEY, without);
+    if (!write(SAVED_KEY, without)) return null;
     mirrorToServer(deal.id, false);
     return false;
   }
@@ -161,7 +163,7 @@ export function toggleSaved(deal: SaveableDeal): boolean {
     savedAt: new Date().toISOString(),
     group: deal.dealGroup,
   };
-  write(SAVED_KEY, [entry, ...without].slice(0, MAX_SAVED));
+  if (!write(SAVED_KEY, [entry, ...without].slice(0, MAX_SAVED))) return null;
   mirrorToServer(deal.id, true);
   return true;
 }
@@ -186,8 +188,8 @@ export function clearViewed(): void {
 }
 
 export function clearSaved(): void {
-  for (const item of readSaved()) mirrorToServer(item.id, false);
-  write(SAVED_KEY, []);
+  const existing = readSaved();
+  if (write(SAVED_KEY, [])) for (const item of existing) mirrorToServer(item.id, false);
 }
 
 /** Subscribes to changes in the given list. Returns the current value. */
@@ -199,7 +201,7 @@ function useStoredList<T>(key: string): T[] {
     listeners.add(sync);
     // Another tab saving a deal should light up this tab too.
     const onStorage = (e: StorageEvent): void => {
-      if (e.key === key) sync();
+      if (e.key === key || e.key === null) sync();
     };
     window.addEventListener('storage', onStorage);
     return () => {

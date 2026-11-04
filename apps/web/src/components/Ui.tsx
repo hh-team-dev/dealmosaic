@@ -1,4 +1,7 @@
 import {
+  Children,
+  cloneElement,
+  isValidElement,
   useEffect,
   useId,
   useRef,
@@ -61,8 +64,8 @@ export function Button({
       aria-busy={loading || undefined}
       onPointerDown={handlePointerDown}
       onClick={onClick}
-      disabled={rest.disabled || loading}
       {...rest}
+      disabled={Boolean(rest.disabled || loading)}
     >
       {loading && <span className="spinner" aria-hidden="true" />}
       {children}
@@ -93,7 +96,14 @@ export function Field({
         {label}
         {optional && <span className="optional">optional</span>}
       </label>
-      {children}
+      {Children.map(children, (child) => {
+        if (!isValidElement<{ id?: string; 'aria-describedby'?: string; 'aria-invalid'?: boolean }>(child) || child.props.id !== htmlFor) return child;
+        const ownDescription = error ? `${htmlFor}-error` : hint ? `${htmlFor}-hint` : undefined;
+        return cloneElement(child, {
+          'aria-describedby': [...new Set([child.props['aria-describedby'], ownDescription].filter(Boolean))].join(' ') || undefined,
+          'aria-invalid': Boolean(error) || child.props['aria-invalid'] || undefined,
+        });
+      })}
       {hint && !error && (
         <span className="hint" id={`${htmlFor}-hint`}>
           {hint}
@@ -134,6 +144,8 @@ export function PasswordInput({
   errorId,
   autoComplete,
   placeholder,
+  'aria-describedby': describedBy,
+  'aria-invalid': ariaInvalid,
 }: {
   id: string;
   value: string;
@@ -142,6 +154,8 @@ export function PasswordInput({
   errorId?: string;
   autoComplete?: string;
   placeholder?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
   return (
@@ -152,8 +166,8 @@ export function PasswordInput({
         type={visible ? 'text' : 'password'}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-invalid={invalid || undefined}
-        aria-describedby={errorId}
+        aria-invalid={invalid || ariaInvalid || undefined}
+        aria-describedby={describedBy || errorId}
         autoComplete={autoComplete}
         placeholder={placeholder}
         style={{ paddingRight: 74 }}
@@ -201,16 +215,18 @@ export function Modal({
 }) {
   const titleId = useId();
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') closeRef.current();
       if (e.key === 'Tab' && ref.current) {
-        const nodes = ref.current.querySelectorAll<HTMLElement>(
+        const nodes = Array.from(ref.current.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        );
+        )).filter((node) => !node.matches(':disabled, [hidden], [tabindex="-1"]') && node.getClientRects().length > 0);
         if (nodes.length === 0) return;
         const first = nodes[0]!;
         const last = nodes[nodes.length - 1]!;
@@ -224,14 +240,15 @@ export function Modal({
       }
     };
     document.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    window.setTimeout(() => ref.current?.querySelector<HTMLElement>('button, input')?.focus(), 60);
+    ref.current?.querySelector<HTMLElement>('button, input')?.focus();
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
       previous?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 

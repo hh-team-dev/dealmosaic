@@ -1,3 +1,4 @@
+import { useToast } from './Toast';
 import { useCallback, useState } from 'react';
 import {
   expiryLabel,
@@ -35,6 +36,7 @@ import { ClaimBadge, CodeButton, ConfidenceLine } from './DealFacts';
  *     says where it goes.
  */
 export function DealCard({ deal, compact = false }: { deal: DealView; compact?: boolean }) {
+  const toast = useToast();
   const [copied, setCopied] = useState(false);
   const saved = useSaved();
   const isSavedNow = saved.some((d) => d.id === deal.id);
@@ -48,10 +50,9 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
       recordView(deal);
       setTimeout(() => setCopied(false), 1900);
     } catch {
-      // Clipboard needs a secure context and permission. The code is on screen,
-      // so a failure is not worth an alert.
+      toast.push(`Copy was blocked. Long-press the code ${deal.code} to copy it manually.`, 'info');
     }
-  }, [deal]);
+  }, [deal, toast]);
 
   const price = statedPriceLabel(deal);
   const urgency = expiryLabel(deal.expiresAt, deal.daysLeft ?? null);

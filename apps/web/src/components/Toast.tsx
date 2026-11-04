@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Icon } from './Icon';
 
 type ToastKind = 'success' | 'error' | 'info';
@@ -22,6 +22,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       setToasts((current) => current.filter((t) => t.id !== id));
     }, 4200);
   }, []);
+
+  useEffect(() => {
+    const onStorageError = () => push('Your browser could not save this change. Allow site storage or free some space, then try again.', 'error');
+    window.addEventListener('dealmosaic:storage-error', onStorageError);
+    return () => window.removeEventListener('dealmosaic:storage-error', onStorageError);
+  }, [push]);
 
   const value = useMemo(() => ({ push }), [push]);
 

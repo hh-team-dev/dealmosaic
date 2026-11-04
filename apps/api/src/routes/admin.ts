@@ -249,10 +249,10 @@ adminRoutes.get('/coupons', async (c) => {
   const { state, q, limit } = parsed.data;
   const now = nowIso();
   const where = [`(? = 'all'
-      OR (? = 'live' AND (c.expires_at IS NULL OR c.expires_at > ?))
-      OR (? = 'expired' AND c.expires_at IS NOT NULL AND c.expires_at <= ?)
+      OR (? = 'live' AND c.trust_state NOT IN ('rejected','expired') AND (c.expires_at IS NULL OR c.expires_at > ?))
+      OR (? = 'expired' AND (c.trust_state = 'expired' OR (c.expires_at IS NOT NULL AND c.expires_at <= ?)))
       OR (? = 'rejected' AND c.trust_state = 'rejected')
-      OR (? = 'codes' AND c.code IS NOT NULL AND c.code <> ''))`].join(' AND ');
+      OR (? = 'codes' AND c.code IS NOT NULL AND c.code <> '' AND c.trust_state NOT IN ('rejected','expired') AND (c.expires_at IS NULL OR c.expires_at > ?)))`].join(' AND ');
 
   const rows = (await db
     .prepare(
@@ -267,7 +267,7 @@ adminRoutes.get('/coupons', async (c) => {
         LIMIT ?`,
     )
     .all(
-      state, state, now, state, now, state, state,
+      state, state, now, state, now, state, state, now,
       q ?? null, q ? `%${q.toLowerCase()}%` : null, q ? `%${q.toLowerCase()}%` : null, q ? `%${q.toLowerCase()}%` : null,
       limit,
     )) as unknown as Array<Record<string, unknown>>;
@@ -275,7 +275,7 @@ adminRoutes.get('/coupons', async (c) => {
   return c.json({ state, count: rows.length, coupons: rows });
 });
 
-const stateBody = z.object({ trustState: z.enum(['moderator_verified', 'community_verified', 'rejected', 'expired']) });
+const stateBody = z.object({ trustState: z.enum(['listed', 'moderator_verified', 'community_verified', 'rejected', 'expired']) });
 
 /**
  * Change a coupon's trust state. Reversible by design: rejecting is a label, not
@@ -307,7 +307,7 @@ adminRoutes.post('/coupons/:id/state', requireCsrf, async (c) => {
 adminRoutes.get('/community', async (c) => {
   const rows = (await db
     .prepare(
-      `SELECT cp.id, cp.variant_id, cp.platform_slug, cp.price_minor, cp.pincode, cp.observed_at,
+      `SELECT cp.id, cp.variant_id, cp.platform_slug, cp.price_minor, cp.pincode, cp.reported_at AS observed_at,
               cp.trust_state, cp.reported_by, v.variant_label, p.title
          FROM community_prices cp
     LEFT JOIN product_variants v ON v.id = cp.variant_id
@@ -321,7 +321,7 @@ adminRoutes.get('/community', async (c) => {
 
 adminRoutes.post('/community/:id/state', requireCsrf, async (c) => {
   const user = c.get('user')!;
-  const parsed = stateBody.safeParse(await c.req.json().catch(() => ({})));
+  const parsed = z.object({ trustState: z.enum(['reported', 'corroborated', 'moderator_verified', 'rejected']) }).safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) return c.json({ error: { code: 'invalid_request', message: 'Unknown trust state' } }, 400);
 
   const id = c.req.param('id');

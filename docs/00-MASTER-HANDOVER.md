@@ -2,7 +2,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **3 November 2026** · Version **1.0.0** · All figures verified live
+Last updated: **4 November 2026** · Version **1.0.0** · All figures verified live
 against production at the time of writing, not recalled from memory.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -11,6 +11,25 @@ against production at the time of writing, not recalled from memory.
 > says so and names the exact steps. Where the agent made a mistake, the mistake
 > is recorded rather than tidied away — those are the places where the next person
 > is most likely to repeat it.
+
+---
+
+## 4 November 2026 — site-wide audit and recovery fixes
+
+**Current audit and deployment evidence: [34-sitewide-audit.md](34-sitewide-audit.md).**
+It supersedes older test counts and records the precise flaw → fix → regression
+matrix, all-page rendering coverage, actual browser interactions, remaining
+coverage limits and unchanged commercial gates. The established warm design and
+branding remain; no paid service or commercial test transaction was used.
+
+Important repairs include owner Price reports SQL, anonymous/forbidden owner
+access, tab/retry behavior, coupon restoration/filter honesty, expiry and unsafe
+redirect checks, transport failure evidence, dialog focus, browser-storage failures,
+PIN synchronization, timeout/error handling and account-data scope wording.
+
+Shop banking details will be entered privately by the owner. Automatic carrier
+integration is still missing and live sales remain paused; do not confuse isolated
+checkout/lifecycle tests with real payment, carrier or legal verification.
 
 ---
 

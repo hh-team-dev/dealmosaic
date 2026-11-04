@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthLayout } from '../components/AuthLayout';
 import { Button, Field, PasswordInput, TextInput } from '../components/Ui';
 import { ApiError } from '../lib/api';
+import { safeReturnPath } from '../lib/navigation';
 import { useAuth } from '../lib/session';
 import { useToast } from '../components/Toast';
 
@@ -29,7 +30,7 @@ export default function Login() {
       await login(email, password);
       toast.push('Welcome back.', 'success');
       // The live deal wall, not the account page: the home screen is the product.
-      navigate(params.get('next') ?? '/', { replace: true });
+      navigate(safeReturnPath(params.get('next')), { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.code === 'email_unverified') {
@@ -58,7 +59,7 @@ export default function Login() {
       />
     <AuthLayout
       title="Welcome back"
-      subtitle="Sign in to compare prices. Accounts are free and search is never public."
+      subtitle="Sign in for price alerts and account settings. Browsing and price comparison need no account."
     >
       {error && (
         <div className="callout callout-danger" role="alert" style={{ marginBottom: 16 }}>

@@ -1,0 +1,321 @@
+{
+  "at": "2026-11-04T11:19:38.542Z",
+  "coverage": "Isolated authenticated rendering/accessibility, not mutation coverage",
+  "results": [
+    {
+      "state": "admin:overview",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:revenue",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:coupons",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:reports",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:people",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:audit",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Products",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Orders",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Delivery quotes",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Shop settings",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Activity",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:product-editor",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:settings",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:delete-dialog",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:buyer-product",
+      "width": 320,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:overview",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:revenue",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:coupons",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:reports",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:people",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:audit",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Products",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Orders",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Delivery quotes",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Shop settings",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Activity",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:product-editor",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:settings",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:delete-dialog",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:buyer-product",
+      "width": 390,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:overview",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:revenue",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:coupons",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:reports",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:people",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "admin:audit",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Products",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Orders",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Delivery quotes",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Shop settings",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:Activity",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:product-editor",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:settings",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "account:delete-dialog",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "state": "shop:buyer-product",
+      "width": 1365,
+      "overflow": false,
+      "errors": [],
+      "violations": []
+    }
+  ]
+}

@@ -63,7 +63,7 @@ export async function queueEmail(input: {
   if (result.sent) {
     message.sentAt = nowIso();
     await db.prepare('UPDATE dev_outbox SET sent_at = ? WHERE id = ?').run(message.sentAt, message.id);
-  } else if (result.transport === 'smtp') {
+  } else if (result.transport !== 'none') {
     message.sendError = result.error ?? 'Unknown delivery error';
     await db
       .prepare('UPDATE dev_outbox SET send_error = ? WHERE id = ?')

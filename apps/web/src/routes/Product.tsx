@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
+import { ApiError } from '../lib/api';
 import { inr } from '../lib/format';
 import { getProduct, type ProductDetail } from '../lib/search-api';
 import { Seo, breadcrumbJsonLd, productJsonLd, SITE_URL } from '../lib/seo';
@@ -18,7 +19,8 @@ import { DealsTicker } from '../components/DealsTicker';
  */
 export default function Product() {
   const { slug = '' } = useParams();
-  const [state, setState] = useState<{ status: 'loading' } | { status: 'ok'; data: ProductDetail } | { status: 'error' }>(
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState<{ status: 'loading' } | { status: 'ok'; data: ProductDetail } | { status: 'error'; notFound: boolean }>(
     { status: 'loading' },
   );
 
@@ -27,11 +29,11 @@ export default function Product() {
     setState({ status: 'loading' });
     getProduct(slug)
       .then((data) => alive && setState({ status: 'ok', data }))
-      .catch(() => alive && setState({ status: 'error' }));
+      .catch((err) => alive && setState({ status: 'error', notFound: err instanceof ApiError && err.status === 404 }));
     return () => {
       alive = false;
     };
-  }, [slug]);
+  }, [slug, attempt]);
 
   if (state.status === 'loading') {
     return (
@@ -47,11 +49,12 @@ export default function Product() {
   if (state.status === 'error') {
     return (
       <Chrome>
-        <Seo title="Product not found" description="That product is not in the DEALMOSAIC catalogue." path={`/p/${slug}`} index={false} />
+        <Seo title={state.notFound ? "Product not found" : "Product could not load"} description="Browse the DealMosaic catalogue or retry loading this product." path={`/p/${slug}`} index={false} />
         <div className="container section empty-state card card-lg stack">
           <Icon name="search" size={28} />
-          <h1 className="h3">We do not have that product</h1>
-          <p className="muted">It may not be in the catalogue yet. Try a search instead.</p>
+          <h1 className="h3">{state.notFound ? "We do not have that product" : "This product could not load"}</h1>
+          <p className="muted">{state.notFound ? "It may not be in the catalogue yet. Try a search instead." : "Please check your connection and try again."}</p>
+          {!state.notFound && <button className="btn btn-primary" onClick={() => setAttempt((value) => value + 1)}>Try again</button>}
           <Link className="btn btn-primary" to="/browse">
             Browse products
           </Link>

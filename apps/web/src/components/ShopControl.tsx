@@ -248,6 +248,7 @@ export default function ShopControl() {
           {error}
         </p>
       )}
+      {error && !data && <button className="btn btn-primary" disabled={busy} onClick={() => run(async () => {}, "Shop controls loaded.")}>Try again</button>}
       {message && (
         <p role="status" className="direct-notice">
           {message}

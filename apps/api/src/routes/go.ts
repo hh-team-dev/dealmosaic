@@ -82,7 +82,8 @@ goRoutes.get('/:couponId', async (c) => {
     .get(id)) as ClickRow | undefined;
 
   if (!row) return c.json({ error: 'not_found', message: 'That offer is no longer in the list.' }, 404);
-  if (row.trust_state === 'rejected' || row.trust_state === 'expired') {
+  const expiry = row.expires_at ? Date.parse(row.expires_at) : null;
+  if (row.trust_state === 'rejected' || row.trust_state === 'expired' || (expiry !== null && (!Number.isFinite(expiry) || expiry <= Date.now()))) {
     return c.json({ error: 'withdrawn', message: 'That offer has been withdrawn.' }, 410);
   }
   if (!row.tracking_url) {
@@ -90,6 +91,13 @@ goRoutes.get('/:couponId', async (c) => {
       { error: 'no_link', message: 'No tracked link is on file for this offer yet.' },
       404,
     );
+  }
+
+  try {
+    const url = new URL(row.tracking_url);
+    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) throw new Error('Unsafe link');
+  } catch {
+    return c.json({ error: 'invalid_link', message: 'That store link is unavailable. Please choose another offer.' }, 410);
   }
 
   const clickId = newId();

@@ -2567,7 +2567,6 @@ button.chip[aria-selected='true'] {
   padding-right: calc(var(--s-4) + 10px);
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
   /* Fade the trailing edge: a chip half-hidden by the screen edge looks broken,
      a chip faded out by a mask reads as "there is more this way". */
   mask-image: linear-gradient(to right, rgba(255, 255, 255, 1) calc(100% - 30px), rgba(255, 255, 255, 0) 100%);
@@ -4155,17 +4154,9 @@ input:-webkit-autofill:active {
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: none;
-  scroll-snap-type: x proximity;
-  /*
-   * Five tabs never fit a 390 px phone. A chip sliced dead straight at the screen
-   * edge reads as a broken layout; a chip fading out reads as a row that continues,
-   * which is what it is. The scrollbar is hidden because a phone scrollbar would
-   * sit here permanently, so the fade is the only affordance there is.
-   */
-  mask-image: linear-gradient(to right, currentColor calc(100% - 26px), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - 26px), transparent 100%);
+  /* No scroll snap: automatic focus scrolling must not move a tab between pointer down/up. */
 }
-.admin-tabs > * { scroll-snap-align: start; }
+.admin-tabs > * { flex: 0 0 auto; }
 .admin-tabs::-webkit-scrollbar { display: none; }
 
 .chip-active {
@@ -4446,7 +4437,7 @@ input:-webkit-autofill:active {
 .direct-photo img { width: 100%; height: 100%; object-fit: cover; }
 .direct-price { color: var(--ink); font-family: var(--font-display, 'Outfit', sans-serif); font-size: clamp(1.5rem, 4vw, 2.25rem); }
 .direct-saving { color: var(--grass-d); background: var(--surface); border: 1px solid var(--grass-d); padding: 5px 10px; border-radius: 10px; font-weight: 700; }
-.direct-product-layout { display: grid; grid-template-columns: 1fr; gap: 28px; margin-top: 24px; }
+.direct-product-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 24px; }
 .direct-gallery { display: grid; gap: 14px; align-content: start; }
 .direct-gallery img, .direct-gallery video { width: 100%; height: auto; border-radius: 20px; background: var(--tint); }
 .direct-gallery figure { margin: 0; }
@@ -4479,5 +4470,26 @@ input:-webkit-autofill:active {
 .direct-admin label.row, .direct-page label.row { min-height: 48px; align-items: flex-start; padding-block: 10px; }
 .direct-admin input[type='file'] { height: auto; padding: 14px; max-width: 100%; }
 .direct-admin .input, .direct-page .input, .direct-admin .select, .direct-page .select { min-width: 0; max-width: 100%; }
-@media (min-width: 800px) { .direct-product-layout { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 800px) { .direct-product-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media print { .direct-order-page button, .direct-order-page form, .direct-order-page a.btn { display: none; } }
+
+/* Phone audit: usable touch targets without changing the established palette/layout. */
+@media (max-width: 640px) {
+  button.chip, a.chip, .chart-ranges .chip, button.deal-code, .deal-save {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+.table-wrap:focus-visible { outline: 3px solid var(--ember-d); outline-offset: 3px; }
+
+/* 320px authenticated/product audit: shrink grid children, not the page. */
+.direct-product-layout > * { min-width: 0; }
+.direct-page .badge { white-space: normal; }
+.direct-page h1, .direct-page h2, .direct-page h3 { overflow-wrap: anywhere; }
+.header-dashboard-icon { display: none; }
+@media (max-width: 380px) {
+  .header-dashboard-label { display: none; }
+  .header-dashboard-icon { display: flex; }
+  .header-actions .btn-header-ghost { padding-inline: 8px; }
+  .header-actions .header-dashboard { width: 40px; padding-inline: 0; }
+}
