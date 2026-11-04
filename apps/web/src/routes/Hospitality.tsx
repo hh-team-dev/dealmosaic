@@ -9,6 +9,9 @@ import { ShopLink } from "../components/ShopLink";
 import {
   CITIES,
   FOOD_BRANDS,
+  LOCAL_DINING_TYPES,
+  localDiningSearch,
+  brandCitySearch,
   cityById,
   indiaToday,
   validateStay,
@@ -666,6 +669,79 @@ function QuoteTool({ dining }: { dining: boolean }) {
     </section>
   );
 }
+function LocalDining({ city }: { city: City }) {
+  const [detail, setDetail] = useState("");
+  return (
+    <section
+      className="hospitality-section hospitality-local"
+      id="local-dining"
+      aria-labelledby="local-dining-title"
+    >
+      <div className="hospitality-section-head">
+        <div>
+          <span className="hospitality-eyebrow">
+            Beyond the familiar chains
+          </span>
+          <h2 id="local-dining-title">
+            Find your kind of table in {city.name}.
+          </h2>
+        </div>
+        <a className="hospitality-secondary" href="#food-directory">
+          Browse restaurant & fast-food chains ↓
+        </a>
+      </div>
+      <p>
+        Neighbourhood restaurants, a café around the corner, or a quick bite on
+        the way. Explore map listings for your chosen destination—not just the
+        brands in our directory.
+      </p>
+      <label>
+        Refine these map searches (optional)
+        <input
+          type="search"
+          maxLength={100}
+          value={detail}
+          onChange={(e) => setDetail(e.target.value)}
+          placeholder="Restaurant name, cuisine or neighbourhood"
+        />
+      </label>
+      {detail && (
+        <button className="hospitality-secondary" onClick={() => setDetail("")}>
+          Clear local search
+        </button>
+      )}
+      <div className="hospitality-local-grid">
+        {LOCAL_DINING_TYPES.map((t) => (
+          <article key={t.id}>
+            <span className="hospitality-eyebrow">{city.name}</span>
+            <h3>{t.label}</h3>
+            <p>
+              {t.id === "restaurants"
+                ? "Discover neighbourhood dining and places beyond the chain directory."
+                : t.id === "vegetarian"
+                  ? "Explore vegetarian dining options; confirm the menu with the restaurant."
+                  : t.id === "cafes"
+                    ? "Find a coffee stop, bakery or somewhere to take a little longer."
+                    : "Search beyond the listed chains for convenient bites and familiar favourites."}
+            </p>
+            <Outside
+              href={localDiningSearch(city, t.id, detail)}
+            >{`Search ${t.label.toLowerCase()}`}</Outside>
+          </article>
+        ))}
+      </div>
+      <p className="hospitality-note">
+        Opens Google Maps in a new tab or its app. Map searches may include
+        independent restaurants and chains; they are not DealMosaic-verified
+        outlet lists or offers. Check the exact address, current hours, menu,
+        service and any booking conditions with the restaurant. No location
+        access is requested here. Your refinement is sent to Google Maps only
+        when you open a search; it is not saved to your account or included in
+        Copy city link.
+      </p>
+    </section>
+  );
+}
 function Hospitality({ dining = false }: { dining?: boolean }) {
   const [params, setParams] = useSearchParams();
   const city = cityById(params.get("city"));
@@ -719,8 +795,8 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
         }
         description={
           dining
-            ? "Explore official restaurant and food-chain sites, check provider-listed codes and calculate your eligible bill across nine selected Indian city regions."
-            : "Plan hotel searches across nine Indian city regions, explore provider-listed promotions and compare the full cost of quotes you enter. Booking stays with the provider."
+            ? "Explore official restaurant and food-chain sites, check provider-listed codes and calculate your eligible bill across our selected Indian destinations."
+            : "Plan hotel searches across our selected Indian destinations, explore provider-listed promotions and compare the full cost of quotes you enter. Booking stays with the provider."
         }
         path={dining ? "/dining" : "/stays"}
       />
@@ -757,7 +833,7 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                 <div className="hospitality-hero-actions">
                   <a
                     className="hospitality-primary"
-                    href={dining ? "#food-directory" : "#stay-planner"}
+                    href={dining ? "#local-dining" : "#stay-planner"}
                   >
                     {dining ? "Find my next bite" : "Plan my stay"}{" "}
                     <span aria-hidden="true">→</span>
@@ -771,7 +847,7 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                 </div>
                 <p className="hospitality-note">
                   {dining
-                    ? "Official brand destinations. Outlet availability and offers are confirmed by the provider."
+                    ? "Local dining discovery and official brand destinations. Confirm outlet availability and offers with the provider."
                     : "Search and offer discovery, not live room-price comparison. Book and pay with the provider."}
                 </p>
               </div>
@@ -799,11 +875,15 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
               </button>
             </div>
             <p className="hospitality-coverage">
-              Nine selected city regions:{" "}
-              {CITIES.map((c) => c.name).join(" · ")}. City selection is a
-              planning preference—not confirmation of every outlet, room or
-              discount.
+              {CITIES.length} selectable destinations. Delhi NCR overlaps the
+              separate Gurugram and Noida entries. City selection is a planning
+              preference—not confirmation of every outlet, room or discount.
             </p>
+            <details className="hospitality-destinations">
+              <summary>View all {CITIES.length} destinations</summary>
+              <p>{CITIES.map((c) => c.name).join(" · ")}</p>
+            </details>
+            {dining && <LocalDining key={city.id} city={city} />}
             {!dining && <StaySearch city={city} />}
             {dining && (
               <section
@@ -916,6 +996,10 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                             ? "Open official ordering"
                             : "Check outlet services"}
                       </Outside>
+                      <Outside
+                        className="hospitality-secondary"
+                        href={brandCitySearch(city, b)}
+                      >{`Find ${b.name} in ${city.name}`}</Outside>
                       <span className="hospitality-domain">
                         {
                           new URL(
@@ -1042,8 +1126,10 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                 provider.
               </p>
               <p>
-                Directory sources were reviewed on 4 November 2026. Brand names
-                belong to their owners. Artwork is original decorative
+                Directory sources were reviewed on 4 November 2026.
+                City-specific map searches are discovery links, not a licensed
+                restaurant database or a guarantee of matching results. Brand
+                names belong to their owners. Artwork is original decorative
                 illustration, not a photograph of a listed property or dish. No
                 reviews or star ratings are invented.
               </p>

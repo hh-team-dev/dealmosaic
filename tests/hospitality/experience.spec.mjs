@@ -135,7 +135,8 @@ test("distinct warm pages, one h1, original illustrations, canonical and accessi
     await expect(page.getByLabel("City region")).toHaveValue("jaipur");
     // Prerender uses the public origin; await the runtime SEO effect on the local preview.
     await expect(page.locator("link[rel=canonical]")).toHaveAttribute(
-      "href", "http://127.0.0.1:5173" + path,
+      "href",
+      "http://127.0.0.1:5173" + path,
     );
     await expect(page.locator(".hospitality-art")).toBeVisible();
     await geometry(page);
@@ -153,7 +154,7 @@ test("distinct warm pages, one h1, original illustrations, canonical and accessi
   }
 });
 
-test("all nine cities change context and provider guide without claiming inventory", async ({
+test("all 17 destinations change context and provider guide without claiming inventory", async ({
   page,
 }) => {
   await page.goto("/stays");
@@ -167,8 +168,18 @@ test("all nine cities change context and provider guide without claiming invento
     "pune",
     "ahmedabad",
     "jaipur",
+    "mysuru",
+    "bhubaneswar",
+    "visakhapatnam",
+    "jamshedpur",
+    "siliguri",
+    "haridwar",
+    "gurugram",
+    "noida",
   ];
-  await expect(page.getByLabel("City region").locator("option")).toHaveCount(9);
+  await expect(page.getByLabel("City region").locator("option")).toHaveCount(
+    17,
+  );
   for (const city of cities) {
     await page.getByLabel("City region").selectOption(city);
     await expect(page).toHaveURL(new RegExp("city=" + city));
@@ -316,14 +327,12 @@ test("all requested food chains are discoverable; filters and reset work", async
   await page
     .getByRole("combobox", { name: "Your plan", exact: true })
     .selectOption("delivery");
-  await expect(page.locator(".hospitality-brand-card a")).toHaveAttribute(
-    "href",
-    "https://www.thechinesewok.com/order-now",
-  );
-  await expect(page.locator(".hospitality-brand-card a")).toHaveAttribute(
-    "rel",
-    "noopener noreferrer",
-  );
+  await expect(
+    page.locator(".hospitality-brand-card .hospitality-link"),
+  ).toHaveAttribute("href", "https://www.thechinesewok.com/order-now");
+  await expect(
+    page.locator(".hospitality-brand-card .hospitality-link"),
+  ).toHaveAttribute("rel", "noopener noreferrer");
   await axe(page);
 });
 
@@ -486,4 +495,129 @@ test("malformed successful feed is an error, not a fabricated empty result", asy
   await expect(
     page.getByText("No matching current codes to display", { exact: false }),
   ).toHaveCount(0);
+});
+
+test("local restaurants, cafes and fast food follow all 17 destinations without automatic external calls", async ({
+  page,
+}) => {
+  const external = [];
+  page.on("request", (r) => {
+    if (new URL(r.url()).hostname === "www.google.com") external.push(r.url());
+  });
+  await page.goto("/dining");
+  await expect(page.locator(".hospitality-local-grid article")).toHaveCount(4);
+  const cities = await page
+    .getByLabel("City region")
+    .locator("option")
+    .evaluateAll((options) =>
+      options.map((o) => ({ id: o.value, name: o.textContent })),
+    );
+  expect(cities).toHaveLength(17);
+  for (const city of cities) {
+    await page.getByLabel("City region").selectOption(city.id);
+    await expect(page.locator("#local-dining-title")).toContainText(city.name);
+    for (const link of await page.locator(".hospitality-local-grid a").all()) {
+      const u = new URL(await link.getAttribute("href"));
+      expect(u.hostname).toBe("www.google.com");
+      expect(u.searchParams.get("api")).toBe("1");
+      expect(u.searchParams.get("query")).toContain(
+        city.id === "delhi-ncr" ? "Delhi NCR" : city.name.split(" (")[0],
+      );
+    }
+    await geometry(page);
+  }
+  expect(external).toEqual([]);
+  await axe(page);
+});
+
+test("new city aliases, NCR choices and local refinement are accurate and private", async ({
+  page,
+}) => {
+  await page.addInitScript(() =>
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: async (text) => {
+          window.__copied = text;
+        },
+      },
+    }),
+  );
+  for (const [alias, id] of [
+    ["mysore", "mysuru"],
+    ["vizag", "visakhapatnam"],
+    ["bhubaneshwar", "bhubaneswar"],
+    ["gurgaon", "gurugram"],
+  ]) {
+    await page.goto("/dining?city=" + alias);
+    await expect(page.getByLabel("City region")).toHaveValue(id);
+  }
+  await page.goto("/dining?city=siliguri");
+  await page.getByLabel("Refine these map searches").fill("Sevoke Road");
+  const map = new URL(
+    await page
+      .locator(".hospitality-local-grid a")
+      .first()
+      .getAttribute("href"),
+  );
+  expect(map.searchParams.get("query")).toBe(
+    "Sevoke Road restaurants in Siliguri, West Bengal, India",
+  );
+  await page.getByRole("button", { name: "Copy city link" }).click();
+  expect(await page.evaluate(() => window.__copied)).toBe(
+    "http://127.0.0.1:5173/dining?city=siliguri",
+  );
+  await page.getByLabel("City region").selectOption("noida");
+  await expect(page.getByLabel("Refine these map searches")).toHaveValue("");
+  page.once("dialog", (d) => d.accept());
+  await dock(page).getByRole("link", { name: "Hotels", exact: true }).click();
+  await expect(page).toHaveURL(/stays\?city=noida$/);
+  await expect(
+    page.getByRole("combobox", { name: "NCR destination", exact: true }),
+  ).toHaveCount(0);
+  await page.getByLabel("Check-in", { exact: true }).fill(future(2));
+  await page.getByLabel("Check-out", { exact: true }).fill(future(4));
+  await page.getByRole("button", { name: "Prepare my hotel search" }).click();
+  const url = new URL(
+    await page
+      .getByRole("link", { name: /Search these dates on Booking.com/ })
+      .getAttribute("href"),
+  );
+  expect(url.searchParams.get("ss")).toBe("Noida, Uttar Pradesh, India");
+});
+
+test("KFC and McDonald’s map searches use selected city without claiming an outlet", async ({
+  page,
+}) => {
+  await page.goto("/dining?city=haridwar");
+  for (const brand of ["KFC", "McDonald’s"]) {
+    const card = page
+      .locator(".hospitality-brand-card")
+      .filter({ has: page.getByRole("heading", { name: brand, exact: true }) });
+    const a = card.getByRole("link", {
+      name: `Find ${brand} in Haridwar (opens new tab)`,
+      exact: true,
+    });
+    const url = new URL(await a.getAttribute("href"));
+    expect(url.searchParams.get("query")).toBe(
+      `${brand} in Haridwar, Uttarakhand, India`,
+    );
+    await expect(a).toHaveAttribute("rel", "noopener noreferrer");
+  }
+  await expect(page.locator("#food-directory")).toContainText(
+    "do not imply a partnership",
+  );
+});
+
+test("offline disables local map actions as well as brand actions", async ({
+  page,
+  context,
+}) => {
+  await page.goto("/dining?city=jamshedpur");
+  await expect(page.locator(".hospitality-local-grid a")).toHaveCount(4);
+  await context.setOffline(true);
+  await expect(page.locator(".hospitality-local-grid a")).toHaveCount(0);
+  await expect(page.locator(".hospitality-brand-card a")).toHaveCount(0);
+  await expect(
+    page.locator(".hospitality-local-grid [aria-disabled=true]"),
+  ).toHaveCount(4);
 });

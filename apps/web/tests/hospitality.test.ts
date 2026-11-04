@@ -2,6 +2,9 @@ import { describe, it, expect } from "vitest";
 import {
   CITIES,
   FOOD_BRANDS,
+  LOCAL_DINING_TYPES,
+  localDiningSearch,
+  brandCitySearch,
   cityById,
   dateValid,
   nightsBetween,
@@ -39,7 +42,7 @@ const coupon = (extra: Partial<CouponView> = {}) =>
     ...extra,
   }) as CouponView;
 describe("hospitality directory and truthful scope", () => {
-  it("has exactly the nine agreed city regions", () =>
+  it("has the 17 agreed destination choices without duplicate Hyderabad", () =>
     expect(CITIES.map((c) => c.name)).toEqual([
       "Delhi NCR",
       "Mumbai",
@@ -50,6 +53,14 @@ describe("hospitality directory and truthful scope", () => {
       "Pune",
       "Ahmedabad",
       "Jaipur",
+      "Mysuru (Mysore)",
+      "Bhubaneswar",
+      "Visakhapatnam (Vizag)",
+      "Jamshedpur",
+      "Siliguri",
+      "Haridwar",
+      "Gurugram (Gurgaon)",
+      "Noida",
     ]));
   it("unknown city input has a safe known fallback", () =>
     expect(cityById("javascript:alert(1)")).toBe(CITIES[0]));
@@ -265,5 +276,83 @@ describe("strict hospitality feed boundary", () => {
         now,
       ),
     ).toBe(false);
+  });
+});
+
+describe("expanded destinations and local dining", () => {
+  it("keeps identifiers unique and Hyderabad single while exposing NCR subcities", () => {
+    expect(new Set(CITIES.map((c) => c.id)).size).toBe(17);
+    expect(CITIES.filter((c) => c.id === "hyderabad")).toHaveLength(1);
+    for (const id of ["delhi-ncr", "gurugram", "noida"])
+      expect(cityById(id).id).toBe(id);
+  });
+  it.each([
+    ["mysore", "mysuru"],
+    ["bhubaneshwar", "bhubaneswar"],
+    ["vizag", "visakhapatnam"],
+    ["gurgaon", "gurugram"],
+  ])("recognises %s links as %s", (alias, id) =>
+    expect(cityById(alias).id).toBe(id),
+  );
+  it("keeps Siliguri explicitly in West Bengal", () =>
+    expect(cityById("siliguri").query).toContain("West Bengal"));
+  it.each(CITIES)(
+    "builds all four local searches and every chain search for $name",
+    (city) => {
+      const destination =
+        city.id === "delhi-ncr" ? "Delhi NCR, India" : city.query;
+      for (const category of LOCAL_DINING_TYPES) {
+        const u = new URL(localDiningSearch(city, category.id));
+        expect(u.origin).toBe("https://www.google.com");
+        expect(u.pathname).toBe("/maps/search/");
+        expect(u.searchParams.get("api")).toBe("1");
+        expect(u.searchParams.get("query")).toBe(
+          `${category.query} in ${destination}`,
+        );
+        expect(u.searchParams.has("key")).toBe(false);
+      }
+      for (const brand of FOOD_BRANDS) {
+        const u = new URL(brandCitySearch(city, brand));
+        expect(u.searchParams.get("query")).toBe(
+          `${brand.name} in ${destination}`,
+        );
+      }
+    },
+  );
+  it("encodes search input as query text, never as a new URL", () => {
+    const u = new URL(
+      localDiningSearch(
+        cityById("siliguri"),
+        "restaurants",
+        "https://evil.test/?a=1&b=2 <script>",
+      ),
+    );
+    expect(u.origin).toBe("https://www.google.com");
+    expect(u.searchParams.get("query")).toContain(
+      "https://evil.test/?a=1&b=2 <script> restaurants in Siliguri, West Bengal, India",
+    );
+    expect([...u.searchParams.keys()]).toEqual(["api", "query"]);
+  });
+  it("bounds refinements and falls back to the actual restaurants category", () => {
+    const u = new URL(
+      localDiningSearch(cityById("mysuru"), "invalid", "x".repeat(500)),
+    );
+    expect(u.href.length).toBeLessThan(2048);
+    expect(u.searchParams.get("query")).toBe(
+      "x".repeat(100) + " restaurants in Mysuru, Karnataka, India",
+    );
+  });
+  it("rejects unlisted cities and brands", () => {
+    expect(() =>
+      localDiningSearch({ ...CITIES[0]!, id: "not-listed" }),
+    ).toThrow();
+    expect(() =>
+      brandCitySearch(CITIES[0]!, { ...FOOD_BRANDS[0]!, id: "not-listed" }),
+    ).toThrow();
+  });
+  it("uses the same destination data for frontend and prerender", () => {
+    const html = readFileSync("scripts/prerender.mjs", "utf8");
+    expect(html).toContain("apps/web/src/data/hospitality-cities.json");
+    expect(html).toContain("esc(HOSPITALITY_NAMES)");
   });
 });

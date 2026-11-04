@@ -1,0 +1,121 @@
+[
+  {
+    "id": "delhi-ncr",
+    "name": "Delhi NCR",
+    "query": "New Delhi, India",
+    "mmt": "delhi",
+    "note": "Choose New Delhi, Gurugram or Noida for your stay."
+  },
+  {
+    "id": "mumbai",
+    "name": "Mumbai",
+    "query": "Mumbai, India",
+    "mmt": "mumbai",
+    "note": "Choose the neighbourhood that fits your plans."
+  },
+  {
+    "id": "bengaluru",
+    "name": "Bengaluru",
+    "query": "Bengaluru, India",
+    "mmt": "bangalore",
+    "note": "A city break or a work trip. Make room for both."
+  },
+  {
+    "id": "chennai",
+    "name": "Chennai",
+    "query": "Chennai, India",
+    "mmt": "chennai",
+    "note": "Set your dates. Keep the full stay cost in view."
+  },
+  {
+    "id": "hyderabad",
+    "name": "Hyderabad",
+    "query": "Hyderabad, India",
+    "mmt": "hyderabad",
+    "note": "Find your base, then make the city your own."
+  },
+  {
+    "id": "kolkata",
+    "name": "Kolkata",
+    "query": "Kolkata, India",
+    "mmt": "kolkata",
+    "note": "Make time for the table as well as the trip."
+  },
+  {
+    "id": "pune",
+    "name": "Pune",
+    "query": "Pune, India",
+    "mmt": "pune",
+    "note": "A change of scene starts with a considered choice."
+  },
+  {
+    "id": "ahmedabad",
+    "name": "Ahmedabad",
+    "query": "Ahmedabad, India",
+    "mmt": "ahmedabad",
+    "note": "Your plans first. The small print, made visible."
+  },
+  {
+    "id": "jaipur",
+    "name": "Jaipur",
+    "query": "Jaipur, India",
+    "mmt": "jaipur",
+    "note": "A memorable escape starts with the right stay."
+  },
+  {
+    "id": "mysuru",
+    "name": "Mysuru (Mysore)",
+    "query": "Mysuru, Karnataka, India",
+    "mmt": "mysore",
+    "note": "Choose your neighbourhood, then check the full stay cost."
+  },
+  {
+    "id": "bhubaneswar",
+    "name": "Bhubaneswar",
+    "query": "Bhubaneswar, Odisha, India",
+    "mmt": "bhubaneshwar",
+    "note": "Find a base for your plans, with dates and guests in focus."
+  },
+  {
+    "id": "visakhapatnam",
+    "name": "Visakhapatnam (Vizag)",
+    "query": "Visakhapatnam, Andhra Pradesh, India",
+    "mmt": "visakhapatnam",
+    "note": "Choose your stay and explore places to eat in the same city."
+  },
+  {
+    "id": "jamshedpur",
+    "name": "Jamshedpur",
+    "query": "Jamshedpur, Jharkhand, India",
+    "mmt": "jamshedpur",
+    "note": "Your visit, your dates. Confirm availability with the provider."
+  },
+  {
+    "id": "siliguri",
+    "name": "Siliguri",
+    "query": "Siliguri, West Bengal, India",
+    "mmt": "siliguri",
+    "note": "Plan a stay and discover places to eat in Siliguri, West Bengal."
+  },
+  {
+    "id": "haridwar",
+    "name": "Haridwar",
+    "query": "Haridwar, Uttarakhand, India",
+    "mmt": "haridwar",
+    "note": "Compare the complete stay cost and check the cancellation rules."
+  },
+  {
+    "id": "gurugram",
+    "name": "Gurugram (Gurgaon)",
+    "query": "Gurugram, Haryana, India",
+    "mmt": "gurgaon",
+    "note": "Choose Gurugram directly. It also remains part of Delhi NCR discovery."
+  },
+  {
+    "id": "noida",
+    "name": "Noida",
+    "query": "Noida, Uttar Pradesh, India",
+    "mmt": "noida",
+    "note": "Choose Noida directly. It also remains part of Delhi NCR discovery."
+  }
+]

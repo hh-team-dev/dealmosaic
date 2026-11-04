@@ -55,7 +55,7 @@ export function EngagementBar() {
   }, []);
   function beforeNavigate() {
     if (dirty.current && (sensitiveTask(location.pathname) || /^\/(stays|dining)(?:\/|$)/.test(location.pathname))) {
-      return window.confirm(/^\/(stays|dining)(?:\/|$)/.test(location.pathname) ? 'Leave this section? Unsaved dates and calculator entries will be cleared. No booking, order or payment will be made.' : 'Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
+      return window.confirm(/^\/(stays|dining)(?:\/|$)/.test(location.pathname) ? 'Leave this section? Unsaved planning and search entries will be cleared. No booking, order or payment will be made.' : 'Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
     }
     return true;
   }

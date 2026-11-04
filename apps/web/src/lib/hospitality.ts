@@ -1,74 +1,62 @@
 import type { CouponView } from "./coupons-api";
 
 /** Editorial destination directory, NOT a claim of live inventory or outlet coverage. */
-export const CITIES = [
+export { default as CITIES } from "../data/hospitality-cities.json";
+import CITIES from "../data/hospitality-cities.json";
+export type City = (typeof CITIES)[number];
+const CITY_ALIASES: Record<string, string> = {
+  mysore: "mysuru",
+  bhubaneshwar: "bhubaneswar",
+  vizag: "visakhapatnam",
+  gurgaon: "gurugram",
+};
+export function cityById(id: string | null): City {
+  const key = (id || "").trim().toLowerCase();
+  return CITIES.find((c) => c.id === (CITY_ALIASES[key] || key)) || CITIES[0]!;
+}
+/** External discovery links, not a licensed venue feed or verified outlet list. */
+export const LOCAL_DINING_TYPES = [
+  { id: "restaurants", label: "Local restaurants", query: "restaurants" },
   {
-    id: "delhi-ncr",
-    name: "Delhi NCR",
-    query: "New Delhi, India",
-    mmt: "delhi",
-    note: "Choose New Delhi, Gurugram or Noida for your stay.",
+    id: "vegetarian",
+    label: "Vegetarian restaurants",
+    query: "vegetarian restaurants",
   },
+  { id: "cafes", label: "Cafés & bakeries", query: "cafes and bakeries" },
   {
-    id: "mumbai",
-    name: "Mumbai",
-    query: "Mumbai, India",
-    mmt: "mumbai",
-    note: "Choose the neighbourhood that fits your plans.",
-  },
-  {
-    id: "bengaluru",
-    name: "Bengaluru",
-    query: "Bengaluru, India",
-    mmt: "bangalore",
-    note: "A city break or a work trip. Make room for both.",
-  },
-  {
-    id: "chennai",
-    name: "Chennai",
-    query: "Chennai, India",
-    mmt: "chennai",
-    note: "Set your dates. Keep the full stay cost in view.",
-  },
-  {
-    id: "hyderabad",
-    name: "Hyderabad",
-    query: "Hyderabad, India",
-    mmt: "hyderabad",
-    note: "Find your base, then make the city your own.",
-  },
-  {
-    id: "kolkata",
-    name: "Kolkata",
-    query: "Kolkata, India",
-    mmt: "kolkata",
-    note: "Make time for the table as well as the trip.",
-  },
-  {
-    id: "pune",
-    name: "Pune",
-    query: "Pune, India",
-    mmt: "pune",
-    note: "A change of scene starts with a considered choice.",
-  },
-  {
-    id: "ahmedabad",
-    name: "Ahmedabad",
-    query: "Ahmedabad, India",
-    mmt: "ahmedabad",
-    note: "Your plans first. The small print, made visible.",
-  },
-  {
-    id: "jaipur",
-    name: "Jaipur",
-    query: "Jaipur, India",
-    mmt: "jaipur",
-    note: "A memorable escape starts with the right stay.",
+    id: "fast-food",
+    label: "Fast food & quick bites",
+    query: "fast food restaurants",
   },
 ] as const;
-export type City = (typeof CITIES)[number];
-export const cityById = (id: string | null): City =>
-  CITIES.find((c) => c.id === id) || CITIES[0];
+export function localDiningSearch(
+  city: City,
+  type = "restaurants",
+  detail = "",
+): string {
+  const selected = CITIES.find((c) => c.id === city.id);
+  if (!selected) throw new Error("Unknown destination");
+  const category =
+    LOCAL_DINING_TYPES.find((t) => t.id === type) || LOCAL_DINING_TYPES[0];
+  const term = detail.trim().replace(/\s+/g, " ").slice(0, 100);
+  const url = new URL("https://www.google.com/maps/search/");
+  url.search = new URLSearchParams({
+    api: "1",
+    query: `${term ? term + " " : ""}${category.query} in ${selected.id === "delhi-ncr" ? "Delhi NCR, India" : selected.query}`,
+  }).toString();
+  return url.href;
+}
+export function brandCitySearch(city: City, brand: FoodBrand): string {
+  const selected = CITIES.find((c) => c.id === city.id);
+  if (!selected || !FOOD_BRANDS.some((b) => b.id === brand.id))
+    throw new Error("Unknown destination or brand");
+  const url = new URL("https://www.google.com/maps/search/");
+  url.search = new URLSearchParams({
+    api: "1",
+    query: `${brand.name} in ${selected.id === "delhi-ncr" ? "Delhi NCR, India" : selected.query}`,
+  }).toString();
+  return url.href;
+}
 export type DiningMode = "all" | "dine-in" | "delivery" | "takeaway";
 export const DINING_MODES: DiningMode[] = [
   "all",
@@ -221,7 +209,7 @@ export function validateStay(
   today = indiaToday(),
 ): string | null {
   if (!CITIES.some((c) => c.id === plan.city))
-    return "Choose one of our nine city regions.";
+    return "Choose a destination from the list.";
   if (!dateValid(plan.checkin) || !dateValid(plan.checkout))
     return "Choose valid arrival and departure dates.";
   if (plan.checkin < today) return "Arrival cannot be in the past.";
