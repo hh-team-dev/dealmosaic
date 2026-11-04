@@ -33,7 +33,9 @@ separate. Scoped limits, file map and release gates are explicit in doc 33.
 Verified before deployment: 38 new targeted tests; 345 total / 23 files; 43 design
 assertions; zero reported npm audit vulnerabilities after dependency updates;
 phone browser test at 320–430px with isolated data. Source of truth for subsequent
-production commit/deploy evidence: doc 33's final section. New shop modules are
+production commit/deploy evidence: doc 33's final section. Code `44163ea` is live
+on Pages `31f0d19a` and Render `dep-dblgk25g1s2s73elut8g`; read-only authenticated
+production mobile checks passed. Shop paused; all direct-commerce tables empty. New shop modules are
 lazy-loaded. Obsolete screenshots removed; recovery archives preserved.
 
 ---

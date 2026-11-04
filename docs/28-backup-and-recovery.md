@@ -1,5 +1,18 @@
 # 28 — Backup and recovery dossier
 
+## Latest release backup — 4 November 2026, 10:36:14 UTC
+
+- Archive: `dealmosaic_2026-11-04_10-36-14.tar.gz`
+- Files verified: **278**; all manifest checksums match.
+- Size: **1,611,118 bytes**.
+- SHA-256: `d3d6c65c6ea997a4df1f6daa428de63df01728606bf404d6f9366e07f9955d71`.
+- Includes the direct-shop implementation and documentation with sales paused.
+- The standard retention policy pruned the oldest `18-42-30` archive; newer recovery
+  archives and original branding backups remain. The historical dossier below
+  describes its named archives, not the current working tree.
+
+
+
 > **4 November 2026 workspace update:** obsolete screenshots have been removed from the working tree. The screenshot entries in the historical archive manifest below describe that immutable archive, not current files. Existing recovery archives are preserved.
 
 **Prepared:** 3 November 2026, 14:21 UTC · **Release:** tag `v1.1-warm`, commit `a29a461`

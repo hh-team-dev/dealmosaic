@@ -158,4 +158,30 @@ Remaining owner facts: exact dispatch PIN, actual seller/contact/return address 
 
 ### Deployment evidence
 
-Pending final deployment verification at the time this file was first written. Append the exact commit/deploy identifiers and checks after deployment, not before.
+**Production code commit:** `44163ea`.
+**Cloudflare Pages:** `31f0d19a` — `https://31f0d19a.dealmosaic.pages.dev`.
+**Render:** `dep-dblgk25g1s2s73elut8g`, observed `live` on commit `44163ea`.
+
+Live checks on 4 November 2026:
+- `/`, `/deals`, `/admin?tab=shop`, `/handcrafted`: HTTP 200; new frontend bundle served.
+- `/api/direct/products`: HTTP 200, `{products: [], seller: null}`.
+- Anonymous `/api/direct-admin/overview`: HTTP 401.
+- A private order lookup without its token: HTTP 404.
+- Quote attempt while paused: HTTP 503, code `shop_paused`.
+- Production Turso direct products/orders/rates/media/settings tables each contain **zero rows**.
+- Actual signed-in owner admin read-only browser check: My shop and Add product editor render;
+  overview reports paused, zero products/orders and no carrier API connection. Editor has no
+  horizontal overflow at 320/390/430px. Live home, deals and collection checked as well;
+  no browser exceptions. A five-minute verification session was removed immediately afterwards.
+- No product save, media upload, seller setup, real payment or shipping booking was performed in production.
+- Updated terms/privacy/disclosure were verified in the production prerendered HTML.
+- Build verified 53 pages (52 prerendered); original comparison catalogue remains 25 products.
+
+Documentation-only commits after `44163ea` do not imply a new code deployment. The broader
+checkout flow was exercised in the isolated browser/database test described above, not with
+real money or actual carrier bookings. The temporary browser database, scripts and screenshots
+were removed. All 10 obsolete working-tree screenshots were removed; immutable recovery
+archives remain preserved.
+
+
+Latest source backup: `dealmosaic_2026-11-04_10-36-14.tar.gz`, **278 files verified**, SHA-256 `d3d6c65c6ea997a4df1f6daa428de63df01728606bf404d6f9366e07f9955d71`. The normal backup retention policy pruned the oldest `18-42-30` archive; retained recovery archives and branding backups remain.
