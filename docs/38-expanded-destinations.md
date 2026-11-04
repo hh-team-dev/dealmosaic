@@ -48,4 +48,16 @@ Real Android/iPhone installation sheets, keyboards, external provider apps and p
 
 ## 6. Publication and recovery ledger
 
-Paired build, production verification and recovery details are recorded here after their gates complete. The preceding verified release remains 2.2.0; no completion is inferred from a visible development control.
+Runtime source/tag: `e6baee38e84da6b5ef4822ecad398d4295c2b1f8` / `pwa-v2.3.0`. Packages were built from a clean source tree (`workingTreeChanged: false`).
+
+- **57/57 production-built hospitality scenarios** and **57/57 classic hospitality scenarios** pass.
+- **39/39 persistent-control**, **51/51 real-worker PWA** and **46/46 production-built shopping/owner** scenarios pass. These suites overlap, so counts are not additive unique journeys. Two Vite-only component injection cases are intentionally outside the static-build shopping suite. All mutation-oriented tests ran against the isolated local fixture database, never production.
+- PWA/classic parity and both archive SHA-256 checks pass. Each flavor has 57 HTML files and 56 unique h1 values; the sitemap remains 53 URLs.
+- PWA build: **2.3.0-33240826e285**, 774,037 safe static bytes, 14 assets, no API cache.
+- Classic build: **2.3.0-b9f48fc99d99**, network-only removal-worker fallback with the same features. Its listed static-byte total is not an offline cache.
+- Package folder: `/home/user/releases/dealmosaic-2.3.0/`.
+- PWA archive SHA-256: `6a30ae19bc4028e2c96bc25889e0c0f2135a9406e8bd4653a1500cf9984e8f2d`.
+- Classic archive SHA-256: `ae0ea060ff85c1878eb8545cda606aacb7f53d6949974a22c425c91b44db0263`.
+- The existing main-bundle advisory remains about 503 KB raw / 153 KB gzip; no warning threshold was raised. The lazy hospitality module is about 35.5 KB raw / 11.7 KB gzip, with about 10.4 KB CSS raw.
+
+Live verification and recovery completion are recorded below only after publication.
