@@ -600,3 +600,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+.hospitality-pet-callout { display:grid; grid-template-columns:minmax(0,1fr) minmax(220px,.6fr); gap:24px; align-items:center; padding:26px; border:1px solid var(--hairline-strong); border-radius:14px; margin:26px 0; background:var(--hospitality-paper); }
+.hospitality-pet-callout h2 { font-size:26px; margin:8px 0; }
+.hospitality-pet-callout p { font-size:14px; margin-bottom:0; }
+.hospitality-pet-callout a { margin:5px 0; max-width:100%; white-space:normal; }
+@media(max-width:599px) { .hospitality-pet-callout { grid-template-columns:1fr; padding:22px 18px; gap:12px; } }

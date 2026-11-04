@@ -64,6 +64,7 @@ CORE = [
     ('36-persistent-install-and-deals.md', '2.1.1: persistent installation and floating deals'),
     ('37-hotels-and-dining.md', '2.2.0: Hotels, Dining and universal navigation'),
     ('38-expanded-destinations.md', '2.3.0: More destinations and local dining'),
+    ('39-pet-friendly-directory.md', '2.4.0: Pet-friendly stays, dining and careful planning'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

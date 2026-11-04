@@ -16,11 +16,11 @@ for(const mode of ['pwa','classic']) {
 }
 const manifests=['pwa','classic'].map(mode=>JSON.parse(readFileSync(join(root,mode,'manifest.webmanifest'),'utf8')));
 assert.equal(manifests[0].display,'standalone');assert.equal(manifests[1].display,'browser');delete manifests[0].display;delete manifests[1].display;assert.deepEqual(manifests[0],manifests[1]);
-for(const prefix of ['DirectShop-','ShopControl-','Hospitality-']) {
+for(const prefix of ['DirectShop-','ShopControl-','Hospitality-','PetFriendly-','hospitality-']) {
  const variants=new Map();
  for(const mode of ['pwa','classic']) {
   const dir=join(root,mode,'assets');const names=readdirSync(dir).filter(name=>name.startsWith(prefix));assert.ok(names.length>0);
-  for(const name of names){const extension=name.split('.').pop();const values=variants.get(extension)||new Set();values.add(readFileSync(join(dir,name),'utf8').replace(/index-[a-zA-Z0-9_-]+\.js/g,'index-SHARED.js'));variants.set(extension,values);}
+  for(const name of names){const extension=name.split('.').pop();const values=variants.get(extension)||new Set();values.add(readFileSync(join(dir,name),'utf8').replace(/(index|hospitality|PetFriendly)-[a-zA-Z0-9_-]+\.js/g,'$1-SHARED.js'));variants.set(extension,values);}
  }
  for(const [extension,values] of variants)assert.equal(values.size,1,`Shared implementation drift in ${prefix} (${extension})`);
 }

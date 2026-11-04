@@ -1,7 +1,7 @@
 {
   "name": "dealmosaic",
   "private": true,
-  "version": "2.3.0",
+  "version": "2.4.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -17,7 +17,7 @@
     "audit:design": "node scripts/audit-design.mjs",
     "check": "npm run typecheck && npm run test && npm run audit:design && npm run secrets:scan",
     "typecheck": "tsc -p apps/web/tsconfig.json --noEmit && tsc -p apps/api/tsconfig.json --noEmit && tsc -p packages/core/tsconfig.json --noEmit",
-    "seo": "tsx scripts/generate-seo.mjs",
+    "seo": "tsx scripts/generate-seo.mjs && node scripts/generate-pet-directory.mjs",
     "backup": "node scripts/secrets-scan.mjs && node scripts/backup.mjs",
     "backup:list": "node scripts/backup.mjs --list",
     "backup:verify": "node scripts/backup.mjs --verify",

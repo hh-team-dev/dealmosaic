@@ -14,7 +14,7 @@ export function EngagementBar() {
   const app = usePwa();
   const location = useLocation();
   const routePath = location.pathname.replace(/\/$/, '') || '/';
-  const cityContext = /^\/(stays|dining)$/.test(routePath) ? new URLSearchParams(location.search).get('city') : null;
+  const cityContext = /^\/(stays|dining|pet-friendly)$/.test(routePath) ? new URLSearchParams(location.search).get('city') : null;
   const toast = useToast();
   const bar = useRef<HTMLElement>(null);
   const dirty = useRef(false);
@@ -54,8 +54,8 @@ export function EngagementBar() {
     return () => { observer.disconnect(); media.removeEventListener?.('change', preference); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('storage', storage); document.removeEventListener('input', change, true); document.removeEventListener('change', change, true); document.removeEventListener('focusin', focus); document.removeEventListener('focusout', blur); };
   }, []);
   function beforeNavigate() {
-    if (dirty.current && (sensitiveTask(location.pathname) || /^\/(stays|dining)(?:\/|$)/.test(location.pathname))) {
-      return window.confirm(/^\/(stays|dining)(?:\/|$)/.test(location.pathname) ? 'Leave this section? Unsaved planning and search entries will be cleared. No booking, order or payment will be made.' : 'Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
+    if (dirty.current && (sensitiveTask(location.pathname) || /^\/(stays|dining|pet-friendly)(?:\/|$)/.test(location.pathname))) {
+      return window.confirm(/^\/(stays|dining|pet-friendly)(?:\/|$)/.test(location.pathname) ? 'Leave this section? Unsaved planning and search entries will be cleared. No booking, order or payment will be made.' : 'Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
     }
     return true;
   }
@@ -88,7 +88,7 @@ export function EngagementBar() {
         {to:'/dining',label:'Dining',icon:'M5 3v7m3-7v7M3 3v7q3 5 6 0V3M6 13v8M17 3q-6 7 0 9v9M17 3v9',active:routePath==='/dining'},
         {to:'/deals',label:'Deals',icon:'M3 4h8l10 10-7 7L3 10zM7 8h.01',active:routePath==='/deals'},
         {to:'/saved',label:'Saved',icon:'M12 20S2 14 2 8a5 5 0 0110-1A5 5 0 0122 8c0 6-10 12-10 12z',active:routePath==='/saved'},
-      ].map(item=><Link key={item.to} to={cityContext && ['/stays','/dining'].includes(item.to) ? `${item.to}?city=${encodeURIComponent(cityContext)}` : item.to} aria-current={item.active?'page':undefined} className={item.active?'is-active':''} onClick={event=>{if(routePath!==item.to&&!beforeNavigate())event.preventDefault();}}><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg><span>{item.label}</span></Link>)}
+      ].map(item=><Link key={item.to} to={cityContext && cityContext!=='all' && ['/stays','/dining'].includes(item.to) ? `${item.to}?city=${encodeURIComponent(cityContext)}` : item.to} aria-current={item.active?'page':undefined} className={item.active?'is-active':''} onClick={event=>{if(routePath!==item.to&&!beforeNavigate())event.preventDefault();}}><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg><span>{item.label}</span></Link>)}
     </nav>
     <Modal open={help} onClose={() => setHelp(false)} title={app.installed ? 'Your DealMosaic app' : 'Keep DealMosaic one tap away'}>
       <div className="stack">

@@ -1,0 +1,1055 @@
+[
+  {
+    "id": "hyatt-delhi-residences",
+    "name": "Hyatt Delhi Residences",
+    "city": "delhi-ncr",
+    "kind": "hotel",
+    "area": "New Delhi / Aerocity",
+    "summary": "The official FAQ describes all residences as pet-friendly.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.hyatt.com/hyatt-hotels/en-US/delaa-hyatt-residences-delhi/faqs",
+        "publisher": "Hyatt",
+        "ref": 4,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "novotel-delhi-aerocity",
+    "name": "Novotel New Delhi Aerocity",
+    "city": "delhi-ncr",
+    "kind": "hotel",
+    "area": "Aerocity, New Delhi",
+    "summary": "The property services list says pets are welcome.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/hotel/7560/index.en.shtml",
+        "publisher": "Accor",
+        "ref": 3,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "lakeside-chalet",
+    "name": "Lakeside Chalet, Mumbai — Marriott Executive Apartments",
+    "city": "mumbai",
+    "kind": "hotel",
+    "area": "Mumbai; confirm the exact address",
+    "summary": "Marriott includes this property in its Mumbai pet-friendly collection.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": "An old pet-staycation promotion found during research ended in 2022 and is not a current offer.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.marriott.com/en-us/destinations/india/mumbai/pet-friendly-hotels.mi",
+        "publisher": "Marriott",
+        "ref": 1,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "marriott-whitefield",
+    "name": "Bengaluru Marriott Hotel Whitefield",
+    "city": "bengaluru",
+    "kind": "hotel",
+    "area": "Whitefield",
+    "summary": "The property page explicitly welcomes pets.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Up to two pets per room are stated; ask about species, breed and weight.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": "Published fee fields show both per-stay and per-night amounts. Obtain one written all-in quote.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://marriott.com/hotels/maps/travel/blrwf-bengaluru-marriott-hotel-whitefield",
+        "publisher": "Marriott",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "hyatt-regency-chennai",
+    "name": "Hyatt Regency Chennai",
+    "city": "chennai",
+    "kind": "hotel",
+    "area": "Teynampet / Anna Salai",
+    "summary": "A detailed property policy permits dogs and cats.",
+    "species": [
+      "dog",
+      "cat"
+    ],
+    "fee": "Published: ₹2,500 + tax per pet, per room, per night. Reconfirm the total.",
+    "limits": "Up to two pets per room, each no more than 25 kg; breed restrictions require enquiry.",
+    "access": "No pets in food/beverage outlets, pool, spa, health club or function spaces. Leash and continuous supervision required.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.hyatt.com/hyatt-regency/en-US/chenn-hyatt-regency-chennai/policies",
+        "publisher": "Hyatt",
+        "ref": 1,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "novotel-chennai-chamiers",
+    "name": "Novotel Chennai Chamiers Road",
+    "city": "chennai",
+    "kind": "hotel",
+    "area": "Chamiers Road",
+    "summary": "Accor identifies this hotel as pet-friendly in its India collection.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/a/en/destination/country/hotels-india-pin/pet-friendly.html",
+        "publisher": "Accor",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "hyatt-gachibowli",
+    "name": "Hyatt Hyderabad Gachibowli",
+    "city": "hyderabad",
+    "kind": "hotel",
+    "area": "Gachibowli",
+    "summary": "The written pet policy permits pets in specified room categories.",
+    "species": [],
+    "fee": "Published: ₹2,500 + 18% tax per night for sanitization. Confirm pet count and total.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Hyatt Deluxe Balcony rooms and suites only; notify the hotel when reserving.",
+    "caution": "An indexed historical fee-waiver package could not be substantiated on the current redirected page. Do not assume a waiver.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.hyatt.com/hyatt-hotels/en-US/hydhy-hyatt-hyderabad-gachibowli/policies",
+        "publisher": "Hyatt",
+        "ref": 3,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "taj-bengal",
+    "name": "Taj Bengal, Kolkata",
+    "city": "kolkata",
+    "kind": "hotel",
+    "area": "Alipore",
+    "summary": "The hotel FAQ describes a dog-friendly stay with a small-dog limit.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "FAQ states dogs under 15 lb. Confirm the unit and your dog’s eligibility directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.tajhotels.com/en-in/hotels/taj-bengal-kolkata?isRedirected=true%2Fplaces-to-visit%2Fwellness%2Fplaces-to-visit%2Fplaces-to-visit%2Frestaurants",
+        "publisher": "Taj",
+        "ref": 1,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "westin-pune",
+    "name": "The Westin Pune Koregaon Park",
+    "city": "pune",
+    "kind": "hotel",
+    "area": "Koregaon Park",
+    "summary": "Marriott’s property page states that pets are welcome.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "One indexed version states up to two pets and a 30 kg limit; reconfirm.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": "Published versions disagree on whether the pet fee is per stay or per night. Do not treat the fee as settled.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.marriott.com/en-us/hotels/pnqwi-the-westin-pune-koregaon-park/overview/?program=spg%2Fphotos%2F",
+        "publisher": "Marriott",
+        "ref": 1,
+        "type": "official",
+        "method": "index"
+      },
+      {
+        "url": "https://www.marriott.com/en-us/hotels/pnqwi-the-westin-pune-koregaon-park/overview/?EM=DNM_WESTINPUNEKOREGAONPARK.COM",
+        "publisher": "Marriott alternate indexed version",
+        "ref": 3,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "novotel-ahmedabad",
+    "name": "Novotel Ahmedabad",
+    "city": "ahmedabad",
+    "kind": "hotel",
+    "area": "SG Highway / Iscon Cross Roads",
+    "summary": "Accor identifies a pet-friendly hotel and pet-friendly Studio Suites.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Ask for the pet-permitted room category; Studio Suites are specifically mentioned.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/hotel/8173/index.en.shtml",
+        "publisher": "Accor",
+        "ref": 1,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "novotel-jaipur",
+    "name": "Novotel Jaipur Convention Centre",
+    "city": "jaipur",
+    "kind": "hotel",
+    "area": "Sitapura",
+    "summary": "The official property services list welcomes pets.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/hotel/9884/index.en.shtml",
+        "publisher": "Accor",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "grand-mercure-mysore",
+    "name": "Grand Mercure Mysore",
+    "city": "mysuru",
+    "kind": "hotel",
+    "area": "Mysuru",
+    "summary": "Accor’s Mysuru collection identifies Grand Mercure as a pet-friendly hotel.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/a/en/destination/city/hotels-mysuru-v5393.html",
+        "publisher": "Accor",
+        "ref": 1,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "ibis-styles-mysuru",
+    "name": "ibis Styles Mysuru",
+    "city": "mysuru",
+    "kind": "hotel",
+    "area": "Mysuru",
+    "summary": "Hotels.com lists this property among pet-friendly Mysore stays.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.hotels.com/de673220-am64/pet-friendly-hotels-mysore-india/",
+        "publisher": "Hotels.com",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "vivanta-bhubaneswar",
+    "name": "Vivanta Bhubaneswar, DN Square",
+    "city": "bhubaneswar",
+    "kind": "hotel",
+    "area": "Kalinga Nagar",
+    "summary": "The official property page identifies a pet-friendly hotel.",
+    "species": [],
+    "fee": "Indexed official FAQ states ₹1,500 + taxes per day; reconfirm billing and eligibility.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.vivantahotels.com/en-in/hotels/vivanta-bhubaneswar",
+        "publisher": "Vivanta",
+        "ref": 1,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "park-visakhapatnam",
+    "name": "The Park Visakhapatnam",
+    "city": "visakhapatnam",
+    "kind": "hotel",
+    "area": "Visakhapatnam",
+    "summary": "BringFido reports dog admission in designated rooms.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": "BringFido regional versions disagree on cats and pet count. Cats are not included in our cats-only filter; request the property’s written policy.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/43746",
+        "publisher": "BringFido",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      },
+      {
+        "url": "https://www.bringfido.co.uk/lodging/43746",
+        "publisher": "BringFido UK (conflicting details)",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "bs-residency",
+    "name": "Hotel BS Residency",
+    "city": "jamshedpur",
+    "kind": "hotel",
+    "area": "Jamshedpur; confirm the exact address",
+    "summary": "Skyscanner identifies this hotel in its dog-friendly Jamshedpur recommendations.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.skyscanner.co.in/hotels/india/jamshedpur-hotels/ci-27542937/pets",
+        "publisher": "Skyscanner",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "niladrii-galaxy",
+    "name": "Hotel Niladrii Galaxy",
+    "city": "siliguri",
+    "kind": "hotel",
+    "area": "Siliguri, West Bengal",
+    "summary": "BringFido lists dogs and cats as welcome; direct confirmation remains necessary.",
+    "species": [
+      "dog",
+      "cat"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/city/siliguri_in/",
+        "publisher": "BringFido",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "insta18",
+    "name": "Hotel Insta 18",
+    "city": "siliguri",
+    "kind": "hotel",
+    "area": "Siliguri, West Bengal",
+    "summary": "BringFido describes dog admission; cats require a separate request.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/city/siliguri_in/",
+        "publisher": "BringFido",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "le-roi-haridwar",
+    "name": "Hotel Le Roi Haridwar @ Har Ki Pauri Road",
+    "city": "haridwar",
+    "kind": "hotel",
+    "area": "Haridwar",
+    "summary": "BringFido reports admission for dogs and cats, subject to possible breed restrictions.",
+    "species": [
+      "dog",
+      "cat"
+    ],
+    "fee": "Third-party listing states ₹750 per pet per night; reconfirm taxes and the current amount.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/297144",
+        "publisher": "BringFido",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "pride-elite-haridwar",
+    "name": "Pride Elite Haridwar",
+    "city": "haridwar",
+    "kind": "hotel",
+    "area": "Haridwar",
+    "summary": "BringFido reports dog admission; cats are by request, not assumed.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/1656750",
+        "publisher": "BringFido",
+        "ref": 3,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "westin-sohna",
+    "name": "The Westin Sohna Resort & Spa",
+    "city": "gurugram",
+    "kind": "hotel",
+    "area": "Sohna / Gurugram outskirts, not central Gurgaon",
+    "summary": "Marriott explicitly describes pet-friendly rooms and villas.",
+    "species": [],
+    "fee": "Pet maintenance charges are stated; confirm whether the charge is per night or per stay and include taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.marriott.com/en-us/hotels/delsw-the-westin-sohna-resort-and-spa/overview/?scid=d2406702-e8ea-4b45-bb9b-69cddaaef03d",
+        "publisher": "Marriott",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "imperial-noida",
+    "name": "Imperial Hotel Noida",
+    "city": "noida",
+    "kind": "hotel",
+    "area": "Noida; confirm the exact branch/address",
+    "summary": "BringFido lists dogs and cats as welcome at this named Noida property.",
+    "species": [
+      "dog",
+      "cat"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/city/noida_in/",
+        "publisher": "BringFido",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "townhouse104-noida",
+    "name": "Super Townhouse Sector 104 Noida",
+    "city": "noida",
+    "kind": "hotel",
+    "area": "Sector 104",
+    "summary": "BringFido reports dogs welcome; cats require a request.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the permitted room and shared areas; hotel admission does not establish restaurant access.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.bringfido.com/lodging/2027919",
+        "publisher": "BringFido",
+        "ref": 3,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "diggin-anandlok",
+    "name": "Diggin — Anand Lok",
+    "city": "delhi-ncr",
+    "kind": "restaurant",
+    "area": "Anand Lok, New Delhi",
+    "summary": "A pet-travel guide reports dog-friendly garden seating.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Garden seating only is reported; confirm the specific branch and table.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://dogwithblog.in/pet-friendly-cafes-in-delhi/",
+        "publisher": "Dog with Blog",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "pefe-mumbai",
+    "name": "Ohh My Dog Cafe Pefe",
+    "city": "mumbai",
+    "kind": "restaurant",
+    "area": "Andheri Lokhandwala / Andheri West",
+    "summary": "The venue listing includes reports of dogs being welcome.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.zomato.com/mumbai/pefe-andheri-lokhandwala",
+        "publisher": "Zomato",
+        "ref": 3,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "mcafe-whitefield",
+    "name": "M Café — pet-friendly brunches",
+    "city": "bengaluru",
+    "kind": "restaurant",
+    "area": "Bengaluru Marriott Hotel Whitefield",
+    "summary": "The property page explicitly calls its brunches pet-friendly.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Brunches are specifically mentioned. Confirm the event/date and permitted seating; other services are not established.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://marriott.com/hotels/maps/travel/blrwf-bengaluru-marriott-hotel-whitefield",
+        "publisher": "Marriott",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "atte-chennai",
+    "name": "ATTE Glocal Café",
+    "city": "chennai",
+    "kind": "restaurant",
+    "area": "Besant Nagar",
+    "summary": "A travel guide explicitly says visitors may bring their own pets.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.tripclap.com/stories/top-10-pet-friendly-caf%C3%A9s-in-chennai",
+        "publisher": "Tripclap",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "ewoke-hyderabad",
+    "name": "E’woke — The Vegan Cafe",
+    "city": "hyderabad",
+    "kind": "restaurant",
+    "area": "Sainikpuri",
+    "summary": "A local guide reports pet-friendly outdoor seating.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Outdoor seating is reported. Confirm the table and pet rules.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.alcazar.in/blog/top-pet-friendly-cafes-in-hyderabad",
+        "publisher": "Alcazar local guide",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "potboiler-kolkata",
+    "name": "Potboiler Cafe",
+    "city": "kolkata",
+    "kind": "restaurant",
+    "area": "Bidhannagar",
+    "summary": "A dining guide describes this location as dog-friendly.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://top10sonly.com/top-10-business/top-10-best-pet-friendly-restaurants-in-kolkata-to-visit-with-your-pets/",
+        "publisher": "Top10sOnly",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "flourworks-pune",
+    "name": "The Flour Works — Kalyani Nagar",
+    "city": "pune",
+    "kind": "restaurant",
+    "area": "Kalyani Nagar",
+    "summary": "A Pune guide reports dogs welcome in outdoor sections.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Outdoor sections are reported; reconfirm seating and service.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://travell.cc/pune/pet-friendly-cafes-pune/",
+        "publisher": "Travell city guide",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "frenchwindow-pune",
+    "name": "The French Window Patisserie",
+    "city": "pune",
+    "kind": "restaurant",
+    "area": "Koregaon Park",
+    "summary": "A Pune guide describes a dog-friendly outdoor area.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Outdoor area is reported; reconfirm before travelling.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://travell.cc/pune/pet-friendly-cafes-pune/",
+        "publisher": "Travell city guide",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "alfresco-ahmedabad",
+    "name": "Alfresco — Novotel Ahmedabad",
+    "city": "ahmedabad",
+    "kind": "restaurant",
+    "area": "SG Highway / Iscon Cross Roads",
+    "summary": "Accor explicitly identifies Alfresco as a pet-friendly dining space.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Open-air dining space. Confirm pet species and table availability.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://all.accor.com/hotel/8173/index.en.shtml",
+        "publisher": "Accor",
+        "ref": 1,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "stepout-jaipur",
+    "name": "Stepout Cafe",
+    "city": "jaipur",
+    "kind": "restaurant",
+    "area": "C-Scheme",
+    "summary": "A local pet-services directory reports dogs welcome outdoors.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Shaded outdoor seating is reported; ask before arrival.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.taildost.com/services",
+        "publisher": "TailDost",
+        "ref": 3,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "roys-mysuru",
+    "name": "Roy’s Cafe",
+    "city": "mysuru",
+    "kind": "restaurant",
+    "area": "Mysuru; confirm the current address",
+    "summary": "Visitor reports in a cafe directory describe bringing a dog.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": "Visitor reports, not a published venue policy. Confirm current operation and permission directly.",
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://wanderlog.com/list/geoCategory/291108/best-coffee-shops-and-best-cafes-in-mysore-district",
+        "publisher": "Wanderlog visitor reports",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "mynt-bhubaneswar",
+    "name": "Mynt — Vivanta Bhubaneswar",
+    "city": "bhubaneswar",
+    "kind": "restaurant",
+    "area": "Kalinga Nagar / DN Square",
+    "summary": "An indexed official description identifies al fresco dining with pets.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Al fresco seating is specifically mentioned; indoor admission is not established.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://vivantahotels.com/en-in/vivanta-bhubaneswar/amp",
+        "publisher": "Vivanta",
+        "ref": 2,
+        "type": "official",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "pawffe-vizag",
+    "name": "Pawffe Pet Friendly Resto Cafe",
+    "city": "visakhapatnam",
+    "kind": "restaurant",
+    "area": "Sagar Nagar",
+    "summary": "EazyDiner’s editorial guide describes pet-friendly dining.",
+    "species": [],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.eazydiner.com/food-trends/need-an-excuse-to-cafe-hop-in-visakhapatnam-here-are-5-spots-built-for-long-conversations",
+        "publisher": "EazyDiner",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "dogvilla-siliguri",
+    "name": "The Dog Villa Café",
+    "city": "siliguri",
+    "kind": "restaurant",
+    "area": "Bidhan Road / Khalpara, Siliguri, West Bengal",
+    "summary": "Zomato marks this specific cafe listing as pet friendly.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Confirm the exact pet-permitted seating area and visiting time.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://www.zomato.com/siliguri/the-dog-villa-caf%C3%A9-1-khalpara",
+        "publisher": "Zomato",
+        "ref": 5,
+        "type": "third-party",
+        "method": "index"
+      },
+      {
+        "url": "https://www.top-rated.online/cities/Siliguri/place/p/8232196/The+Dog+Villa+Caf%C3%A9",
+        "publisher": "Top-Rated Online listing",
+        "ref": 2,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "tailclub-gurugram",
+    "name": "Tail Club",
+    "city": "gurugram",
+    "kind": "restaurant",
+    "area": "Sector 59 / Raisina Road",
+    "summary": "The venue describes a dog-first space with a human-friendly cafe.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Designated dog park and cafe; confirm admission, vaccination rules and entry fees.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://tailclub.in/",
+        "publisher": "Tail Club",
+        "ref": 1,
+        "type": "official",
+        "method": "page"
+      }
+    ]
+  },
+  {
+    "id": "underneem-gurugram",
+    "name": "Under The Neem",
+    "city": "gurugram",
+    "kind": "restaurant",
+    "area": "Sector 83",
+    "summary": "A pet-travel guide reports a dedicated pet section.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Pet section is reported; confirm the seating and visit rules.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://dogwithblog.in/pet-friendly-cafes-in-delhi/",
+        "publisher": "Dog with Blog",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "colocal-noida",
+    "name": "Colocal — Sector 104",
+    "city": "noida",
+    "kind": "restaurant",
+    "area": "Sector 104",
+    "summary": "A pet-travel guide reports dogs welcome in open-air seating.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Open-air seating is reported; this entry does not cover every Colocal branch.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://dogwithblog.in/pet-friendly-cafes-in-delhi/",
+        "publisher": "Dog with Blog",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  },
+  {
+    "id": "roastery-noida",
+    "name": "Roastery Coffee House — Sector 144",
+    "city": "noida",
+    "kind": "restaurant",
+    "area": "Sector 144",
+    "summary": "A pet-travel guide reports a dog-friendly semi-open patio.",
+    "species": [
+      "dog"
+    ],
+    "fee": "Not established here. Ask for the current pet fee and taxes.",
+    "limits": "Size, breed and number limits not established. Confirm directly.",
+    "access": "Semi-open patio is reported; reconfirm before visiting.",
+    "caution": null,
+    "reviewedAt": "2026-11-04",
+    "status": "listed",
+    "sources": [
+      {
+        "url": "https://dogwithblog.in/pet-friendly-cafes-in-delhi/",
+        "publisher": "Dog with Blog",
+        "ref": 1,
+        "type": "third-party",
+        "method": "index"
+      }
+    ]
+  }
+]

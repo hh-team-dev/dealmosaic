@@ -752,12 +752,14 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
   const [mode, setMode] = useState("dine-in");
   const brand = FOOD_BRANDS.find((b) => b.id === params.get("brand"));
   const changeCity = (id: string) => {
-    const next = new URLSearchParams(params);
+    // Read the current URL so two quick selections cannot overwrite a pending React render.
+    const next = new URLSearchParams(location.search);
     next.set("city", id);
     setParams(next);
   };
   const changeBrand = (id: string) => {
-    const next = new URLSearchParams(params);
+    // Read the current URL so two quick selections cannot overwrite a pending React render.
+    const next = new URLSearchParams(location.search);
     if (id) next.set("brand", id);
     else next.delete("brand");
     setParams(next, { replace: true });
@@ -883,6 +885,7 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
               <summary>View all {CITIES.length} destinations</summary>
               <p>{CITIES.map((c) => c.name).join(" · ")}</p>
             </details>
+            <aside className="hospitality-pet-callout" aria-labelledby="pet-entry-title"><div><span className="hospitality-eyebrow">Bring your companion</span><h2 id="pet-entry-title">A welcome worth checking.</h2><p>Pet-friendly places, with or without a deal. Read the source, check the restrictions and plan the full cost.</p></div><div><Link className="hospitality-primary" to={`/pet-friendly?city=${city.id}&type=${dining?'restaurant':'hotel'}`}>{dining?'Pet-friendly dining':'Pet-friendly stays'} in {city.name} →</Link><Link className="hospitality-secondary" to="/pet-friendly">View all destinations together →</Link></div></aside>
             {dining && <LocalDining key={city.id} city={city} />}
             {!dining && <StaySearch city={city} />}
             {dining && (

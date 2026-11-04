@@ -25,6 +25,7 @@ const SPA_ROUTES = [
   /^\/deals\/?$/,
   /^\/stays\/?$/,
   /^\/dining\/?$/,
+  /^\/pet-friendly\/?$/,
   /^\/saved\/?$/,
   /^\/install\/?$/,
   /^\/handcrafted\/?$/,

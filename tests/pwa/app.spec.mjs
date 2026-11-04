@@ -49,5 +49,5 @@ test('evicted offline files produce an honest branded recovery page instead of a
 
 test('hospitality cold-offline routes keep navigation but do not claim live inventory',async({page,context})=>{
  await page.goto('/install');await page.getByText('Offline ready',{exact:true}).waitFor();await page.waitForFunction(()=>Boolean(navigator.serviceWorker.controller));await context.setOffline(true);
- for(const path of ['/stays?city=jaipur','/dining?city=mumbai']){await page.goto(path);await expect(page.getByRole('heading',{name:'Your saved list is still here'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Explore DealMosaic'})).toBeVisible();await expect(page.locator('.hospitality-offer')).toHaveCount(0);await expect(page.locator('.hospitality-brand-card')).toHaveCount(0);}
+ for(const path of ['/stays?city=jaipur','/dining?city=mumbai','/pet-friendly?city=siliguri']){await page.goto(path);await expect(page.getByRole('heading',{name:'Your saved list is still here'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Explore DealMosaic'})).toBeVisible();await expect(page.locator('.hospitality-offer')).toHaveCount(0);await expect(page.locator('.hospitality-brand-card')).toHaveCount(0);}
 });
