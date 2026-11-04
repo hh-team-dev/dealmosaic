@@ -12,7 +12,7 @@ createServer(async(req,res)=>{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname.startsWith('/api/')) {
    const data=[];for await(const part of req)data.push(part);
-   const headers={...req.headers};delete headers.host;delete headers.connection;
+   const headers={...req.headers,'x-forwarded-host':req.headers.host};delete headers.host;delete headers.connection; // Node fetch rewrites Host; preserve the browser-facing origin explicitly.
    const response=await fetch(api+url.pathname+url.search,{method:req.method,headers,body:['GET','HEAD'].includes(req.method)?undefined:Buffer.concat(data),redirect:'manual'});
    res.writeHead(response.status,Object.fromEntries([...response.headers].filter(([key])=>!['content-encoding','content-length','transfer-encoding'].includes(key))));res.end(Buffer.from(await response.arrayBuffer()));return;
  }

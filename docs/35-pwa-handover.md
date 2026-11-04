@@ -186,8 +186,11 @@ NODE_ENV=test DB_PATH=/tmp/dm-site-audit.db TURSO_DATABASE_URL= TURSO_AUTH_TOKEN
 # Start isolated API and production-built test preview in separate managed processes.
 NODE_ENV=test DB_PATH=/tmp/dm-site-audit.db TURSO_DATABASE_URL= TURSO_AUTH_TOKEN= PORT=8787 MAIL_TRANSPORT=none npx tsx apps/api/src/server.ts
 node scripts/serve-pwa-test.mjs
-npm run audit:interactions
 npm run test:pwa
+# Production-bundle business regressions; the component injection test requires Vite.
+npm run audit:interactions -- --grep-invert 'shared busy button'
+# Then stop the static test preview, start npm run dev:web, and run the complete suite.
+npm run audit:interactions
 ```
 
 The PWA suite covers installation prompt simulation, manual instructions, standalone-navigation simulation, 320px/390px/desktop layouts, accessibility, offline cold starts, private deep links, misleading `navigator.onLine`, field preservation, API cache exclusion, mutation network failure, online-only data preservation, multi-tab waiting updates, tombstone cleanup, unsupported APIs, blocked storage and real classic/PWA package switching.

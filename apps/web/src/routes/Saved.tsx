@@ -37,7 +37,7 @@ export default function Saved() {
         path="/saved"
       />
       <Chrome>
-        <div className="container section stack-lg">
+        <div className="container section stack stack-lg">
           {/* Alive on every screen, not only the first one. */}
           {!offline && <DealsTicker />}
           <header>

@@ -15,7 +15,7 @@ export default function Install() {
   }, [app.ready, app.disabled]);
   return <Chrome>
     <Seo title="Install DealMosaic · app settings" description="Add DealMosaic to your home screen, manage offline access and apply updates when you are ready." path="/install" index={false} />
-    <div className="container section stack-lg pwa-guide">
+    <div className="container section stack stack-lg pwa-guide">
       <header className="card card-lg pwa-install-hero stack">
         <div className="row wrap"><img src="/brand/dm-icon-192.png" width="64" height="64" alt="" /><span className="badge badge-lime">Same DealMosaic. One tap away.</span></div>
         <h1>{app.installed ? 'Your DealMosaic app' : 'A home for smarter shopping'}</h1>
