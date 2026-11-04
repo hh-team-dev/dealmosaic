@@ -15,7 +15,7 @@ of importance:
 
 | # | What | Where it is | Contains |
 |---|---|---|---|
-| 1 | Source archive | **`backups/dealmosaic_2026-11-03_18-43-32.tar.gz`** (§2.4) | the entire codebase, docs, brand SVG/PNG masters, public DB snapshot — 265 files, 5.15 MB uncompressed |
+| 1 | Source archive | **`backups/dealmosaic_2026-11-04_08-39-25.tar.gz`** (§2.4) | the entire codebase, docs, brand SVG/PNG masters, public DB snapshot — 265 files, 5.15 MB uncompressed |
 | 2 | Git history | `github.com/hh-team-dev/dealmosaic` @ `v1.1-warm` | every commit, the deployed tree, and the workflow that keeps Render awake |
 | 3 | Live data | Turso (hosted libSQL) + `db-snapshots/dealmosaic-public-2026-11-03.sql` | 441 rows of catalogue/offers/price history, in the archive and in the repo |
 | 4 | Credentials | `~/.config/dealmosaic/deploy.env` (mode **600**) + the owner's password manager | API tokens. **Not** in the archive, by design |
@@ -80,22 +80,22 @@ the schema plus the public data snapshot.
 
 | Property | Value |
 |---|---|
-| File | **`backups/dealmosaic_2026-11-03_18-43-32.tar.gz`** |
-| Size on disk | 3,403,753 bytes (3.25 MB) |
-| Tracked files inside | **269** (checked against the tree by the manifest) |
-| SHA-256 | `6fe6f476c78028708b43eb18c600b5b1e1accd75d66966d131908798ade028ec` |
+| File | **`backups/dealmosaic_2026-11-04_08-39-25.tar.gz`** |
+| Size on disk | 3,439,494 bytes (3.28 MB) |
+| Tracked files inside | **277** (checked against the tree by the manifest) |
+| SHA-256 | `ad99393b02be1981a398ee0ede0743fd41e0fe3b058c1562685985b4f2d2e5ea` |
 | Manifest | `backups/dealmosaic_2026-11-03_18-42-30.manifest.json` (per-file hashes) |
-| Verified | `node scripts/backup.mjs --verify dealmosaic_2026-11-03_18-43-32.tar.gz` → **269 files, all checksums match** |
+| Verified | `node scripts/backup.mjs --verify dealmosaic_2026-11-04_08-39-25.tar.gz` → **277 files, all checksums match** |
 | Difference from the previous release archive (`14-22-45`) | the site-tour work: `docs/29-site-tour-fixes.md`, `apps/api/src/lib/text.ts` with `splitSentences()`, `scripts/reclean-copy.ts`, `scripts/verify-pdfs.py`, the 290-test suite and the corrected handover §2.22 |
 
 **An honest note about self-referencing archives.** The copy of *this* document inside the archive was
-frozen at 18:43:32, which is before the table above could be filled in. So the file you are reading is
+frozen at 08:39:25, which is before the table above could be filled in. So the file you are reading is
 one revision newer than the copy stored in the archive — this is unavoidable for any archive that
 describes itself, and it is why the authoritative checksum for an archive is never written inside it,
 but printed by `--verify` and stored in its sibling `.manifest.json`.
 
 **Four archives are kept, rotating.** Each `npm run backup` writes a new one and prunes the oldest; the
-one named above is the release archive for `v1.2-tour`.
+one named above is the release archive for `v1.3-earn`.
 
 ---
 
@@ -109,7 +109,7 @@ The database is split in two on purpose, because **the GitHub repository is publ
 |---|---|
 | File | `db-snapshots/dealmosaic-public-2026-11-03.sql` |
 | Size | 234,067 bytes |
-| SHA-256 | `6fe6f476c78028708b43eb18c600b5b1e1accd75d66966d131908798ade028ec` |
+| SHA-256 | `ad99393b02be1981a398ee0ede0743fd41e0fe3b058c1562685985b4f2d2e5ea` |
 | Rows | **441** |
 | Committed | yes — inside `db-snapshots/`, and therefore inside the project archive too |
 | Restore-verified | `node scripts/db-backup.mjs --verify db-snapshots/dealmosaic-public-2026-11-03.sql` → every table matched, then a real query ran: *OnePlus 13R — 2 variants*, *Dettol Original Bathing Soap — 3 variants*, *Wakefit Orthopaedic Memory Foam Mattress — 2 variants* |
