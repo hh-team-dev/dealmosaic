@@ -6,7 +6,7 @@ const config={version:'2.0.0',build:'current',assets:['/pwa-shell.html','/assets
 function harness(classic=false, fail=false) {
  const events=new Map<string,Function>(); const stores=new Map<string,Map<string,Response>>();
  const url=(request:any)=>new URL(typeof request==='string'?request:request.url,origin).href;
- const caches={keys:async()=>[...stores.keys()],delete:vi.fn(async(name:string)=>stores.delete(name)),open:async(name:string)=>{
+ const caches={match:async(request:any,options:{cacheName:string})=>stores.get(options.cacheName)?.get(url(request))?.clone(),keys:async()=>[...stores.keys()],delete:vi.fn(async(name:string)=>stores.delete(name)),open:async(name:string)=>{
   if(!stores.has(name))stores.set(name,new Map());const data=stores.get(name)!;
   return {put:async(req:any,res:Response)=>{data.set(url(req),res.clone());},match:async(req:any)=>data.get(url(req))?.clone()};
  }};
@@ -20,6 +20,7 @@ function harness(classic=false, fail=false) {
 }
 describe('PWA static-only safety policy',()=>{
  it('precaches only the explicit static release, credential-free and revalidated',async()=>{const h=harness();await h.fire('install');expect(h.fetch).toHaveBeenCalledTimes(2);for(const [req]of h.fetch.mock.calls){expect(req.credentials).toBe('omit');expect(req.cache).toBe('reload');}expect([...h.stores.get('dealmosaic-pwa-current')!.keys()]).toEqual(config.assets.map(p=>origin+p));});
+ it('read misses never recreate a cache deleted by online-only fallback',async()=>{const h=harness();await h.fire('fetch',{request:h.request('/assets/app-hash.js')});expect(h.stores.size).toBe(0);});
  it('never forces activation on an ordinary installation/update',async()=>{const h=harness();await h.fire('install');expect(h.self.skipWaiting).not.toHaveBeenCalled();});
  it('removes an incomplete offline release if any install request fails',async()=>{const h=harness(false,true);await expect(h.fire('install')).rejects.toThrow('offline');expect(h.stores.size).toBe(0);});
  it('rejects a redirected asset instead of storing a login or error document',async()=>{const h=harness();h.fetch.mockImplementation(async()=>{const r=new Response('redirect');Object.defineProperty(r,'redirected',{value:true});return r;});await expect(h.fire('install')).rejects.toThrow('Incomplete');expect(h.stores.size).toBe(0);});

@@ -23,7 +23,7 @@ export const sensitiveTask = (path: string) => /^\/(admin|buy|direct-orders|app|
 async function offlineReady() {
   try {
     const names = (await caches.keys()).filter(key => key.startsWith(CACHE_PREFIX));
-    const shells = await Promise.all(names.map(async name => Boolean(await (await caches.open(name)).match('/pwa-shell.html'))));
+    const shells = await Promise.all(names.map(async name => Boolean(await caches.match('/pwa-shell.html', { cacheName: name }))));
     patch({ ready: Boolean(registration?.active) && shells.some(Boolean) });
   }
   catch { patch({ ready: false }); }
@@ -31,6 +31,9 @@ async function offlineReady() {
 async function register() {
   if (!('serviceWorker' in navigator) || !window.isSecureContext || !import.meta.env.PROD) return;
   try {
+    // A fresh classic visit must not create a new removal worker. That can race
+    // an immediate switch back to PWA while its own unregister is still pending.
+    if (!PWA_ENABLED && !await navigator.serviceWorker.getRegistration('/')) return;
     registration = await navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' });
     if (!PWA_ENABLED) return; // The classic build serves a self-removing network-only worker.
     if (registration.waiting) patch({ updateReady: true });
@@ -47,6 +50,7 @@ async function register() {
           if (replacesActive) patch({ updateReady: true });
           else void navigator.serviceWorker.ready.then(() => { patch({ updateReady: false }); return offlineReady(); });
         }
+        if (worker.state === 'activated') void offlineReady();
         if (worker.state === 'redundant') patch({ message: 'Offline files could not be prepared. The online website still works; try checking again.' });
       };
       worker.addEventListener('statechange', changed);

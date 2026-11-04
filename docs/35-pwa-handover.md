@@ -111,6 +111,8 @@ The build fails if the static precache exceeds **4 MiB**. After activation it re
 
 A normal worker installation never calls `skipWaiting`. An update becomes visible when the new worker is installed; explicit approval sends `ACTIVATE_UPDATE`. Only the requesting window reloads on controller change. Other windows retain their form values and receive a reload notice. Sensitive account, owner, order and payment paths do not expose the global apply-update button.
 
+Timing regressions also guard WebKit fallback: cache reads never open/recreate a deleted cache, and a fresh classic visit does not register a needless tombstone that could race a return to PWA.
+
 An initial test found a Chromium lifecycle bug: the first-registration "had active worker" state had been captured once and reused for later updates. This was changed to compute replacement status for **each installation**, with already-installing worker observation. The cross-browser two-tab test guards the regression.
 
 ## 6. Website/PWA fallback and recovery

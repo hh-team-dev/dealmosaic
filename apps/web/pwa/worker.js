@@ -38,11 +38,10 @@ self.addEventListener('message', event => {
 });
 
 async function cachedAsset(request) {
-  const current = await caches.open(CACHE);
-  const hit = await current.match(request);
+  const hit = await caches.match(request, { cacheName: CACHE });
   if (hit) return hit;
   for (const key of (await caches.keys()).filter(key => key.startsWith(PREFIX) && key !== CACHE)) {
-    const old = await (await caches.open(key)).match(request);
+    const old = await caches.match(request, { cacheName: key });
     if (old) return old;
   }
   return fetch(request);
@@ -55,7 +54,7 @@ async function navigation(request) {
     // Network first, without ever storing a visited HTML page or a private URL.
     return await fetch(request, { cache: 'no-store', signal: controller.signal });
   } catch {
-    const shell = await (await caches.open(CACHE)).match('/pwa-shell.html');
+    const shell = await caches.match('/pwa-shell.html', { cacheName: CACHE });
     if (shell) return shell;
     return new Response('<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Reconnect to open DealMosaic</title></head><body style="margin:0;background:#FFF9F0;color:#4A2B22;font:18px/1.6 system-ui"><main style="max-width:640px;padding:32px;margin:auto"><p>DealMosaic</p><h1>Reconnect to open DealMosaic</h1><p>The offline app files are unavailable. Your browser may have cleared them. Live prices, orders and payments need a connection; nothing has been queued.</p><p>Reconnect, then reopen the website to prepare offline access again.</p><a href="/" style="display:inline-block;padding:12px;color:#4A2B22">Open the website</a></main></body></html>', {
       status: 503, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' },
