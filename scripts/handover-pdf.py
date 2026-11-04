@@ -65,6 +65,7 @@ CORE = [
     ('37-hotels-and-dining.md', '2.2.0: Hotels, Dining and universal navigation'),
     ('38-expanded-destinations.md', '2.3.0: More destinations and local dining'),
     ('39-pet-friendly-directory.md', '2.4.0: Pet-friendly stays, dining and careful planning'),
+    ('40-hospitality-revenue-reset.md', 'Hospitality: field-test response and on-site revenue blueprint'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

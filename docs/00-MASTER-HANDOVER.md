@@ -1,5 +1,7 @@
 # DEALMOSAIC — MASTER HANDOVER
 
+> **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
+
 > **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.

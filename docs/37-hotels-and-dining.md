@@ -1,5 +1,7 @@
 # DealMosaic 2.2.0 — Hotels, Dining and the universal destination dock
 
+> **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
+
 > **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 **Date:** 4 November 2026. **Release scope:** one DealMosaic website, one shared PWA/classic application, two new hospitality destinations. This document records the 2.2.0 enhancement; the later expansion is in document 38, while documents 35–36 retain the install/offline architecture and preceding release evidence.

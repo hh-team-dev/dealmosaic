@@ -1,5 +1,7 @@
 # 31 — Affiliate applications: what I did, what only the owner can do
 
+> **4 November 2026 correction:** This is a historical application record. “Open” means campaign access, not that every click pays, a destination works or commission has been received. The fresh hotel-access check and five-row protective hold are documented in [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md). Do not use stale cached application status to reapply.
+
 Prepared 3 November 2026. Every claim in this document was checked against the live Cuelinks
 publisher API on the day it was written; the API responses are quoted, not paraphrased.
 

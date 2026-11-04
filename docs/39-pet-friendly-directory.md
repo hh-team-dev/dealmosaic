@@ -1,5 +1,7 @@
 # DealMosaic 2.4.0 — Pet-friendly stays and dining
 
+> **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
+
 **4 November 2026.** One implementation for the website, installable PWA and current-feature classic fallback. **Published and production-checked.** Exact release/recovery evidence follows below; document 38 records the preceding release.
 
 ## 1. Delivered scope and honest limits
