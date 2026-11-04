@@ -14,6 +14,33 @@ against production at the time of writing, not recalled from memory.
 
 ---
 
+## 4 November 2026 — direct-sales design addendum (not live)
+
+The owner requested self-managed handcrafted product listings, discounts and own-site
+checkout, without a GSTIN field during product entry. Full researched design and the
+flaw → action register: **`docs/32-direct-sales-blueprint.md`**.
+
+**Exact state:** design/documentation only. No direct-product editor, cart, payment
+integration, orders or browser push has been implemented or deployed. Existing
+production behaviour is unchanged. Historical verification below is not a new audit.
+
+The proposed direct-sale path is separate from affiliate checkout. Products may fit
+into the normal design with disclosed featured placements and actual seller details;
+no disguised owner promotion or unsolicited repeated notifications. Comparison
+ranking remains independent of margin. Product drafts do not require GSTIN, but sales
+eligibility requires seller location, product classification and aggregate-turnover
+review (including relevant affiliate/services income). Do not assume all handmade
+items qualify for interstate relief or that a goods-only threshold applies.
+
+Blocked choices: dispatch country/state and actual seller; manual UPI versus explicitly
+approved gateway costs; ready-stock versus made-to-order. No fees are authorised.
+Source-backed legal/payment caveats, secure inventory/payment architecture, notification
+caps, mobile workflow and release tests are in doc 32. Existing digest's blanket
+“Nothing here is an advert” wording must be reviewed before introducing owner promotions.
+The current 25-product comparison catalogue must not be padded with invented stock.
+
+---
+
 ## PART 1 — WHAT THIS PRODUCT IS
 
 ### 1.1 The idea
@@ -1632,6 +1659,7 @@ Two rules learned the hard way:
 | **`29-site-tour-fixes.md`** | **36 defects found by watching a 9-minute phone tour plus the PDF set it exposed, each traced to its cause and fixed, with the verification log** |
 | **`30-earning-and-admin.md`** | **How the site earns: the tracked click, the affiliate chain, why there is no embedded checkout, and how the owner runs `/admin`** |
 | **`31-affiliate-applications.md`** | **What was applied for, what the network answered, and the one form left for the owner — every field prefilled** |
+| **`32-direct-sales-blueprint.md`** | **Proposed handcrafted direct sales: product editor, discounts, disclosed placement, no-GST eligibility, payments, orders and notification safeguards — not implemented** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

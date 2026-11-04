@@ -1,5 +1,13 @@
 # 30 — How DealMosaic earns, and how the owner runs it
 
+> **4 November 2026 update:** the owner now also wants to sell their own handcrafted
+> goods. The direct-sales design is in `32-direct-sales-blueprint.md`; it is **not
+> implemented or live**. The affiliate-only checkout discussion below describes
+> the existing product, not a ban on a separate checkout for genuine own stock.
+> Tax registration and seller-structure eligibility are case-specific; do not
+> treat older blanket wording below as a determination for this new business.
+
+
 Written on 3 November 2026 in answer to the owner's questions about money, checkout and the admin
 side. It states what exists in the code today, what is deliberately not built, and the one decision only
 the owner can make.
