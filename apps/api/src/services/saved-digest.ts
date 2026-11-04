@@ -184,12 +184,13 @@ export async function runSavedDigests(
   const rows = (await db
     .prepare(
       `SELECT s.user_id, s.saved_at, s.notified_at, s.coupon_id,
-              c.platform_slug AS platform_name, c.title, c.code, c.expires_at,
+              COALESCE(pf.name, c.platform_slug) AS platform_name, c.title, c.code, c.expires_at,
               u.email, u.display_name, u.email_verified_at, u.status,
               p.notify_email
          FROM saved_deals s
          JOIN coupons c ON c.id = s.coupon_id
          JOIN users u ON u.id = s.user_id
+         LEFT JOIN platforms pf ON pf.slug = c.platform_slug
          LEFT JOIN user_preferences p ON p.user_id = u.id
         ORDER BY s.user_id, s.saved_at DESC`,
     )
