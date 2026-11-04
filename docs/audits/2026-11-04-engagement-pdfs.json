@@ -1,0 +1,93 @@
+{
+  "date": "2026-11-04",
+  "release": "2.1.1",
+  "validatedHeadings": 338,
+  "files": [
+    {
+      "file": "00-MASTER-HANDOVER.pdf",
+      "pages": 33,
+      "bytes": 1434045
+    },
+    {
+      "file": "00-executive-summary.pdf",
+      "pages": 4,
+      "bytes": 259322
+    },
+    {
+      "file": "04-design-system.pdf",
+      "pages": 6,
+      "bytes": 397874
+    },
+    {
+      "file": "14-seo-launch-checklist.pdf",
+      "pages": 4,
+      "bytes": 245034
+    },
+    {
+      "file": "15-project-handover.pdf",
+      "pages": 19,
+      "bytes": 925109
+    },
+    {
+      "file": "27-five-agent-consolidation.pdf",
+      "pages": 6,
+      "bytes": 338821
+    },
+    {
+      "file": "28-backup-and-recovery.pdf",
+      "pages": 15,
+      "bytes": 904905
+    },
+    {
+      "file": "29-site-tour-fixes.pdf",
+      "pages": 6,
+      "bytes": 344001
+    },
+    {
+      "file": "30-earning-and-admin.pdf",
+      "pages": 4,
+      "bytes": 263675
+    },
+    {
+      "file": "31-affiliate-applications.pdf",
+      "pages": 4,
+      "bytes": 245027
+    },
+    {
+      "file": "32-direct-sales-blueprint.pdf",
+      "pages": 7,
+      "bytes": 318371
+    },
+    {
+      "file": "33-direct-shop-release.pdf",
+      "pages": 6,
+      "bytes": 323686
+    },
+    {
+      "file": "34-sitewide-audit.pdf",
+      "pages": 6,
+      "bytes": 306593
+    },
+    {
+      "file": "35-pwa-handover.pdf",
+      "pages": 9,
+      "bytes": 433713
+    },
+    {
+      "file": "36-persistent-install-and-deals.pdf",
+      "pages": 5,
+      "bytes": 226827
+    },
+    {
+      "file": "DEALMOSAIC-handover-set.pdf",
+      "pages": 140,
+      "bytes": 7332418
+    },
+    {
+      "file": "brand-identity.pdf",
+      "pages": 5,
+      "bytes": 321659
+    }
+  ],
+  "result": "All 17 PDFs regenerated; every contents entry checked against its actual heading page. Screenshots deleted; local fixture API and preview stopped; generated dependencies/build folders removed."
+}

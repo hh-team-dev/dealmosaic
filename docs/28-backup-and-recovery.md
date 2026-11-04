@@ -7,6 +7,7 @@
 ## Latest recovery point — PWA / website 2.1.1
 
 - Live source `d608712436c056f6b9880a394c8319ea32f86997`, tag `pwa-v2.1.1`, Pages `1a0b443a`.
+- **Verified source archive:** `backups/dealmosaic_2026-11-04_13-29-18.tar.gz`, **325 files**, **1,769,832 bytes**, SHA-256 `fcfc9e203f8b684c9eb7d47d4c0c4c603e5857637463d8d0be0682db7364d355`. It contains source and final test/live evidence. This self-referential archive note and final cleanup bookkeeping follow the archive and are included in the final Git bundle/PDFs.
 - Matched PWA/classic archives and exact SHA-256 values: document 36, section 8; `/home/user/releases/dealmosaic-2.1.1/`.
 - Full-history recovery: `backups/pwa-v2.1.1.bundle`, including current handover and evidence; retain the immutable original website and 2.0.1 bundles as well.
 - The intermediate 2.1.0 deployment is superseded by the verified 2.1.1 real-404 fix. Do not use it as this enhancement's recovery target.
