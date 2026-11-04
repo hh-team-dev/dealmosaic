@@ -1,0 +1,114 @@
+{
+  "at": "2026-11-04T13:24:09.485Z",
+  "base": "https://dealmosaic.pages.dev",
+  "release": {
+    "version": "2.1.1",
+    "build": "2.1.1-8a98a8e75129",
+    "mode": "pwa",
+    "assets": [
+      "/pwa-shell.html",
+      "/assets/DirectShop-MSlF0ErB.js",
+      "/assets/ShopControl-CQ7s2Gg_.js",
+      "/assets/index-C_kNZnU6.js",
+      "/assets/index-Cz9OxM5D.css",
+      "/fonts/Outfit.woff2",
+      "/fonts/Plus-Jakarta-Sans.woff2",
+      "/favicon.svg",
+      "/apple-touch-icon.png",
+      "/brand/dm-icon-192.png",
+      "/brand/dm-icon-512.png",
+      "/brand/dm-icon-maskable-512.png"
+    ],
+    "precacheBytes": 723386,
+    "cachePolicy": "static-only; API/network-only; no mutation replay"
+  },
+  "headers": {
+    "/sw.js": {
+      "cache-control": "no-cache, no-store, must-revalidate",
+      "content-type": "application/javascript; charset=utf-8",
+      "service-worker-allowed": "/",
+      "x-robots-tag": null
+    },
+    "/manifest.webmanifest": {
+      "cache-control": "no-cache, must-revalidate",
+      "content-type": "application/manifest+json",
+      "service-worker-allowed": null,
+      "x-robots-tag": null
+    },
+    "/pwa-release.json": {
+      "cache-control": "no-store",
+      "content-type": "application/json",
+      "service-worker-allowed": null,
+      "x-robots-tag": "noindex"
+    },
+    "/pwa-shell.html": {
+      "cache-control": "no-store",
+      "content-type": "text/html; charset=utf-8",
+      "service-worker-allowed": null,
+      "x-robots-tag": "noindex, nofollow"
+    }
+  },
+  "shopPublicState": {
+    "products": [],
+    "seller": null
+  },
+  "results": [
+    {
+      "engine": "chromium",
+      "states": [
+        {
+          "label": "online install guide",
+          "h1": "A home for smarter shopping",
+          "overflow": false,
+          "violations": []
+        },
+        {
+          "label": "offline protected deep link",
+          "h1": "Your saved list is still here",
+          "overflow": false,
+          "violations": []
+        },
+        {
+          "label": "offline saved board",
+          "h1": "Saved deals",
+          "overflow": false,
+          "violations": []
+        }
+      ],
+      "cacheEntries": 12,
+      "apiCacheEntries": 0,
+      "installability": {
+        "installabilityErrors": []
+      },
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "states": [
+        {
+          "label": "online install guide",
+          "h1": "A home for smarter shopping",
+          "overflow": false,
+          "violations": []
+        },
+        {
+          "label": "offline protected deep link",
+          "h1": "Your saved list is still here",
+          "overflow": false,
+          "violations": []
+        },
+        {
+          "label": "offline saved board",
+          "h1": "Saved deals",
+          "overflow": false,
+          "violations": []
+        }
+      ],
+      "cacheEntries": 12,
+      "apiCacheEntries": 0,
+      "installability": null,
+      "errors": []
+    }
+  ],
+  "limits": "Read-only browser engines, not physical Android/iPhone OS installation. No real financial, shipment or notification action."
+}

@@ -91,4 +91,55 @@ Browser-engine tests and responsive viewports do not prove behavior on every phy
 
 ## 8. Final release record
 
-Final test totals, deployment/version identifiers, production evidence, checksummed recovery files, PDF validation and cleanup status are recorded here after verification.
+### Published release
+
+- **Live:** https://dealmosaic.pages.dev — installation/settings: https://dealmosaic.pages.dev/install
+- **Version:** 2.1.1; source `d608712436c056f6b9880a394c8319ea32f86997`; published tag `pwa-v2.1.1`.
+- **Cloudflare Pages:** `1a0b443a` — https://1a0b443a.dealmosaic.pages.dev
+- **PWA build:** `2.1.1-8a98a8e75129`; raw static precache **723,386 bytes**, 12 cached static entries, **0 API entries** observed in both engines.
+- **Matched classic build:** `2.1.1-30cc987c5fce`. Both packages record the same clean source revision (`workingTreeChanged: false`).
+- **Backend unchanged:** the previously verified Render release `dep-dblhapnf3r2c73a5csa0` / source `00711ad` was not redeployed. No database, banking or merchant setting was changed.
+- The initial 2.1.0 deployment `17ac533c` was superseded after the 404 integration gap was discovered. Use 2.1.1, not that intermediate package, for recovery of this enhancement.
+
+### Exact verification results
+
+| Verification | Result |
+|---|---|
+| Unit/API/security tests and typechecks | **417 tests in 31 files passed**, typechecks passed |
+| Color/contrast rules | **43 assertions passed**; includes the raw 404 fallback |
+| Dependency and secret checks | **0 dependency vulnerabilities**, no detected source secrets |
+| New persistent-bar suite | **39/39 passed**, Chromium 320px/1365px and WebKit 390px |
+| Existing PWA regressions | **48/48 passed**, including offline safety and classic removal |
+| Production-built business interactions | **46/46 passed**, isolated fixtures |
+| Full Vite website interactions | **48/48 passed**, including Vite-only injection coverage |
+| Matched package parity | **55 verified HTML files per flavor**, common commerce behavior and removal worker |
+| Live fixed-bar checks | **36/36 route/viewport states**, each at top and bottom; real 404 retained |
+| Live PWA checks | **6/6 online/offline states**, no accessibility findings/JS errors; Chromium installability errors empty |
+| Live public rendering/accessibility | **66 states, 0 findings**, including every sitemap route |
+
+Browser-suite totals repeat scenarios across engines and viewports; they are not counts of unique pages or physical devices. The 46- and 48-case interaction suites overlap. Production checks are read-only. No real order, payment, shipment, email or push was created. Actual OS installation remains a device-level check, not something inferred from a synthetic install event.
+
+Visual review at live 390px and 1365px confirmed the bar stays visible at the page bottom. Both review screenshots were deleted immediately, as requested.
+
+Machine-readable evidence:
+
+- `docs/audits/2026-11-04-engagement-browser.json`
+- `docs/audits/2026-11-04-engagement-production.json`
+- `docs/audits/2026-11-04-engagement-pwa-production.json`
+- `docs/audits/2026-11-04-engagement-public-pages.json`
+
+### Matched deployment archives
+
+Folder: `/home/user/releases/dealmosaic-2.1.1/`. Keep its `release.json`, `SHA256SUMS` and `README.txt` with the pair.
+
+- `dealmosaic-2.1.1-pwa.tar.gz` — **631,090 bytes**; SHA-256 `7365a10607b60f6b5211850e8e04205141f85b6fb810df2ce8c5fb04d369ae88`.
+- `dealmosaic-2.1.1-classic.tar.gz` — **629,447 bytes**; SHA-256 `8efa8717189552b0c350ad40cebeeb1c002637ab2c5f91f3949011a5551e760e`.
+
+The immutable pre-PWA website baseline and verified 2.0.1 recovery point remain retained. The current complete source recovery bundle is `backups/pwa-v2.1.1.bundle`; see document 28 for the verified source archive. The full **17-file PDF set** was regenerated and its contents-page links checked. Keep the distinctly named `36-persistent-install-and-deals.pdf` with the earlier architecture handover. Review screenshots are deleted; generated dependencies, local fixtures and preview processes are removed after verification.
+
+### Still outside this release
+
+This completes the requested persistent invitation and floating ticker; it does not turn browser-controlled installation into a permanent guarantee or create an app-store listing. Genuine offer availability still depends on the existing feed, connection and retailer terms; a listed code is not a checkout-tested saving.
+
+The public direct shop remains empty/paused. The seller's real origin PIN, product/media/pricing facts and private bank/UPI setup are still owner inputs. Carrier booking, automatic bank reconciliation, order emails, combined cart, direct-SKU search/saves/digest/push, partial-refund automation, profit ledger and full grievance workflow remain absent as documented in the existing shop handover. No financial or notification functionality is implied by the new bar.
+

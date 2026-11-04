@@ -2,9 +2,16 @@
 
 > **Current enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
-> **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For current deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
+> **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
-## Latest recovery point — PWA / website 2.0.1
+## Latest recovery point — PWA / website 2.1.1
+
+- Live source `d608712436c056f6b9880a394c8319ea32f86997`, tag `pwa-v2.1.1`, Pages `1a0b443a`.
+- Matched PWA/classic archives and exact SHA-256 values: document 36, section 8; `/home/user/releases/dealmosaic-2.1.1/`.
+- Full-history recovery: `backups/pwa-v2.1.1.bundle`, including current handover and evidence; retain the immutable original website and 2.0.1 bundles as well.
+- The intermediate 2.1.0 deployment is superseded by the verified 2.1.1 real-404 fix. Do not use it as this enhancement's recovery target.
+
+## Previous recovery point — PWA / website 2.0.1
 
 - Live app source: `2faf8e3`, tag `pwa-v2.0.1`; Pages `eaa528a8`.
 - **Source archive:** `backups/dealmosaic_2026-11-04_12-30-38.tar.gz` — **314 checksum-verified files**, **1,714,899 bytes**, SHA-256 `ed9dd82d71a79969eb9f5967dc6da22e401c8fb9629697d1b3cd86ea3617ed79`.
