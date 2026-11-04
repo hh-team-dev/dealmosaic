@@ -24,6 +24,9 @@ const SPA_ROUTES = [
   /^\/browse\/?$/,
   /^\/deals\/?$/,
   /^\/saved\/?$/,
+  /^\/handcrafted\/?$/,
+  /^\/buy\/[a-f0-9-]{36}\/?$/,
+  /^\/direct-orders\/[a-f0-9-]{36}\/?$/,
   /^\/admin\/?$/, // owner control centre — auth is enforced by the API, not by hiding the route
   /^\/c\/[^/]+\/?$/, // category
   /^\/p\/[^/]+\/?$/, // product
@@ -98,7 +101,7 @@ export default {
       const shell = await env.ASSETS.fetch(new URL('/index.html', url));
       return new Response(shell.body, {
         status: 200,
-        headers: shell.headers,
+        headers: new Headers([...shell.headers, ...(/^\/(buy|direct-orders|handcrafted)(\/|$)/.test(pathname) ? [['X-Robots-Tag', 'noindex']] : [])]),
       });
     }
 

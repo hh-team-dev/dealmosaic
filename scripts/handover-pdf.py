@@ -36,12 +36,12 @@ from xhtml2pdf import pisa
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / 'docs'
 
-PLUM = '#452B5E'
-PLUM_MUTED = '#6B5280'
+PLUM = '#4A2B22'
+PLUM_MUTED = '#7A5748'
 SURFACE = '#FFF9F0'
 TINT = '#FDF1E7'
-HAIRLINE = '#EBDDEA'
-COBALT = '#2F49C9'
+HAIRLINE = '#F2DFCE'
+COBALT = '#C2410C'
 
 # The handover set: everything a person needs to pick this project up, in reading
 # order. Other docs in docs/ are historical build reports and are not included by
@@ -55,6 +55,10 @@ CORE = [
     ('27-five-agent-consolidation.md', 'Five-agent consolidation'),
     ('28-backup-and-recovery.md', 'Backup and recovery dossier'),
     ('29-site-tour-fixes.md', 'Site tour: 36 defects fixed'),
+    ('30-earning-and-admin.md', 'Earning and admin'),
+    ('31-affiliate-applications.md', 'Affiliate applications'),
+    ('32-direct-sales-blueprint.md', 'Direct-sales design and roadmap'),
+    ('33-direct-shop-release.md', 'Direct shop: implementation and operating guide'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

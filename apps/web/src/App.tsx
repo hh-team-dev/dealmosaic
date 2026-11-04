@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './lib/session';
 import { ToastProvider } from './components/Toast';
@@ -19,11 +19,15 @@ import Admin from './routes/Admin';
 import Saved from './routes/Saved';
 import { DataSources, HowWeRank } from './routes/Method';
 
+const DirectCollection = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectCollection})));
+const DirectProductPage = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectProductPage})));
+const DirectOrderPage = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectOrderPage})));
+
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
     if (hash) {
-      const el = document.querySelector(hash);
+      const el = document.getElementById(hash.slice(1));
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
@@ -70,6 +74,9 @@ export default function App() {
             <Route path="/browse" element={<Browse />} />
             <Route path="/deals" element={<Deals />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/handcrafted" element={<Suspense fallback={<p role="status">Loading…</p>}><DirectCollection /></Suspense>} />
+            <Route path="/buy/:id" element={<Suspense fallback={<p role="status">Loading…</p>}><DirectProductPage /></Suspense>} />
+            <Route path="/direct-orders/:id" element={<Suspense fallback={<p role="status">Loading…</p>}><DirectOrderPage /></Suspense>} />
           <Route path="/saved" element={<Saved />} />
             <Route path="/c/:slug" element={<Browse />} />
             <Route path="/p/:slug" element={<Product />} />

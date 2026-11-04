@@ -447,7 +447,7 @@ function privacyBody() {
       <nav><a href="/">Home</a></nav>
       <h1>Privacy policy</h1>
       <p>Search and comparison work without an account. Saved deals and recently viewed
-      offers are stored in your own browser and never sent to us.</p>
+      offers can be stored in your browser. Signed-in saved deals are also mirrored to the server for your requested reminders.</p>
       <h2>What we collect, and why</h2>
       <ul>
         <li>An email address, if you create an account — to verify it and to send the alerts you asked for.</li>
@@ -457,6 +457,14 @@ function privacyBody() {
       <h2>What we do not collect</h2>
       <p>No third-party advertising trackers, no cross-site profiles, no selling of data.
       A pincode is not an identity — it is shared by tens of thousands of people.</p>
+      <h2>Direct-order information</h2>
+      <p>Direct checkout records your name, email, phone, delivery address, product, price,
+      shipping selection and payment references. The seller shares necessary delivery details
+      with the booked carrier. We do not collect card numbers, bank passwords or UPI PINs.</p>
+      <p>Your private order link grants access to that order. Keep it private. Direct-order
+      data is separate from the account-only export and deletion; contact the seller on the
+      order for access or correction. Transaction records may be retained for fulfilment,
+      disputes and legal obligations.</p>
       <h2>Who else sees data</h2>
       <p>Transactional email is delivered through Brevo; the database is hosted on Turso.
       Outbound store links pass through an affiliate network, which sets its own cookie at
@@ -474,14 +482,17 @@ function termsBody() {
       <nav><a href="/">Home</a></nav>
       <h1>Terms of use</h1>
       <h2>What DEALMOSAIC is</h2>
-      <p>An independent comparison and discovery service. We are not the seller of any
-      product listed, and no contract of sale is formed with us. Prices and availability
-      belong to the store and can change between the moment we observed them and the
-      moment you arrive.</p>
+      <p>A comparison and discovery service with two distinct purchase paths. Retailer links lead to the retailer's own checkout. Clearly labelled owner-operated products can be purchased directly on DealMosaic, with the actual seller, policies and payable total shown before purchase.</p>
       <h2>What we promise — and what we cannot</h2>
       <p>We promise to show what we observed, dated, with the source named, and to say
       "unknown" rather than guess. We cannot promise a price will still be live when you
       click, and a demonstration price is labelled as one.</p>
+      <h2>Direct purchases</h2>
+      <p>UPI transaction references await a bank-credit check. The selected shipping service
+      is the lowest total among the confirmed services checked for that parcel, not every
+      carrier in India. Selection does not book a parcel and delivery dates are estimates.
+      Do not pay after the payment window expires; contact the seller about late payments,
+      corrections, cancellations, returns or refunds. Statutory consumer rights remain.</p>
       <h2>Community-reported prices</h2>
       <p>Shopper reports are opinions about one moment at one pincode. They are shown
       separately and are never merged into a ranked total.</p>
@@ -499,7 +510,9 @@ function disclosureBody() {
       <h1>Affiliate disclosure</h1>
       <h2>How we earn</h2>
       <p>When you buy through a link on DEALMOSAIC, the store may pay us a small
-      commission. The price you pay is unchanged. We do not charge stores for placement.</p>
+      commission. The price you pay is unchanged. Separately, the operator can earn directly
+      from owner-operated products. These Featured placements disclose that interest and do
+      not alter organic comparison winners or rankings.</p>
       <h2>What commission cannot do</h2>
       <ul>
         <li>It cannot change the ranking. Ranking is verified landed total, then match confidence, then reliability, then delivery, then freshness.</li>

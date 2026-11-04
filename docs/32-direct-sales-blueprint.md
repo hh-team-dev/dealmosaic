@@ -2,7 +2,16 @@
 
 **Decision blueprint · 4 November 2026**
 
-**Status:** researched and designed, NOT implemented or deployed. No products, orders, payment accounts or push subscriptions have been created. No fees authorised. Existing affiliate checkout remains unchanged.
+**Status update:** the scoped implementation now exists; see **`33-direct-shop-release.md`**
+for what is actually built and deployment evidence. The detailed sections below are
+the original design/roadmap, not a claim that every feature is shipped. In particular,
+carrier APIs, multi-item basket, direct-item reminders and push are not implemented.
+Sales remain paused; no real direct products or payment recipient are seeded.
+
+**Owner's subsequent clarification:** West Bengal dispatch, owner is the seller and
+payee, goods may be acquired from different vendors, nationwide intent subject to
+eligibility/serviceability, and cheapest all-in delivery even if slow. Origin PIN
+still required. Manual UPI and mixed ready/made-to-order inventory are confirmed.
 
 ## 1. The concept
 
@@ -209,9 +218,9 @@ and made-to-order**. No fee-bearing gateway is authorised. Payment remains await
 verification until an actual bank credit is matched. Bank terms and shipping costs
 still need checking; no-gateway-fee does not mean fulfilment is free.
 
-**Still missing:** dispatch state and whether the actual seller is the owner or
-another person. Do not infer either from the owner's current location. Product
-entry can be built without those facts; live sales eligibility cannot be finalised.
+**Subsequently resolved:** West Bengal and the owner personally as seller/payee.
+**Still missing:** exact origin PIN, one-time seller/contact/payment details, real product
+data and documented sales eligibility. See doc 33 for the implemented setup screens.
 The following records the full setup decision checklist (payment and stock choices
 above are resolved):
 

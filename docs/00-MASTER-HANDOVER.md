@@ -14,7 +14,31 @@ against production at the time of writing, not recalled from memory.
 
 ---
 
-## 4 November 2026 — direct-sales design addendum (not live)
+## 4 November 2026 — direct-shop implementation (sales paused)
+
+**Current direct-sales state is in `docs/33-direct-shop-release.md`.** This supersedes
+the design-only status below. Owner confirmed West Bengal dispatch, owner as seller
+and payee, goods possibly sourced from vendors, nationwide intent, and lowest all-in
+shipping price even when slow. No exact origin PIN or UPI recipient has been supplied.
+
+Implemented `/admin?tab=shop`, products/options/media, evidence-based reference-price
+arithmetic, private coupon floor, confirmed delivery-quote selection, guest one-item
+checkout, UPI reference/reconciliation, private order status, audited dispatch/refund
+and late-payment exception paths. Default shop state is paused; no fake products,
+rates or live payments are seeded. **Carrier API integration is not done.** Only
+current carrier-confirmed quotes entered in admin can support checkout. No shipping
+booking or paid service is activated. Delivery selection and legal eligibility are
+separate. Scoped limits, file map and release gates are explicit in doc 33.
+
+Verified before deployment: 38 new targeted tests; 345 total / 23 files; 43 design
+assertions; zero reported npm audit vulnerabilities after dependency updates;
+phone browser test at 320–430px with isolated data. Source of truth for subsequent
+production commit/deploy evidence: doc 33's final section. New shop modules are
+lazy-loaded. Obsolete screenshots removed; recovery archives preserved.
+
+---
+
+## Earlier design-only record (superseded by the implementation above)
 
 The owner requested self-managed handcrafted product listings, discounts and own-site
 checkout, without a GSTIN field during product entry. Full researched design and the
@@ -1661,7 +1685,8 @@ Two rules learned the hard way:
 | **`29-site-tour-fixes.md`** | **36 defects found by watching a 9-minute phone tour plus the PDF set it exposed, each traced to its cause and fixed, with the verification log** |
 | **`30-earning-and-admin.md`** | **How the site earns: the tracked click, the affiliate chain, why there is no embedded checkout, and how the owner runs `/admin`** |
 | **`31-affiliate-applications.md`** | **What was applied for, what the network answered, and the one form left for the owner — every field prefilled** |
-| **`32-direct-sales-blueprint.md`** | **Proposed handcrafted direct sales: product editor, discounts, disclosed placement, no-GST eligibility, payments, orders and notification safeguards — not implemented** |
+| **`32-direct-sales-blueprint.md`** | **Original design and remaining roadmap; implementation status is in doc 33** |
+| **`33-direct-shop-release.md`** | **Actual direct-shop release, operating guide, cheapest-confirmed-shipping rules, pricing, tests, remaining gates and exact deployment evidence** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

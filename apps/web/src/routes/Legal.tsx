@@ -44,9 +44,9 @@ export function Privacy() {
   return (
     <LegalPage
       title="Privacy policy"
-      updated="2 November 2026"
+      updated="4 November 2026"
       path="/privacy"
-      description="What DEALMOSAIC collects, why, how long it is kept, and how to export or delete everything in one click. Written in plain English, compliant with India's DPDP Act."
+      description="What DealMosaic collects for accounts, comparisons and direct orders, and how to request access or deletion."
     >
       <div className="callout callout-info">
         <div className="callout-title">
@@ -54,8 +54,7 @@ export function Privacy() {
         </div>
         <p className="small" style={{ margin: 0, color: 'var(--ink)' }}>
           We collect what an account genuinely needs: your email, a display name, a password hash and your preferences.
-          We do not run ad networks or third-party trackers. You can export everything or delete everything, instantly,
-          from your settings.
+          We do not run ad networks or third-party trackers. Account data can be managed from Settings. Direct orders also need delivery and payment-reconciliation records, described below.
         </p>
       </div>
 
@@ -76,7 +75,7 @@ export function Privacy() {
           code (needed only because quick-commerce prices differ per dark store).
         </li>
         <li>
-          <strong>Phone number</strong> — strictly optional, used only for account recovery if you choose to add it.
+          <strong>Phone number</strong> — optional on an account; required on a direct order for fulfilment and customer support.
         </li>
         <li>
           <strong>Session metadata</strong> — a hash of your IP address and your browser’s user-agent, used to protect
@@ -90,11 +89,24 @@ export function Privacy() {
       <h2>What we do not collect</h2>
       <ul>
         <li>Your date of birth. We ask a single age confirmation instead.</li>
-        <li>Card, UPI, bank or payment details. DEALMOSAIC never processes a payment.</li>
+        <li>Card numbers, CVV, bank passwords or UPI PINs. Direct orders record transaction references and payment status, not your payment credentials.</li>
         <li>Retailer account credentials. We never ask for them, and never will.</li>
         <li>GPS location. A PIN code is typed by you, optionally, and nothing else.</li>
         <li>Advertising identifiers, cross-site trackers, session recording or heatmaps.</li>
       </ul>
+
+      <h2>Direct orders</h2>
+      <p>When you buy directly, we store your name, email, phone, delivery address, selected product,
+        price, shipping service, transaction references and order history. The seller uses these to fulfil
+        the order and handle payment checks, returns and disputes, and shares the necessary delivery details
+        with the booked carrier. Checking an unconfirmed PIN can record the product/PIN pair for up to seven days,
+        without a name or delivery address.</p>
+      <p>Your private order-access token is kept in this browser's session storage and in your private order link.
+        The order database stores a hash of it. Anyone with your private link can view that order;
+        do not publish it. Direct-order details are not included in the account-only export or account deletion.
+        Contact the seller shown on your order for access, correction or deletion requests. Necessary transaction
+        records may be retained for fulfilment, disputes and legal obligations; they are not used to enrol you
+        in marketing automatically.</p>
 
       <h2>Cookies</h2>
       <p>
@@ -127,13 +139,12 @@ export function Privacy() {
       </p>
       <ul>
         <li>Access and correct your profile and preferences.</li>
-        <li>Export everything we hold as a JSON file.</li>
+        <li>Export your account data as a JSON file. Direct-order requests are handled separately by the seller.</li>
         <li>Delete the account, which removes your profile, preferences, PIN code, sessions and activity immediately.</li>
         <li>Withdraw consent for optional items (phone, PIN code, email notifications) at any time.</li>
       </ul>
       <p>
-        We keep no shadow copies. Some security logs are retained in a minimal, hashed form for abuse prevention, and
-        records required for legal compliance would be disclosed to you if they existed.
+        Some security records are retained for abuse prevention. Account deletion does not automatically erase direct-order records needed for fulfilment, disputes or legal compliance. Ask the seller about your specific order.
       </p>
 
       <h2>Children</h2>
@@ -155,16 +166,24 @@ export function Terms() {
   return (
     <LegalPage
       title="Terms of use"
-      updated="2 November 2026"
+      updated="4 November 2026"
       path="/terms"
       description="The rules for using DEALMOSAIC: what our prices are and are not, what we promise about ranking, and the limits of that promise."
     >
       <h2>What DEALMOSAIC is</h2>
       <p>
-        DEALMOSAIC is an independent price-comparison and purchase-decision tool. We do not sell products, take
-        payments, hold stock, or arrange delivery. Every purchase happens on the retailer’s own website, under the
-        retailer’s terms.
+        DEALMOSAIC provides retailer comparisons and offers. Retailer links lead to that retailer’s checkout and terms. Separately, clearly labelled owner-operated listings can be purchased on DealMosaic. The actual seller, delivery terms, return policy and payable total are shown before that direct purchase.
       </p>
+
+      <h2>Direct purchases</h2>
+      <p>For a direct order, pay the displayed amount to the seller's displayed UPI recipient.
+        Submitting a transaction reference is not proof of payment; the seller checks the bank credit.
+        A delivery quote chooses the lowest total among the confirmed services checked for that parcel,
+        not necessarily every carrier in India. Estimated transit includes the disclosed preparation and
+        pickup wait and is not a delivery guarantee. Selecting a carrier does not book a parcel.</p>
+      <p>Do not pay after an order's payment window closes. Contact the seller about late payments,
+        corrections, cancellations, returns or refunds. The order preserves the policies and prices
+        accepted at purchase. Product-specific policies do not remove statutory consumer rights.</p>
 
       <h2>What we promise — and what we cannot</h2>
       <ul>
@@ -234,7 +253,7 @@ export function Disclosure() {
   return (
     <LegalPage
       title="Affiliate disclosure"
-      updated="2 November 2026"
+      updated="4 November 2026"
       path="/disclosure"
       description="DEALMOSAIC may earn a commission on some retailer links. It never changes the price you pay and is never an input to our ranking — here is exactly how that works."
     >
@@ -250,7 +269,7 @@ export function Disclosure() {
 
       <h2>How we earn</h2>
       <p>
-        DEALMOSAIC is free to use. Our intended revenue is affiliate commission: if you click through to a retailer and
+        DEALMOSAIC is free to use. One source of revenue is affiliate commission: if you click through to a retailer and
         buy, that retailer may pay us a percentage. This is the same model used by most comparison sites — the difference
         is what we do with it.
       </p>
@@ -263,8 +282,7 @@ export function Disclosure() {
         <li>It cannot hide a cheaper non-affiliated offer. If a plain link is the best deal, it ranks first.</li>
       </ul>
       <p>
-        Sponsored placements are not part of the product today. If they are ever introduced, they will be visually
-        separated from organic results and labelled as sponsored, in a way you cannot miss.
+        Owner-operated products may appear in clearly labelled Featured placements. The operator has a direct financial interest in these sales; they are not independent recommendations or comparison winners. They do not change the lowest-price comparison ranking. Any paid third-party sponsorship will be labelled separately.
       </p>
 
       <h2>Where we are not affiliated</h2>

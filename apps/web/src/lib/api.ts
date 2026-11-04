@@ -38,11 +38,12 @@ interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   body?: unknown;
   signal?: AbortSignal;
+  headers?: Record<string, string>;
 }
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const method = options.method ?? 'GET';
-  const headers: Record<string, string> = { accept: 'application/json' };
+  const headers: Record<string, string> = { accept: 'application/json', ...options.headers };
 
   if (options.body !== undefined) headers['content-type'] = 'application/json';
   if (method !== 'GET' && csrfToken) headers['x-csrf-token'] = csrfToken;

@@ -1,3 +1,4 @@
+import { DirectShelf } from '../components/DirectShelf';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
@@ -210,6 +211,7 @@ export default function Landing() {
             </div>
           </div>
         </section>
+        <DirectShelf />
 
         {/* ------------------------- discovery wall --------------------------- */}
         {/* Placed above every explanatory section on purpose: a visitor should be

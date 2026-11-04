@@ -1,5 +1,11 @@
 # DEALMOSAIC — Complete Project Handover
 
+> **4 November 2026 update:** for the new direct-shop routes, data model, operating
+> guide and actual implementation limits, read `33-direct-shop-release.md` and the
+> latest master handover first. The historical technical description below predates
+> owner-operated checkout. Carrier APIs remain unconnected and direct sales paused.
+
+
 > **The single entry point is [`00-MASTER-HANDOVER.md`](00-MASTER-HANDOVER.md).**
 > This file remains the detailed technical log — incident history, schema notes and
 > per-module detail — and is the reference the master document links into.

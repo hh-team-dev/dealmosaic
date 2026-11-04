@@ -16,6 +16,7 @@ import { couponRoutes } from './routes/coupons.js';
 import { alertRoutes } from './routes/alerts.js';
 import { maintenanceRoutes } from './routes/maintenance.js';
 import { adminRoutes } from './routes/admin.js';
+import { directRoutes, directAdminRoutes } from './routes/direct.js';
 import { goRoutes } from './routes/go.js';
 import { maybeRunDaily } from './services/daily-job.js';
 import { seedCatalogue } from './db/catalog-seed.js';
@@ -127,6 +128,8 @@ app.route('/api/coupons', couponRoutes);
 app.route('/api/alerts', alertRoutes);
 app.route('/api/maintenance', maintenanceRoutes);
 app.route('/api/admin', adminRoutes);
+app.route('/api/direct', directRoutes);
+app.route('/api/direct-admin', directAdminRoutes);
   // The money route: every coupon tap leaves through here so the sale can be
   // attributed to us. See routes/go.ts.
   app.route('/api/go', goRoutes);

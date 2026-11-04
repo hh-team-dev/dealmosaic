@@ -1,3 +1,4 @@
+import { expireOrders } from './direct-shop.js';
 import { db, nowIso } from '../db/index.js';
 import { recordDailySnapshots } from './snapshots.js';
 import { runAlerts } from './alerts.js';
@@ -212,6 +213,9 @@ export async function runDailyNow(_source: string): Promise<{
     ok = false;
     steps.push({ step: 'saved-digest', ok: false, error: (err as Error).message });
   }
+
+  try { steps.push({ step: 'direct-order-expiry', ok: true, expired: await expireOrders() }); }
+  catch (err) { ok = false; steps.push({ step: 'direct-order-expiry', ok: false, error: (err as Error).message }); }
 
   const tookMs = Date.now() - started;
   await db

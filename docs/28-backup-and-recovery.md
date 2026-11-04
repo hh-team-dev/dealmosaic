@@ -1,5 +1,7 @@
 # 28 — Backup and recovery dossier
 
+> **4 November 2026 workspace update:** obsolete screenshots have been removed from the working tree. The screenshot entries in the historical archive manifest below describe that immutable archive, not current files. Existing recovery archives are preserved.
+
 **Prepared:** 3 November 2026, 14:21 UTC · **Release:** tag `v1.1-warm`, commit `a29a461`
 **Live:** `https://dealmosaic.pages.dev` (Cloudflare Pages `7fa2430b`) · API `https://dealmosaic-api.onrender.com`
 **Status:** every artefact below was created, checksum-verified and (for the database) restored into a

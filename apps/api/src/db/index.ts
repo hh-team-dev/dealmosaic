@@ -177,6 +177,7 @@ export async function initDb(): Promise<void> {
 
   await db.exec(readFileSync(join(__dirname, 'schema.sql'), 'utf8'));
   await db.exec(readFileSync(join(__dirname, 'catalog.sql'), 'utf8'));
+  await db.exec(readFileSync(join(__dirname, 'direct.sql'), 'utf8'));
 
   const hasColumn = async (table: string, column: string): Promise<boolean> => {
     const rows = await db.prepare(`PRAGMA table_info(${table})`).all();

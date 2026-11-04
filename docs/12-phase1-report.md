@@ -77,7 +77,7 @@ npm run dev            # API on :8787, website on :5173
 | Self-hosted subset fonts (no CDN) | ✅ Live | 32 KB + 27 KB woff2, preloaded |
 | Session persists across reload; protected routes redirect to login | ✅ Verified | Browser test |
 
-**Screenshots:** [`docs/screenshots/`](screenshots/) — landing (mobile), verification, dashboard, comparison at desktop/tablet/mobile.
+**Screenshots:** historical captures were removed on 4 November 2026 at the owner’s standing request. Keep textual test results; do not retain new screenshots.
 
 ---
 

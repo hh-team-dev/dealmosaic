@@ -1,3 +1,4 @@
+import { DirectShelf } from '../components/DirectShelf';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
@@ -196,6 +197,7 @@ export default function Deals() {
               </div>
             </div>
           </header>
+          {!filtered && <DirectShelf />}
 
           {/* ---- Filters ---- */}
           <div className="deals-controls">

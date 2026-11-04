@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Chrome } from '../components/PublicChrome';
 import { Icon } from '../components/Icon';
@@ -22,6 +22,8 @@ import {
   type AdminUser,
 } from '../lib/admin-api';
 
+const ShopControl = lazy(() => import('../components/ShopControl'));
+
 /**
  * /admin — the owner's control centre.
  *
@@ -34,9 +36,10 @@ import {
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
 
 const TABS: Array<{ id: Tab; label: string }> = [
+  { id: 'shop', label: 'My shop' },
   { id: 'overview', label: 'Overview' },
   { id: 'revenue', label: 'Earnings' },
   { id: 'coupons', label: 'Coupons' },
@@ -135,6 +138,7 @@ export default function Admin() {
                 ))}
               </nav>
 
+              {tab === 'shop' && <Suspense fallback={<p role="status">Loading shop controls…</p>}><ShopControl /></Suspense>}
               {tab === 'overview' && <Overview onError={fail} />}
               {tab === 'revenue' && <Revenue onError={fail} />}
               {tab === 'coupons' && <Coupons onError={fail} />}
