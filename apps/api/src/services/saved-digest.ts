@@ -1,5 +1,5 @@
 import { db, newId, nowIso } from '../db/index.js';
-import { sendMail } from '../lib/mailer.js';
+import { queueEmail } from '../lib/outbox.js';
 
 /**
  * THE SAVED-DEAL NUDGE.
@@ -141,11 +141,33 @@ export function buildDigestEmail(
  * written to, how often, and what the email says — can then be tested without
  * standing up an SMTP server or racing an in-memory database.
  */
-export type Mailer = (input: { to: string; subject: string; body: string; actionUrl?: string | null }) => Promise<{ sent: boolean; error?: string }>;
+export type Mailer = (input: {
+  to: string;
+  subject: string;
+  body: string;
+  actionUrl?: string | null;
+}) => Promise<{ sent: boolean; error?: string }>;
+
+/**
+ * The real mailer is `queueEmail`, not `sendMail`, and the difference matters:
+ * `queueEmail` writes the message to `dev_outbox` **before** handing it to Brevo,
+ * so there is a record of every email this feature ever tried to send, with the
+ * provider's own error when one fails. A digest that only calls `sendMail` leaves
+ * nothing behind to debug when a shopper says "I never got it".
+ */
+const defaultMailer: Mailer = async (input) => {
+  const message = await queueEmail({
+    to: input.to,
+    subject: input.subject,
+    body: input.body,
+    actionUrl: input.actionUrl ?? undefined,
+  });
+  return { sent: message.sentAt !== null, ...(message.sendError ? { error: message.sendError } : {}) };
+};
 
 export async function runSavedDigests(
   now: Date = new Date(),
-  mail: Mailer = sendMail,
+  mail: Mailer = defaultMailer,
 ): Promise<DigestResult> {
   const nowMs = now.getTime();
 
