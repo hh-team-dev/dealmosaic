@@ -123,3 +123,41 @@ Completed pre-deployment checks:
 - Non-fatal build notes: shared API modules are both statically and dynamically imported, so those particular imports do not split another chunk. Commerce chunks still split normally.
 
 The pre-audit production code was `44163ea` (Pages `31f0d19a`, Render `dep-dblgk25g1s2s73elut8g`), with documentation at `d407e5b`. Production deployment and live re-verification are recorded below when observed; local passing tests alone are not deployment evidence.
+
+
+### Observed production deployment
+
+- **Code commit:** `00711adc7557ac6882a890c7436875232cc7d656`.
+- **Cloudflare Pages:** `48e99231` (`https://48e99231.dealmosaic.pages.dev`); main site serves `index-BoNRY-lY.js` and the updated CSS.
+- **Render:** `dep-dblhapnf3r2c73a5csa0`, explicitly observed **live on `00711ad`**, not merely accepted/queued.
+- Read-only production owner checks at **320px**: Overview, Coupons, Price reports, People, Audit log, My shop and Shop settings had no page exceptions or horizontal page overflow. The Price reports API returned **200**.
+- A genuinely expired production offer still marked as listed was tested through the redirect endpoint: **410, zero click rows added**. No merchant checkout was opened.
+- The temporary five-minute verification session was removed in `finally`; the database check confirmed **zero remaining rows** for that session.
+- **Production shop remains paused.** Products, orders, rates, media and settings tables were each verified at **zero rows**. No commercial fixture was deployed.
+- Live mobile homepage was visually inspected at 390px; the warm palette/branding/layout remain coherent. The temporary screenshot was immediately deleted.
+- GitHub's normal push endpoint repeatedly returned HTTP 500. The release was safely published through Git data APIs instead: the full tree was checked identical to the tested local tree, the expected parent was checked, and the branch moved **without force**. REST commit metadata produced the new ID above; local history was aligned to that identical tree. No source change was introduced by this recovery.
+
+
+### Live public re-scan after deployment
+
+**66/66 page states completed with zero detected page exceptions, API 5xx responses, horizontal page overflow or axe WCAG A/AA/2.1-AA violations at 390px.** Every scanned state had one H1. The two pre-fix scrollable-region findings are cleared. Exact paths and results: `docs/audits/2026-11-04-after.json`; baseline: `2026-11-04-before.json`.
+
+Coverage is deliberately separated: **66 live public page states**, **45 isolated authenticated/layout states** and **48 isolated interaction scenarios**. These are not 159 distinct pages and should not be added together as such. Read-only production owner evidence is recorded separately in `2026-11-04-production-owner.json`.
+
+
+### Handover and recovery
+
+The master, technical handover, direct-shop guide and backup dossier were updated
+in the same pass. The full PDF handover set was regenerated, including this report,
+and its contents-page links were checked by `scripts/verify-pdfs.py`.
+
+Source archive: **`dealmosaic_2026-11-04_11-26-58.tar.gz`**, **295 files verified**,
+**1,642,450 bytes**, SHA-256
+`1ceb5ddd9fc12eed073ea43445c3c79a0f0efdd01316eaa768aae272083a7e47`.
+This snapshot contains the deployed application source and audit evidence; this
+self-referential backup note and final documentation-only commit follow it.
+
+Local audit servers are stopped after verification. Temporary DB/session files,
+screenshots and generated browser/build/dependency caches are removed; reusable
+source tests and the four retained release/branding backups are kept. No scratch
+`scripts/_*.ts` file is part of this release.

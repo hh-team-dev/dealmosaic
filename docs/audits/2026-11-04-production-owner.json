@@ -1,0 +1,71 @@
+{
+  "at": "2026-11-04T11:24:00.559Z",
+  "coverage": "Read-only production owner checks; temporary session removed",
+  "shopPaused": true,
+  "counts": {
+    "direct_products": 0,
+    "direct_orders": 0,
+    "direct_rates": 0,
+    "direct_media": 0,
+    "direct_settings": 0
+  },
+  "results": [
+    {
+      "state": "admin:overview",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "admin:coupons",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "admin:reports",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "admin:people",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "admin:audit",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "admin:shop",
+      "width": 320,
+      "overflow": false,
+      "alerts": [],
+      "errors": []
+    },
+    {
+      "state": "shop-settings",
+      "width": 320,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "state": "live-price-report-api",
+      "status": 200
+    },
+    {
+      "state": "expired-production-offer-blocked",
+      "status": 410,
+      "clickRowsAdded": 0
+    }
+  ]
+}

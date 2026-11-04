@@ -1,6 +1,19 @@
 # 28 — Backup and recovery dossier
 
-## Latest release backup — 4 November 2026, 10:36:14 UTC
+## Latest release backup — 4 November 2026, 11:26:58 UTC
+
+- Archive: `dealmosaic_2026-11-04_11-26-58.tar.gz`
+- **295 files verified**, all manifest checksums match; **1,642,450 bytes**.
+- SHA-256: `1ceb5ddd9fc12eed073ea43445c3c79a0f0efdd01316eaa768aae272083a7e47`.
+- Includes code tree deployed as `00711ad`, reusable audit suites and compact
+  before/after/interaction/owner evidence. This archive precedes the self-referential
+  backup-record and final documentation-only commit; it contains the complete tested
+  application source. No test DB, temporary session file or screenshot is included.
+- Four release archives remain, plus original branding recovery assets. The normal
+  retention policy pruned the oldest `18-43-32` archive during this audit; the short-lived
+  intermediate `11-24-34` archive was replaced by this complete evidence snapshot.
+
+## Previous release backup — 4 November 2026, 10:36:14 UTC
 
 - Archive: `dealmosaic_2026-11-04_10-36-14.tar.gz`
 - Files verified: **278**; all manifest checksums match.

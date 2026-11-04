@@ -17,6 +17,13 @@ against production at the time of writing, not recalled from memory.
 ## 4 November 2026 — site-wide audit and recovery fixes
 
 **Current audit and deployment evidence: [34-sitewide-audit.md](34-sitewide-audit.md).**
+Production code **`00711ad`**, Pages **`48e99231`**, Render **`dep-dblhapnf3r2c73a5csa0`**
+were verified live. **381 tests / 27 files**, **48 phone/desktop interaction scenarios**,
+**45 authenticated/layout states**, **66 clean live public page states**, 43 design
+assertions and zero reported dependency vulnerabilities. Production shop is still
+paused and all five commerce tables remain empty. Owner's 320px live views were
+checked without mutation; the temporary session was removed.
+
 It supersedes older test counts and records the precise flaw → fix → regression
 matrix, all-page rendering coverage, actual browser interactions, remaining
 coverage limits and unchanged commercial gates. The established warm design and
