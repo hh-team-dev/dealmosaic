@@ -1,7 +1,7 @@
 {
   "name": "dealmosaic",
   "private": true,
-  "version": "2.1.1",
+  "version": "2.2.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -38,7 +38,8 @@
     "build:classic": "VITE_PWA_MODE=classic npm run build",
     "test:pwa": "playwright test -c playwright.pwa.config.mjs",
     "package:pwa": "node scripts/package-pwa.mjs",
-    "test:engagement": "playwright test -c playwright.engagement.config.mjs"
+    "test:engagement": "playwright test -c playwright.engagement.config.mjs",
+    "test:hospitality": "playwright test -c playwright.hospitality.config.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

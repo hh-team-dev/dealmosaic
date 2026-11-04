@@ -1,12 +1,14 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **Current enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
+> **2.2.0 hospitality release:** see [37-hotels-and-dining.md](37-hotels-and-dining.md) for Hotels, Dining, the universal dock, nine-region discovery scope, verification and recovery. Earlier release evidence below is historical.
+
+> **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **4 November 2026** · Version **2.1.1** · Current release evidence is in document 36.
+Last updated: **4 November 2026** · Version **2.2.0** · Current release evidence is in document 37.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -18,7 +20,7 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — PWA and website 2.0.1
+## Previous verified release — PWA and website 2.0.1
 
 **Source/tag:** `2faf8e3` / `pwa-v2.0.1`; **Pages:** `eaa528a8`; **build:** `2.0.1-ca9abf43ff28`. The backend is unchanged at Render `dep-dblhapnf3r2c73a5csa0` / `00711ad`. **409 tests**, **48 PWA scenarios**, **46 production-built business flows**, **67 live public states** and **6 live PWA states** passed their checks. Physical Android/iPhone OS installation remains a device-specific confirmation, not a claimed automated test.
 

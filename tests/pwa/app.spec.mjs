@@ -45,3 +45,9 @@ test('real classic package switches back to the website and can resume the PWA w
 test('corrupt saved records cannot break an offline cold start',async({page,context})=>{await ready(page);await page.evaluate(data=>localStorage.setItem('dealmosaic.saved.v1',JSON.stringify([null,42,{},...data])),saved);await context.setOffline(true);await page.goto('/saved');await expect(page.getByRole('heading',{name:'Saved deals',exact:true})).toBeVisible();await expect(page.getByText('Local offline test note',{exact:true})).toBeVisible();});
 
 test('evicted offline files produce an honest branded recovery page instead of a blank screen',async({page,context})=>{await ready(page);await page.evaluate(async()=>{for(const name of await caches.keys())if(name.startsWith('dealmosaic-pwa-'))await caches.delete(name);});await context.setOffline(true);const response=await page.goto('/saved');expect(response.status()).toBe(503);await expect(page.getByRole('heading',{name:'Reconnect to open DealMosaic'})).toBeVisible();await expect(page.getByText('The offline app files are unavailable.',{exact:false})).toBeVisible();await axe(page);});
+
+
+test('hospitality cold-offline routes keep navigation but do not claim live inventory',async({page,context})=>{
+ await page.goto('/install');await page.getByText('Offline ready',{exact:true}).waitFor();await page.waitForFunction(()=>Boolean(navigator.serviceWorker.controller));await context.setOffline(true);
+ for(const path of ['/stays?city=jaipur','/dining?city=mumbai']){await page.goto(path);await expect(page.getByRole('heading',{name:'Your saved list is still here'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Explore DealMosaic'})).toBeVisible();await expect(page.locator('.hospitality-offer')).toHaveCount(0);await expect(page.locator('.hospitality-brand-card')).toHaveCount(0);}
+});

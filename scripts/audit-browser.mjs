@@ -9,7 +9,7 @@ const base=option('--base','http://127.0.0.1:5173');const output=option('--outpu
 const axe=readFileSync(new URL('../node_modules/axe-core/axe.min.js',import.meta.url),'utf8');
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const context=await browser.newContext({viewport:{width:Number(option('--width','390')),height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
-let paths=['/','/browse','/deals','/saved','/search','/search?q=iphone','/search?q=unfindable-test-query-742','/how-we-rank','/data-sources','/login','/register','/forgot-password','/reset-password','/verify-email','/privacy','/terms','/disclosure','/contact','/admin','/admin?tab=shop','/handcrafted','/app','/app/settings','/this-page-does-not-exist'];
+let paths=['/','/stays','/dining','/install','/browse','/deals','/saved','/search','/search?q=iphone','/search?q=unfindable-test-query-742','/how-we-rank','/data-sources','/login','/register','/forgot-password','/reset-password','/verify-email','/privacy','/terms','/disclosure','/contact','/admin','/admin?tab=shop','/handcrafted','/app','/app/settings','/this-page-does-not-exist'];
 if(args.includes('--all')){const xml=await (await fetch(base+'/sitemap.xml')).text();paths=[...new Set([...paths,...[...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>new URL(m[1]).pathname)])];}
 if(args.includes('--paths-from')) paths=[...new Set([...paths,...JSON.parse(readFileSync(option('--paths-from',''),'utf8')).results.map(p=>p.path)])];
 const results=[];

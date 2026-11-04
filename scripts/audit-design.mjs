@@ -13,6 +13,7 @@ import { join } from 'node:path';
 
 const CSS_FILES = [
   'apps/web/src/design/theme.css',
+  'apps/web/src/design/hospitality.css',
   'apps/web/public/404.html',
 ];
 
@@ -63,6 +64,11 @@ const WHITE = '#FFFFFF';
 
 /** Every colour the UI uses for TEXT must clear these pairs. */
 const TEXT_PAIRS = [
+  ['hospitality gold', '#8A5A00', '#FFF9F0'],
+  ['white on hospitality gold', WHITE, '#8A5A00'],
+  ['hospitality berry', '#A32950', '#FFF8F4'],
+  ['white on hospitality berry', WHITE, '#A32950'],
+  ['hospitality berry on rose', '#A32950', '#F8DCE3'],
   ['--ink (Roast)', '#4A2B22', SURFACE],
   ['--ink-muted', '#7A5748', SURFACE],
   ['--ink-soft', '#8D6A57', SURFACE],

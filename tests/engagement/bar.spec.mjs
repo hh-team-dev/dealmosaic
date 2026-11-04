@@ -13,7 +13,7 @@ async function assertFixed(page){await expect(bar(page)).toHaveCount(1);await ex
 async function axe(page){await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});expect(await page.evaluate(async()=>(await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})))).toEqual([]);}
 
 test('one fixed bar survives top and bottom scrolling across every route family',async({page})=>{
- for(const path of ['/','/deals','/saved','/browse','/search','/how-we-rank','/data-sources','/privacy','/terms','/disclosure','/contact','/login','/register','/forgot-password','/reset-password','/verify-email','/install','/handcrafted','/buy/'+fixtures.productId,'/direct-orders/00000000-0000-0000-0000-000000000001','/admin','/app','/app/settings','/not-a-real-page']){
+ for(const path of ['/','/stays','/dining','/deals','/saved','/browse','/search','/how-we-rank','/data-sources','/privacy','/terms','/disclosure','/contact','/login','/register','/forgot-password','/reset-password','/verify-email','/install','/handcrafted','/buy/'+fixtures.productId,'/direct-orders/00000000-0000-0000-0000-000000000001','/admin','/app','/app/settings','/not-a-real-page']){
   const response=await page.goto(path);if(path==='/not-a-real-page')expect(response.status()).toBe(404);await expect(bar(page).getByRole('button',{name:'Install app',exact:false})).toBeVisible();await assertFixed(page);
   await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));await assertFixed(page);
  }

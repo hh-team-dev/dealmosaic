@@ -1,5 +1,7 @@
 # DealMosaic 2.1.1 — persistent install invitation and floating deals
 
+> **2.2.0 hospitality release:** see [37-hotels-and-dining.md](37-hotels-and-dining.md) for Hotels, Dining, the universal dock, nine-region discovery scope, verification and recovery. Earlier release evidence below is historical.
+
 **Date:** 4 November 2026. **Scope:** the same enhancement in website, PWA and current-feature classic builds. This is the current enhancement handover; `35-pwa-handover.md` preserves the earlier 2.0.1 architecture and recovery history.
 
 ## 1. What the owner asked for

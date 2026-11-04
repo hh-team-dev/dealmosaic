@@ -62,6 +62,7 @@ CORE = [
     ('34-sitewide-audit.md', 'Site-wide audit: fixes, tests and remaining gates'),
     ('35-pwa-handover.md', 'PWA 2.0.1: install, shared website, safety and fallback'),
     ('36-persistent-install-and-deals.md', '2.1.1: persistent installation and floating deals'),
+    ('37-hotels-and-dining.md', '2.2.0: Hotels, Dining and universal navigation'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

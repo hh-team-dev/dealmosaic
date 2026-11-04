@@ -1,0 +1,141 @@
+{
+  "checkedAt": "2026-11-04T14:43:39.102Z",
+  "scope": "Read-only public URL checks. HTTP restrictions/timeouts do not prove a link is dead. No CAPTCHA bypass, booking, order or application. Official pages separately reviewed with readable-source fetches.",
+  "results": [
+    {
+      "url": "https://www.makemytrip.com/hotels/delhi-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/mumbai-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/bangalore-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/chennai-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/hyderabad-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/kolkata-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/pune-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/ahmedabad-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.makemytrip.com/hotels/jaipur-hotels.html",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.mcdonaldsindia.com/",
+      "status": 200,
+      "finalUrl": "https://www.mcdonaldsindia.com/",
+      "title": "McDonald's"
+    },
+    {
+      "url": "https://restaurants.kfc.co.in/",
+      "status": 200,
+      "finalUrl": "https://restaurants.kfc.co.in/",
+      "title": "KFC Locator/Finder | Restaurants"
+    },
+    {
+      "url": "https://online.kfc.co.in/",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.dominos.co.in/",
+      "status": 200,
+      "finalUrl": "https://www.dominos.co.in/",
+      "title": "Domino’s Pizza – Order Online | Get 2 Regular Pizza @99 Each"
+    },
+    {
+      "url": "https://www.pizzahut.co.in/",
+      "status": 200,
+      "finalUrl": "https://www.pizzahut.co.in/",
+      "title": "Order Pizza Online - Delivery and Takeaway"
+    },
+    {
+      "url": "https://www.dominos.co.in/store-location",
+      "status": 200,
+      "finalUrl": "https://www.dominos.co.in/store-location",
+      "title": "Domino’s Pizza – Order Online | Get 2 Regular Pizza @99 Each"
+    },
+    {
+      "url": "https://restaurants.pizzahut.co.in/",
+      "status": 200,
+      "finalUrl": "https://restaurants.pizzahut.co.in/",
+      "title": "Find the Best Pizza Near Me - Top Rated Pizzerias"
+    },
+    {
+      "url": "https://restaurants.wowmomo.com/",
+      "status": 200,
+      "finalUrl": "https://restaurants.wowmomo.com/",
+      "title": "Wow! Momo Locator/Finder | Momo Restaurant"
+    },
+    {
+      "url": "https://www.wowmomo.com/",
+      "status": 200,
+      "finalUrl": "https://www.wowmomo.com/",
+      "title": "WOW! Momo – India&#039;s Fastest Growing QSR Chain"
+    },
+    {
+      "url": "https://www.thechinesewok.com/",
+      "status": 429,
+      "finalUrl": "https://www.thechinesewok.com/"
+    },
+    {
+      "url": "https://www.thechinesewok.com/locate",
+      "status": 429,
+      "finalUrl": "https://www.thechinesewok.com/locate"
+    },
+    {
+      "url": "https://www.speciality.co.in/",
+      "error": "TimeoutError"
+    },
+    {
+      "url": "https://www.tacobell.co.in/",
+      "status": 403,
+      "finalUrl": "https://www.tacobell.co.in/"
+    },
+    {
+      "url": "https://www.thechinesewok.com/order-now",
+      "status": 429,
+      "finalUrl": "https://www.thechinesewok.com/order-now"
+    },
+    {
+      "url": "https://www.barbequenation.com/",
+      "status": 200,
+      "finalUrl": "https://www.barbequenation.com/",
+      "title": "#1 buffet grill barbeque restaurant near you. Exciting Offers on lunch dinner with our trademark. | Barbeque Nation"
+    },
+    {
+      "url": "https://www.booking.com/",
+      "status": 202,
+      "finalUrl": "https://www.booking.com/",
+      "title": null
+    },
+    {
+      "url": "https://www.cleartrip.com/hotels",
+      "status": 403,
+      "finalUrl": "https://www.cleartrip.com/hotels"
+    },
+    {
+      "url": "https://www.itchotels.com/in/en",
+      "status": 200,
+      "finalUrl": "https://www.itchotels.com/in/en",
+      "title": "Experience Luxury 5-Star Hotels &amp; Resorts in India - ITC Hotels"
+    }
+  ]
+}

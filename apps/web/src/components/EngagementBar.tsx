@@ -13,6 +13,8 @@ const readPaused = () => { try { return localStorage.getItem(MOTION_KEY) === '1'
 export function EngagementBar() {
   const app = usePwa();
   const location = useLocation();
+  const routePath = location.pathname.replace(/\/$/, '') || '/';
+  const cityContext = /^\/(stays|dining)$/.test(routePath) ? new URLSearchParams(location.search).get('city') : null;
   const toast = useToast();
   const bar = useRef<HTMLElement>(null);
   const dirty = useRef(false);
@@ -26,7 +28,7 @@ export function EngagementBar() {
   const still = paused || reduced || !visible || editing || help || otherDialog || app.busy;
   const apple = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   useEffect(() => { if (app.message && requestedInstall.current) { requestedInstall.current = false; toast.push(app.message, 'info'); } }, [app.message, toast]);
-  useEffect(() => { dirty.current = false; setEditing(false); }, [location.pathname, location.search]);
+  useEffect(() => { dirty.current = false; setEditing(false); }, [location.pathname]);
   useLayoutEffect(() => {
     const update = () => document.documentElement.style.setProperty('--engagement-height', `${Math.ceil(bar.current?.getBoundingClientRect().height || 96)}px`);
     update(); const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
@@ -52,8 +54,8 @@ export function EngagementBar() {
     return () => { observer.disconnect(); media.removeEventListener?.('change', preference); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('storage', storage); document.removeEventListener('input', change, true); document.removeEventListener('change', change, true); document.removeEventListener('focusin', focus); document.removeEventListener('focusout', blur); };
   }, []);
   function beforeNavigate() {
-    if (dirty.current && sensitiveTask(location.pathname)) {
-      return window.confirm('Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
+    if (dirty.current && (sensitiveTask(location.pathname) || /^\/(stays|dining)(?:\/|$)/.test(location.pathname))) {
+      return window.confirm(/^\/(stays|dining)(?:\/|$)/.test(location.pathname) ? 'Leave this section? Unsaved dates and calculator entries will be cleared. No booking, order or payment will be made.' : 'Leave this page? Save any unfinished form first. No order, payment or account change will be submitted by this link.');
     }
     return true;
   }
@@ -79,6 +81,15 @@ export function EngagementBar() {
       <DealsTicker offline={app.disconnected} paused={still} visible={visible} beforeNavigate={beforeNavigate} />
     </section>
     <div className="engagement-spacer" aria-hidden="true" />
+    <nav className="explore-dock" aria-label="Explore DealMosaic">
+      {[
+        {to:'/', label:'Shop', icon:'M4 9h16l-2-5H6zM5 9v11h14V9M9 20v-7h6v7',active:routePath==='/'||/^\/(browse|search|p|c|handcrafted|buy|direct-orders)(?:\/|$)/.test(location.pathname)},
+        {to:'/stays',label:'Hotels',icon:'M4 20V4h16v16M8 8h2m4 0h2M8 12h2m4 0h2M9 20v-4h6v4',active:routePath==='/stays'},
+        {to:'/dining',label:'Dining',icon:'M5 3v7m3-7v7M3 3v7q3 5 6 0V3M6 13v8M17 3q-6 7 0 9v9M17 3v9',active:routePath==='/dining'},
+        {to:'/deals',label:'Deals',icon:'M3 4h8l10 10-7 7L3 10zM7 8h.01',active:routePath==='/deals'},
+        {to:'/saved',label:'Saved',icon:'M12 20S2 14 2 8a5 5 0 0110-1A5 5 0 0122 8c0 6-10 12-10 12z',active:routePath==='/saved'},
+      ].map(item=><Link key={item.to} to={cityContext && ['/stays','/dining'].includes(item.to) ? `${item.to}?city=${encodeURIComponent(cityContext)}` : item.to} aria-current={item.active?'page':undefined} className={item.active?'is-active':''} onClick={event=>{if(routePath!==item.to&&!beforeNavigate())event.preventDefault();}}><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg><span>{item.label}</span></Link>)}
+    </nav>
     <Modal open={help} onClose={() => setHelp(false)} title={app.installed ? 'Your DealMosaic app' : 'Keep DealMosaic one tap away'}>
       <div className="stack">
         <p>{app.installed ? 'You are already using app mode. The same website, account and shopping tools are here.' : 'Add the DealMosaic icon to your home screen. No app-store download or separate app account is needed.'}</p>

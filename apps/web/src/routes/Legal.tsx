@@ -113,6 +113,8 @@ export function Privacy() {
       <p>In supported browsers, DealMosaic prepares public app code, fonts and icons for offline access. It does not put API responses, private orders, shipping quotes or payment details in the offline app cache, and it never queues purchases or payments. Saved prices and codes are historical notes, not current quotes.</p>
       <p>Install & app settings lets you select online-only mode; that preference is stored locally. The persistent install/deals bar also stores your optional pause-animation preference locally; it is not sent to the server. This removes only offline app files, not your saved notes or account cookie. Your browser may evict offline files, and clearing site data can remove local notes and private order-link storage. Installation does not request notification, location, camera or microphone access.</p>
 
+      <h2>Hotel and dining planning</h2>
+      <p>City and brand selections can appear in the page address and copied city links. Hotel dates, guest counts, child ages and calculator amounts are held in page memory, not stored in your DealMosaic account or sent to our server. Choosing the hotel-search link sends the search details to the named provider. Official directory links do not pass your dates or guest details. We do not automatically request your location. The provider has its own privacy policy.</p>
       <h2>Cookies</h2>
       <p>
         Exactly one cookie is set: <code>dm_session</code>, which keeps you signed in. It is <code>HttpOnly</code>,{' '}
@@ -212,6 +214,8 @@ export function Terms() {
         </li>
       </ul>
 
+      <h2>Hotels, restaurants and food outlets</h2>
+      <p>These sections provide official-site discovery, selected provider-listed promotions and calculators based on your inputs. They do not supply live hotel inventory, confirmed outlet coverage, room-price comparison or native bookings. A selected city does not confirm a branch, room or offer. Reconfirm dates, occupancy, eligible items, all charges, cancellation and payment rules with the provider. The provider handles the booking or order, fulfilment, payment and refunds. Calculator outputs are estimates, not quotes or eligibility checks; cashback is excluded.</p>
       <h2>Accounts</h2>
       <p>
         Search and personal features require a confirmed account. Keep your password to yourself; we will never ask for
@@ -298,6 +302,8 @@ export function Disclosure() {
         Mosaic Rewards never applies to Amazon purchases.
       </p>
 
+      <h2>Hospitality directory and offer links</h2>
+      <p>Official hotel and restaurant directory links are not affiliate links. Separately labelled provider-feed offer links may earn a commission on qualifying transactions. Brand inclusion is not a partnership or verified city-coverage claim. Provider-listed does not mean checkout-tested by DealMosaic. Directory ordering is editorial, not commission-based.</p>
       <h2>Rewards, honestly</h2>
       <p>
         Mosaic XP is an experience system: it is not money, not cashback, and cannot be exchanged for cash. Any

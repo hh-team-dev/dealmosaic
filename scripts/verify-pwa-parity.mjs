@@ -16,10 +16,13 @@ for(const mode of ['pwa','classic']) {
 }
 const manifests=['pwa','classic'].map(mode=>JSON.parse(readFileSync(join(root,mode,'manifest.webmanifest'),'utf8')));
 assert.equal(manifests[0].display,'standalone');assert.equal(manifests[1].display,'browser');delete manifests[0].display;delete manifests[1].display;assert.deepEqual(manifests[0],manifests[1]);
-for(const prefix of ['DirectShop-','ShopControl-']) {
- const normalized=[];
- for(const mode of ['pwa','classic']) {const dir=join(root,mode,'assets');const names=readdirSync(dir).filter(name=>name.startsWith(prefix));assert.ok(names.length>0);for(const name of names)normalized.push(readFileSync(join(dir,name),'utf8').replace(/index-[a-zA-Z0-9_-]+\.js/g,'index-SHARED.js'));}
- assert.equal(new Set(normalized).size,1,`Commerce implementation drift in ${prefix}`);
+for(const prefix of ['DirectShop-','ShopControl-','Hospitality-']) {
+ const variants=new Map();
+ for(const mode of ['pwa','classic']) {
+  const dir=join(root,mode,'assets');const names=readdirSync(dir).filter(name=>name.startsWith(prefix));assert.ok(names.length>0);
+  for(const name of names){const extension=name.split('.').pop();const values=variants.get(extension)||new Set();values.add(readFileSync(join(dir,name),'utf8').replace(/index-[a-zA-Z0-9_-]+\.js/g,'index-SHARED.js'));variants.set(extension,values);}
+ }
+ for(const [extension,values] of variants)assert.equal(values.size,1,`Shared implementation drift in ${prefix} (${extension})`);
 }
 assert.equal(readFileSync(join(root,'classic/sw.js'),'utf8'),readFileSync('apps/web/pwa/classic-worker.js','utf8'));
 function walk(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);}

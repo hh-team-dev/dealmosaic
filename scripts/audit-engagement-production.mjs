@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 const base=process.argv[2]||'https://dealmosaic.pages.dev';
 const output=process.argv[3]||'/tmp/dm-engagement-production.json';
-const paths=['/','/deals','/saved','/browse','/search?q=rice','/privacy','/login','/register','/install','/admin?tab=shop','/handcrafted','/this-page-does-not-exist'];
+const paths=['/','/stays','/dining','/deals','/saved','/browse','/search?q=rice','/privacy','/login','/register','/install','/admin?tab=shop','/handcrafted','/this-page-does-not-exist'];
 const results=[];
 for(const [name,type,viewport]of [['chromium-320',chromium,{width:320,height:740}],['chromium-desktop',chromium,{width:1365,height:900}],['webkit-390',webkit,{width:390,height:844}]]){
  const browser=await type.launch();const context=await browser.newContext({viewport});const page=await context.newPage();
@@ -16,5 +16,5 @@ for(const [name,type,viewport]of [['chromium-320',chromium,{width:320,height:740
  page.off('pageerror',onError);results.push({engine:name,path,status:response.status(),top,bottom,errors});console.log(name,path,'fixed at both scroll positions');}
  }finally{await browser.close();}
 }
-writeFileSync(output,JSON.stringify({at:new Date().toISOString(),base,coverage:'36 read-only live viewport/route states, each checked at top and bottom; not physical-device certification.',results},null,2)+'\n');
+writeFileSync(output,JSON.stringify({at:new Date().toISOString(),base,coverage:`${results.length} read-only live viewport/route states, each checked at top and bottom; not physical-device certification.`,results},null,2)+'\n');
 console.log(`${results.length} live persistent-bar states passed; no screenshot or production mutation.`);

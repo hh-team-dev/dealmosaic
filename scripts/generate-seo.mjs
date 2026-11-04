@@ -29,6 +29,8 @@ const today = new Date().toISOString().slice(0, 10);
 /* ---------------------------------------------------------------- */
 
 const staticPages = [
+  { path: '/stays', changefreq: 'weekly', priority: '0.8', note: 'Hotel discovery, provider offers and entered-quote comparison' },
+  { path: '/dining', changefreq: 'weekly', priority: '0.8', note: 'Restaurant and food-chain discovery, offer checks and bill calculator' },
   { path: '/', changefreq: 'daily', priority: '1.0', note: 'Landing' },
   { path: '/deals', changefreq: 'daily', priority: '0.95', note: 'Live coupons and deals' },
   { path: '/browse', changefreq: 'daily', priority: '0.9', note: 'Catalogue index' },

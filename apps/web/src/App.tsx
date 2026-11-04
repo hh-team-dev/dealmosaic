@@ -21,6 +21,9 @@ import Install from './routes/Install';
 import { PwaExperience } from './components/PwaExperience';
 import { DataSources, HowWeRank } from './routes/Method';
 
+const Stays = lazy(() => import('./routes/Hospitality').then(m => ({default:m.Stays})));
+const Dining = lazy(() => import('./routes/Hospitality').then(m => ({default:m.Dining})));
+
 const DirectCollection = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectCollection})));
 const DirectProductPage = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectProductPage})));
 const DirectOrderPage = lazy(() => import('./routes/DirectShop').then(m => ({default:m.DirectOrderPage})));
@@ -73,6 +76,8 @@ export default function App() {
           <PwaExperience>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/stays" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening Hotels & Stays…</p></main>}><Stays /></Suspense>} />
+            <Route path="/dining" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening Dining & Food…</p></main>}><Dining /></Suspense>} />
             <Route path="/install" element={<Install />} />
             <Route path="/search" element={<Search />} />
             <Route path="/browse" element={<Browse />} />

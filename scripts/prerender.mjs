@@ -457,6 +457,8 @@ function privacyBody() {
       <h2>What we do not collect</h2>
       <p>No third-party advertising trackers, no cross-site profiles, no selling of data.
       A pincode is not an identity — it is shared by tens of thousands of people.</p>
+      <h2>Hotel and dining planning</h2>
+      <p>City and brand selections can appear in the page address and copied links. Dates, guest counts, child ages and calculator amounts remain in page memory, not your DealMosaic account or our server. Choosing the named hotel provider sends your search details to that provider. Directory links do not pass dates or guests. No location permission is automatically requested. The provider has its own privacy policy.</p>
       <h2>Offline app files</h2>
       <p>Supported browsers store public app code, fonts and icons for offline access, not API responses, private orders or payment details. Purchases and payments are never queued. Install & app settings lets you select online-only mode without clearing saves or cookies. The install/deals bar stores your optional pause-animation preference only in this browser, not on the server. Browser eviction or clearing site data can remove local files and notes. Installation requests no notification, location, camera or microphone permission.</p>
       <h2>Direct-order information</h2>
@@ -495,6 +497,8 @@ function termsBody() {
       carrier in India. Selection does not book a parcel and delivery dates are estimates.
       Do not pay after the payment window expires; contact the seller about late payments,
       corrections, cancellations, returns or refunds. Statutory consumer rights remain.</p>
+      <h2>Hotels, restaurants and food outlets</h2>
+      <p>Official-site discovery, provider-listed promotions and entered-value calculators are not live inventory, confirmed outlet coverage, room-price comparison or native bookings. A city selection does not confirm a branch, room or discount. Reconfirm dates, occupancy, eligible items, charges, payment and cancellation rules with the provider. The provider handles bookings, orders, payment and refunds. Calculator outputs are estimates, not eligibility checks; cashback is excluded.</p>
       <h2>Community-reported prices</h2>
       <p>Shopper reports are opinions about one moment at one pincode. They are shown
       separately and are never merged into a ranked total.</p>
@@ -515,6 +519,8 @@ function disclosureBody() {
       commission. The price you pay is unchanged. Separately, the operator can earn directly
       from owner-operated products. These Featured placements disclose that interest and do
       not alter organic comparison winners or rankings.</p>
+      <h2>Hospitality directory and offer links</h2>
+      <p>Official hotel and restaurant directory links are not affiliate links. Separately labelled provider-feed offer links may earn commission. Brand inclusion does not imply a partnership or verified city coverage. Provider-listed does not mean checkout-tested by DealMosaic. Directory ordering is editorial, not commission-based.</p>
       <h2>What commission cannot do</h2>
       <ul>
         <li>It cannot change the ranking. Ranking is verified landed total, then match confidence, then reliability, then delivery, then freshness.</li>
@@ -628,6 +634,12 @@ async function main() {
   }
 
   const prose = [
+    ['/stays', 'Hotels & stays — plan the trip, check the full cost — DEALMOSAIC',
+      'Explore hotel providers across nine Indian city regions, check provider-listed offers and compare quotes you enter. Book and pay with the provider.',
+      '<h1>Make the stay worth the trip.</h1><p>Hotels &amp; stays by DealMosaic. Explore options, check the conditions, and put the full cost in focus.</p><h2>Nine selected city regions</h2><p>Delhi NCR, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Pune, Ahmedabad and Jaipur.</p><p>City selection is a planning preference, not confirmed room or offer availability. This is not live room-price comparison.</p><h2>Start with your plans</h2><p>With JavaScript enabled, prepare a provider search with dates and guests, check current provider-listed promotions and compare the total cost of quotes you enter. No booking or payment takes place on DealMosaic.</p><p><a href="https://www.booking.com/" rel="noopener noreferrer">Booking.com</a> · <a href="https://www.cleartrip.com/hotels" rel="noopener noreferrer">Cleartrip Hotels</a> · <a href="https://www.itchotels.com/in/en" rel="noopener noreferrer">ITC Hotels</a></p><p>Provider-listed promotions are not checkout-tested. Cashback is not an instant discount. Offer links may earn commission; official directory links are not affiliate links.</p>'],
+    ['/dining', 'Restaurants & food outlets — choose your next stop — DEALMOSAIC',
+      'Explore official restaurant and food-chain sites, check provider-listed codes and calculate an eligible bill across nine selected Indian city regions.',
+      '<h1>Big cravings. Smarter spending.</h1><p>Restaurants, quick bites and food outlets by DealMosaic. Find your next stop, check the offer and know the bill.</p><h2>Nine selected city regions</h2><p>Delhi NCR, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata, Pune, Ahmedabad and Jaipur.</p><h2>Official brand destinations</h2><p>KFC, McDonald’s, Domino’s, Pizza Hut, Wow! Momo, Mainland China, Chinese Wok, Taco Bell and Barbeque Nation.</p><p>Brand names identify official destinations, not partnerships or verified outlet coverage. Select your exact location and confirm current menus, offers and service availability with the provider.</p><p>With JavaScript enabled, filter the directory, check matching provider-feed codes and calculate the effect of a discount cap using your own amounts. No reservation, order or payment takes place on DealMosaic.</p><p>Provider-listed codes are not checkout-tested. Cashback is not an instant discount. Offer links may earn commission; directory links are not affiliate links.</p>'],
     ['/browse', 'Browse every product we compare — DEALMOSAIC',
       'Every product DEALMOSAIC compares, by category, with the variant identity we matched on. At most three ranked offers per product.',
       browseBody(categories, allProducts)],

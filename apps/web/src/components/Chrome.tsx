@@ -173,25 +173,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
  * a different optical size on every device, and ⚙ renders as a colour emoji on
  * some Android builds.
  */
-export function BottomNav() {
-  return (
-    <nav className="bottom-nav" aria-label="Primary">
-      <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
-        <Icon name="chart" size={19} />
-        Home
-      </NavLink>
-      <NavLink to="/deals" className={({ isActive }) => (isActive ? 'active' : '')}>
-        <Icon name="tag" size={19} />
-        Deals
-      </NavLink>
-      <NavLink to="/browse" className={({ isActive }) => (isActive ? 'active' : '')}>
-        <Icon name="search" size={19} />
-        Browse
-      </NavLink>
-      <NavLink to="/saved" className={({ isActive }) => (isActive ? 'active' : '')}>
-        <Icon name="heart" size={19} />
-        Saved
-      </NavLink>
-    </nav>
-  );
-}
+/** Navigation is mounted globally in EngagementBar, including auth and error screens. */
+export function BottomNav() { return null; }
+

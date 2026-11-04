@@ -10,7 +10,7 @@ export function Chrome({ children }: { children: ReactNode }) {
         {children}
       </main>
       <SiteFooter />
-      {/* Phones get the same four destinations the app shell has. */}
+      {/* Compatibility placeholder; the destination dock is mounted globally. */}
       <BottomNav />
     </>
   );
