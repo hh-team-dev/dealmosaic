@@ -19,7 +19,7 @@ On iPhone/iPad, use Safari → Share → Add to Home Screen → Open as Web App 
 
 ## 2. Release status and precise scope
 
-Publication and final verification are being completed; the final deployment identifiers and evidence are recorded in section 10 before handover delivery.
+**Live and verified:** version 2.0.1 is deployed at https://dealmosaic.pages.dev . Installation, real offline behavior and required headers were checked on the production origin using Chromium and WebKit. Section 10 records exact evidence and remaining real-device limits.
 
 | Capability | Website + PWA behavior |
 |---|---|
@@ -213,4 +213,60 @@ The PWA suite covers installation prompt simulation, manual instructions, standa
 
 ## 10. Final release evidence
 
-Final test counts, package checksums, source revision, deployment identifiers, production checks, source backup and cleanup status are added here after verification. Do not interpret an earlier in-progress statement as deployment evidence.
+### Published version
+
+- **App + website version:** 2.0.1. Source commit **`2faf8e31e2fdf4c7e79a048251b64a5478a5acfa`**, tag **`pwa-v2.0.1`**. The tag, baseline tag/branch and main source were pushed to GitHub.
+- **Cloudflare Pages:** **`eaa528a8`**, verified at the main production origin. Build identity **`2.0.1-ca9abf43ff28`**.
+- **Backend unchanged:** existing Render deployment **`dep-dblhapnf3r2c73a5csa0`**, application commit **`00711adc7557ac6882a890c7436875232cc7d656`**, was confirmed live. No API/schema deployment or database migration was needed.
+- **Classic build identity:** `2.0.1-0183d51ba830`. This is the current-feature recovery website, not the historical 1.4.0 snapshot.
+- Packages were built from the committed source with **`workingTreeChanged: false`**. Later evidence/document changes do not alter the deployed application. Wrangler's dirty-worktree warning reflected generated TypeScript/evidence files, not an uncommitted application build.
+
+### Passed checks
+
+| Verification | Observed result |
+|---|---|
+| Type checking, unit/service/security tests | **409 tests / 30 files**, all passing |
+| Design rules | **43 assertions**, no forbidden dark/blue-family colors |
+| Dependency audit | **0 vulnerabilities**; no dependency added for PWA runtime |
+| PWA browser scenarios on final 2.0.1 | **48/48**, Chromium 320px, Chromium desktop and WebKit 390px; no skips or retries |
+| Production-built shared business flows on final 2.0.1 | **46/46**, phone and desktop, including isolated checkout/owner flows |
+| Complete existing website suite | **48/48** on shared 2.0.0 source before the edge-only 2.0.1 correction; includes the Vite-only component-injection case |
+| Both build flavors | **55 verified HTML files** each; manifest identity/commerce parity and static-cache policy checked |
+| Live public-site audit | **67 page states**, no reported axe violations, horizontal overflow, JS exceptions or API 5xx findings |
+| Live PWA smoke tests | **6 states across Chromium + WebKit**: install guide, offline private deep link, offline saved board; all clean |
+| Chromium's live installability check | **No installability errors**; this is not a physical OS install claim |
+| Actual live Cache Storage | **12 static entries per browser, zero API entries** |
+| Production commerce read-only check | Products, orders, rates, media and settings each **0**; public shop remains paused |
+| Release integrity | Both final deployment archive SHA-256 checks passed |
+
+These are different suites, not 142 distinct pages or a certification of every physical phone. The 46 production-built business tests exclude only the two viewport runs of a component-injection test that intentionally imports Vite development modules. The complete 48-case suite covers that component separately.
+
+The raw static precache is **710,078 bytes**, about **0.68 MiB**, before HTTP compression; classic metadata lists 708,068 bytes but classic does not install that cache. Runtime caches are bounded to current plus one preceding release. No Lighthouse performance score or unmeasured speed improvement is claimed.
+
+Live `/sw.js` returned JavaScript, `no-cache, no-store, must-revalidate` and `Service-Worker-Allowed: /`. The manifest returned the correct manifest MIME type with revalidation. Both offline-shell aliases are no-store/noindex; release metadata is no-store. Offline private navigation stayed on its requested URL without an unintended login redirect.
+
+### Fixes caught during implementation
+
+| Failure exposed | Root fix | Regression evidence |
+|---|---|---|
+| Later Chromium update did not appear | Compute active-worker replacement status for each install; observe already-installing workers | Two-tab update test in both engines |
+| Corrupt saved record crashed the subscribed board | Use validated readers in the React subscriptions as well as direct reads | Offline malformed-record tests and storage unit tests |
+| Cleanup could recreate an empty cache | Cache reads use non-creating `caches.match` | Worker unit test and WebKit tombstone test |
+| Classic cold visit could race a return to PWA | Do not create a removal worker if no registration exists | Actual classic-package → PWA switch test |
+| Local production-build proxy changed the browser-facing origin | Preserve forwarded host in the isolated test proxy; production security rules unchanged | Same-origin probe and 46 passing business flows |
+| Cloudflare canonicalized the fixed shell URL | Internal extensionless resolution with explicit no-store/noindex response | Two edge-routing tests plus live offline installation in both engines |
+
+### Retained delivery and recovery files
+
+Directory: `/home/user/releases/dealmosaic-2.0.1/`.
+
+- `dealmosaic-2.0.1-pwa.tar.gz` — SHA-256 `27c95cb27ad1e1e559b319f1d695174e36bd12d369fd8a23b93af800b090af0c`.
+- `dealmosaic-2.0.1-classic.tar.gz` — SHA-256 `2cb135cf2eeeeabac99de30fdc11b1e011c9724adaaeb263b87eda5f7caff927`.
+- `release.json`, `SHA256SUMS`, and `README.txt` describe the matched pair.
+- Distinct handover: `docs/35-pwa-handover.md` and `/home/user/handover-pdf/35-pwa-handover.pdf`; the full 16-PDF set was regenerated together and all 325 contents headings were verified.
+- Compact evidence: `docs/audits/2026-11-04-pwa-browser.json`, `2026-11-04-pwa-production.json`, and `2026-11-04-pwa-public-pages.json`.
+- Original website complete-history bundle: `backups/website-v1.4.0.bundle`, SHA-256 `464b6cebecda158ede9eba745fa00dd91b9b1024b60bd62d7b3129a6e3a0741c`.
+- Current source recovery: `backups/dealmosaic_2026-11-04_12-30-38.tar.gz` (314 verified files, SHA-256 `ed9dd82d71a79969eb9f5967dc6da22e401c8fb9629697d1b3cd86ea3617ed79`) and `backups/pwa-v2.0.1.bundle`. The archive precedes its own checksum note and final PDF/cleanup bookkeeping; those final document changes are in Git and the complete-history bundle.
+
+The temporary test database, fixture sessions, package staging, dependency/browser caches, review screenshot and test servers are removed/stopped after evidence and PDFs are saved. The superseded 2.0.0 deployment archives are removed to prevent an accidental rollback to the rejected candidate. The historical website baseline and final 2.0.1 matched archives remain. No screenshot is retained and no real purchase, payment, shipment or notification was generated.
+

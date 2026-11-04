@@ -16,6 +16,16 @@ against production at the time of writing, not recalled from memory.
 
 ---
 
+## Current live release — PWA and website 2.0.1
+
+**Source/tag:** `2faf8e3` / `pwa-v2.0.1`; **Pages:** `eaa528a8`; **build:** `2.0.1-ca9abf43ff28`. The backend is unchanged at Render `dep-dblhapnf3r2c73a5csa0` / `00711ad`. **409 tests**, **48 PWA scenarios**, **46 production-built business flows**, **67 live public states** and **6 live PWA states** passed their checks. Physical Android/iPhone OS installation remains a device-specific confirmation, not a claimed automated test.
+
+The installable and classic flavors are generated from one codebase; each improvement reaches both. Current-feature fallback archives, the distinct PWA handover, platform limits and exact verification are in **[35-pwa-handover.md](35-pwa-handover.md)**. The original website remains preserved as `website-v1.4.0` at `5f85cf3`. The initial 2.0.0 candidate was superseded by the production-verified Cloudflare routing correction in 2.0.1.
+
+The shop is still paused; read-only production counts for products/orders/rates/media/settings are all zero. No PWA installation bypasses the existing commerce gates or adds push notifications, carrier booking or automatic bank verification.
+
+---
+
 ## 4 November 2026 — preceding site-wide audit and recovery fixes
 
 **Pre-PWA audit and deployment evidence: [34-sitewide-audit.md](34-sitewide-audit.md).**

@@ -2,6 +2,18 @@
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For current deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
+## Latest recovery point — PWA / website 2.0.1
+
+- Live app source: `2faf8e3`, tag `pwa-v2.0.1`; Pages `eaa528a8`.
+- **Source archive:** `backups/dealmosaic_2026-11-04_12-30-38.tar.gz` — **314 checksum-verified files**, **1,714,899 bytes**, SHA-256 `ed9dd82d71a79969eb9f5967dc6da22e401c8fb9629697d1b3cd86ea3617ed79`.
+- The archive contains the published source and the final test/production evidence. This self-referential archive note and subsequent PDF/cleanup bookkeeping follow the archive; their current copies are in Git and the final PDFs. The source recovery bundle includes the final documentation commit.
+- Complete-history original website bundle: `backups/website-v1.4.0.bundle`; preserved baseline tag/branch at `5f85cf3`.
+- Complete-history current source bundle: `backups/pwa-v2.0.1.bundle` (main, current release tag and original website refs). Validate with `git bundle verify` before restoring.
+- Matched deployable frontend archives and checked SHA-256 sums: `/home/user/releases/dealmosaic-2.0.1/`. Use the **classic** archive for an operational online-only fallback; it removes an old worker safely while retaining current business functionality.
+- The original `11-26-58` audited website archive remains available. Retired 2.0.0 candidate deployment archives are not a recommended recovery target and were removed.
+- Current installation, fallback, test boundaries and device steps: **[35-pwa-handover.md](35-pwa-handover.md)**. Historical inventories/checksums below are not the latest source manifest.
+
+
 ## Latest release backup — 4 November 2026, 11:26:58 UTC
 
 - Archive: `dealmosaic_2026-11-04_11-26-58.tar.gz`
