@@ -61,7 +61,7 @@ CORE = [
     ('33-direct-shop-release.md', 'Direct shop: implementation and operating guide'),
     ('34-sitewide-audit.md', 'Site-wide audit: fixes, tests and remaining gates'),
     ('35-pwa-handover.md', 'PWA 2.0.1: install, shared website, safety and fallback'),
-    ('36-persistent-install-and-deals.md', '2.1.0: persistent installation and floating deals'),
+    ('36-persistent-install-and-deals.md', '2.1.1: persistent installation and floating deals'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

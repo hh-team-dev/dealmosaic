@@ -13,6 +13,7 @@ import { join } from 'node:path';
 
 const CSS_FILES = [
   'apps/web/src/design/theme.css',
+  'apps/web/public/404.html',
 ];
 
 function walk(dir, out = []) {

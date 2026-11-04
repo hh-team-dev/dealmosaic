@@ -1,4 +1,4 @@
-# DealMosaic 2.1.0 — persistent install invitation and floating deals
+# DealMosaic 2.1.1 — persistent install invitation and floating deals
 
 **Date:** 4 November 2026. **Scope:** the same enhancement in website, PWA and current-feature classic builds. This is the current enhancement handover; `35-pwa-handover.md` preserves the earlier 2.0.1 architecture and recovery history.
 
@@ -65,6 +65,8 @@ The bar fetches the existing coupons API once for its global lifetime, not once 
 
 All previous per-route `<DealsTicker />` mounts were removed. The bar remains in the same shared application for both PWA and classic builds. Existing source-flavor and commerce-parity guards remain mandatory.
 
+The initial 2.1.0 live sweep exposed the legacy standalone 404 document: it did not hydrate React and therefore had no global controls. Version 2.1.1 generates a dedicated noindex 404 document with the same application bundle, while the edge still returns HTTP 404. The raw fallback palette was corrected too, and the static 404 file is now included in the design audit. The local production-test server now returns a real 404 on unknown routes instead of masking this difference with a generic 200 shell.
+
 An additional 320px route sweep exposed an existing unbroken connector-description string on Data sources. It is fixed with actual text wrapping on the connector card, not by hiding overflow. Ticker borders were also adjusted so its 44px controls are not clipped by half a pixel at the top/bottom.
 
 ## 7. Verification and recovery
@@ -83,7 +85,7 @@ npm run audit:interactions -- --grep-invert 'shared busy button'
 
 The complete existing interaction suite includes a Vite-only component-injection case; run it on the Vite development server as documented in the preceding handover. No production mutation, bank transfer, booking or notification is used for these checks.
 
-**Recovery:** keep the previous verified `pwa-v2.0.1` source and its source bundle. Generate and retain both `dealmosaic-2.1.0-pwa.tar.gz` and `dealmosaic-2.1.0-classic.tar.gz`. The classic archive keeps these new persistent controls and all business functionality, but removes the offline worker safely. Do not substitute an old website folder without the same-URL removal worker.
+**Recovery:** keep the previous verified `pwa-v2.0.1` source and its source bundle. Generate and retain both `dealmosaic-2.1.1-pwa.tar.gz` and `dealmosaic-2.1.1-classic.tar.gz`. The classic archive keeps these new persistent controls and all business functionality, but removes the offline worker safely. Do not substitute an old website folder without the same-URL removal worker.
 
 Browser-engine tests and responsive viewports do not prove behavior on every physical phone or operating-system install sheet. Browser chrome, an external retailer/payment app, native install menus, and the minimal recovery document when all offline files have been evicted are outside the fully loaded React application. No native UI can be covered by a website's floating bar.
 

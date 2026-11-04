@@ -1,6 +1,6 @@
 # DealMosaic 2.0.1 — PWA + website handover
 
-> **Current enhancement — 2.1.0:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
+> **Current enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
 **Distinct release:** 2.0.1 · **Date:** 4 November 2026 · **Website baseline:** 1.4.0 (`5f85cf3`).
 

@@ -14,7 +14,7 @@ async function axe(page){await page.addScriptTag({path:require.resolve('axe-core
 
 test('one fixed bar survives top and bottom scrolling across every route family',async({page})=>{
  for(const path of ['/','/deals','/saved','/browse','/search','/how-we-rank','/data-sources','/privacy','/terms','/disclosure','/contact','/login','/register','/forgot-password','/reset-password','/verify-email','/install','/handcrafted','/buy/'+fixtures.productId,'/direct-orders/00000000-0000-0000-0000-000000000001','/admin','/app','/app/settings','/not-a-real-page']){
-  await page.goto(path);await expect(bar(page).getByRole('button',{name:'Install app',exact:false})).toBeVisible();await assertFixed(page);
+  const response=await page.goto(path);if(path==='/not-a-real-page')expect(response.status()).toBe(404);await expect(bar(page).getByRole('button',{name:'Install app',exact:false})).toBeVisible();await assertFixed(page);
   await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));await assertFixed(page);
  }
 });

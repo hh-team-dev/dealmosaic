@@ -19,6 +19,12 @@ writeFileSync(join(root, 'install/index.html'), readFileSync(join(root, 'index.h
  .replace(/<meta\s+name="robots"[^>]*>/, '<meta name="robots" content="noindex,follow">')
  .replace(/<link rel="canonical"[^>]*>/, '<link rel="canonical" href="https://dealmosaic.pages.dev/install">')
  .replace('<div id="root"></div>', '<div id="root"><main><h1>Add DealMosaic to your home screen</h1><p>The same website and account, one tap away. In Safari on iPhone or iPad, choose Share, Add to Home Screen, and Open as Web App when available. On Android, look for Install app or Add to Home screen in the browser menu. Live prices, shipping, checkout and account changes need a connection. Installation does not enable push notifications.</p></main></div>')); 
+// Keep the server's real 404 status, but hydrate the same global application frame.
+writeFileSync(join(root, '404.html'), readFileSync(join(root, 'index.html'), 'utf8')
+ .replace(/<title>[\s\S]*?<\/title>/, '<title>Page not found — DealMosaic</title>')
+ .replace(/<meta\s+name="robots"[^>]*>/, '<meta name="robots" content="noindex,follow">')
+ .replace(/<link rel="canonical"[^>]*>/, '')
+ .replace('<div id="root"></div>', '<div id="root"><main><h1>That page isn’t here</h1><p>The link may be old or the page may have moved. DealMosaic still works. Return to the home page to compare products, browse listed offers or open installation help. Live prices and checkout need a connection.</p><a href="/">Go home</a> <a href="/install">Install &amp; app settings</a></main></div>'));
 const assets = ['/pwa-shell.html', ...readdirSync(join(root,'assets')).filter(f=>/\.(js|css)$/.test(f)).map(f=>'/assets/'+f),
   '/fonts/Outfit.woff2','/fonts/Plus-Jakarta-Sans.woff2','/favicon.svg', '/apple-touch-icon.png',
   '/brand/dm-icon-192.png','/brand/dm-icon-512.png','/brand/dm-icon-maskable-512.png'];

@@ -11,6 +11,7 @@ for(const mode of ['pwa','classic']) {
  assert.equal(release.mode,mode);assert.equal(release.version,version);assert.ok(release.precacheBytes<=4*1024*1024);
  for(const path of release.assets){assert.ok(/^\/(pwa-shell\.html|assets\/[^/]+\.(js|css)|fonts\/[^/]+\.woff2|brand\/dm-icon[^/]*\.png|favicon\.svg|apple-touch-icon\.png)$/.test(path),`Unsafe precache entry ${path}`);assert.ok(existsSync(join(dir,path)));}
  const shell=readFileSync(join(dir,'pwa-shell.html'),'utf8');assert.ok(shell.includes('window.__DM_OFFLINE_SHELL__=true'));assert.ok(shell.includes('noindex,nofollow'));
+ const notFound=readFileSync(join(dir,'404.html'),'utf8');assert.match(notFound,/<script[^>]+src="\/assets\//);assert.ok(notFound.includes('noindex,follow'));assert.ok(notFound.includes('id="root"'));
  assert.ok(existsSync(join(dir,'install/index.html')));assert.ok(existsSync(join(dir,'_worker.js')));
 }
 const manifests=['pwa','classic'].map(mode=>JSON.parse(readFileSync(join(root,mode,'manifest.webmanifest'),'utf8')));
