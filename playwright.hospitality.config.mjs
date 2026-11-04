@@ -11,6 +11,7 @@ export default defineConfig({
   outputDir: "/tmp/dm-hospitality-browser-artifacts",
   use: {
     baseURL: "http://127.0.0.1:5173",
+    serviceWorkers: "block", // deterministic page-level failure injection; real workers are covered by test:pwa
     screenshot: "off",
     trace: "off",
     video: "off",
