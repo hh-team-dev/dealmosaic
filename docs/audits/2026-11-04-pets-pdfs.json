@@ -1,7 +1,7 @@
 {
   "date": "2026-11-04",
   "release": "2.4.0",
-  "validatedHeadings": 376,
+  "validatedHeadings": 377,
   "files": [
     {
       "file": "00-MASTER-HANDOVER.pdf",
@@ -48,7 +48,7 @@
     {
       "file": "28-backup-and-recovery.pdf",
       "pages": 18,
-      "bytes": 986507,
+      "bytes": 988498,
       "outOfPageSpans": 0,
       "headings": 26
     },
@@ -124,10 +124,10 @@
     },
     {
       "file": "39-pet-friendly-directory.pdf",
-      "pages": 4,
-      "bytes": 210398,
+      "pages": 5,
+      "bytes": 236356,
       "outOfPageSpans": 0,
-      "headings": 8
+      "headings": 9
     },
     {
       "file": "00-executive-summary.pdf",
@@ -138,8 +138,8 @@
     },
     {
       "file": "DEALMOSAIC-handover-set.pdf",
-      "pages": 158,
-      "bytes": 8225265,
+      "pages": 159,
+      "bytes": 8253244,
       "outOfPageSpans": 0
     }
   ]

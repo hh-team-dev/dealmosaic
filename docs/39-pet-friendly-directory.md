@@ -95,3 +95,10 @@ Directory: `/home/user/releases/dealmosaic-2.4.0/`. Retain both archives, `relea
 - `dealmosaic-2.4.0-classic.tar.gz`: SHA-256 **`7860afb14e923fca7113cc582d6c60cb109abff235cd274f9ac9dcd281acd47f`**.
 
 Classic preserves current customer/owner features while retiring the service worker at the same origin; do not reset the backend or clear account/saved-list storage. Retain earlier release recovery points, the original website baseline and original brand vectors. The full source/history bundle and verified source archive are recorded below. Offline users cannot be recalled instantly; the usual explicit update/reconnect rules still apply.
+
+## 9. Source backup and handover completion
+
+- Verified source archive: `backups/dealmosaic_2026-11-04_16-48-21.tar.gz` — **386 files**, **2,061,119 archive bytes**, SHA-256 **`7fdc744328832603e20c91a4065e843ecb8b69e978877c165a77cde6848fce3c`**. Every manifest checksum passed. This archive includes published source, current release evidence and the initial updated PDF-validation report. This self-referential archive note and final PDF/cleanup bookkeeping follow the archive; their current copies are in Git and the final full-history bundle.
+- Complete-history bundle: `backups/pwa-v2.4.0.bundle`, with `.sha256` sidecar, covering all **14 Git refs** through the final handover commit. The runtime tag remains pinned to `151bc4d`; later commits are documentation, evidence and audit harness only.
+- Updated PDFs: `/home/user/handover-pdf/39-pet-friendly-directory.pdf` and the full `/home/user/handover-pdf/DEALMOSAIC-handover-set.pdf`, plus the individual core documents. Contents destinations and text bounds are validated by `scripts/validate-handover-pdfs.py`; results are in `docs/audits/2026-11-04-pets-pdfs.json`.
+- Review screenshots are deleted. Isolated test services, fixtures, temporary build-switch files and package staging are removed after validation; the verified source/history backups and paired deployable archives remain. No production data reset is part of cleanup.

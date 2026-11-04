@@ -11,6 +11,7 @@
 - Runtime tag: `pwa-v2.4.0` at `151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05`.
 - Paired packages: `/home/user/releases/dealmosaic-2.4.0/`; PWA `2.4.0-6a89cd91fc88`, classic `2.4.0-16ea84c91465`. Both archive checksums and shared-chunk parity pass; hospitality scenarios pass 81/81 on each flavor.
 - Pages deployment: `316dae5b`; current evidence, source-backup and bundle ledger: `39-pet-friendly-directory.md`.
+- Source archive: `backups/dealmosaic_2026-11-04_16-48-21.tar.gz`, 386 files, all manifest checks passed. SHA-256: `7fdc744328832603e20c91a4065e843ecb8b69e978877c165a77cde6848fce3c`. Full-history bundle: `backups/pwa-v2.4.0.bundle` with checksum sidecar. The archive predates its own note; the final Git bundle/PDFs retain that note.
 - Retain the prior release recovery points. No backend/database replacement is required; classic uses the same-origin removal worker and preserves saved-list/account storage.
 
 ## Previous recovery point — PWA / website 2.3.0
