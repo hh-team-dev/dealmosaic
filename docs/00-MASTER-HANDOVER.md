@@ -32,8 +32,10 @@ eligibility requires seller location, product classification and aggregate-turno
 review (including relevant affiliate/services income). Do not assume all handmade
 items qualify for interstate relief or that a goods-only threshold applies.
 
-Blocked choices: dispatch country/state and actual seller; manual UPI versus explicitly
-approved gateway costs; ready-stock versus made-to-order. No fees are authorised.
+Owner subsequently confirmed: dispatch from India, **manual UPI with no gateway
+fees**, and **both ready-stock and made-to-order**. Dispatch state and actual seller
+identity remain unknown. No fee-bearing gateway is authorised; bank-credit
+verification is required before marking a manual payment paid.
 Source-backed legal/payment caveats, secure inventory/payment architecture, notification
 caps, mobile workflow and release tests are in doc 32. Existing digest's blanket
 “Nothing here is an advert” wording must be reviewed before introducing owner promotions.

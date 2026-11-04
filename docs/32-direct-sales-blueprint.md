@@ -201,7 +201,20 @@ Release must prove: unauthorised admin denied; price tampering rejected; expired
 
 Test Android Chrome back/app-switch behaviour, slow network and double taps, keyboard overlap, 320–430px layouts, readable labels, 48px tap targets and reduced motion. Run typecheck, tests, design/secret checks and build, then verify the deployed commit. Payment sandbox tests are not a claim that a live charge/refund worked. A live financial test needs owner approval and any real fee disclosed. Delete screenshots and scratch files after verification.
 
-## 12. Decisions needed now
+## 12. Owner decisions and remaining setup facts
+
+**Confirmed in the owner's answers, 4 November 2026:** dispatch from **India**;
+payment route **manual UPI, strict no gateway fees**; inventory **both ready stock
+and made-to-order**. No fee-bearing gateway is authorised. Payment remains awaiting
+verification until an actual bank credit is matched. Bank terms and shipping costs
+still need checking; no-gateway-fee does not mean fulfilment is free.
+
+**Still missing:** dispatch state and whether the actual seller is the owner or
+another person. Do not infer either from the owner's current location. Product
+entry can be built without those facts; live sales eligibility cannot be finalised.
+The following records the full setup decision checklist (payment and stock choices
+above are resolved):
+
 
 1. **Where will goods actually ship from, and who is the legal seller?** Country and Indian state if applicable; confirm whether the maker/seller is the same individual operating DealMosaic. Exact address and turnover are one-time private setup inputs, not per-product fields.
 2. **Payment priority:** strict no-gateway-fee/manual UPI confirmation, or approve a fee-bearing gateway for automatic confirmation subject to actual terms. No credentials needed to choose.
