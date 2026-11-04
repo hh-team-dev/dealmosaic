@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { z } from 'zod';
 import {
   CURRENCIES,
   getCountry,
@@ -7,6 +8,7 @@ import {
   type CurrencyCode,
 } from '@dealmosaic/core';
 import { db, nowIso } from '../db/index.js';
+import { listSavedDealIds, saveDeal, unsaveDeal } from '../services/saved-digest.js';
 import { assertSameOrigin, badRequest, clientIp } from '../lib/http.js';
 import { hashIp, verifyPassword } from '../lib/security.js';
 import { logAuthEvent } from '../lib/audit.js';
@@ -123,6 +125,38 @@ meRoutes.patch('/preferences', requireCsrf, async (c) => {
 });
 
 /** Data export — DPDP Act portability. Returns everything we hold on this user. */
+/* ------------------------------------------------------------------ */
+/* Saved deals — the server's copy, so the weekly email has something  */
+/* to read. The list itself still works with no account.               */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The saved list is device-local by design (docs/25), which means the server
+ * cannot email a shopper about a deal it has never heard of. These three routes
+ * keep the ids in step for signed-in shoppers only; nothing else is copied,
+ * because the coupon row already holds everything the email needs.
+ */
+meRoutes.get('/saved-deals', async (c) => {
+  const user = c.get('user')!;
+  const saved = await listSavedDealIds(user.id);
+  return c.json({ saved });
+});
+
+const savedDealBody = z.object({ couponId: z.string().trim().min(1).max(64) });
+
+meRoutes.post('/saved-deals', requireCsrf, async (c) => {
+  const user = c.get('user')!;
+  const body = savedDealBody.parse(await c.req.json());
+  const result = await saveDeal(user.id, body.couponId);
+  return result.saved ? c.json({ saved: true }) : c.json({ saved: false, message: result.reason }, 404);
+});
+
+meRoutes.delete('/saved-deals/:couponId', requireCsrf, async (c) => {
+  const user = c.get('user')!;
+  await unsaveDeal(user.id, c.req.param('couponId'));
+  return c.json({ saved: false });
+});
+
 meRoutes.get('/export', async (c) => {
   const user = c.get('user')!;
   const payload = {

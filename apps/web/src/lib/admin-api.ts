@@ -124,6 +124,28 @@ export const getJobs = (signal?: AbortSignal) =>
  * rupee figure from clicks × a guessed commission rate is the most expensive kind of
  * lie: the one you plan your life around.
  */
+export interface NetworkEarnings {
+  currency: string;
+  commission: {
+    pendingMinor: number;
+    validatedMinor: number;
+    payableMinor: number;
+    claimedMinor: number;
+    rejectedMinor: number;
+    totalMinor: number;
+  };
+  performance: {
+    clicks: number;
+    transactions: number;
+    commissionMinor: number;
+    saleAmountMinor: number;
+    conversionRate: string;
+    epcMinor: number;
+  };
+  window: { from: string; to: string };
+  fetchedAt: string;
+}
+
 export interface AdminRevenue {
   clicks: {
     all_time: number | null;
@@ -139,6 +161,8 @@ export interface AdminRevenue {
   byDay: Array<{ day: string; clicks: number }>;
   topCoupons: Array<{ id: string; store: string; title: string; code: string | null; clicks: number }>;
   byDevice: Array<{ device: string | null; clicks: number }>;
+  /** The affiliate network's own ledger. null = unreachable, which is not the same as zero. */
+  network: NetworkEarnings | null;
   note: string;
   now: string;
 }

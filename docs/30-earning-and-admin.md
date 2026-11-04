@@ -23,6 +23,7 @@ Nothing about that was a design philosophy. It was a missing route. It is now bu
 | "Shop at store" button | every coupon card: `/deals`, home shelves, `/saved` | **live** |
 | Three-step instruction | `HowItWorks`, on `/` and `/deals` | **live** |
 | Earnings dashboard | `/admin?tab=revenue` | **live** |
+| The network's own commission ledger | same tab, from `services/earnings.ts` | **live** |
 
 ---
 
@@ -155,10 +156,15 @@ Everything is reversible and everything is recorded. There is no delete-anything
 
 ### 4.3 What the admin page deliberately does not do
 
-It does not show a rupee total. Sales and commission live in the affiliate network's report against our
-sub-ids; that is where to reconcile payouts. A dashboard that multiplies clicks by a guessed rate is the
-most expensive lie a small business can tell itself, so the Earnings tab says so in a sentence at the top
-instead of inventing a number.
+It shows the network's ledger, not a calculated guess. Since 3 November the Earnings tab reads
+`/reports/earnings` and `/reports/performance` from Cuelinks and renders **pending, validated, payable and
+claimed** commission, sales, conversion rate and EPC for the last 30 days, next to our own click count.
+If the network cannot be reached the tab says **unknown** — never ₹0, because "we could not ask" and "you
+earned nothing" are different facts.
+
+What it still will not do is multiply clicks by a commission rate to estimate income. That number is the
+most expensive lie a small business can tell itself, and it is the one figure that decides whether you
+keep going.
 
 ---
 

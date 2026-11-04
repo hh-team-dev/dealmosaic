@@ -212,10 +212,11 @@ export default function Settings() {
           </div>
           <div className="switch">
             <div className="switch-text">
-              <strong>Email notifications</strong>
+              <strong>A weekly email about what you saved</strong>
               <span className="tiny">
-                Sent through a free-tier provider once configured. Nothing is sent while email delivery is in
-                development mode.
+                One email a week at most: saved deals that are about to end, ones that have just ended, and
+                anything you saved since we last wrote. No marketing, no daily nagging. Price alerts are
+                separate and fire only when a price really drops.
               </span>
             </div>
             <button

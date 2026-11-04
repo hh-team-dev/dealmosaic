@@ -126,6 +126,74 @@ export function fetchCampaigns(page = 1, perPage = 100, type = 'CPS'): Promise<C
   return call<CampaignsPage>(`/campaigns?${qs.toString()}`);
 }
 
+/* ------------------------------------------------------------------ */
+/* The other half of the money: what the network says we earned.        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * WHY THIS EXISTS.
+ *
+ * Until now the site could count its own clicks but had no idea whether any of
+ * them became money — and the admin page said so, honestly, in a sentence. That
+ * sentence was true for exactly as long as we refused to ask the network. The
+ * network already knows: it holds the commission, the transaction count and the
+ * payout state, keyed by the sub-id we send on every click.
+ *
+ * Both figures below are the network's, not ours. Nothing here is calculated,
+ * estimated or multiplied out: `""` means the network reported nothing, and it is
+ * rendered as nothing rather than as zero rupees of income.
+ */
+export interface EarningsTotals {
+  pending: string;
+  rejected: string;
+  validated: string;
+  payable: string;
+  claimed: string;
+  total: string;
+  currency: string;
+}
+
+export interface PerformanceTotals {
+  clicks: number;
+  transactions: number;
+  commission: string;
+  sale_amount: string;
+  cr: string;
+  epc: string;
+  currency: string;
+}
+
+export interface EarningsReport {
+  data: Array<Record<string, unknown>>;
+  totals: EarningsTotals;
+  meta: { page: number; per_page: number; total: number; total_pages: number; currency?: string };
+}
+
+export interface PerformanceReport {
+  data: Array<Record<string, unknown>>;
+  totals: PerformanceTotals;
+  meta: { page: number; per_page: number; total: number; total_pages: number; currency?: string };
+}
+
+function range(from: string, to: string, extra: Record<string, string> = {}): string {
+  const qs = new URLSearchParams({ from, to, ...extra });
+  return qs.toString();
+}
+
+/** Monthly earnings by commission state — pending, validated, payable, claimed. */
+export function fetchEarnings(from: string, to: string, channelId?: number): Promise<EarningsReport> {
+  return call<EarningsReport>(
+    `/reports/earnings?${range(from, to, channelId ? { channel_id: String(channelId) } : {})}`,
+  );
+}
+
+/** Daily clicks, transactions, commission, conversion rate and EPC. */
+export function fetchPerformance(from: string, to: string, channelId?: number): Promise<PerformanceReport> {
+  return call<PerformanceReport>(
+    `/reports/performance?${range(from, to, channelId ? { channel_id: String(channelId) } : {})}`,
+  );
+}
+
 export function convertLink(url: string, channelId?: number): Promise<{ data: ConvertResult }> {
   return call<{ data: ConvertResult }>('/links/convert', {
     method: 'POST',

@@ -571,6 +571,49 @@ function Revenue({ onError }: { onError: (e: unknown) => void }) {
         ))}
       </section>
 
+      {/*
+        THE NETWORK'S LEDGER, NEXT TO OURS.
+        Two different facts, deliberately not merged: what we counted, and what the
+        affiliate network says was sold and earned. `network === null` means the
+        network could not be reached — shown as "unknown", never as ₹0.
+      */}
+      <section className="card">
+        <h2 className="h3" style={{ marginTop: 0 }}>Commission — the affiliate network&apos;s figures</h2>
+        {data.network ? (
+          <>
+            <div className="admin-tiles" style={{ marginTop: 10 }}>
+              {[
+                ['Pending', data.network.commission.pendingMinor, 'sale recorded, return window open'],
+                ['Validated', data.network.commission.validatedMinor, 'merchant accepted it'],
+                ['Payable', data.network.commission.payableMinor, 'due at the next payout'],
+                ['Claimed', data.network.commission.claimedMinor, 'already paid to you'],
+                ['Sales', data.network.performance.transactions, 'paid orders in the window'],
+                ['Conversion', data.network.performance.conversionRate, 'clicks that became orders'],
+              ].map(([label, value, note]) => (
+                <div className="admin-tile" key={String(label)}>
+                  <span className="admin-tile-label">{label}</span>
+                  <strong className="admin-tile-value">
+                    {typeof value === 'number' && label !== 'Sales' && label !== 'Conversion'
+                      ? inr(value)
+                      : String(value)}
+                  </strong>
+                  <span className="admin-tile-note">{note}</span>
+                </div>
+              ))}
+            </div>
+            <p className="tiny muted" style={{ margin: '10px 0 0' }}>
+              Last 30 days: {data.network.window.from} to {data.network.window.to} · read {formatMoment(data.network.fetchedAt)} ·
+              amounts in {data.network.currency}. Commission is confirmed after the merchant&apos;s return window, usually 30–60 days.
+            </p>
+          </>
+        ) : (
+          <p className="small" style={{ margin: 0 }}>
+            Could not reach the affiliate network just now, so commission is <strong>unknown</strong> — not zero.
+            Reload in a minute; the click numbers above are unaffected because they are counted here.
+          </p>
+        )}
+      </section>
+
       <div className="card">
         <div className="callout-title">
           <Icon name="info" size={16} /> About these numbers

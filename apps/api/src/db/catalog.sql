@@ -205,3 +205,28 @@ CREATE TABLE IF NOT EXISTS outbound_clicks (
 CREATE INDEX IF NOT EXISTS idx_outbound_created ON outbound_clicks(created_at);
 CREATE INDEX IF NOT EXISTS idx_outbound_coupon ON outbound_clicks(coupon_id);
 CREATE INDEX IF NOT EXISTS idx_outbound_platform ON outbound_clicks(platform_slug, created_at);
+
+-- ============================================================================
+-- SAVED DEALS, ON THE SERVER.
+--
+-- The saved list lives in localStorage, deliberately: it has to work for a first
+-- visitor on a phone with no account. The consequence is that the server cannot
+-- email a shopper about a deal it has never heard of.
+--
+-- So when a signed-in shopper saves a deal we also keep the id here. Nothing else
+-- is copied — no browsing history, no prices, no search terms — because the coupon
+-- row already holds everything the email needs, and duplicating it would create a
+-- second version of the truth that goes stale.
+--
+-- `notified_at` is what stops the digest becoming spam: at most one email per
+-- shopper per seven days, enforced by query, not by good intentions.
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS saved_deals (
+  id         TEXT PRIMARY KEY,
+  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  coupon_id  TEXT NOT NULL,
+  saved_at   TEXT NOT NULL,
+  notified_at TEXT,
+  UNIQUE (user_id, coupon_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_deals_user ON saved_deals(user_id, saved_at);

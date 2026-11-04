@@ -2,6 +2,7 @@ import { db, nowIso } from '../db/index.js';
 import { recordDailySnapshots } from './snapshots.js';
 import { runAlerts } from './alerts.js';
 import { syncCampaigns } from './affiliate-campaigns.js';
+import { runSavedDigests } from './saved-digest.js';
 import { syncAffiliateOffers } from './affiliate-sync.js';
 import * as cuelinks from '../lib/cuelinks.js';
 
@@ -188,6 +189,28 @@ export async function runDailyNow(_source: string): Promise<{
     } catch (err) {
       steps.push({ step: 'campaigns', ok: false, error: (err as Error).message });
     }
+  }
+
+  /**
+   * 5. The weekly saved-deal nudge.
+   *
+   * Runs daily and decides for itself who is due — a shopper gets at most one
+   * email every seven days, and only when there is something worth saying: an
+   * offer about to end, one that has just ended, or a deal saved since we last
+   * wrote. `notify_email = 0` means never.
+   */
+  try {
+    const digest = await runSavedDigests();
+    steps.push({
+      step: 'saved-digest',
+      ok: true,
+      people: digest.considered,
+      sent: digest.sent,
+      skipped: digest.skipped,
+    });
+  } catch (err) {
+    ok = false;
+    steps.push({ step: 'saved-digest', ok: false, error: (err as Error).message });
   }
 
   const tookMs = Date.now() - started;

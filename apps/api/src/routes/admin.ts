@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { fetchEarningsSnapshot } from '../services/earnings.js';
 import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
@@ -205,16 +206,24 @@ adminRoutes.get('/revenue', async (c) => {
     )
     .all(monthAgo)) as Array<{ device: string | null; clicks: number }>;
 
+  /*
+   * The network's ledger, alongside ours. `network` is null when the affiliate API
+   * is unreachable or not configured — and the page says exactly that rather than
+   * showing ₹0, because "we could not ask" and "you earned nothing" are different
+   * facts and only one of them is worth panicking about.
+   */
+  const network = await fetchEarningsSnapshot(30, Number(process.env.CUELINKS_CHANNEL_ID) || undefined);
+
   return c.json({
     clicks: totals,
     byStore,
     byDay,
     topCoupons,
     byDevice,
-    note:
-      'Clicks are measured here. Sales and commission are measured by the affiliate ' +
-      'network against the sub-id we send, and appear in the network’s own report — ' +
-      'this page will not invent a rupee figure it cannot see.',
+    network,
+    note: network
+      ? 'Clicks are counted here. Commission, sales and payout state come from the affiliate network for the last 30 days and are the network\u2019s figures, not ours.'
+      : 'Clicks are counted here. The affiliate network could not be reached just now, so commission is unknown \u2014 not zero.',
     now: nowIso(),
   });
 });

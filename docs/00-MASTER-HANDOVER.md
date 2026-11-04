@@ -873,6 +873,72 @@ Flipkart affiliate approvals, a second device tour, and Pro — which is the own
 
 ---
 
+### 2.24 Affiliate access, real commission, and the weekly nudge — 3 November 2026
+
+Three things the owner asked for, and one finding that changes the picture. Detail in
+**`docs/31-affiliate-applications.md`**.
+
+**The finding: every offer we display can already be paid for.** I pulled all **25,289** Cuelinks
+campaigns (51 pages), matched them against the **246** campaign ids in our `coupons` table, and counted:
+
+```
+campaigns in our table by access: {'open': 243, 'unknown': 3}
+our offer rows by access:        {'open': 1106}
+```
+
+`open` means `approved_for_all` — no application needed, tracking URL live, commission payable. So the
+fear that we were routing 1,100 clicks to merchants we were never approved for is unfounded: the
+constraint is traffic, not access.
+
+| Merchant | State | Rate |
+|---|---|---|
+| Amazon India (817) | `pending` | 3.17 % |
+| Flipkart (1) | `pending` | 6.0 % |
+| Myntra (101) | `pending` | 7.5 % |
+| Ajio (2589) | `pending` | 9.0 % |
+
+**What I submitted programmatically** — six `201 Created`, all now `pending`: HP India (EPC ₹51.64, the
+highest in the Indian set), Kaspersky India, Autodesk, Booking.com, Expedia India, Skyscanner India. Each
+carried real promotion text, because a blank application is a rejection. **Eight were refused because the
+merchant has paused the campaign** (Meesho, Myprotein India, Netmeds, RedBus, Hostinger, Audible IN,
+Skyscanner Hotels, Deodap) — nothing to apply to; worth re-checking monthly.
+
+**Only one application needs the owner:** the direct **Amazon Associates India** form, because it wants
+his PAN and bank account. `docs/31` §4 has every field prefilled, including the website description and
+which traffic sources to tick — plus the warning that matters: Amazon requires **three qualifying sales
+in 180 days** or the account closes. The form is not the gate; traffic is.
+
+**Real commission, finally visible.** The Earnings tab showed clicks and said, honestly, that the network
+knew the money. It now asks the network: `/admin?tab=revenue` renders the affiliate ledger — pending /
+validated / payable / claimed, plus sales, conversion rate and EPC for the last 30 days — beside our own
+click count. If the network cannot be reached it says **unknown**, never ₹0, because those are different
+facts. `apps/api/src/services/earnings.ts` keeps the raw decimal strings next to the parsed paise, so an
+amount is never silently re-rounded.
+
+**The weekly nudge the owner asked about.** Saving a deal used to be the end of the story: the list sat
+in `localStorage` and never spoke again. Now a signed-in shopper's saved deals are mirrored to the server
+(ids only — the coupon row already holds the rest), and the daily job sends **at most one email per
+shopper per seven days**, and only when there is something worth saying: an offer ending within a week,
+one that has just ended, or a deal saved since we last wrote. Nothing to say means no email at all.
+
+The rules are enforced by query, not by intention: `notify_email = 0` means never; an unverified address
+is never written to; a **failed send does not stamp `notified_at`**, so the next run tries again; and the
+Settings switch now describes exactly what it does instead of apologising for a transport in development.
+
+**Two defects the tests found, both real:**
+
+* The digest fetched saved rows and then ran one query **per shopper** — an N+1 on a daily job over every
+  account, which on libSQL's single connection produced `SQLITE_BUSY` / `TRANSACTION_ACTIVE` as soon as a
+  second shopper had saved something. It is now one joined query, grouped in memory.
+* The tests were racing `app.ts`'s floating boot promise (`initDb` + the catalogue seed). Awaiting the
+  exported `ready` is the difference between testing a service and testing a boot.
+
+**Gates:** 307 tests / 21 files · design 43 assertions · 0 secrets / 234 files · 53 pages.
+**Live:** Pages rebuilt, Render redeployed, `/api/go/:couponId` verified returning
+`302 → linksredirect.com/…&subid=…`.
+
+---
+
 ## PART 3 — ARCHITECTURE, AND WHY IT IS SHAPED THIS WAY
 
 ### 3.1 Repository map
@@ -1565,6 +1631,7 @@ Two rules learned the hard way:
 | **`28-backup-and-recovery.md`** | **The backup dossier: every file in the release archive with its hash, the database snapshots, the credential gap, the recovery runbook and the disaster table** |
 | **`29-site-tour-fixes.md`** | **36 defects found by watching a 9-minute phone tour plus the PDF set it exposed, each traced to its cause and fixed, with the verification log** |
 | **`30-earning-and-admin.md`** | **How the site earns: the tracked click, the affiliate chain, why there is no embedded checkout, and how the owner runs `/admin`** |
+| **`31-affiliate-applications.md`** | **What was applied for, what the network answered, and the one form left for the owner — every field prefilled** |
 | `brand/README.md` | Index of the concept renders kept as evidence |
 | `05-data-model.md` | Schema rationale |
 | `06-roadmap.md` | Original phase plan (historical) |

@@ -112,11 +112,38 @@ export interface SaveableDeal {
   dealGroup: CouponView['dealGroup'];
 }
 
+/**
+ * TELL THE SERVER, WHEN THERE IS A SERVER TO TELL.
+ *
+ * The list stays device-first: it works with no account, no network and no
+ * cookies. But a signed-in shopper who saves a deal should also get the weekly
+ * email about it, and the server cannot email an offer it has never heard of — so
+ * the id is mirrored up, best effort, and a failure changes nothing on this device.
+ *
+ * `void` on purpose: saving a deal must never wait for a network round trip, and
+ * a 401 for an anonymous visitor is the normal answer, not an error.
+ */
+function mirrorToServer(dealId: string, saved: boolean): void {
+  void (async () => {
+    try {
+      const { apiRequest } = await import('./api');
+      if (saved) {
+        await apiRequest('/api/me/saved-deals', { method: 'POST', body: { couponId: dealId } });
+      } else {
+        await apiRequest(`/api/me/saved-deals/${encodeURIComponent(dealId)}`, { method: 'DELETE' });
+      }
+    } catch {
+      /* Not signed in, offline, or the API refused. The device list is unaffected. */
+    }
+  })();
+}
+
 export function toggleSaved(deal: SaveableDeal): boolean {
   const existing = readSaved();
   const without = existing.filter((d) => d.id !== deal.id);
   if (without.length !== existing.length) {
     write(SAVED_KEY, without);
+    mirrorToServer(deal.id, false);
     return false;
   }
   const entry: SavedDeal = {
@@ -135,6 +162,7 @@ export function toggleSaved(deal: SaveableDeal): boolean {
     group: deal.dealGroup,
   };
   write(SAVED_KEY, [entry, ...without].slice(0, MAX_SAVED));
+  mirrorToServer(deal.id, true);
   return true;
 }
 
@@ -158,6 +186,7 @@ export function clearViewed(): void {
 }
 
 export function clearSaved(): void {
+  for (const item of readSaved()) mirrorToServer(item.id, false);
   write(SAVED_KEY, []);
 }
 
