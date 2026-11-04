@@ -1,0 +1,750 @@
+{
+  "at": "2026-11-04",
+  "coverageNote": "Separate suites; counts include repeated scenarios across viewports/engines, not distinct pages or physical devices.",
+  "pwa": {
+    "stats": {
+      "startTime": "2026-11-04T12:17:29.618Z",
+      "duration": 41753.11,
+      "expected": 48,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "scenario": "installation guide is accessible, unforced and uses the existing brand",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "a browser install prompt is invoked only after the customer asks",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "standalone-mode navigation has a safe Back fallback and phone-safe layout",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline cold launch exposes only labelled historical saves, not live shopping actions",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline private deep links never redirect to login or reveal cached customer pages",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline shell is safe even when navigator.onLine incorrectly reports online",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "connection loss preserves entered fields, locks sensitive actions and never auto-submits on reconnection",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "API reads and mutations remain network-only with no offline replay queue",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "online-only mode preserves saved lists, private link storage, cookies and unrelated caches",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "a waiting update does not reload another tab or erase its form",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "the classic tombstone removes only PWA caches and registration without forcing reload",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "unsupported installation still leaves a fully usable website and honest guide",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked browser storage does not crash the install guide or saved board",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "real classic package switches back to the website and can resume the PWA without losing saves",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "corrupt saved records cannot break an offline cold start",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "evicted offline files produce an honest branded recovery page instead of a blank screen",
+        "project": "chromium-320",
+        "status": "expected"
+      },
+      {
+        "scenario": "installation guide is accessible, unforced and uses the existing brand",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "a browser install prompt is invoked only after the customer asks",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "standalone-mode navigation has a safe Back fallback and phone-safe layout",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline cold launch exposes only labelled historical saves, not live shopping actions",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline private deep links never redirect to login or reveal cached customer pages",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline shell is safe even when navigator.onLine incorrectly reports online",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "connection loss preserves entered fields, locks sensitive actions and never auto-submits on reconnection",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "API reads and mutations remain network-only with no offline replay queue",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "online-only mode preserves saved lists, private link storage, cookies and unrelated caches",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "a waiting update does not reload another tab or erase its form",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "the classic tombstone removes only PWA caches and registration without forcing reload",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "unsupported installation still leaves a fully usable website and honest guide",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked browser storage does not crash the install guide or saved board",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "real classic package switches back to the website and can resume the PWA without losing saves",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "corrupt saved records cannot break an offline cold start",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "evicted offline files produce an honest branded recovery page instead of a blank screen",
+        "project": "chromium-desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "installation guide is accessible, unforced and uses the existing brand",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "a browser install prompt is invoked only after the customer asks",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "standalone-mode navigation has a safe Back fallback and phone-safe layout",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline cold launch exposes only labelled historical saves, not live shopping actions",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline private deep links never redirect to login or reveal cached customer pages",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "offline shell is safe even when navigator.onLine incorrectly reports online",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "connection loss preserves entered fields, locks sensitive actions and never auto-submits on reconnection",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "API reads and mutations remain network-only with no offline replay queue",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "online-only mode preserves saved lists, private link storage, cookies and unrelated caches",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "a waiting update does not reload another tab or erase its form",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "the classic tombstone removes only PWA caches and registration without forcing reload",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "unsupported installation still leaves a fully usable website and honest guide",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked browser storage does not crash the install guide or saved board",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "real classic package switches back to the website and can resume the PWA without losing saves",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "corrupt saved records cannot break an offline cold start",
+        "project": "webkit-390",
+        "status": "expected"
+      },
+      {
+        "scenario": "evicted offline files produce an honest branded recovery page instead of a blank screen",
+        "project": "webkit-390",
+        "status": "expected"
+      }
+    ]
+  },
+  "productionBundleBusiness": {
+    "stats": {
+      "startTime": "2026-11-04T12:18:12.198Z",
+      "duration": 40129.388,
+      "expected": 46,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "scenario": "signed-out owner controls explain access and preserve the requested shop tab",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "non-admin account receives a clear forbidden explanation",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid admin tab falls back to overview and all seven tabs load",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "admin failure has a functional retry",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "search retries the same query after an API error",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "catalogue retries and resets error state",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "product network failure is not misreported as a missing product and retry works",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "sign-in works; password toggle, field hints and account settings persist",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "save, reopen and remove a device-only deal",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked storage gives feedback instead of claiming a save",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "clipboard failure explains the manual fallback",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "PIN follows cross-tab changes and clears pending loading cleanly",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /how-we-rank",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /data-sources",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner shop tabs and product editor open without missing controls or phone overflow",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "deals failure can be retried without changing filters",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "direct collection failure has a working retry",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid and unknown delivery PINs do not create a payable order",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "account export downloads parseable data and notification preference persists",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner coupon reject and restore buttons persist state",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "signed-out owner controls explain access and preserve the requested shop tab",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "non-admin account receives a clear forbidden explanation",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid admin tab falls back to overview and all seven tabs load",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "admin failure has a functional retry",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "search retries the same query after an API error",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "catalogue retries and resets error state",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "product network failure is not misreported as a missing product and retry works",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "sign-in works; password toggle, field hints and account settings persist",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "save, reopen and remove a device-only deal",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked storage gives feedback instead of claiming a save",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "clipboard failure explains the manual fallback",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "PIN follows cross-tab changes and clears pending loading cleanly",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /how-we-rank",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /data-sources",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner shop tabs and product editor open without missing controls or phone overflow",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "deals failure can be retried without changing filters",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "direct collection failure has a working retry",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid and unknown delivery PINs do not create a payable order",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "account export downloads parseable data and notification preference persists",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner coupon reject and restore buttons persist state",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+        "project": "desktop",
+        "status": "expected"
+      }
+    ]
+  },
+  "sharedWebsite": {
+    "stats": {
+      "startTime": "2026-11-04T12:19:13.771Z",
+      "duration": 59293.867,
+      "expected": 48,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "scenario": "signed-out owner controls explain access and preserve the requested shop tab",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "non-admin account receives a clear forbidden explanation",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid admin tab falls back to overview and all seven tabs load",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "admin failure has a functional retry",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "search retries the same query after an API error",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "catalogue retries and resets error state",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "product network failure is not misreported as a missing product and retry works",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "sign-in works; password toggle, field hints and account settings persist",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "shared busy button cannot be re-enabled by disabled=false",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "save, reopen and remove a device-only deal",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked storage gives feedback instead of claiming a save",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "clipboard failure explains the manual fallback",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "PIN follows cross-tab changes and clears pending loading cleanly",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /how-we-rank",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /data-sources",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner shop tabs and product editor open without missing controls or phone overflow",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "deals failure can be retried without changing filters",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "direct collection failure has a working retry",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid and unknown delivery PINs do not create a payable order",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "account export downloads parseable data and notification preference persists",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner coupon reject and restore buttons persist state",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+        "project": "phone",
+        "status": "expected"
+      },
+      {
+        "scenario": "signed-out owner controls explain access and preserve the requested shop tab",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "non-admin account receives a clear forbidden explanation",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid admin tab falls back to overview and all seven tabs load",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "admin failure has a functional retry",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "search retries the same query after an API error",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "catalogue retries and resets error state",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "product network failure is not misreported as a missing product and retry works",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "sign-in works; password toggle, field hints and account settings persist",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "delete dialog keeps typing focus, traps keyboard focus and Escape restores opener",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "shared busy button cannot be re-enabled by disabled=false",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "save, reopen and remove a device-only deal",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "blocked storage gives feedback instead of claiming a save",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "clipboard failure explains the manual fallback",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "PIN follows cross-tab changes and clears pending loading cleanly",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /how-we-rank",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "keyboard users can focus the scrollable table on /data-sources",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner shop tabs and product editor open without missing controls or phone overflow",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "guest checkout selects the cheapest slower carrier, creates a private order and records reference only",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "deals failure can be retried without changing filters",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "direct collection failure has a working retry",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "invalid and unknown delivery PINs do not create a payable order",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "account export downloads parseable data and notification preference persists",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner coupon reject and restore buttons persist state",
+        "project": "desktop",
+        "status": "expected"
+      },
+      {
+        "scenario": "owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price",
+        "project": "desktop",
+        "status": "expected"
+      }
+    ]
+  }
+}

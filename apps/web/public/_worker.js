@@ -58,6 +58,18 @@ export default {
     const url = new URL(request.url);
     const { pathname } = url;
 
+    // Cloudflare canonicalizes .html assets to extensionless URLs. The browser
+    // worker deliberately precaches a fixed shell URL and rejects redirects.
+    // Resolve the clean asset internally, without exposing an install-time redirect.
+    if (pathname === '/pwa-shell.html' || pathname === '/pwa-shell') {
+      const shell = await env.ASSETS.fetch(new URL('/pwa-shell', url));
+      const headers = new Headers(shell.headers);
+      headers.set('Cache-Control', 'no-store');
+      headers.set('X-Robots-Tag', 'noindex, nofollow');
+      headers.set('Content-Type', 'text/html; charset=utf-8');
+      return new Response(shell.body, { status: shell.status, headers });
+    }
+
     /* ---- 1. API proxy ------------------------------------------------- */
     if (pathname === '/api' || pathname.startsWith('/api/')) {
       const origin = env.API_ORIGIN?.trim();
