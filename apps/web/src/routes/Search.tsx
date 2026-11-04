@@ -10,7 +10,6 @@ import { Seo, breadcrumbJsonLd, SITE_NAME } from '../lib/seo';
 import { inr, relativeTime } from '../lib/format';
 import { ApiError } from '../lib/api';
 import { search, type Comparison, type NeedsSelection, type NoResults, type SearchOutcome } from '../lib/search-api';
-import { DealsTicker } from '../components/DealsTicker';
 
 /**
  * /search?q=...
@@ -97,7 +96,6 @@ export default function Search() {
       />
       <Chrome>
         <div className="container search-shell">
-          <DealsTicker />
           <SearchField initial={query} />
 
           {!query && (

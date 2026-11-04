@@ -7,7 +7,6 @@ import { Icon } from '../components/Icon';
 import { Seo } from '../lib/seo';
 import { clearSaved, clearViewed, toggleSaved, useSaved, useViewed, type SaveableDeal } from '../lib/saved';
 import { statedPercentLabel, statedPriceLabel, expiryLabel } from '../lib/coupons-api';
-import { DealsTicker } from '../components/DealsTicker';
 
 /** Device-local snapshots, with honest server-mirror and offline-read-only limits. */
 export default function Saved() {
@@ -39,7 +38,6 @@ export default function Saved() {
       <Chrome>
         <div className="container section stack stack-lg">
           {/* Alive on every screen, not only the first one. */}
-          {!offline && <DealsTicker />}
           <header>
             <span className="eyebrow">
               <Icon name="heart" size={14} /> Your board

@@ -14,7 +14,6 @@ import {
   type CouponView,
   type MerchantView,
 } from '../lib/coupons-api';
-import { DealsTicker } from '../components/DealsTicker';
 
 /**
  * /deals — the coupon and discount page.
@@ -56,7 +55,8 @@ export default function Deals() {
   const expiring = Number(params.get('expiring') ?? '') || 0;
   const bankOnly = params.get('bank') === '1';
   const sortParam = (params.get('sort') ?? '') as '' | 'savings' | 'price' | 'new' | 'ending';
-  const [q, setQ] = useState('');
+  const q = params.get('q') ?? '';
+  const setQ = (value: string) => { const next = new URLSearchParams(params); if (value) next.set('q', value); else next.delete('q'); setParams(next, { replace: true }); };
   const codesOnly = params.get('codes') === '1';
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -159,7 +159,6 @@ export default function Deals() {
       <Chrome>
         <div className="container section stack-lg">
           {/* Alive on every screen, not only the first one. */}
-          <DealsTicker />
           {/* ---- Hero: the promise, and the count that backs it ---- */}
           <header className="deals-hero">
             <span className="deals-hero-kicker">

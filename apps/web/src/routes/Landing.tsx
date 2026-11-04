@@ -2,7 +2,6 @@ import { DirectShelf } from '../components/DirectShelf';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
-import { DealsTicker } from '../components/DealsTicker';
 import { DiscoverShelves } from '../components/DiscoverShelves';
 import { SampleComparison } from '../components/SampleComparison';
 import { Icon } from '../components/Icon';
@@ -95,7 +94,6 @@ export default function Landing() {
         Skip to content
       </a>
       <SiteHeader />
-      <DealsTicker />
 
       <main id="main">
         {/* ------------------------------- hero ------------------------------- */}

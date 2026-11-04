@@ -7,7 +7,6 @@ import { inr } from '../lib/format';
 import { getProduct, type ProductDetail } from '../lib/search-api';
 import { Seo, breadcrumbJsonLd, productJsonLd, SITE_URL } from '../lib/seo';
 import { CommunityPanel, CouponStrip, OfferList, PriceAlertForm, PriceChart } from '../components/ProductInsights';
-import { DealsTicker } from '../components/DealsTicker';
 
 /**
  * /p/:slug — the indexable product page.
@@ -103,7 +102,6 @@ export default function Product() {
       />
       <Chrome>
         <div className="container section stack-lg">
-          <DealsTicker />
           <nav className="row wrap tiny muted" aria-label="Breadcrumb">
             <Link to="/">Home</Link>
             <span aria-hidden="true">/</span>

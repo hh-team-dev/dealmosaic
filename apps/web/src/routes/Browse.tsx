@@ -5,7 +5,6 @@ import { Icon } from '../components/Icon';
 import { inr } from '../lib/format';
 import { listCategories, listProducts, type ProductSummary } from '../lib/search-api';
 import { Seo, breadcrumbJsonLd } from '../lib/seo';
-import { DealsTicker } from '../components/DealsTicker';
 
 type Category = { name: string; slug: string; productCount: number; isGrocery: boolean };
 
@@ -55,7 +54,6 @@ export default function Browse() {
       />
       <Chrome>
         <div className="container section stack-lg">
-          <DealsTicker />
           <header className="stack-sm">
             <span className="eyebrow">{slug ? 'Category' : 'Catalogue'}</span>
             <h1 className="h1">{heading}</h1>

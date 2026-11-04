@@ -8,7 +8,6 @@ import { formatDate, inr } from '../lib/format';
 import { useToast } from '../components/Toast';
 import { deleteAlert, listAlerts, type AlertView } from '../lib/alerts-api';
 import { useSaved } from '../lib/saved';
-import { DealsTicker } from '../components/DealsTicker';
 import { DiscoverShelves } from '../components/DiscoverShelves';
 
 export default function Dashboard() {
@@ -74,7 +73,6 @@ export default function Dashboard() {
           wall — the reason anyone opens this site — vanished. The ticker and the
           shelves now come with you into the app, so no screen is a dead end.
         */}
-        <DealsTicker />
         <header>
           <span className="badge badge-lime">
             <span className="dot dot-grass" aria-hidden="true" />

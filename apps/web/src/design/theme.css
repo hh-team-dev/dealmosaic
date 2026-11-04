@@ -4516,3 +4516,58 @@ input:-webkit-autofill:active {
 .pwa-status dd { margin:0; }
 @media(max-width:700px) { .pwa-feature-grid { grid-template-columns:minmax(0,1fr); } .pwa-status > div { grid-template-columns:minmax(0,1fr); gap:4px; } .pwa-guide .row > .btn { white-space:normal; text-align:center; } }
 @media(display-mode:standalone) { body { padding-left:env(safe-area-inset-left,0px); padding-right:env(safe-area-inset-right,0px); } }
+
+/* Persistent install + offer bar. One reserved area, never a content-covering overlay. */
+:root { --engagement-height: calc(96px + env(safe-area-inset-top, 0px)); }
+html { scroll-padding-top: calc(var(--engagement-height) + 12px); }
+[id] { scroll-margin-top: calc(var(--engagement-height) + 12px); }
+.engagement-bar { position:fixed; inset:0 0 auto; z-index:80; padding-top:env(safe-area-inset-top,0px); background:var(--surface); box-shadow:0 3px 14px rgba(74,43,34,.12); }
+.engagement-spacer { height:var(--engagement-height); flex:none; }
+.engagement-install { display:flex; align-items:center; min-height:52px; gap:8px; padding:4px max(8px, env(safe-area-inset-right,0px)) 4px max(12px, env(safe-area-inset-left,0px)); background:linear-gradient(110deg, #FFF9F0, #F5F8DC); }
+.engagement-icon { display:flex; align-items:center; justify-content:center; width:32px; height:36px; flex:none; }
+.engagement-copy { display:flex; flex-direction:column; flex:1; min-width:0; color:var(--ink); }
+.engagement-copy strong { font-family:var(--font-display); font-size:13px; line-height:1.3; }
+.engagement-copy > span { font-size:10px; line-height:1.4; }
+.engagement-install-button { position:relative; isolation:isolate; flex:none; border:1px solid var(--action); border-radius:999px; min-height:44px; padding:8px 13px; font:inherit; font-size:12px; font-weight:800; background:var(--action); color:#fff; cursor:pointer; }
+.engagement-install-button::before { content:''; position:absolute; inset:-2px; border:2px solid var(--action); border-radius:inherit; z-index:-1; animation:install-breathe 4s ease-in-out infinite; pointer-events:none; }
+@keyframes install-breathe { 0%,100% { opacity:.12; transform:scale(1); } 50% { opacity:.55; transform:scale(1.06,1.14); } }
+.engagement-install-button.is-installed { background:var(--surface); color:var(--action); }
+.engagement-install-button.is-installed::before { animation:none; opacity:0; }
+.engagement-install-button:disabled { opacity:.7; cursor:wait; }
+.engagement-install-button:hover { background:var(--action-hover); color:#fff; }
+.engagement-motion { display:flex; align-items:center; justify-content:center; width:44px; min-height:44px; padding:10px; border:1px solid var(--hairline-strong); border-radius:50%; flex:none; background:var(--surface); color:var(--ink); cursor:pointer; }
+.engagement-motion[aria-pressed='true'] { background:var(--lime); }
+.engagement-still .engagement-install-button::before, .engagement-install-button:focus-visible::before { animation:none; opacity:0; }
+.engagement-still .ticker-pulse { animation:none; }
+.engagement-bar .ticker { height:44px; min-width:0; padding-left:env(safe-area-inset-left,0px); padding-right:env(safe-area-inset-right,0px); }
+.engagement-bar .ticker-item { min-height:44px; padding-block:8px; }
+.engagement-bar .ticker-viewport { mask-image:none; -webkit-mask-image:none; }
+.engagement-bar .ticker-label { padding-inline:12px; }
+.ticker-empty { display:flex; align-items:center; gap:8px; min-width:0; padding-inline:12px; font-size:11px; line-height:1.2; }
+.ticker-empty button { min-height:44px; padding:4px 8px; flex:none; background:transparent; color:#fff; border:0; text-decoration:underline; font:inherit; cursor:pointer; }
+.ticker-static .ticker-track { animation:none; transform:none; }
+.ticker-static .ticker-track[aria-hidden='true'] { display:none; }
+.ticker-static .ticker-viewport { overflow-x:auto; scrollbar-width:none; }
+.ticker-static .ticker-viewport::-webkit-scrollbar { display:none; }
+.ticker-held .ticker-track { animation-play-state:paused; }
+.engagement-bar a:focus-visible, .engagement-bar button:focus-visible { outline:3px solid var(--sun); outline-offset:-3px; }
+.engagement-steps { padding-left:22px; margin:0; }
+.engagement-steps li { margin-block:8px; }
+/* The two requested controls stay fixed. Normal branding scrolls away to save phone space. */
+.site-header, .app-header { position:relative; top:auto; }
+.deals-controls { top:var(--engagement-height); }
+.toast-wrap { top:calc(var(--engagement-height) + 10px); }
+.pwa-nav { padding-top:4px; }
+@media (min-width:960px) {
+ :root { --engagement-height:calc(52px + env(safe-area-inset-top,0px)); }
+ .engagement-bar { display:grid; grid-template-columns:minmax(340px,390px) minmax(0,1fr); }
+ .engagement-bar .ticker { height:52px; }
+ .engagement-bar .ticker-item { min-height:52px; }
+}
+@media (max-width:359px) { .engagement-install { gap:5px; padding-inline:8px; } .engagement-copy > span { font-size:9px; } .engagement-install-button { padding-inline:10px; } }
+@media (prefers-reduced-motion:reduce) { .engagement-install-button::before { animation:none; opacity:0; } }
+@media print { .engagement-bar, .engagement-spacer { display:none; } }
+
+.engagement-bar .ticker-track { animation-duration:var(--ticker-duration,120s); }
+.engagement-bar .ticker { border-bottom:0; }
+.connector-card { min-width:0; overflow-wrap:anywhere; }

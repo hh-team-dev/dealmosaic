@@ -1,3 +1,4 @@
+import { EngagementBar } from './EngagementBar';
 import { useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { applyUpdate, reconnect, sensitiveTask, usePwa } from '../lib/pwa';
@@ -11,6 +12,7 @@ export function PwaExperience({ children }: { children: ReactNode }) {
   const bootBlocked = app.bootOffline && !safeOfflinePage;
   const locked = app.disconnected && sensitiveTask(pathname);
   return <>
+    <EngagementBar />
     {app.installed && <nav className="pwa-nav" aria-label="App navigation">
       <button type="button" onClick={() => typeof window.history.state?.idx === 'number' && window.history.state.idx > 0 ? navigate(-1) : navigate('/')}>Back</button>
       <Link to="/">Home</Link><Link to="/deals">Deals</Link><Link to="/saved">Saved</Link><Link to="/install">App settings</Link>
