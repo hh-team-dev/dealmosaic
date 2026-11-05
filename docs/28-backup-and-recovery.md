@@ -1,6 +1,17 @@
 # 28 — Backup and recovery dossier
 
-> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime `492e98b` / `pwa-v2.7.1`; Pages `0c9c7b7e`; Render `dep-dbma2k0ae00c738pqjqg`. 793 unit and 379 browser checks passed; production repair/general/hospitality checks passed without external clicks. See the click-repair release receipts.
+> **Current release — 2.8.0, 5 November:** [Document 46](46-traffic-first-hotel-discovery.md) records the traffic-first hotel discovery rebuild: Vijayawada as the 18th destination, evidence-grouped results, six extra checks and consent-gated anonymous analytics. No live supplier feeds, prices, stars or bookings; no new payable programme. The owner's phone DNS failure stays open. Runtime `63d50e8` / `pwa-v2.8.0`; PWA `2.8.0-39e7c8d2dd33`, classic `2.8.0-b026ca0e4176`. 824 unit and 385 browser checks passed; production verification without external clicks follows in the release receipts.
+
+> **Previous release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime `492e98b` / `pwa-v2.7.1`; Pages `0c9c7b7e`; Render `dep-dbma2k0ae00c738pqjqg`. 793 unit and 379 browser checks passed; production repair/general/hospitality checks passed without external clicks. See the click-repair release receipts.
+
+## 2.8.0 recovery — 5 November
+
+- Runtime tag: `pwa-v2.8.0`, commit `63d50e80b212`; deploy this pair of API and web assets, not a mixture of older APIs and new browser code.
+- Source snapshot: `backups/dealmosaic_2026-11-05_17-21-14.tar.gz`, 482 files. Its checksum and retention record are in the release backup receipt. The snapshot precedes its own receipt and final recovery-document edits.
+- Paired deployment archives are under `releases/dealmosaic-2.8.0/`, each verified against `SHA256SUMS`. PWA build `2.8.0-39e7c8d2dd33`; classic build `2.8.0-b026ca0e4176`.
+- Git recovery uses the full base `backups/pwa-v2.7.0.bundle` plus the incrementals `backups/pwa-v2.7.1-incremental.bundle` and `backups/pwa-v2.8.0-incremental.bundle`. All three are needed for an empty-machine restore. Clone the base, fetch `main` and tag `pwa-v2.8.0` from the 2.8.0 incremental, then select the release tag for runtime code or the fetched main for the final handover. Checksums are alongside the bundles. A fresh bare restore is verified before delivery.
+- The 2.8.0 API migration only adds the `hospitality_events` table and indexes. It does not delete offers, accounts, orders or financial records. No production database restore is needed to recover application code.
+- Render and Pages deploy from the `main` push; dashboard deployment IDs were not capturable in this sandbox, so the release receipts record live-endpoint verification (API version/revision and the `pwa-release.json` build match) instead of dashboard IDs.
 
 ## 2.7.1 recovery — 5 November
 
@@ -11,7 +22,6 @@
 - The backup script’s rolling retention removed four older source-snapshot tarballs, listed in the backup receipt. Older versioned Git bundles and paired release archives remain; do not interpret historical snapshot filenames elsewhere in this dossier as a promise that every rolling tarball is still retained.
 - The API migration only adds nullable category/country cache fields. It does not delete offers, accounts, orders or financial records. No production database restore is needed to recover application code.
 
-> **Previous release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
 
 > **Previous release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
 
