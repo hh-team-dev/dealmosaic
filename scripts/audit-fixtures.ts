@@ -22,6 +22,10 @@ await db.prepare(`INSERT OR REPLACE INTO coupons(id, platform_slug,code,title,di
 for (let i=1;i<=5;i++) {
  await db.prepare(`INSERT OR REPLACE INTO coupons(id,platform_slug,code,title,discount_type,discount_value,source,trust_state,tracking_url,created_at,stated_percent,deal_group,expires_at) VALUES(?,?,?,?, 'percent',10,'affiliate','listed','https://example.test/offer',?,10,'electronics',?)`).run(`audit-coupon-${i}`,'croma',`AUDIT${i}`,`Isolated audit offer ${i}`,now,new Date(Date.now()+86400000).toISOString());
 }
+
+await db.prepare(`INSERT OR REPLACE INTO affiliate_campaigns(id,name,domain,access_status,campaign_type,synced_at,categories_json,countries_json) VALUES(990001,'Fixture Store','merchant.example.org','open','CPS',?,'["Electronics"]','["IN"]')`).run(now);
+await db.prepare(`INSERT OR REPLACE INTO coupons(id,campaign_id,platform_slug,code,title,discount_type,discount_value,source,trust_state,tracking_url,created_at,deal_group,expires_at) VALUES('audit-recovery',990001,'fixture-store','RECOVER10','Isolated recovery offer','percent',10,'affiliate','listed','https://linksredirect.com/?cid=fixture&url=https%3A%2F%2Fmerchant.example.org%2Fitem',?,'electronics',?)`).run(now,new Date(Date.now()+86400000).toISOString());
+
 const reportVariant = await db.prepare('SELECT id FROM product_variants LIMIT 1').get();
 await db.prepare("INSERT OR REPLACE INTO community_prices(id,variant_id,platform_slug,pincode,price_minor,reported_at) VALUES('audit-community',?,'croma','700001',123450,?)").run(String(reportVariant!.id),now);
 await db.prepare('INSERT OR REPLACE INTO direct_settings(id,data,version) VALUES(1,?,1)').run(JSON.stringify({...EMPTY_SHOP,enabled:true,sellerName:'Isolated seller',sellerAddress:'Test-only address',supportEmail:'seller@example.test',supportPhone:'9876543210',grievanceName:'Isolated seller',originPin:'700001',upiId:'test@bank',payeeName:'Isolated seller',returnsPolicy:'Isolated fixture returns policy.',shippingPolicy:'Isolated fixture shipping policy.',eligibilityBasis:'Isolated legal fixture, not a real permission.'}));

@@ -59,6 +59,7 @@ export interface CouponView {
   percentIsCap: boolean;
   mentionsBankOrUpi: boolean;
   outboundUrl: string | null;
+  merchantHomeUrl?: string | null;
   startsAt: string | null;
   createdAt: string | null;
 }

@@ -85,10 +85,27 @@ export default {
         return jsonError(503, 'api_unavailable', 'The API service is not configured yet.');
       }
       const target = new URL(pathname + url.search, origin);
-      const proxied = new Request(target, request);
+      // Redirects belong to the visitor's browser, never the edge worker.
+      // Explicit manual mode prevents server-side affiliate visits and passing a
+      // third-party HTML body off as a blank /api/go response on our own origin.
+      const isStoreVisit = /^\/api\/go\/[^/]+$/.test(pathname) && request.method === 'GET';
+      const controller = isStoreVisit ? new AbortController() : null;
+      const timer = controller ? setTimeout(() => controller.abort(), 12000) : null;
+      const forwarded = new Request(target, request);
+      const proxied = new Request(forwarded, { redirect: 'manual', signal: controller?.signal ?? request.signal });
       // The upstream sees the real path; strip our own forwarding header if present.
       proxied.headers.delete('x-dealmosaic-proxy');
-      const response = await fetch(proxied);
+      let response;
+      try { response = await fetch(proxied); if (isStoreVisit && response.status >= 500) throw new Error('Store service unavailable'); }
+      catch {
+        if (isStoreVisit && request.headers.get('accept')?.includes('text/html')) {
+          const help = '/store-link-help?offer=' + encodeURIComponent(pathname.split('/').pop());
+          return new Response(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Store-link recovery · DealMosaic</title><style>body{font:18px/1.6 system-ui;background:#fff8ef;color:#65394b;margin:0;padding:32px}main{max-width:600px;margin:auto}a{color:#a32150;display:inline-block;padding:12px 0}h1{line-height:1.2}</style><main><p>DealMosaic · Store-link recovery</p><h1>The offer service did not respond in time.</h1><p>We have not confirmed that the store opened. Your offer details and any direct-store alternative are on the recovery page.</p><a href="${help}">Keep your code &amp; see opening options</a><br><a href="/deals">Back to offers</a></main></html>`, { status: 503, headers: {
+            'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow',
+            'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'" } });
+        }
+        return jsonError(502, 'upstream_unavailable', 'The offer service could not be reached. Please try again.');
+      } finally { if (timer) clearTimeout(timer); }
       // Re-wrap so we can attach a marker without mutating immutable headers.
       const out = new Response(response.body, response);
       out.headers.set('x-dealmosaic-proxy', 'pages');

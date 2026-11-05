@@ -4,9 +4,10 @@ import { Chrome } from '../components/PublicChrome';
 import { Seo } from '../lib/seo';
 import { apiRequest } from '../lib/api';
 import { Icon } from '../components/Icon';
+import { safeMerchantHome } from '../components/StoreFallback';
 import { useToast } from '../components/Toast';
 
-type OfferHelp = { available: boolean; reason?: string; title?: string; store?: string; code?: string | null; terms?: string | null; expiresAt?: string | null; linkHost?: string | null };
+type OfferHelp = { available: boolean; reason?: string; title?: string; store?: string; code?: string | null; terms?: string | null; expiresAt?: string | null; linkHost?: string | null; merchantHomeUrl?: string | null };
 export default function StoreLinkHelp() {
   const [params] = useSearchParams();
   const id = (params.get('offer') ?? '').slice(0, 128);
@@ -36,7 +37,8 @@ export default function StoreLinkHelp() {
         {offer.available ? <>
           <span className="eyebrow">{offer.store}</span><h2 className="h3">{offer.title}</h2>
           {offer.code ? <><p>Offer code: <strong className="selectable-code">{offer.code}</strong></p><button className="btn btn-ghost" onClick={() => void copy()}>Copy code</button></> : <p>No code is listed for this offer. Check the merchant’s eligibility rules and final bill.</p>}
-          <a className="btn btn-primary" href={`/api/go/${encodeURIComponent(id)}?src=recovery`} target="_blank" rel="sponsored nofollow noopener noreferrer">Try the store link again <Icon name="external" size={15} /></a>
+          {safeMerchantHome(offer.merchantHomeUrl) && <div className="callout stack"><h3 className="h4">Use the store’s own address instead</h3><a className="btn btn-primary" href={safeMerchantHome(offer.merchantHomeUrl)!} target="_blank" rel="nofollow noopener noreferrer">Open store homepage directly <Icon name="external" size={15} /></a><p className="small">This avoids the affiliate redirect host and opens the store homepage, not necessarily the advertised item. Keep the code above, find the item and check the final bill. Offer-specific prices or benefits may not carry over. Nothing is applied automatically.</p></div>}
+          <a className={safeMerchantHome(offer.merchantHomeUrl) ? "btn btn-ghost" : "btn btn-primary"} href={`/api/go/${encodeURIComponent(id)}?src=recovery`} target="_blank" rel="sponsored nofollow noopener noreferrer">Try the store link again <Icon name="external" size={15} /></a>
           <p className="tiny">Affiliate link · opens a new tab. This page stays here. Opening the store does not automatically apply a code or confirm a discount.</p>
           {offer.terms && <details><summary>Offer conditions supplied in the feed</summary><p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{offer.terms}</p></details>}
           {offer.linkHost && <p className="tiny muted">First link host: <strong>{offer.linkHost}</strong>. This identifies the redirect host, not a diagnosis of the fault.</p>}

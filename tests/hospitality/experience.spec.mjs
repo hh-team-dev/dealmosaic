@@ -255,11 +255,11 @@ test("strict hotel promotions exclude misclassified goods, unknown validity and 
   await expect(page.locator(".hospitality-offer")).toContainText(
     "Not checkout-tested",
   );
-  await expect(page.locator(".hospitality-offer a")).toHaveAttribute(
+  await expect(page.locator(".hospitality-offer a.shop-link")).toHaveAttribute(
     "href",
     /\/api\/go\/local-only-itc-hotels\?src=hospitality-stays/,
   );
-  await expect(page.locator(".hospitality-offer a")).toHaveAttribute(
+  await expect(page.locator(".hospitality-offer a.shop-link")).toHaveAttribute(
     "rel",
     /sponsored/,
   );

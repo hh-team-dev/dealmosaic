@@ -163,7 +163,7 @@ export async function runDailyNow(_source: string): Promise<{
    * 4. Refresh affiliate approval status — weekly, not daily.
    *
    * Campaign approval changes when a network reviews an application, which is a
-   * matter of weeks. Re-pulling 1,884 campaigns every day would burn 19 throttled
+   * matter of weeks. Re-pulling 1,884 campaigns every day would require several throttled
    * requests for information that did not change, so it runs at most once every
    * six days. It is last because it is the least urgent step and the slowest.
    */

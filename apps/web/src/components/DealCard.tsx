@@ -1,5 +1,5 @@
 import { useToast } from './Toast';
-import { Link } from 'react-router-dom';
+import { StoreFallback } from './StoreFallback';
 import { useCallback, useState } from 'react';
 import {
   expiryLabel,
@@ -115,13 +115,8 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         ) : (
           <span className="deal-code deal-code-none">No code listed</span>
         )}
-        {/*
-          Through our own redirect, not straight to the merchant. The feed's
-          tracking URL is identical for every visitor, so a direct link tells the
-          network only that somebody clicked — it cannot attribute the sale, and an
-          unattributed sale is one we are never paid for. /api/go mints a unique
-          sub-id per click. See apps/api/src/routes/go.ts.
-        */}
+        {/* Preserve publisher tracking; sub-ids reconcile attempts with network reports.
+            A recorded attempt is not a confirmed arrival, sale or commission. */}
         {deal.outboundUrl ? (
           <a
             className="deal-go"
@@ -140,7 +135,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         ) : null}
       </div>
 
-      {opened && <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(deal.id)}`}>Store not opening? Keep your code & get help</Link>}
+      {deal.outboundUrl && <StoreFallback id={deal.id} merchantHomeUrl={deal.merchantHomeUrl} showHelp={opened} />}
       <footer className="deal-card-foot">
         {urgency ? (
           <span className="deal-urgency">

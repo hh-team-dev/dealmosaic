@@ -253,6 +253,13 @@ export async function initDb(): Promise<void> {
       synced_at        TEXT
     )`);
   await db.exec('CREATE INDEX IF NOT EXISTS idx_affcamp_status ON affiliate_campaigns(access_status)');
+  // Retain network-provided category/country evidence. NULL means not yet read,
+  // not universal eligibility. Existing campaigns and recovery links survive.
+  const campaignColumns = await db.prepare('PRAGMA table_info(affiliate_campaigns)').all();
+  for (const column of ['categories_json', 'countries_json']) {
+    if (!campaignColumns.some(r => r.name === column)) await db.exec(`ALTER TABLE affiliate_campaigns ADD COLUMN ${column} TEXT`);
+  }
+
 
   /**
    * TEACHING AN OLD TABLE A NEW WORD.

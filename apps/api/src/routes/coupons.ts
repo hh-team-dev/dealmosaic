@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { merchantHome } from '../lib/merchant-home.js';
 import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
 import type { AppBindings } from '../middleware/session.js';
@@ -79,6 +80,7 @@ export interface CouponRow {
   starts_at?: string | null;
   created_at?: string | null;
   tracking_url?: string | null;
+  merchant_domain?: string | null;
 }
 
 export function toApi(r: CouponRow) {
@@ -155,6 +157,7 @@ export function toApi(r: CouponRow) {
     mentionsBankOrUpi: (r.mentions_bank ?? 0) === 1,
     /** Outbound link. Present only for affiliate-sourced rows. */
     outboundUrl: r.tracking_url ?? null,
+    merchantHomeUrl: merchantHome(r.merchant_domain, r.tracking_url),
     startsAt: r.starts_at ?? null,
     createdAt: r.created_at ?? null,
   };
@@ -241,9 +244,10 @@ couponRoutes.get('/', async (c) => {
 
   const rows = (await db
     .prepare(
-      `SELECT c.*, p.name AS platform_name
+      `SELECT c.*, p.name AS platform_name, a.domain AS merchant_domain
          FROM coupons c
          LEFT JOIN platforms p ON p.slug = c.platform_slug
+         LEFT JOIN affiliate_campaigns a ON a.id = c.campaign_id
         WHERE ${whereSql}
         ORDER BY ${orderBy}
         LIMIT ?`,
@@ -339,9 +343,10 @@ couponRoutes.get('/discover', async (c) => {
   const now = nowIso();
   const rows = (await db
     .prepare(
-      `SELECT c.*, p.name AS platform_name
+      `SELECT c.*, p.name AS platform_name, a.domain AS merchant_domain
          FROM coupons c
          LEFT JOIN platforms p ON p.slug = c.platform_slug
+         LEFT JOIN affiliate_campaigns a ON a.id = c.campaign_id
         WHERE c.trust_state IN ('listed','community_verified','moderator_verified')
           AND (c.expires_at IS NULL OR c.expires_at > ?)
           AND (c.starts_at IS NULL OR c.starts_at <= ?)

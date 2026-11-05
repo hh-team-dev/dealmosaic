@@ -1,0 +1,22 @@
+{
+  "screenshots": [
+    {
+      "name": "Screenshot_20261105-195359.png",
+      "sha256": "5a98b714ccee73a3e87c4a0ecd7e37bb463206e9317ee2a82a4e35e19b7762c3"
+    },
+    {
+      "name": "Screenshot_20261105-195358.png",
+      "sha256": "e9f26b189290f2d9c6334769d9f26df0c7eafa99ec2f3dc5a1988b0843ba0f53"
+    },
+    {
+      "name": "Screenshot_20261105-195355.png",
+      "sha256": "7abc211fead7141106bea31cd875fe6326c9e8385bc9ad49a62c6f4e9dc22729"
+    }
+  ],
+  "observations": [
+    "Chrome reports DNS_PROBE_FINISHED_NXDOMAIN at linksredirect.com; visible key/VPN indicator is not proof of the cause.",
+    "Blank in-progress first-party /api/go page; exact duration and final response are not established.",
+    "Homepage Tata Cliq / Ajio Gram offers visible, with no direct-store fallback."
+  ],
+  "deletedAfterReview": true
+}

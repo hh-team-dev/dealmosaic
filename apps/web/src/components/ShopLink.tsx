@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { StoreFallback } from './StoreFallback';
 import type { CouponView } from '../lib/coupons-api';
 import { Icon } from './Icon';
 
@@ -13,7 +13,7 @@ export function ShopLink({
   compact = false,
   label,
 }: {
-  coupon: Pick<CouponView, 'id' | 'platformName' | 'code'>;
+  coupon: Pick<CouponView, 'id' | 'platformName' | 'code' | 'merchantHomeUrl'>;
   source: string;
   compact?: boolean;
   label?: string;
@@ -45,7 +45,7 @@ export function ShopLink({
       {label ?? `Shop at ${coupon.platformName}`}
       <Icon name="external" size={14} />
     </a>
-    {opened && <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(coupon.id)}`}>Store not opening? Keep your code & get help</Link>}
+    <StoreFallback id={coupon.id} merchantHomeUrl={coupon.merchantHomeUrl} showHelp={opened} />
     </>
   );
 }

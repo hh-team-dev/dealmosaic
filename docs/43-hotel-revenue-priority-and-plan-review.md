@@ -1,6 +1,8 @@
 # 2.6.1: Hotel revenue priorities and review of Our Business 01 / 02
 
-> **Current release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
+> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime tag `pwa-v2.7.1`; exact deployments and validation are in the click-repair release receipts.
+
+> **Previous release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
 
 **Reviewed:** 5 November 2026. **Release status:** **2.6.1 deployed and production-verified.** Customer design retained; owner tools improved. No new monetisation programme is activated.
 

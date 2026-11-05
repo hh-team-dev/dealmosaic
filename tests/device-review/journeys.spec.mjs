@@ -105,7 +105,7 @@ test("shelf CTA stays readable on hover, focus, pressed state and store return; 
   await page.bringToFront();
   await readable(button);
   const help = page
-    .getByRole("link", { name: "Store not opening? Keep your code & get help" })
+    .getByRole("link", { name: "Keep your code & get link help" })
     .first();
   await expect(help).toBeVisible();
   await help.click();

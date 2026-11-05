@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-05T14:54:12.902961+00:00",
+  "scope": "DNS queries only, no affiliate URL or merchant navigation",
+  "hostname": "linksredirect.com",
+  "system": [
+    "68.183.244.242"
+  ],
+  "publicResolvers": [
+    {
+      "resolver": "Google",
+      "status": 0,
+      "answers": [
+        {
+          "name": "linksredirect.com.",
+          "type": 1,
+          "TTL": 300,
+          "data": "68.183.244.242"
+        }
+      ]
+    },
+    {
+      "resolver": "Cloudflare",
+      "status": 0,
+      "answers": [
+        {
+          "name": "linksredirect.com",
+          "type": 1,
+          "TTL": 300,
+          "data": "68.183.244.242"
+        }
+      ]
+    }
+  ]
+}

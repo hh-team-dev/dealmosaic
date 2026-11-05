@@ -77,9 +77,10 @@ export async function findOfferMatches(query: string, limit = 8): Promise<OfferM
 
   const rows = (await db
     .prepare(
-      `SELECT c.*, p.name AS platform_name
+      `SELECT c.*, p.name AS platform_name, a.domain AS merchant_domain
          FROM coupons c
     LEFT JOIN platforms p ON p.slug = c.platform_slug
+         LEFT JOIN affiliate_campaigns a ON a.id = c.campaign_id
         WHERE c.trust_state NOT IN ('expired', 'rejected')
           AND (c.expires_at IS NULL OR c.expires_at > ?)
           AND ${where}

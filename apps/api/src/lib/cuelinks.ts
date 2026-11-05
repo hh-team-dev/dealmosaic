@@ -110,6 +110,7 @@ export interface CuelinksCampaign {
   deeplink_allowed: boolean | null;
   cashback_publishers_allowed: boolean | null;
   countries?: Array<{iso: string; name?: string}>;
+  categories?: Array<{id?: number; name: string}>;
   sub_ids_allowed?: boolean | null;
   social_media_publishers_allowed?: boolean | null;
   missing_transactions_accepted?: boolean | null;

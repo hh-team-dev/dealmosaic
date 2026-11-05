@@ -23,6 +23,7 @@ import {
 } from '../lib/admin-api';
 
 const HospitalityBusiness = lazy(() => import('../components/HospitalityBusiness'));
+const ConnectionsDesk = lazy(() => import('../components/ConnectionsDesk'));
 const CampaignInventory = lazy(() => import('../components/CampaignInventory'));
 const ShopControl = lazy(() => import('../components/ShopControl'));
 
@@ -38,11 +39,12 @@ const ShopControl = lazy(() => import('../components/ShopControl'));
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'hospitality' | 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'connections' | 'hospitality' | 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'shop', label: 'My shop' },
   { id: 'overview', label: 'Overview' },
+  { id: 'connections', label: 'Connections' },
   { id: 'revenue', label: 'Earnings' },
   { id: 'campaigns', label: 'Campaigns' },
   { id: 'hospitality', label: 'Hotels & dining' },
@@ -153,7 +155,8 @@ export default function Admin() {
               </nav>
 
               {tab === 'shop' && <Suspense fallback={<p role="status">Loading shop controls…</p>}><ShopControl /></Suspense>}
-              {tab === 'overview' && <Overview key={attempt} onError={fail} />}
+              {tab === 'connections' && <Suspense fallback={<p role="status">Loading your connections…</p>}><ConnectionsDesk /></Suspense>}
+              {tab === 'overview' && <><div className="callout stack"><strong>Your APIs, campaign access & published offers</strong><Link className="btn btn-ghost" to="/admin?tab=connections">Open the category-by-category connection desk</Link></div><Overview key={attempt} onError={fail} /></>}
               {tab === 'revenue' && <Revenue key={attempt} onError={fail} />}
               {tab === 'hospitality' && <Suspense fallback={<p role="status">Loading hospitality business desk…</p>}><HospitalityBusiness /></Suspense>}
               {tab === 'campaigns' && <Suspense fallback={<p role="status">Loading campaign inventory…</p>}><CampaignInventory /></Suspense>}

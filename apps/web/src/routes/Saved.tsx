@@ -1,3 +1,4 @@
+import { StoreFallback } from '../components/StoreFallback';
 import { SavedAccountStatus } from '../components/SavedAccountStatus';
 import { usePwa } from '../lib/pwa';
 import { useToast } from '../components/Toast';
@@ -138,7 +139,7 @@ export default function Saved() {
                           </a>
                         )}
                       </div>
-                      <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(d.id)}`}>Offer details & store-link help</Link>
+                      {!offline && <StoreFallback id={d.id} merchantHomeUrl={d.merchantHomeUrl} showHelp />}
                       <footer className="deal-card-foot">
                         <span className="deal-urgency">
                           <Icon name="clock" size={12} /> {expiryLabel(d.expiresAt, null) ?? 'No expiry published'}

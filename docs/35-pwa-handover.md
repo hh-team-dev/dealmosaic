@@ -1,6 +1,8 @@
-# DealMosaic 2.0.1 — PWA + website handover
+# DealMosaic — PWA + website handover
 
-> **Current release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
+> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime tag `pwa-v2.7.1`; exact deployments and validation are in the click-repair release receipts.
+
+> **Previous release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
 
 > **Previous release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
 

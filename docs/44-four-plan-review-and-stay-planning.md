@@ -1,5 +1,7 @@
 # 2.7.0 — Four-plan review and practical stay planning
 
+> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime tag `pwa-v2.7.1`; exact deployments and validation are in the click-repair release receipts.
+
 **Review date:** 5 November 2026. **Release status:** **2.7.0 deployed and production-verified.** No new earning programme, paid service or hospitality booking operation is activated.
 
 ## 1. What was reviewed

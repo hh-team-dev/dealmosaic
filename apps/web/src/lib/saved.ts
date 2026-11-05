@@ -23,6 +23,7 @@ export interface SavedDeal {
   percentIsCap: boolean;
   expiresAt: string | null;
   outboundUrl: string | null;
+  merchantHomeUrl?: string | null;
   savedAt: string;
   /** Which shelf it was found on, so "saved from" can be shown later. */
   group: string;
@@ -112,6 +113,7 @@ export interface SaveableDeal {
   percentIsCap: boolean;
   expiresAt: string | null;
   outboundUrl: string | null;
+  merchantHomeUrl?: string | null;
   dealGroup: CouponView['dealGroup'];
 }
 
@@ -164,6 +166,7 @@ export function toggleSaved(deal: SaveableDeal): boolean | null {
     percentIsCap: deal.percentIsCap,
     expiresAt: deal.expiresAt,
     outboundUrl: deal.outboundUrl,
+    merchantHomeUrl: deal.merchantHomeUrl ?? null,
     savedAt: new Date().toISOString(),
     group: deal.dealGroup,
   };

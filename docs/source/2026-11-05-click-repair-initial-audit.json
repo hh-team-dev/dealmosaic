@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-05T14:32:36.286Z",
+  "campaigns": 1884,
+  "access": {
+    "pending": 4,
+    "open": 1543,
+    "not_applied": 337
+  },
+  "offers": 1141,
+  "liveOffers": 1123,
+  "trackingHosts": {
+    "linksredirect.com": 1141
+  },
+  "withUrlParameter": 1141,
+  "scope": "Initial read-only database audit; no affiliate URL followed or production row changed."
+}

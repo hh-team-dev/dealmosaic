@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 process.env.DB_PATH = ':memory:';
 process.env.NODE_ENV = 'development';
@@ -159,5 +159,21 @@ describe('redirect safety at click time', () => {
     const id = await seedCoupon({ tracking_url });
     expect((await click(id)).status).toBe(410);
     expect(await dbModule.db.prepare('SELECT COUNT(*) AS n FROM outbound_clicks WHERE coupon_id=?').get(id)).toMatchObject({ n: 0 });
+  });
+});
+
+
+describe('bounded outbound analytics', () => {
+  it('does not strand navigation behind a stuck click-record insert', async () => {
+    const id = await seedCoupon();
+    const original = dbModule.db.prepare.bind(dbModule.db);
+    const spy = vi.spyOn(dbModule.db, 'prepare').mockImplementation(((sql: string) => {
+      if (sql.includes('INSERT INTO outbound_clicks')) return { run: () => new Promise(() => {}) };
+      return original(sql);
+    }) as typeof dbModule.db.prepare);
+    try {
+      const started = Date.now(); const res = await click(id);
+      expect(res.status).toBe(302); expect(Date.now()-started).toBeLessThan(2500);
+    } finally { spy.mockRestore(); }
   });
 });

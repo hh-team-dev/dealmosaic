@@ -1,36 +1,14 @@
 import { Hono, type Context } from 'hono';
+import { merchantHome } from '../lib/merchant-home.js';
 import { db, newId, nowIso } from '../db/index.js';
 import { createRateLimiter } from '../lib/rate-limit.js';
 import type { AppBindings } from '../middleware/session.js';
 
-/**
- * THE ONE ROUTE THAT EARNS.
- *
- * `GET /api/go/:couponId` is the difference between a website that displays
- * discounts and a business that sells them. Everything else on the site is
- * decoration around this redirect:
- *
- *   1. a shopper taps "Shop at Croma";
- *   2. we mint a unique **sub-id** and append it to the merchant's tracking link;
- *   3. we record the click — store, coupon, day, coarse device, never the person;
- *   4. the browser is sent to the merchant through the affiliate network;
- *   5. the network reports the sale back against that sub-id, and pays.
- *
- * Step 5 is the only step that produces rupees, and it is out of our hands. What
- * is in our hands is steps 2–3: without a unique sub-id per click there is no
- * attribution, and an unattributed sale is a sale we gave away.
- *
- * Why a redirect on our own host rather than the merchant's link straight from the
- * card: the tracking URL in the feed is shareable and identical for every visitor,
- * so clicking it directly tells the network only that *somebody* clicked. That is
- * how coupon sites end up with traffic and no commission.
- *
- * Honesty rules held here:
- *   • no click is invented, and a click is not a sale — the admin view says both;
- *   • an expired or rejected coupon never redirects, because sending a shopper to
- *     a dead code is the fastest way to lose them;
- *   • if a row has no tracking link we say so instead of inventing a destination.
- */
+/** Outbound ATTEMPTS, not confirmed store arrivals or payable earnings.
+ * Preserve the network-issued publisher link. A unique sub-id helps reconcile
+ * attempts with network reports; it does not itself create an entitlement to
+ * commission, nor is it required for every network's publisher attribution.
+ * No server-side test clicks, tracking-host swaps or silent direct fallbacks. */
 
 export const goRoutes = new Hono<AppBindings>();
 
@@ -96,12 +74,13 @@ function safeHost(url: string | null): string | null {
 goRoutes.get('/:couponId/details', async c => {
   c.header('Cache-Control', 'no-store');
   c.header('X-Robots-Tag', 'noindex, nofollow');
-  const row = await db.prepare(`SELECT id, platform_slug, code, tracking_url, trust_state, expires_at,
-    starts_at, title, campaign_name, terms FROM coupons WHERE id = ?`).get(c.req.param('couponId')) as (ClickRow & { title: string; campaign_name: string | null; terms: string | null }) | undefined;
+  const row = await db.prepare(`SELECT c.id, c.platform_slug, c.code, c.tracking_url, c.trust_state, c.expires_at,
+    c.starts_at, c.title, c.campaign_name, c.terms, a.domain AS merchant_domain FROM coupons c
+    LEFT JOIN affiliate_campaigns a ON a.id = c.campaign_id WHERE c.id = ?`).get(c.req.param('couponId')) as (ClickRow & { title: string; campaign_name: string | null; terms: string | null; merchant_domain: string | null }) | undefined;
   if (!row || !eligible(row) || !safeHost(row.tracking_url)) return c.json({ available: false,
     reason: 'The offer is unavailable, outside its validity window, or has no safe store link.' });
   return c.json({ available: true, title: row.title, store: row.campaign_name || row.platform_slug,
-    code: row.code, terms: row.terms, expiresAt: row.expires_at, linkHost: safeHost(row.tracking_url) });
+    code: row.code, terms: row.terms, expiresAt: row.expires_at, linkHost: safeHost(row.tracking_url), merchantHomeUrl: merchantHome(row.merchant_domain, row.tracking_url) });
 });
 
 goRoutes.get('/:couponId', async (c) => {
@@ -136,8 +115,9 @@ goRoutes.get('/:couponId', async (c) => {
    * sale. So it is written first but awaited on a short leash, and a failure is
    * logged rather than thrown.
    */
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    await db
+    const write = db
       .prepare(
         `INSERT INTO outbound_clicks (id, coupon_id, platform_slug, user_id, subid, destination, source, device, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -153,8 +133,11 @@ goRoutes.get('/:couponId', async (c) => {
         deviceOf(c.req.header('user-agent') ?? ''),
         nowIso(),
       );
-  } catch (err) {
-    console.error('outbound click not recorded', (err as Error).message);
+    await Promise.race([write, new Promise<void>(resolve => { timer = setTimeout(resolve, 800); })]);
+  } catch {
+    console.error('outbound attempt record failed');
+  } finally {
+    if (timer) clearTimeout(timer);
   }
 
   c.header('cache-control', 'no-store');

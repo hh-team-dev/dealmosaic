@@ -11,11 +11,11 @@ import * as cuelinks from '../lib/cuelinks.js';
  * assumption this project exists to avoid.
  *
  * This service caches the network's own answer. It pulls the CPS campaign list
- * (the only campaign type that pays on a purchase) and stores `access_status`:
+ * (sale-labelled campaigns; actual payable events are defined by their terms) and stores `access_status`:
  *
- *   open         → approved. A click through a tracked link earns.
- *   pending      → we applied. The link resolves and pays nothing.
- *   not_applied  → never asked. Pays nothing.
+ *   open         → network reports access; placement and payable-event rules still apply.
+ *   pending      → pending network approval; no earnings assumed.
+ *   not_applied  → network reports no application; no earnings assumed.
  *
  * Rate limit: 6 requests/minute. The sync therefore sleeps 10.5 s between pages
  * and is capped at `maxPages`. It is deliberately sequential — parallelising it
@@ -51,6 +51,8 @@ interface CampaignRow {
   cookie_duration: string | null;
   deeplink_allowed: boolean | null;
   cashback_publishers_allowed: boolean | null;
+  categories?: Array<{ name: string }>;
+  countries?: Array<{ iso: string }>;
 }
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
@@ -73,7 +75,7 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
   for (let page = 1; page <= maxPages; page += 1) {
     let res: Awaited<ReturnType<typeof cuelinks.fetchCampaigns>>;
     try {
-      res = await cuelinks.fetchCampaigns(page, 100, 'CPS');
+      res = await cuelinks.fetchCampaigns(page, 500, 'CPS');
     } catch (err) {
       errors.push(`page ${page}: ${(err as Error).message}`);
       break;
@@ -95,8 +97,8 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
         rows.map((c) => ({
           sql: `INSERT INTO affiliate_campaigns
                   (id, name, domain, access_status, campaign_type, payout, payout_currency,
-                   cookie_duration, deeplink_allowed, cashback_allowed, synced_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                   cookie_duration, deeplink_allowed, cashback_allowed, synced_at, categories_json, countries_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                   name = excluded.name,
                   domain = excluded.domain,
@@ -107,7 +109,9 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
                   cookie_duration = excluded.cookie_duration,
                   deeplink_allowed = excluded.deeplink_allowed,
                   cashback_allowed = excluded.cashback_allowed,
-                  synced_at = excluded.synced_at`,
+                  synced_at = excluded.synced_at,
+                  categories_json = excluded.categories_json,
+                  countries_json = excluded.countries_json`,
           args: [
             c.id,
             c.name,
@@ -120,6 +124,8 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
             c.deeplink_allowed ? 1 : 0,
             c.cashback_publishers_allowed ? 1 : 0,
             stamp,
+            Array.isArray(c.categories) ? JSON.stringify(c.categories.filter(x => typeof x?.name === 'string').slice(0, 30).map(x => x.name.slice(0, 120))) : null,
+            Array.isArray(c.countries) ? JSON.stringify(c.countries.filter(x => typeof x?.iso === 'string' && /^[A-Z]{2}$/i.test(x.iso)).slice(0, 250).map(x => x.iso.toUpperCase())) : null,
           ],
         })),
       );
@@ -128,6 +134,7 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
       break;
     }
 
+    if (page === maxPages && res.meta?.next_page) errors.push('Campaign cache refresh stopped at its page limit; the network list is incomplete.');
     if (page < maxPages && res.meta?.next_page) await sleep(PAGE_DELAY_MS);
     else if (!res.meta?.next_page) break;
   }
@@ -138,9 +145,9 @@ export async function syncCampaigns(maxPages = 20): Promise<CampaignSyncResult> 
 export interface AffiliateReadiness {
   /** Campaigns we have cached. */
   tracked: number;
-  /** `access_status = 'open'` — a click through a tracked link earns. */
+  /** Network-reported open access, NOT earned revenue or blanket placement permission. */
   earning: number;
-  /** Applied, not yet approved. Links resolve, pay nothing. */
+  /** Network reports pending approval; no commission entitlement assumed. */
   pending: number;
   /** Never applied. */
   notApplied: number;
