@@ -1,0 +1,8 @@
+{
+  "archive": "backups/dealmosaic_2026-11-05_12-22-47.tar.gz",
+  "sha256": "e25addacb00db45f4c708aa5534a484e1116ef9feb69b8469b18c69437759698",
+  "files": 431,
+  "uncompressedBytes": 9125901,
+  "verified": true,
+  "note": "Snapshot precedes its own checksum note and final PDF receipt; final Git bundle preserves later records."
+}

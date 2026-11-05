@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-05T12:22:40.629201+00:00",
+  "sourceCommit": "19b8c142c8956836d84f62790053473a00c9cbd5",
+  "unitTests": 729,
+  "unitFiles": 37,
+  "designAssertions": 48,
+  "browserSuites": {
+    "device": 39,
+    "general": 46,
+    "hospitality": 117,
+    "pwa": 57,
+    "engagement": 39
+  },
+  "browserPassed": 298,
+  "developmentOnlySkips": 2,
+  "productionChecks": 70,
+  "api": {
+    "id": "dep-dbm792142hec73ds3a40",
+    "status": "live",
+    "commit": "19b8c142c8956836d84f62790053473a00c9cbd5",
+    "finishedAt": "2026-11-05T12:21:22.450415Z"
+  },
+  "pages": {
+    "id": "1e072c89-790f-49e7-a260-3108880485c7",
+    "url": "https://1e072c89.dealmosaic.pages.dev",
+    "environment": "production",
+    "commit": "19b8c142c8956836d84f62790053473a00c9cbd5",
+    "apiOriginPreserved": true
+  },
+  "paidServicesActivated": false,
+  "newApplications": 0,
+  "affiliateSelfClicks": 0,
+  "screenshotsRetained": false
+}

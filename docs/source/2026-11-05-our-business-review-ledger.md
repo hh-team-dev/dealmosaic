@@ -33,3 +33,5 @@ Final window: 2026-11-05T11:53:01.470Z to 2026-11-05T12:04:24.741Z. CPC: 47/47 p
 **Critical interpretation:** “CPS” can encode a downstream click-out as an order. Trivago's open status and India inclusion are promising, but its deals/coupons restrictions are material for this publisher. No statement that all click revenue requires a hotel booking, or that all first clicks are payable, is justified. The owner enquiry asks explicitly about DealMosaic's actual publisher type and proposed organic, coupon-free comparison placement. No page relabelling is used to bypass a restriction.
 
 No paid service, new programme application, terms acceptance, bank/identity collection, provider scrape, CAPTCHA bypass, live booking, affiliate self-click, financial-product recommendation or customer message was performed.
+
+A separate authenticated SELECT against the existing production Turso database returned zero coupon rows for campaign IDs 2516 and 25058. It followed no links and changed no records. The network scan is paginated and non-atomic; “complete” means all reported pages were read, not a guarantee that the catalogue could not change during the scan.

@@ -1,5 +1,8 @@
 # 42 — DealMosaic hospitality: business architecture and native comparison
 
+> **Current release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
+
+
 **Owner decision:** proceed with hotels first, then restaurants; physical-device retest can follow. Research reviewed: both supplied PDFs, all 13 pages. **Design date: 5 November 2026.**
 
 **Release status:** Website, PWA and API **2.6.0 deployed and production-verified on 5 November 2026**. Personal comparison and the owner business desk are live. Automatic supplier prices, bookings and new hospitality commission connections are not activated. The receipt below distinguishes tested implementation from future integrations.

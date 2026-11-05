@@ -1,6 +1,9 @@
 # 28 — Backup and recovery dossier
 
-> **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
+> **Current release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
+
+
+> **Previous release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
 
 
 > **Previous release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
@@ -14,7 +17,17 @@
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
-## Current recovery point — website / PWA / API 2.6.0
+## Current recovery point — website / PWA / API 2.6.1
+
+### Recovery and handover
+
+- Verified source snapshot: `backups/dealmosaic_2026-11-05_12-22-47.tar.gz`, **431 files / 9,125,901 bytes uncompressed**; every manifest checksum matched. SHA-256 `e25addacb00db45f4c708aa5534a484e1116ef9feb69b8469b18c69437759698`.
+- Snapshot excludes credentials, databases, generated build output and review media. It precedes its own checksum note and final PDF receipts; subsequent records are preserved in Git and the complete-history bundle.
+- Complete Git recovery: `backups/pwa-v2.6.1.bundle` with a `SHA256` sidecar; verify both the checksum and `git bundle verify`. The runtime tag stays at the frozen application source; the final documentation commit is separate.
+- Matched PWA/classic archives remain in `/home/user/releases/dealmosaic-2.6.1/`. Keep the compatible API and database. For a classic switch, retain the same-origin removal worker; do not delete personal quote/account storage.
+- All individual handover PDFs and the combined master are regenerated together. The isolated test servers are stopped, test databases and test-media folders removed, and no screenshot retained. No paid service was added.
+
+## Previous recovery point — website / PWA / API 2.6.0
 
 ### Source recovery
 

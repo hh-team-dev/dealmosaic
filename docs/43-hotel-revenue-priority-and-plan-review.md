@@ -1,6 +1,6 @@
 # 2.6.1: Hotel revenue priorities and review of Our Business 01 / 02
 
-**Reviewed:** 5 November 2026. **Release status:** implementation and validation in progress; production remains 2.6.0 until the receipt is completed.
+**Reviewed:** 5 November 2026. **Release status:** **2.6.1 deployed and production-verified.** Customer design retained; owner tools improved. No new monetisation programme is activated.
 
 ## 1. Decision in one minute
 
@@ -189,15 +189,37 @@ The **35/0 result is about the API's CPC classification**, not proof that no cli
 
 The Park Hotels 25058 is an India-listed CPC-labelled prospect, not applied, with deep links disabled. Its public page also contains “Payout per Successful booking” and purchase-flow language. That conflict needs written clarification; do not advertise it as guaranteed click income. [8](https://www.cuelinks.com/campaigns/theparkhotels-affiliate-program)
 
-Trivago's public headline and authenticated account headline amounts differ; neither establishes the precise India-specific net payout. The public page lists validation/payment delays; completed tracking is not immediate cash. No financial forecast uses those headline amounts. Full relevant account rows stay in the workspace research folder; the compact checked receipt is `docs/source/2026-11-05-hotel-monetisation-account-audit.json`.
+Trivago's public headline and authenticated account headline amounts differ; neither establishes the precise India-specific net payout. The public page lists 55-day validation from the following month and payment 60 days after validation; confirm the applicable account/category terms rather than treating this as a guaranteed schedule. Completed tracking is not immediate cash. No financial forecast uses those headline amounts. A separate read-only production database check found zero coupon rows for Trivago 2516 and The Park Hotels 25058; neither campaign was newly exposed as a promotion. Full relevant account rows stay in the workspace research folder; the compact checked receipt is `docs/source/2026-11-05-hotel-monetisation-account-audit.json`.
 
 ### Deployment receipt
 
-Final test counts, source/deployment identities and recovery hashes follow after validation. Research completion is not itself a production release.
+- Runtime source/tag: `19b8c142c8956836d84f62790053473a00c9cbd5` / `pwa-v2.6.1`.
+- Existing free Render service deployment: `dep-dbm792142hec73ds3a40`, live. Cloudflare Pages: `1e072c89-790f-49e7-a260-3108880485c7`; API origin preserved.
+- Public site: https://dealmosaic.pages.dev. Owner desk: `/admin?tab=hospitality`; campaign inventory: `/admin?tab=campaigns`. Administrator authentication remains required.
+- Type checks and **729 unit/service tests in 37 files** passed; **48 design assertions** passed. Final secret scan is recorded with the release bookkeeping.
+- Exact packaged browser suites: **39 device-review + 46 general + 117 hospitality + 57 PWA + 39 persistent-control = 298 passed**, with 2 existing development-only skips. Targeted development checks preceded these final artifact runs.
+- Both PWA and classic builds passed **59 HTML / 58 unique-h1 checks** and implementation parity. Local release rehearsal passed 69 checks against isolated data.
+- Production: **70 read-only checks** verified frozen runtime revision, exact PWA build, protected-route denials (including CPC query), neutral private shells, disclosures, existing product truth, mobile accessibility/layout and local-note persistence. Zero API mutation or external provider/affiliate navigation; temporary local notes removed. Signed-in owner interactions used isolated fixtures, not a production owner session.
+- The deployment CLI reported uncommitted documentation updates; the application archives themselves were already frozen from clean source, as the manifest confirms.
+- Packages: `/home/user/releases/dealmosaic-2.6.1/`; clean-source manifest `docs/source/2026-11-05-hotel-revenue-release-manifest.json`, `workingTreeChanged: false`.
+
+- **pwa** build `2.6.1-8db336e6e3e4`; archive `dealmosaic-2.6.1-pwa.tar.gz`; SHA-256 `0ae734f892fd5c2fd595b81557ab2134f39087fc2c89a0a9a623bef7c71a0bf3`.
+- **classic** build `2.6.1-9c832757a412`; archive `dealmosaic-2.6.1-classic.tar.gz`; SHA-256 `a7d0c4078fbbdeade68fa957086c617f3154531f43de182dbf98cf15c99bbd22`.
+
+### Recovery and handover
+
+- Verified source snapshot: `backups/dealmosaic_2026-11-05_12-22-47.tar.gz`, **431 files / 9,125,901 bytes uncompressed**; every manifest checksum matched. SHA-256 `e25addacb00db45f4c708aa5534a484e1116ef9feb69b8469b18c69437759698`.
+- Snapshot excludes credentials, databases, generated build output and review media. It precedes its own checksum note and final PDF receipts; subsequent records are preserved in Git and the complete-history bundle.
+- Complete Git recovery: `backups/pwa-v2.6.1.bundle` with a `SHA256` sidecar; verify both the checksum and `git bundle verify`. The runtime tag stays at the frozen application source; the final documentation commit is separate.
+- Matched PWA/classic archives remain in `/home/user/releases/dealmosaic-2.6.1/`. Keep the compatible API and database. For a classic switch, retain the same-origin removal worker; do not delete personal quote/account storage.
+- All individual handover PDFs and the combined master are regenerated together. The isolated test servers are stopped, test databases and test-media folders removed, and no screenshot retained. No paid service was added.
+
+
+
 
 
 ## 10. Owner's phone-sized next steps
 
-After release: **Admin → Hospitality** for priorities and scenarios. Use **Inspect live CPC campaigns and country restrictions** to open the filtered network inventory. Expand a campaign to inspect country, payout basis and restrictions. This is read-only and cannot join a campaign or create a paid click.
+After release: **Admin → Hospitality** for priorities and scenarios. Use **Inspect live CPC campaigns and country restrictions** to open the filtered network inventory. Expand a campaign to inspect country, payout basis and restrictions. For **Trivago**, switch to cached inventory, choose **All available types** or **CPS**, and search **2516**; the CPC-only filter intentionally will not show its CPS-labelled record. This is read-only and cannot join a campaign or create a paid click.
 
 You can defer the device tour as requested. The next unavoidable owner actions are programme/contract acceptance and private identity/tax/payment facts where a chosen supplier requires them—not more cosmetic website work. The developer can prepare, integrate and test approved tools; it cannot manufacture advertiser acceptance or promise a first payment date.

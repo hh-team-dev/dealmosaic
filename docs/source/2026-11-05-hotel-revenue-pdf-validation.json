@@ -1,0 +1,174 @@
+{
+  "date": "2026-11-05",
+  "release": "2.6.1",
+  "validatedHeadings": 492,
+  "files": [
+    {
+      "file": "00-MASTER-HANDOVER.pdf",
+      "pages": 35,
+      "bytes": 1495780,
+      "outOfPageSpans": 0,
+      "headings": 90
+    },
+    {
+      "file": "brand-identity.pdf",
+      "pages": 5,
+      "bytes": 321388,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "04-design-system.pdf",
+      "pages": 6,
+      "bytes": 397618,
+      "outOfPageSpans": 0,
+      "headings": 15
+    },
+    {
+      "file": "15-project-handover.pdf",
+      "pages": 19,
+      "bytes": 922480,
+      "outOfPageSpans": 0,
+      "headings": 58
+    },
+    {
+      "file": "14-seo-launch-checklist.pdf",
+      "pages": 4,
+      "bytes": 244859,
+      "outOfPageSpans": 0,
+      "headings": 15
+    },
+    {
+      "file": "27-five-agent-consolidation.pdf",
+      "pages": 6,
+      "bytes": 338642,
+      "outOfPageSpans": 0,
+      "headings": 12
+    },
+    {
+      "file": "28-backup-and-recovery.pdf",
+      "pages": 19,
+      "bytes": 1028740,
+      "outOfPageSpans": 0,
+      "headings": 31
+    },
+    {
+      "file": "29-site-tour-fixes.pdf",
+      "pages": 6,
+      "bytes": 346257,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "30-earning-and-admin.pdf",
+      "pages": 4,
+      "bytes": 264208,
+      "outOfPageSpans": 0,
+      "headings": 13
+    },
+    {
+      "file": "31-affiliate-applications.pdf",
+      "pages": 4,
+      "bytes": 273046,
+      "outOfPageSpans": 0,
+      "headings": 11
+    },
+    {
+      "file": "32-direct-sales-blueprint.pdf",
+      "pages": 7,
+      "bytes": 318528,
+      "outOfPageSpans": 0,
+      "headings": 17
+    },
+    {
+      "file": "33-direct-shop-release.pdf",
+      "pages": 6,
+      "bytes": 323481,
+      "outOfPageSpans": 0,
+      "headings": 16
+    },
+    {
+      "file": "34-sitewide-audit.pdf",
+      "pages": 6,
+      "bytes": 306561,
+      "outOfPageSpans": 0,
+      "headings": 9
+    },
+    {
+      "file": "35-pwa-handover.pdf",
+      "pages": 9,
+      "bytes": 441826,
+      "outOfPageSpans": 0,
+      "headings": 23
+    },
+    {
+      "file": "36-persistent-install-and-deals.pdf",
+      "pages": 5,
+      "bytes": 271456,
+      "outOfPageSpans": 0,
+      "headings": 12
+    },
+    {
+      "file": "37-hotels-and-dining.pdf",
+      "pages": 7,
+      "bytes": 349864,
+      "outOfPageSpans": 0,
+      "headings": 17
+    },
+    {
+      "file": "38-expanded-destinations.pdf",
+      "pages": 4,
+      "bytes": 226701,
+      "outOfPageSpans": 0,
+      "headings": 8
+    },
+    {
+      "file": "39-pet-friendly-directory.pdf",
+      "pages": 5,
+      "bytes": 283732,
+      "outOfPageSpans": 0,
+      "headings": 9
+    },
+    {
+      "file": "40-hospitality-revenue-reset.pdf",
+      "pages": 9,
+      "bytes": 415903,
+      "outOfPageSpans": 0,
+      "headings": 25
+    },
+    {
+      "file": "41-device-review-and-conversion-repair.pdf",
+      "pages": 6,
+      "bytes": 281712,
+      "outOfPageSpans": 0,
+      "headings": 12
+    },
+    {
+      "file": "42-hospitality-business-and-native-comparison.pdf",
+      "pages": 13,
+      "bytes": 558741,
+      "outOfPageSpans": 0,
+      "headings": 46
+    },
+    {
+      "file": "43-hotel-revenue-priority-and-plan-review.pdf",
+      "pages": 8,
+      "bytes": 336855,
+      "outOfPageSpans": 0,
+      "headings": 24
+    },
+    {
+      "file": "00-executive-summary.pdf",
+      "pages": 4,
+      "bytes": 259204,
+      "outOfPageSpans": 0,
+      "headings": 7
+    },
+    {
+      "file": "DEALMOSAIC-handover-set.pdf",
+      "pages": 199,
+      "bytes": 10053984,
+      "outOfPageSpans": 0
+    }
+  ]
+}

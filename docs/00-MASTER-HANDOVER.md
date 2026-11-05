@@ -1,9 +1,9 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **Revenue-plan review in progress — 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) reviews Our Business 01/02, the completed account audit, Trivago’s qualified-click terms and the proposed 2.6.1 owner-tool improvements. The latest deployed receipt below remains authoritative until 2.6.1 verification is recorded.
+> **Current release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
 
 
-> **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
+> **Previous release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
 
 > **Previous 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.
 
@@ -17,7 +17,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **5 November 2026** · Live website/PWA/API **2.6.0** · Current release evidence is in document 42.
+Last updated: **5 November 2026** · Live website/PWA/API **2.6.1** · Current release evidence is in document 43.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -29,7 +29,13 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — website, PWA and API 2.6.0
+## Current live release — website, PWA and API 2.6.1
+
+The customer comparison and shopping design remain intact. Owner tools now distinguish payment types, countries, sub-ID/cashback/social permissions and missing-transaction rules. CPC is the first investigated scenario, with a separate downstream click-out model. The complete read-only network scan found 23,127 CPC-labelled rows (35 explicitly India-listed, zero India-listed/open) and 1,882 CPS-labelled rows. Trivago 2516 is open/India and describes click-outs in its detailed terms despite the CPS label; Deals/Coupons restrictions require publisher/placement clarification before activation. It is not payment for every DealMosaic tap.
+
+Runtime/tag `19b8c142c8956836d84f62790053473a00c9cbd5` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. Both deployable flavors were packaged from clean committed source. Validation: **729 unit tests**, **48 design assertions**, **298 browser checks plus 2 existing skips**, and **70 read-only production checks**. Document 43 contains the source audit, plan corrections, priority order and exact remaining commercial gates. No new applications, paid services, affiliate test clicks or customer messages were made. Physical retest and the pre-existing intermittent external-link diagnosis remain open.
+
+## Previous live release — website, PWA and API 2.6.0
 
 Native `/stays/compare` and `/dining/compare` provide 40 sourced stays and 33 dining places across the 17 destination choices. Customers can enter their own quotes, compare complete like-for-like totals and conditions, keep private device notes offline and export them. **These are personal quotes, not automatically fetched or verified OTA prices.** The protected owner hospitality desk exposes approval gates, an unsent supplier enquiry and hypothetical unit economics; it does not activate accounts or record earnings.
 
