@@ -1,0 +1,93 @@
+.sp-page header {
+  max-width: 850px;
+  padding: 28px 0;
+}
+.sp-card {
+  margin: 30px 0;
+  padding: clamp(16px, 3vw, 30px);
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  scroll-margin-top: 150px;
+}
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.sp-page fieldset {
+  border: 1px solid var(--line);
+  padding: 18px;
+  border-radius: 12px;
+  min-width: 0;
+}
+.sp-page legend {
+  font-weight: 700;
+  padding-inline: 7px;
+}
+.sp-page label {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.sp-page input:not([type="checkbox"]),
+.sp-page select,
+.sp-draft {
+  width: 100%;
+  min-width: 0;
+  color: var(--ink);
+  background: #fffdf8;
+  border: 1px solid var(--line-strong, #a78567);
+  border-radius: 9px;
+  padding: 12px;
+  font: inherit;
+}
+.sp-page input::placeholder {
+  color: var(--ink-muted);
+  opacity: 1;
+}
+.sp-page .sp-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.sp-check input {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  accent-color: var(--hospitality-accent);
+}
+.sp-result {
+  background: var(--hospitality-wash);
+  padding: 18px;
+  margin-top: 20px;
+  border-radius: 12px;
+}
+.sp-page [role="alert"] {
+  border-left: 3px solid var(--hospitality-accent);
+  padding: 12px;
+  font-weight: 600;
+}
+.sp-draft {
+  resize: vertical;
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.sp-page a {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 680px) {
+  .sp-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .sp-page fieldset {
+    padding: 12px;
+  }
+  .sp-page h1 {
+    font-size: 38px;
+  }
+}

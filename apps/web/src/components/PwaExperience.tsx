@@ -8,7 +8,7 @@ export function PwaExperience({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [later, setLater] = useState(false);
-  const localQuotePage = /^\/(stays|dining)\/compare\/?$/.test(pathname);
+  const localQuotePage = /^\/(stays|dining)\/compare\/?$/.test(pathname) || /^\/stays\/plan\/?$/.test(pathname);
   const safeOfflinePage = localQuotePage || ['/saved', '/install'].includes(pathname.replace(/\/$/, '') || '/');
   const bootBlocked = app.bootOffline && !safeOfflinePage;
   const locked = app.disconnected && sensitiveTask(pathname) && !localQuotePage;

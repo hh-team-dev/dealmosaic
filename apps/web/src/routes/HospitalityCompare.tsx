@@ -669,6 +669,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
               >
                 {hotel ? "Compare dining" : "Compare stays"}
               </Link>
+              <Link to={`/stays/plan?city=${city.id}`}>Trip budget & stay questions</Link>
               <Link to={`/pet-friendly?city=${city.id}`}>
                 Pet-friendly places
               </Link>

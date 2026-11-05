@@ -71,6 +71,7 @@ check(
   release.build === expected.build && release.mode === "pwa",
 );
 for (const path of [
+  "/stays/plan",
   "/stays/compare",
   "/dining/compare",
   "/stays/compare?city=siliguri",
@@ -241,6 +242,24 @@ for (const [name, engine] of [
     await page.evaluate(() =>
       localStorage.removeItem("dealmosaic.hospitality-quotes.v1"),
     );
+    await page.goto(origin + '/stays/plan?city=siliguri');
+    await page.getByRole('heading', {level:1, name:/Plan the whole trip/}).waitFor();
+    check(name + ' native stay planner loads', true);
+    check(name + ' planner retains destination', await page.getByLabel('Destination', {exact:true}).inputValue() === 'siliguri');
+    const labels = ['Stay, all nights and rooms','Food and dining','Transport, including getting there','Activities','Other non-refundable costs'];
+    for (const label of labels) {
+      await page.getByLabel('Plan A: ' + label, {exact:true}).fill('100');
+      await page.getByLabel('Plan B: ' + label, {exact:true}).fill('200');
+    }
+    await page.getByLabel('Both plans cover').check();
+    await page.getByRole('button', {name:'Compare trip budgets'}).click();
+    await page.getByText('Plan A has the lower entered budget by ₹500.00.', {exact:true}).waitFor();
+    check(name + ' planner budget arithmetic', true);
+    await page.getByLabel('Your stay needs').selectOption('family');
+    check(name + ' family questions are not a suitability claim', (await page.getByLabel('Stay questions to review and copy').inputValue()).includes('child-age'));
+    await page.getByRole('button', {name:'Clear all planning figures'}).click();
+    check(name + ' planner clear works', await page.getByLabel('Plan A: ' + labels[0], {exact:true}).inputValue() === '');
+    check(name + ' planner no overflow', await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     check(name + " no browser exception", errors.length === 0);
     report.browsers.push({ engine: name, errors, localNotesDeleted: true });
   } finally {

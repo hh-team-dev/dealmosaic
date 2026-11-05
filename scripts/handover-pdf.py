@@ -68,6 +68,7 @@ CORE = [
     ('40-hospitality-revenue-reset.md', 'Hospitality: field-test response and on-site revenue blueprint'),
     ('41-device-review-and-conversion-repair.md', '2.5.0: Guest, member and administrator repair'),
     ('42-hospitality-business-and-native-comparison.md', '2.6.0: Hospitality business architecture and native comparison'),
+    ('44-four-plan-review-and-stay-planning.md', '2.7.0: Four-plan review and practical stay planning'),
     ('43-hotel-revenue-priority-and-plan-review.md', '2.6.1: Hotel revenue priorities and business-plan review'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]

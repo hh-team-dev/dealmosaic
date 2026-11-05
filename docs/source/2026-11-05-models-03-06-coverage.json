@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-11-05T13:24:20.461532+00:00",
+  "suppliedImages": 212,
+  "successfullyExtracted": 212,
+  "textRead": 212,
+  "visuallyCrossChecked": 12,
+  "imageCopiesDeleted": true,
+  "driveOriginalsUntouched": true,
+  "limits": "Clipped columns and missing passages outside screenshots not reconstructed; OCR headers and rupee glyphs can be noisy."
+}
