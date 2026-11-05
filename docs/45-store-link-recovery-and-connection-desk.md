@@ -48,11 +48,30 @@ Search by campaign name, domain or ID, combine category/access/country/publicati
 
 The desk also shows which redirect hosts published offers depend on. **A recorded outbound attempt is not a confirmed store arrival, completed sale or approved earning.** Trivago campaign 2516 retains the explicit placement-permission warning; no programme was activated merely because its cached access says open.
 
+### Deployment snapshot: 5 November, 15:33 UTC
+
+- 1,123 published offer rows across 248 campaigns; 85 cards from 47 campaigns selected for homepage shelves.
+- 1,096 rows have a validated direct-homepage alternative. The remaining 27 do not get a guessed destination. This is URL-validation coverage, not proof of a successful visit from every connection.
+- The refreshed CPS network response contained 1,881 campaigns: 1,541 open, 10 pending and 330 not applied. The stored cache retains 12 older records, so its worldwide open-access total is 1,553, not 1,553 newly confirmed approvals. One additional published campaign has no matching cached access record.
+- 510 cached open campaigns have India listed. Country listing is still not blanket placement permission. The full CPC catalogue remains a separate live-inventory view.
+- One published offer row has unconfirmed campaign access. It is flagged for review, not counted as guaranteed income.
+
+| Category | Cached open | Published campaigns | Offer rows |
+| --- | ---: | ---: | ---: |
+| Products / shopping | 915 | 196 | 944 |
+| Grocery / FMCG | 34 | 6 | 22 |
+| Hotels / stays | 8 | 1 | 1 |
+| Dining / food delivery | 0 | 0 | 0 |
+| Other travel | 86 | 20 | 80 |
+| Other / classification review | 510 | 25 | 76 |
+
+The open column is worldwide cached access, not India-only approval. Broad “Food & Beverage” categories are not silently treated as grocery or dining; mixed/unclear categories stay in review. Directory records and ordinary venue links are not added to campaign or payable-offer counts.
+
 ## 4. Data and safety boundaries
 
 - Two additive nullable cache columns retain network-provided categories and country codes. NULL means not read, not worldwide eligibility. Old application releases can still read the table.
 - Routine campaign refreshes read up to 500 rows per request, with the existing throttle between pages. A page-limit stop is reported as incomplete. This avoids a slow one-request-per-small-page refresh without ignoring network limits.
-- The explicit cache-maintenance script reads campaign metadata and updates only the campaign cache. It does not import the app, run the daily mail job, apply to campaigns, modify offers, place orders or follow links. The script refuses unintended local/test execution and requires an explicit production maintenance flag.
+- The legacy refresh-result field `joined` counts returned open-access rows; it does not mean applications were submitted. The explicit cache-maintenance script reads campaign metadata and updates only the campaign cache. It does not import the app, run the daily mail job, apply to campaigns, modify offers, place orders or follow links. The script refuses unintended local/test execution and requires an explicit production maintenance flag.
 - Reading the owner desk performs database reads only. It does not ping affiliate URLs or produce “test” clicks. Admin authentication remains enforced on the server; regular users and anonymous visitors are denied.
 - Direct fallback requires a public merchant origin, a matching embedded merchant destination, safe schemes and no userinfo/ports. It strips product paths, queries and fragments rather than carrying unknown affiliate parameters into a supposed direct route. It never trusts a visitor-supplied URL.
 - The three phone screenshots were visually reviewed and deleted. Their hashes and textual findings remain; no screenshot copies are included in the release.
@@ -63,7 +82,11 @@ Unit, browser, production and release receipts are stored under `docs/source/` w
 
 Tests cover domain/destination validation, protected owner reads, category/country persistence, approval versus publication, direct-link reads without click records, a stuck analytics write, manual edge redirects, readable upstream-failure recovery, preserved request bodies/cookies, mobile layout, saved offers and owner filtering/retry. Existing shopping, hospitality, planner, account, notification and PWA suites are retained.
 
-Both website flavours are packaged from the same runtime revision under `releases/dealmosaic-2.7.1/`. Exact deployment IDs and hashes are in the release receipts. Document 28 records the source backup and Git recovery chain; older recovery files are retained.
+Completed checks: **793 unit tests, 48 design assertions, 379 browser passes** and two development-only source-import skips. Production verification passed **26 repair-specific, 84 hospitality and 94 general checks** (overlapping assertions, not unique user journeys), with no browser exceptions, state-changing requests or external/affiliate visits. The final WebKit navigation tests wait for outstanding API reads before hard reloads; errors are not ignored.
+
+Runtime: `492e98b285d5`, tag `pwa-v2.7.1`. Cloudflare Pages: `0c9c7b7e`; Render: `dep-dbma2k0ae00c738pqjqg`. PWA build `2.7.1-a64c61ae0da3`; classic build `2.7.1-2f5bbc1bc976`.
+
+Both website flavours are packaged from the same runtime revision under `releases/dealmosaic-2.7.1/`. Exact deployment IDs and hashes are in the release receipts. Document 28 records the source backup and Git recovery chain; older versioned Git bundles and deployment archives are retained; rolling source snapshots follow the configured retention policy.
 
 ### Remaining phone check — not waived by automated tests
 

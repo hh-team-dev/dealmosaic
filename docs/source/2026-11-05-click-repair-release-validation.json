@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-11-05T15:31:55.511346+00:00",
+  "version": "2.7.1",
+  "runtimeRevision": "492e98b285d51c2aea0922145c3aa74def37eaf0",
+  "unitTests": 793,
+  "unitFiles": 41,
+  "designAssertions": 48,
+  "browserSuites": {
+    "device": {
+      "passed": 60,
+      "skipped": 0,
+      "logSha256": "d3d97c33b31316854d606d2b23faf66470f1f331c7f7ff28bd1f65dd5e92eb91"
+    },
+    "general": {
+      "passed": 46,
+      "skipped": 2,
+      "logSha256": "878f94b99a9800122415767f0edc9c974fc7f0854dd20f001e769fd0a8937aed"
+    },
+    "hospitality": {
+      "passed": 135,
+      "skipped": 0,
+      "logSha256": "a7cfaf58f0a137faedc186f0a3fad2b2977ee745559df5e59ebac6077c92d2fb"
+    },
+    "pwa": {
+      "passed": 60,
+      "skipped": 0,
+      "logSha256": "dabae8327741916a15f707be2962b78cb41e893f40401996a6357b80102da5fb"
+    },
+    "engagement": {
+      "passed": 39,
+      "skipped": 0,
+      "logSha256": "0e92ec08f4c30579ed2f5470b894a50d9b2b574578b75bd92aa7bd7c7765b4de"
+    },
+    "classicConnections": {
+      "passed": 21,
+      "skipped": 0,
+      "logSha256": "98297a3a6dc6f1615717cd9a8b41f97346f735ee3cc28cadbd20095c34d01de6"
+    },
+    "classicPlanner": {
+      "passed": 18,
+      "skipped": 0,
+      "logSha256": "5b7394281332489e9c85e429596d716ba5d53f546043d6dbc90d1e76305a5f72"
+    }
+  },
+  "browserPassed": 379,
+  "browserSkipped": 2,
+  "scope": "Isolated local test database and intercepted external destinations; not proof of physical-phone DNS or third-party conversion. All final application hashes match the exercised paired artifacts. Last amendments affected test timing only; no errors were suppressed.",
+  "apiSourceTree": "baf8accaeb32b4400ba95f71cfa50c0576688804",
+  "webBuilds": {
+    "pwa": "2.7.1-a64c61ae0da3",
+    "classic": "2.7.1-2f5bbc1bc976"
+  }
+}

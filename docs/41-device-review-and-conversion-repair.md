@@ -1,6 +1,6 @@
 # DealMosaic 2.5.0 — Guest, member and administrator repair
 
-> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime tag `pwa-v2.7.1`; exact deployments and validation are in the click-repair release receipts.
+> **Current release — 2.7.1, 5 November:** [Document 45](45-store-link-recovery-and-connection-desk.md) records explicit direct-store recovery, bounded analytics/edge-proxy safeguards and the category-separated owner connection desk. Campaign access, India-listed access, published offers and homepage placement are separate. Hotel live-rate APIs remain unconnected. The owner’s phone DNS failure is not dismissed or marked solved by automated checks; physical testing has begun and remains incomplete. Runtime `492e98b` / `pwa-v2.7.1`; Pages `0c9c7b7e`; Render `dep-dbma2k0ae00c738pqjqg`. 793 unit and 379 browser checks passed; production repair/general/hospitality checks passed without external clicks. See the click-repair release receipts.
 
 **5 November 2026 · Website / installed PWA / classic website share this release**
 

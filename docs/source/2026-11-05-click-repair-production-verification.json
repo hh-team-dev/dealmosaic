@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-05T15:34:33.406Z",
+  "origin": "https://dealmosaic.pages.dev",
+  "scope": "Read-only public/API/browser checks; no external visits or authenticated production writes",
+  "checks": [
+    "Expected API version",
+    "Expected website/PWA artifact",
+    "Owner connection inventory denies anonymous access",
+    "Public offers contain direct-store recovery choices",
+    "Direct recovery URLs contain only HTTPS merchant origins",
+    "Read-only recovery matches the published offer",
+    "Unavailable offers expose neither code nor direct destination",
+    "Pages returns a local 303 rather than following the redirect",
+    "Private neutral shell: /admin?tab=connections",
+    "Private neutral shell: /store-link-help",
+    "android-chromium: direct fallback available on homepage before clicking",
+    "android-chromium: homepage fits mobile width",
+    "android-chromium: recovery direct URL agrees with validated API field",
+    "android-chromium: original sponsored option remains separate",
+    "android-chromium: recovery fits mobile width",
+    "android-chromium: no claim of automatic offer benefits",
+    "android-chromium: private inventory not rendered to a guest",
+    "webkit-phone: direct fallback available on homepage before clicking",
+    "webkit-phone: homepage fits mobile width",
+    "webkit-phone: recovery direct URL agrees with validated API field",
+    "webkit-phone: original sponsored option remains separate",
+    "webkit-phone: recovery fits mobile width",
+    "webkit-phone: no claim of automatic offer benefits",
+    "webkit-phone: private inventory not rendered to a guest",
+    "No browser exceptions",
+    "No external, affiliate-click or mutation request attempted"
+  ],
+  "errors": [],
+  "blockedRequests": [],
+  "api": {
+    "version": "2.7.1",
+    "revision": "492e98b285d5",
+    "environment": "production"
+  },
+  "web": {
+    "version": "2.7.1",
+    "build": "2.7.1-a64c61ae0da3",
+    "mode": "pwa"
+  },
+  "sample": {
+    "offer": "c0d72f5a-5763-4f41-8d13-7182757f9fad",
+    "store": "HealthKart",
+    "merchantHost": "healthkart.com"
+  }
+}

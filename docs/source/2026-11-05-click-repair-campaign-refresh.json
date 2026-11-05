@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-11-05T15:32:33.149Z",
+  "finishedAt": "2026-11-05T15:33:29.861Z",
+  "scope": "Network campaign GETs and local campaign-cache writes only. No applications, affiliate clicks, email, orders or paid activation. Concurrent organic visits may change click totals.",
+  "result": {
+    "ok": true,
+    "pages": 4,
+    "seen": 1881,
+    "joined": 1541,
+    "pending": 10,
+    "notApplied": 330,
+    "tookMs": 55782,
+    "errors": []
+  },
+  "evidence": {
+    "cached": 1893,
+    "withMetadata": 1881,
+    "oldest": "2026-11-02T21:30:47.143Z",
+    "newest": "2026-11-05T15:32:33.149Z"
+  },
+  "outboundAttemptsBefore": 41,
+  "outboundAttemptsAfter": 41
+}

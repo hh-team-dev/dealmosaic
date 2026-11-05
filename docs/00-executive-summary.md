@@ -1,4 +1,7 @@
 # DEALMOSAIC — Executive Summary & Project Charter
+
+> **Current operational handover, 5 November 2026:** This is a historical charter. Use [Document 45](45-store-link-recovery-and-connection-desk.md) for deployed 2.7.1, the owner connection inventory, store-link recovery and the unresolved phone DNS/live-hotel-inventory limits.
+
 **Role:** Lead Developer / Technical Architect / Project Manager
 **Owner:** Founder (product owner)
 **Date:** 2 November 2026

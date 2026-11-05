@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-05T15:38:16.848481+00:00",
+  "archive": "backups/dealmosaic_2026-11-05_15-36-59.tar.gz",
+  "sha256": "4d77679746cec4260aab955930cbab5199e7e8fe0a6925b55bcb3c55bc1f0045",
+  "verifiedFiles": 473,
+  "scope": "Source snapshot after production verification, before its own receipt and final recovery-document edits. Production databases, credentials, dependencies and generated builds excluded.",
+  "rollingSnapshotsPruned": [
+    "dealmosaic_2026-11-04_15-49-31.tar.gz",
+    "dealmosaic_2026-11-04_16-48-21.tar.gz",
+    "dealmosaic_2026-11-04_18-05-54.tar.gz",
+    "dealmosaic_2026-11-05_10-05-14.tar.gz"
+  ],
+  "olderReleaseRecovery": "Versioned Git bundles and paired deployment archives retained; rolling source snapshots follow configured retention."
+}

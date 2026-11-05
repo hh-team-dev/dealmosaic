@@ -1,0 +1,165 @@
+{
+  "checkedAt": "2026-11-05T15:33:34.620Z",
+  "scope": "Private server-side inventory calculation against the production database using owner-authorised DB access. Not an authenticated HTTP session or a phone test. No tracking visits, applications, mutations or mail.",
+  "summary": {
+    "cachedCampaigns": 1893,
+    "open": 1553,
+    "pending": 10,
+    "indiaOpen": 510,
+    "notApplied": 330,
+    "unknown": 1,
+    "publishedCampaigns": 248,
+    "publishedOfferRows": 1123,
+    "homepageOffers": 85,
+    "homepageCampaigns": 47,
+    "directFallbacks": 1096,
+    "unconfirmedAccessOffers": 1,
+    "unlinkedOfferRows": 0
+  },
+  "categories": [
+    {
+      "id": "products",
+      "name": "Products & online shopping",
+      "campaigns": 1056,
+      "open": 915,
+      "publishedCampaigns": 196,
+      "publishedOffers": 944,
+      "homepageOffers": 71
+    },
+    {
+      "id": "grocery",
+      "name": "Grocery, FMCG & quick commerce",
+      "campaigns": 48,
+      "open": 34,
+      "publishedCampaigns": 6,
+      "publishedOffers": 22,
+      "homepageOffers": 5
+    },
+    {
+      "id": "hotels",
+      "name": "Hotels & stays",
+      "campaigns": 15,
+      "open": 8,
+      "publishedCampaigns": 1,
+      "publishedOffers": 1,
+      "homepageOffers": 0
+    },
+    {
+      "id": "dining",
+      "name": "Dining, QSR & food delivery",
+      "campaigns": 2,
+      "open": 0,
+      "publishedCampaigns": 0,
+      "publishedOffers": 0,
+      "homepageOffers": 0
+    },
+    {
+      "id": "travel",
+      "name": "Flights, transport & experiences",
+      "campaigns": 132,
+      "open": 86,
+      "publishedCampaigns": 20,
+      "publishedOffers": 80,
+      "homepageOffers": 3
+    },
+    {
+      "id": "other",
+      "name": "Other services / needs classification",
+      "campaigns": 641,
+      "open": 510,
+      "publishedCampaigns": 25,
+      "publishedOffers": 76,
+      "homepageOffers": 6
+    }
+  ],
+  "redirectHosts": [
+    {
+      "host": "linksredirect.com",
+      "offers": 1123
+    }
+  ],
+  "publishedCampaignExamples": [
+    {
+      "id": 201,
+      "name": "Croma Retail",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 25,
+      "homepageOffers": 0,
+      "directFallbacks": 25,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 2588,
+      "name": "Tata Cliq",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 23,
+      "homepageOffers": 4,
+      "directFallbacks": 23,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 3553,
+      "name": "Klook",
+      "category": "travel",
+      "access": "open",
+      "publishedOffers": 22,
+      "homepageOffers": 1,
+      "directFallbacks": 22,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 847,
+      "name": "HealthKart",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 20,
+      "homepageOffers": 6,
+      "directFallbacks": 20,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 2397,
+      "name": "Jockey",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 19,
+      "homepageOffers": 1,
+      "directFallbacks": 19,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 4469,
+      "name": "Wellbeing Nutrition",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 17,
+      "homepageOffers": 0,
+      "directFallbacks": 17,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 4482,
+      "name": "Uniqlo",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 16,
+      "homepageOffers": 0,
+      "directFallbacks": 16,
+      "countryEvidence": "India listed"
+    },
+    {
+      "id": 4164,
+      "name": "Vijay Sales",
+      "category": "products",
+      "access": "open",
+      "publishedOffers": 16,
+      "homepageOffers": 1,
+      "directFallbacks": 16,
+      "countryEvidence": "India listed"
+    }
+  ],
+  "outboundAttemptsBefore": 41,
+  "outboundAttemptsAfter": 41
+}
