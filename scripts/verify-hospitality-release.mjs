@@ -97,6 +97,7 @@ check(
 for (const path of [
   "/api/admin/hospitality",
   "/api/admin/campaigns",
+  "/api/admin/campaigns/network?campaignType=CPC",
   "/api/me/notifications",
 ])
   check("Anonymous API denial " + path, (await get(path)).status === 401);

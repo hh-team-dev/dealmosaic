@@ -1,6 +1,7 @@
 /** Planning arithmetic only. This never creates a ledger entry, agreement or payment. */
 export interface HospitalityScenario {
-  mode: "cpa" | "cpc" | "direct";
+  mode: "cpa" | "cpc" | "cpc-referral" | "direct";
+  downstreamPercent?: number;
   qualifiedPlans: number;
   actionPercent: number;
   bookingPercent: number;
@@ -18,6 +19,7 @@ export function hospitalityScenario(x: HospitalityScenario) {
     x.completionPercent,
     x.acceptancePercent,
   ];
+  if (x.mode === "cpc-referral") rates.push(x.downstreamPercent ?? NaN);
   const amounts = [
     x.payoutMinor,
     x.servicePerEventMinor,
@@ -25,7 +27,7 @@ export function hospitalityScenario(x: HospitalityScenario) {
     x.fixedCostMinor,
   ];
   if (
-    !["cpa", "cpc", "direct"].includes(x.mode) ||
+    !["cpa", "cpc", "cpc-referral", "direct"].includes(x.mode) ||
     !Number.isInteger(x.qualifiedPlans) ||
     x.qualifiedPlans < 0 ||
     x.qualifiedPlans > 1000000 ||
@@ -40,7 +42,8 @@ export function hospitalityScenario(x: HospitalityScenario) {
   const payableFactor =
     actionFactor *
     acceptance *
-    (x.mode === "cpc"
+    (x.mode === "cpc-referral" ? x.downstreamPercent! / 100 : 1) *
+    (x.mode === "cpc" || x.mode === "cpc-referral"
       ? 1
       : ((x.bookingPercent / 100) * x.completionPercent) / 100);
   const actions = x.qualifiedPlans * actionFactor,

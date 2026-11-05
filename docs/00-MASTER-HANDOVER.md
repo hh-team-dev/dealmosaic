@@ -1,5 +1,8 @@
 # DEALMOSAIC — MASTER HANDOVER
 
+> **Revenue-plan review in progress — 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) reviews Our Business 01/02, the completed account audit, Trivago’s qualified-click terms and the proposed 2.6.1 owner-tool improvements. The latest deployed receipt below remains authoritative until 2.6.1 verification is recorded.
+
+
 > **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
 
 > **Previous 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.

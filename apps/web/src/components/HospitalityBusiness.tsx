@@ -9,6 +9,13 @@ import { apiRequest } from "../lib/api";
 import { parseQuoteMoney } from "../lib/hospitality-comparison";
 
 type Readiness = {
+  revenueReview: {
+    checkedOn: string;
+    scope: string;
+    preference: string;
+    routes: Array<{ name: string; action: string; status: string }>;
+    corrections: Array<{ text: string; source: string }>;
+  };
   assessedAt: string;
   scope: string;
   nativeRateConnections: number;
@@ -49,7 +56,7 @@ export default function HospitalityBusiness() {
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
   const [notice, setNotice] = useState("");
-  const [mode, setMode] = useState<HospitalityScenario["mode"]>("cpa");
+  const [mode, setMode] = useState<HospitalityScenario["mode"]>("cpc");
   const [result, setResult] = useState<ReturnType<
     typeof hospitalityScenario
   > | null>(null);
@@ -94,8 +101,12 @@ export default function HospitalityBusiness() {
           mode,
           qualifiedPlans: number("qualifiedPlans"),
           actionPercent: number("actionPercent"),
-          bookingPercent: mode === "cpc" ? 0 : number("bookingPercent"),
-          completionPercent: mode === "cpc" ? 0 : number("completionPercent"),
+          bookingPercent: mode.startsWith("cpc") ? 0 : number("bookingPercent"),
+          downstreamPercent:
+            mode === "cpc-referral" ? number("downstreamPercent") : undefined,
+          completionPercent: mode.startsWith("cpc")
+            ? 0
+            : number("completionPercent"),
           acceptancePercent: number("acceptancePercent"),
           payoutMinor: amount("payoutMinor")!,
           servicePerEventMinor: amount("servicePerEventMinor")!,
@@ -132,6 +143,54 @@ export default function HospitalityBusiness() {
         <p role="status">Reading the server’s hospitality configuration…</p>
       ) : (
         <>
+          <section
+            className="card stack"
+            aria-labelledby="revenue-priority-heading"
+          >
+            <h3 id="revenue-priority-heading">
+              Easiest eligible revenue first
+            </h3>
+            <p>
+              <strong>{data.revenueReview.preference}</strong>
+            </p>
+            <p className="small muted">
+              Reviewed {data.revenueReview.checkedOn}.{" "}
+              {data.revenueReview.scope}
+            </p>
+            <Link to="/admin?tab=campaigns&inventory=network&campaignType=CPC">
+              Inspect live CPC campaigns and country restrictions
+            </Link>
+            {data.revenueReview.routes.map((route) => (
+              <details key={route.name}>
+                <summary>
+                  <strong>{route.name}</strong>
+                </summary>
+                <p>{route.status}</p>
+                <p>{route.action}</p>
+              </details>
+            ))}
+            <details>
+              <summary>Research corrections that protect the business</summary>
+              {data.revenueReview.corrections.map((item, i) => (
+                <p key={item.source}>
+                  {item.text}{" "}
+                  <a
+                    href={item.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Official source {i + 1}
+                  </a>
+                </p>
+              ))}
+            </details>
+            <p className="small">
+              No guessed provider prices, fixed “typical” fees, unconfirmed
+              bank-offer stacking, incognito tracking guarantee, AI safety
+              scores or unfunded cashback. No commission is earned merely by
+              displaying this desk.
+            </p>
+          </section>
           <div className="admin-tiles">
             <div className="admin-tile">
               <strong className="admin-tile-value">
@@ -230,6 +289,13 @@ export default function HospitalityBusiness() {
             Forecasts are not cash receipts, realised revenue or profit; this
             calculator never writes to the earnings ledger.
           </p>
+          <p className="small">
+            CPC is the first model to investigate, not an activated income
+            source. A direct eligible click and a visitor clicking onward on a
+            partner site are different payable events. Enter your net share, not
+            the advertiser’s whole payment. No own-click testing, incentivised
+            clicking or automatic redirects.
+          </p>
           <form
             onSubmit={calculate}
             onChange={() => setResult(null)}
@@ -239,6 +305,7 @@ export default function HospitalityBusiness() {
             <label>
               Revenue model
               <select
+                aria-label="Revenue model"
                 className="input"
                 value={mode}
                 onChange={(e) => {
@@ -247,7 +314,12 @@ export default function HospitalityBusiness() {
                 }}
               >
                 <option value="cpa">CPA: validated completed stays</option>
-                <option value="cpc">CPC: contract-eligible clicks</option>
+                <option value="cpc">
+                  CPC: contract-eligible direct clicks
+                </option>
+                <option value="cpc-referral">
+                  Click-out revenue share: a second action on the partner site
+                </option>
                 <option value="direct">
                   Direct venue: validated fulfilled referrals
                 </option>
@@ -275,7 +347,18 @@ export default function HospitalityBusiness() {
                   required
                 />
               </label>
-              {mode !== "cpc" && (
+              {mode === "cpc-referral" && (
+                <label>
+                  Partner-site onward click rate (%)
+                  <input
+                    className="input"
+                    name="downstreamPercent"
+                    inputMode="decimal"
+                    required
+                  />
+                </label>
+              )}
+              {!mode.startsWith("cpc") && (
                 <>
                   <label>
                     {mode === "direct"
@@ -316,8 +399,8 @@ export default function HospitalityBusiness() {
                 />
               </label>
               <label>
-                {mode === "cpc"
-                  ? "Payout per valid click"
+                {mode.startsWith("cpc")
+                  ? "Your net payout per accepted payable click"
                   : mode === "direct"
                     ? "Fee per validated fulfilment"
                     : "Net payout per validated stay"}{" "}

@@ -409,6 +409,10 @@ test("owner-only business desk has truthful gates, works on phones and calculate
   await expect(page.getByLabel("Partner application brief")).toContainText(
     "not acceptance of a contract",
   );
+  await expect(page.getByLabel("Revenue model", { exact: true })).toHaveValue(
+    "cpc",
+  );
+  await page.getByLabel("Revenue model", { exact: true }).selectOption("cpa");
   for (const [name, value] of Object.entries({
     qualifiedPlans: "1000",
     actionPercent: "30",
@@ -455,4 +459,41 @@ test("conditional eligibility and unsaved in-site navigation are explicit", asyn
   await entry(page, "Public provider", "13000");
   await save(page);
   await expect(page.locator(".hc-match")).toHaveCount(0);
+});
+
+test("downstream click revenue is not mistaken for every outbound tap", async ({
+  page,
+  context,
+}) => {
+  await context.addCookies([
+    {
+      name: "dm_session",
+      value: fixture.users.super_admin.token,
+      url: base,
+      httpOnly: true,
+    },
+  ]);
+  await page.goto("/admin?tab=hospitality");
+  await expect(
+    page.getByRole("heading", { name: "Easiest eligible revenue first" }),
+  ).toBeVisible();
+  await page
+    .getByLabel("Revenue model", { exact: true })
+    .selectOption("cpc-referral");
+  for (const [key, value] of Object.entries({
+    qualifiedPlans: "1000",
+    actionPercent: "30",
+    downstreamPercent: "20",
+    acceptancePercent: "90",
+    payoutMinor: "1",
+    servicePerEventMinor: "0",
+    servicePerPlanMinor: "0",
+    fixedCostMinor: "0",
+  }))
+    await page.locator(`[name=${key}]`).fill(value);
+  await page.getByRole("button", { name: "Calculate this scenario" }).click();
+  await expect(page.locator("main")).toContainText("₹54.00");
+  await expect(page.locator('[name="bookingPercent"]')).toHaveCount(0);
+  await size(page);
+  await axe(page);
 });

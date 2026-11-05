@@ -1,0 +1,950 @@
+{
+  "checkedAt": "2026-11-05T11:53:01.470Z",
+  "finishedAt": "2026-11-05T12:04:24.741Z",
+  "scope": true,
+  "scans": [
+    {
+      "type": "CPC",
+      "complete": true,
+      "pages": [
+        {
+          "page": 1,
+          "meta": {
+            "page": 1,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 2,
+            "prev_page": null
+          }
+        },
+        {
+          "page": 2,
+          "meta": {
+            "page": 2,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 3,
+            "prev_page": 1
+          }
+        },
+        {
+          "page": 3,
+          "meta": {
+            "page": 3,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 4,
+            "prev_page": 2
+          }
+        },
+        {
+          "page": 4,
+          "meta": {
+            "page": 4,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 5,
+            "prev_page": 3
+          }
+        },
+        {
+          "page": 5,
+          "meta": {
+            "page": 5,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 6,
+            "prev_page": 4
+          }
+        },
+        {
+          "page": 6,
+          "meta": {
+            "page": 6,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 7,
+            "prev_page": 5
+          }
+        },
+        {
+          "page": 7,
+          "meta": {
+            "page": 7,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 8,
+            "prev_page": 6
+          }
+        },
+        {
+          "page": 8,
+          "meta": {
+            "page": 8,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 9,
+            "prev_page": 7
+          }
+        },
+        {
+          "page": 9,
+          "meta": {
+            "page": 9,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 10,
+            "prev_page": 8
+          }
+        },
+        {
+          "page": 10,
+          "meta": {
+            "page": 10,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 11,
+            "prev_page": 9
+          }
+        },
+        {
+          "page": 11,
+          "meta": {
+            "page": 11,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 12,
+            "prev_page": 10
+          }
+        },
+        {
+          "page": 12,
+          "meta": {
+            "page": 12,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 13,
+            "prev_page": 11
+          }
+        },
+        {
+          "page": 13,
+          "meta": {
+            "page": 13,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 14,
+            "prev_page": 12
+          }
+        },
+        {
+          "page": 14,
+          "meta": {
+            "page": 14,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 15,
+            "prev_page": 13
+          }
+        },
+        {
+          "page": 15,
+          "meta": {
+            "page": 15,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 16,
+            "prev_page": 14
+          }
+        },
+        {
+          "page": 16,
+          "meta": {
+            "page": 16,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 17,
+            "prev_page": 15
+          }
+        },
+        {
+          "page": 17,
+          "meta": {
+            "page": 17,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 18,
+            "prev_page": 16
+          }
+        },
+        {
+          "page": 18,
+          "meta": {
+            "page": 18,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 19,
+            "prev_page": 17
+          }
+        },
+        {
+          "page": 19,
+          "meta": {
+            "page": 19,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 20,
+            "prev_page": 18
+          }
+        },
+        {
+          "page": 20,
+          "meta": {
+            "page": 20,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 21,
+            "prev_page": 19
+          }
+        },
+        {
+          "page": 21,
+          "meta": {
+            "page": 21,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 22,
+            "prev_page": 20
+          }
+        },
+        {
+          "page": 22,
+          "meta": {
+            "page": 22,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 23,
+            "prev_page": 21
+          }
+        },
+        {
+          "page": 23,
+          "meta": {
+            "page": 23,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 24,
+            "prev_page": 22
+          }
+        },
+        {
+          "page": 24,
+          "meta": {
+            "page": 24,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 25,
+            "prev_page": 23
+          }
+        },
+        {
+          "page": 25,
+          "meta": {
+            "page": 25,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 26,
+            "prev_page": 24
+          }
+        },
+        {
+          "page": 26,
+          "meta": {
+            "page": 26,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 27,
+            "prev_page": 25
+          }
+        },
+        {
+          "page": 27,
+          "meta": {
+            "page": 27,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 28,
+            "prev_page": 26
+          }
+        },
+        {
+          "page": 28,
+          "meta": {
+            "page": 28,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 29,
+            "prev_page": 27
+          }
+        },
+        {
+          "page": 29,
+          "meta": {
+            "page": 29,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 30,
+            "prev_page": 28
+          }
+        },
+        {
+          "page": 30,
+          "meta": {
+            "page": 30,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 31,
+            "prev_page": 29
+          }
+        },
+        {
+          "page": 31,
+          "meta": {
+            "page": 31,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 32,
+            "prev_page": 30
+          }
+        },
+        {
+          "page": 32,
+          "meta": {
+            "page": 32,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 33,
+            "prev_page": 31
+          }
+        },
+        {
+          "page": 33,
+          "meta": {
+            "page": 33,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 34,
+            "prev_page": 32
+          }
+        },
+        {
+          "page": 34,
+          "meta": {
+            "page": 34,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 35,
+            "prev_page": 33
+          }
+        },
+        {
+          "page": 35,
+          "meta": {
+            "page": 35,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 36,
+            "prev_page": 34
+          }
+        },
+        {
+          "page": 36,
+          "meta": {
+            "page": 36,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 37,
+            "prev_page": 35
+          }
+        },
+        {
+          "page": 37,
+          "meta": {
+            "page": 37,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 38,
+            "prev_page": 36
+          }
+        },
+        {
+          "page": 38,
+          "meta": {
+            "page": 38,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 39,
+            "prev_page": 37
+          }
+        },
+        {
+          "page": 39,
+          "meta": {
+            "page": 39,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 40,
+            "prev_page": 38
+          }
+        },
+        {
+          "page": 40,
+          "meta": {
+            "page": 40,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 41,
+            "prev_page": 39
+          }
+        },
+        {
+          "page": 41,
+          "meta": {
+            "page": 41,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 42,
+            "prev_page": 40
+          }
+        },
+        {
+          "page": 42,
+          "meta": {
+            "page": 42,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 43,
+            "prev_page": 41
+          }
+        },
+        {
+          "page": 43,
+          "meta": {
+            "page": 43,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 44,
+            "prev_page": 42
+          }
+        },
+        {
+          "page": 44,
+          "meta": {
+            "page": 44,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 45,
+            "prev_page": 43
+          }
+        },
+        {
+          "page": 45,
+          "meta": {
+            "page": 45,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 46,
+            "prev_page": 44
+          }
+        },
+        {
+          "page": 46,
+          "meta": {
+            "page": 46,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": 47,
+            "prev_page": 45
+          }
+        },
+        {
+          "page": 47,
+          "meta": {
+            "page": 47,
+            "per_page": 500,
+            "total": 23127,
+            "total_pages": 47,
+            "next_page": null,
+            "prev_page": 46
+          }
+        }
+      ],
+      "observed": 23127,
+      "access": {
+        "not_applied": 23125,
+        "open": 2
+      },
+      "indiaListed": 35,
+      "indiaOpen": 0
+    },
+    {
+      "type": "CPS",
+      "complete": true,
+      "pages": [
+        {
+          "page": 1,
+          "meta": {
+            "page": 1,
+            "per_page": 500,
+            "total": 1882,
+            "total_pages": 4,
+            "next_page": 2,
+            "prev_page": null
+          }
+        },
+        {
+          "page": 2,
+          "meta": {
+            "page": 2,
+            "per_page": 500,
+            "total": 1882,
+            "total_pages": 4,
+            "next_page": 3,
+            "prev_page": 1
+          }
+        },
+        {
+          "page": 3,
+          "meta": {
+            "page": 3,
+            "per_page": 500,
+            "total": 1882,
+            "total_pages": 4,
+            "next_page": 4,
+            "prev_page": 2
+          }
+        },
+        {
+          "page": 4,
+          "meta": {
+            "page": 4,
+            "per_page": 500,
+            "total": 1882,
+            "total_pages": 4,
+            "next_page": null,
+            "prev_page": 3
+          }
+        }
+      ],
+      "observed": 1882,
+      "access": {
+        "open": 1541,
+        "not_applied": 331,
+        "pending": 10
+      },
+      "indiaListed": 619,
+      "indiaOpen": 531
+    }
+  ],
+  "hotelRows": [
+    {
+      "id": 326,
+      "name": "Agoda",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "4.5",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 6823,
+      "name": "Apex hotels - UK",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "1.5",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 1715,
+      "name": "Booking.com",
+      "access_status": "pending",
+      "campaign_type": "CPS",
+      "payout": "4.5",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 29,
+      "name": "Cleartrip Flight",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "67.5",
+      "payout_type": "Per Sale",
+      "payout_currency": "INR",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 58550,
+      "name": "Cleartrip Hotels",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "148.5",
+      "payout_type": "Per Sale",
+      "payout_currency": "INR",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 7112,
+      "name": "Expedia - HK",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.75",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 7113,
+      "name": "Expedia - MY",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 7114,
+      "name": "Expedia - PH",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 365,
+      "name": "Expedia - SG",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.75",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 674,
+      "name": "Expedia - TH",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 7115,
+      "name": "Expedia - VN",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 11100,
+      "name": "Expedia CA",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "1.5",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 55338,
+      "name": "Expedia ID",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "3.75",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 42,
+      "name": "Expedia India",
+      "access_status": "pending",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 34098,
+      "name": "Expedia MX",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 685,
+      "name": "Expedia Taiwan",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 11099,
+      "name": "Expedia United Kingdom",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 411,
+      "name": "Expedia United States",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 3942,
+      "name": "Goibibo Hotels",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "210.0",
+      "payout_type": "Per Sale",
+      "payout_currency": "INR",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 380,
+      "name": "HostelWorld",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "18.75",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 3757,
+      "name": "Hotels.com",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 55339,
+      "name": "Hotels.com ID",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": false
+    },
+    {
+      "id": 243,
+      "name": "Hotels.com India",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 5490,
+      "name": "ITC Hotels",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 3801,
+      "name": "MakeMyTrip (Hotels)",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "112.5",
+      "payout_type": "Per Sale",
+      "payout_currency": "INR",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 20991,
+      "name": "Millenniumhotels",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "1.58",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 11141,
+      "name": "Radisson Hotel Group",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    },
+    {
+      "id": 11156,
+      "name": "Skyscanner Hotels",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "1.5",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 24308,
+      "name": "T-Bank Hotels",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "4.34",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": false
+    },
+    {
+      "id": 4308,
+      "name": "TripAdvisor",
+      "access_status": "not_applied",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 2516,
+      "name": "Trivago",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "7.66",
+      "payout_type": "Per Sale",
+      "payout_currency": "INR",
+      "deeplink_allowed": true,
+      "indiaListed": true
+    },
+    {
+      "id": 11873,
+      "name": "Zen Hotels",
+      "access_status": "open",
+      "campaign_type": "CPS",
+      "payout": "3.0",
+      "payout_type": "Per Sale(%)",
+      "payout_currency": "%",
+      "deeplink_allowed": false,
+      "indiaListed": true
+    }
+  ],
+  "caveat": "Country inclusion and open access are not active media/placement approval. CPS can label a downstream click-out as an order; detailed event terms control."
+}

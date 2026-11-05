@@ -104,11 +104,16 @@ export interface CuelinksCampaign {
   payout: string | null;
   payout_currency: string | null;
   campaign_type: string | null;
-  /** `open` means approved and earning; `pending` means applied; `not_applied` means never asked. */
+  /** `open` reports access, not earnings or permission for every market/placement. */
   access_status: string | null;
   cookie_duration: string | null;
   deeplink_allowed: boolean | null;
   cashback_publishers_allowed: boolean | null;
+  countries?: Array<{iso: string; name?: string}>;
+  sub_ids_allowed?: boolean | null;
+  social_media_publishers_allowed?: boolean | null;
+  missing_transactions_accepted?: boolean | null;
+  reporting_type?: string | null;
 }
 
 export interface CampaignsPage {
@@ -117,7 +122,7 @@ export interface CampaignsPage {
 }
 
 /**
- * Campaign list. `per_page` maxes at 100 and the endpoint is limited to 6
+ * Campaign list. The UI requests 100 rows; the read-only audit also received 500 per page. The endpoint is limited to 6
  * requests a minute, exactly like `/offers`. Filtering happens client-side: the
  * API accepts `campaign_type` but ignores most other query parameters.
  */

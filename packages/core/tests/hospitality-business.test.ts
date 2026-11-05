@@ -111,3 +111,37 @@ describe("independent live-rate release gates", () => {
     ).toHaveLength(8);
   });
 });
+
+describe("downstream payable-click scenarios", () => {
+  it("does not mistake the first referral click for partner revenue", () => {
+    const r = hospitalityScenario({
+      ...scenario,
+      mode: "cpc-referral",
+      downstreamPercent: 20,
+      payoutMinor: 100,
+      servicePerEventMinor: 0,
+    });
+    expect(r.actions).toBe(300);
+    expect(r.payableEvents).toBeCloseTo(54);
+    expect(r.revenueMinor).toBe(5400);
+  });
+  it.each([undefined, -1, 101, NaN, Infinity])(
+    "requires a valid explicit downstream rate: %s",
+    (value) =>
+      expect(() =>
+        hospitalityScenario({
+          ...scenario,
+          mode: "cpc-referral",
+          downstreamPercent: value,
+        }),
+      ).toThrow(),
+  );
+  it("zero onward clicks produces zero revenue", () =>
+    expect(
+      hospitalityScenario({
+        ...scenario,
+        mode: "cpc-referral",
+        downstreamPercent: 0,
+      }).revenueMinor,
+    ).toBe(0));
+});

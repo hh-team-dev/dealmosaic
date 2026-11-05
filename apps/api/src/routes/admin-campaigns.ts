@@ -1,89 +1,251 @@
-import { Hono } from 'hono';
-import { db } from '../db/index.js';
-import type { AppBindings } from '../middleware/session.js';
-import { fetchCampaigns, isConfigured } from '../lib/cuelinks.js';
-import { createRateLimiter } from '../lib/rate-limit.js';
+import { Hono } from "hono";
+import { db } from "../db/index.js";
+import type { AppBindings } from "../middleware/session.js";
+import { fetchCampaigns, isConfigured } from "../lib/cuelinks.js";
+import { createRateLimiter } from "../lib/rate-limit.js";
 
 /** Mounted ONLY behind adminRoutes' server-side user + role checks. Read-only:
  * never joins a campaign, changes an offer, creates a link or generates a click. */
 export const adminCampaignRoutes = new Hono<AppBindings>();
-const liveLimiter = createRateLimiter({ name: 'campaign-read', windowMs: 60_000, max: 4, keyFn: () => 'publisher' });
-const pageNumber = (s?: string) => /^\d{1,5}$/.test(s ?? '') ? Math.max(1, Math.min(10000, Number(s))) : 1;
-const escapeLike = (s: string) => s.replace(/[\\%_]/g, '\\$&');
+const liveLimiter = createRateLimiter({
+  name: "campaign-read",
+  windowMs: 60_000,
+  max: 4,
+  keyFn: () => "publisher",
+});
+const pageNumber = (s?: string) =>
+  /^\d{1,5}$/.test(s ?? "") ? Math.max(1, Math.min(10000, Number(s))) : 1;
+const escapeLike = (s: string) => s.replace(/[\\%_]/g, "\\$&");
 
 async function metrics(ids: number[]) {
-  if (!ids.length) return new Map<number, { liveOffers: number; heldOffers: number; clicks30: number }>();
-  const marks = ids.map(() => '?').join(',');
+  if (!ids.length)
+    return new Map<
+      number,
+      { liveOffers: number; heldOffers: number; clicks30: number }
+    >();
+  const marks = ids.map(() => "?").join(",");
   const now = new Date().toISOString();
   const since = new Date(Date.now() - 30 * 86400000).toISOString();
-  const rows = await db.prepare(`SELECT c.campaign_id AS id,
+  const rows = (await db
+    .prepare(
+      `SELECT c.campaign_id AS id,
     SUM(CASE WHEN c.trust_state IN ('listed','community_verified','moderator_verified')
       AND (c.expires_at IS NULL OR c.expires_at > ?) AND (c.starts_at IS NULL OR c.starts_at <= ?)
       AND c.tracking_url LIKE 'https://%' THEN 1 ELSE 0 END) AS liveOffers,
     SUM(CASE WHEN c.trust_state = 'rejected' THEN 1 ELSE 0 END) AS heldOffers,
     COALESCE((SELECT COUNT(*) FROM outbound_clicks x JOIN coupons cx ON cx.id = x.coupon_id
       WHERE cx.campaign_id = c.campaign_id AND x.created_at >= ?), 0) AS clicks30
-    FROM coupons c WHERE c.campaign_id IN (${marks}) GROUP BY c.campaign_id`).all(now, now, since, ...ids) as Array<{ id: number; liveOffers: number; heldOffers: number; clicks30: number }>;
-  return new Map(rows.map(r => [r.id, r]));
+    FROM coupons c WHERE c.campaign_id IN (${marks}) GROUP BY c.campaign_id`,
+    )
+    .all(now, now, since, ...ids)) as Array<{
+    id: number;
+    liveOffers: number;
+    heldOffers: number;
+    clicks30: number;
+  }>;
+  return new Map(rows.map((r) => [r.id, r]));
 }
 
-adminCampaignRoutes.get('/', async c => {
-  c.header('Cache-Control', 'private, no-store');
-  const page = pageNumber(c.req.query('page'));
-  const q = (c.req.query('q') ?? '').trim().slice(0, 100);
-  const access = c.req.query('access') ?? '';
-  const coverage = c.req.query('coverage') ?? '';
-  const clauses = ['1=1']; const args: (string | number)[] = [];
-  if (q) { clauses.push("(a.name LIKE ? ESCAPE '\\' OR a.domain LIKE ? ESCAPE '\\' OR CAST(a.id AS TEXT) = ?)"); args.push(`%${escapeLike(q)}%`, `%${escapeLike(q)}%`, q); }
-  if (['open', 'pending', 'not_applied'].includes(access)) { clauses.push('a.access_status = ?'); args.push(access); }
-  else if (access === 'other') clauses.push("COALESCE(a.access_status,'') NOT IN ('open','pending','not_applied')");
+adminCampaignRoutes.get("/", async (c) => {
+  c.header("Cache-Control", "private, no-store");
+  const page = pageNumber(c.req.query("page"));
+  const q = (c.req.query("q") ?? "").trim().slice(0, 100);
+  const access = c.req.query("access") ?? "";
+  const coverage = c.req.query("coverage") ?? "";
+  const type = c.req.query("campaignType") ?? "";
+  if (!["", "CPC", "CPS"].includes(type))
+    return c.json(
+      {
+        error: {
+          code: "invalid_type",
+          message: "Choose all, CPC or CPS campaigns.",
+        },
+      },
+      400,
+    );
+  const clauses = ["1=1"];
+  const args: (string | number)[] = [];
+  if (type) {
+    clauses.push("UPPER(a.campaign_type) = ?");
+    args.push(type);
+  }
+  if (q) {
+    clauses.push(
+      "(a.name LIKE ? ESCAPE '\\' OR a.domain LIKE ? ESCAPE '\\' OR CAST(a.id AS TEXT) = ?)",
+    );
+    args.push(`%${escapeLike(q)}%`, `%${escapeLike(q)}%`, q);
+  }
+  if (["open", "pending", "not_applied"].includes(access)) {
+    clauses.push("a.access_status = ?");
+    args.push(access);
+  } else if (access === "other")
+    clauses.push(
+      "COALESCE(a.access_status,'') NOT IN ('open','pending','not_applied')",
+    );
   const live = `EXISTS (SELECT 1 FROM coupons c WHERE c.campaign_id = a.id
     AND c.trust_state IN ('listed','community_verified','moderator_verified')
     AND (c.expires_at IS NULL OR c.expires_at > ?) AND (c.starts_at IS NULL OR c.starts_at <= ?)
     AND c.tracking_url LIKE 'https://%')`;
-  if (coverage === 'with' || coverage === 'without') {
-    clauses.push(coverage === 'with' ? live : `NOT ${live}`);
-    const now = new Date().toISOString(); args.push(now, now);
+  if (coverage === "with" || coverage === "without") {
+    clauses.push(coverage === "with" ? live : `NOT ${live}`);
+    const now = new Date().toISOString();
+    args.push(now, now);
   }
-  const where = clauses.join(' AND ');
-  const count = await db.prepare(`SELECT COUNT(*) AS n FROM affiliate_campaigns a WHERE ${where}`).get(...args) as { n: number };
-  const rows = await db.prepare(`SELECT * FROM affiliate_campaigns a WHERE ${where} ORDER BY a.name COLLATE NOCASE, a.id LIMIT 50 OFFSET ?`).all(...args, (page - 1) * 50) as Array<Record<string, unknown>>;
-  const stats = await metrics(rows.map(r => Number(r.id)));
-  const summary = await db.prepare(`SELECT COUNT(*) AS total, MIN(synced_at) AS oldest, MAX(synced_at) AS newest,
+  const where = clauses.join(" AND ");
+  const count = (await db
+    .prepare(`SELECT COUNT(*) AS n FROM affiliate_campaigns a WHERE ${where}`)
+    .get(...args)) as { n: number };
+  const rows = (await db
+    .prepare(
+      `SELECT * FROM affiliate_campaigns a WHERE ${where} ORDER BY a.name COLLATE NOCASE, a.id LIMIT 50 OFFSET ?`,
+    )
+    .all(...args, (page - 1) * 50)) as Array<Record<string, unknown>>;
+  const stats = await metrics(rows.map((r) => Number(r.id)));
+  const summary = await db
+    .prepare(
+      `SELECT COUNT(*) AS total, MIN(synced_at) AS oldest, MAX(synced_at) AS newest,
     SUM(CASE WHEN access_status = 'open' THEN 1 ELSE 0 END) AS open,
     SUM(CASE WHEN access_status = 'pending' THEN 1 ELSE 0 END) AS pending,
-    SUM(CASE WHEN access_status = 'not_applied' THEN 1 ELSE 0 END) AS notApplied FROM affiliate_campaigns`).get();
-  return c.json({ source: 'cache', page, pageSize: 50, total: count.n, totalPages: Math.max(1, Math.ceil(count.n / 50)), summary,
+    SUM(CASE WHEN access_status = 'not_applied' THEN 1 ELSE 0 END) AS notApplied FROM affiliate_campaigns`,
+    )
+    .get();
+  return c.json({
+    source: "cache",
+    page,
+    pageSize: 50,
+    total: count.n,
+    totalPages: Math.max(1, Math.ceil(count.n / 50)),
+    summary,
     fetchedAt: new Date().toISOString(),
-    rows: rows.map(r => ({ id: r.id, name: r.name, domain: r.domain, access: r.access_status, type: r.campaign_type,
-      payout: r.payout, currency: r.payout_currency, payoutType: null, cookie: r.cookie_duration,
-      deepLink: r.deeplink_allowed === null ? null : Boolean(r.deeplink_allowed),
-      checkedAt: r.synced_at, ...stats.get(Number(r.id)),
-      liveOffers: stats.get(Number(r.id))?.liveOffers ?? 0, heldOffers: stats.get(Number(r.id))?.heldOffers ?? 0,
-      clicks30: stats.get(Number(r.id))?.clicks30 ?? 0 })),
+    rows: rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      domain: r.domain,
+      access: r.access_status,
+      type: r.campaign_type,
+      payout: r.payout,
+      currency: r.payout_currency,
+      payoutType: null,
+      cookie: r.cookie_duration,
+      deepLink:
+        r.deeplink_allowed === null ? null : Boolean(r.deeplink_allowed),
+      checkedAt: r.synced_at,
+      ...stats.get(Number(r.id)),
+      liveOffers: stats.get(Number(r.id))?.liveOffers ?? 0,
+      heldOffers: stats.get(Number(r.id))?.heldOffers ?? 0,
+      clicks30: stats.get(Number(r.id))?.clicks30 ?? 0,
+    })),
   });
 });
 
-adminCampaignRoutes.get('/network', liveLimiter, async c => {
-  c.header('Cache-Control', 'private, no-store');
-  if (!isConfigured()) return c.json({ error: { code: 'network_unavailable', message: 'The campaign API is not configured. Cached inventory is still available.' } }, 503);
-  const page = pageNumber(c.req.query('page'));
+adminCampaignRoutes.get("/network", liveLimiter, async (c) => {
+  c.header("Cache-Control", "private, no-store");
+  if (!isConfigured())
+    return c.json(
+      {
+        error: {
+          code: "network_unavailable",
+          message:
+            "The campaign API is not configured. Cached inventory is still available.",
+        },
+      },
+      503,
+    );
+  const page = pageNumber(c.req.query("page"));
+  const type = c.req.query("campaignType") ?? "";
+  if (!["", "CPC", "CPS"].includes(type))
+    return c.json(
+      {
+        error: {
+          code: "invalid_type",
+          message: "Choose all, CPC or CPS campaigns.",
+        },
+      },
+      400,
+    );
   try {
     // Omit campaign_type to see ALL network types, not only the cached CPS list.
-    const result = await fetchCampaigns(page, 100, '');
+    const result = await fetchCampaigns(page, 100, type);
+    if (type && result.data.some((row) => row.campaign_type !== type))
+      return c.json(
+        {
+          error: {
+            code: "type_not_confirmed",
+            message:
+              "The network did not confirm the requested campaign type. No result is treated as CPC income. Use all types or retry later.",
+          },
+        },
+        502,
+      );
     const rows = result.data.slice(0, 100);
-    const stats = await metrics(rows.map(r => r.id));
+    const stats = await metrics(rows.map((r) => r.id));
     const stamp = new Date().toISOString();
-    return c.json({ source: 'network', page: result.meta.page, pageSize: result.meta.per_page,
-      total: result.meta.total, totalPages: Math.max(1, result.meta.total_pages), summary: null, fetchedAt: stamp,
-      rows: rows.map(r => ({ id: r.id, name: r.name, domain: r.domain, access: r.access_status, type: r.campaign_type,
-        payout: r.payout, currency: r.payout_currency, payoutType: r.payout_type, cookie: r.cookie_duration,
-        deepLink: r.deeplink_allowed, checkedAt: stamp,
-        liveOffers: stats.get(r.id)?.liveOffers ?? 0, heldOffers: stats.get(r.id)?.heldOffers ?? 0,
-        clicks30: stats.get(r.id)?.clicks30 ?? 0 })),
+    return c.json({
+      source: "network",
+      page: result.meta.page,
+      pageSize: result.meta.per_page,
+      total: result.meta.total,
+      totalPages: Math.max(1, result.meta.total_pages),
+      summary: null,
+      fetchedAt: stamp,
+      rows: rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        domain: r.domain,
+        access: r.access_status,
+        type: r.campaign_type,
+        payout: r.payout,
+        currency: r.payout_currency,
+        payoutType: r.payout_type,
+        cookie: r.cookie_duration,
+        deepLink: r.deeplink_allowed,
+        checkedAt: stamp,
+        countries: Array.isArray(r.countries)
+          ? r.countries
+              .filter((x) => typeof x?.iso === "string")
+
+              .map((x) => ({
+                iso: x.iso.slice(0, 3),
+                name:
+                  typeof x.name === "string"
+                    ? x.name.slice(0, 80)
+                    : x.iso.slice(0, 3),
+              }))
+          : null,
+        subIds:
+          typeof r.sub_ids_allowed === "boolean" ? r.sub_ids_allowed : null,
+        cashback:
+          typeof r.cashback_publishers_allowed === "boolean"
+            ? r.cashback_publishers_allowed
+            : null,
+        social:
+          typeof r.social_media_publishers_allowed === "boolean"
+            ? r.social_media_publishers_allowed
+            : null,
+        missingTransactions:
+          typeof r.missing_transactions_accepted === "boolean"
+            ? r.missing_transactions_accepted
+            : null,
+        reportingType:
+          typeof r.reporting_type === "string"
+            ? r.reporting_type.slice(0, 80)
+            : null,
+        liveOffers: stats.get(r.id)?.liveOffers ?? 0,
+        heldOffers: stats.get(r.id)?.heldOffers ?? 0,
+        clicks30: stats.get(r.id)?.clicks30 ?? 0,
+      })),
     });
   } catch {
     // Do not return upstream response bodies, publisher details or credentials.
-    return c.json({ error: { code: 'network_unavailable', message: 'The live campaign API could not be read. It may be busy or rate-limited. Wait a minute and retry, or use cached inventory; this does not mean there are zero campaigns.' } }, 503);
+    return c.json(
+      {
+        error: {
+          code: "network_unavailable",
+          message:
+            "The live campaign API could not be read. It may be busy or rate-limited. Wait a minute and retry, or use cached inventory; this does not mean there are zero campaigns.",
+        },
+      },
+      503,
+    );
   }
 });
