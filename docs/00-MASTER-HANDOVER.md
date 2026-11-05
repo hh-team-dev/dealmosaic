@@ -1,8 +1,8 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **Hospitality implementation — 5 November 2026:** [42-hospitality-business-and-native-comparison.md](42-hospitality-business-and-native-comparison.md) contains the reviewed two-PDF business architecture and 2.6.0 implementation: native sourced places and personal quote comparisons, plus the owner business desk. Automatic hotel-rate APIs and hospitality booking remain approval-gated. Production remains 2.5.0 until the new release receipt is complete.
+> **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
 
-> **Current 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.
+> **Previous 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.
 
 > **Previous hospitality field-test review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime at that review remained 2.4.0; the proposed booking/merchant platform was not deployed. Read document 41 for the later 2.5.0 repair release.
 
@@ -14,7 +14,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **5 November 2026** · Live website/PWA/API **2.5.0** · Current release evidence is in document 41.
+Last updated: **5 November 2026** · Live website/PWA/API **2.6.0** · Current release evidence is in document 42.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -26,7 +26,15 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — website, PWA and API 2.5.0
+## Current live release — website, PWA and API 2.6.0
+
+Native `/stays/compare` and `/dining/compare` provide 40 sourced stays and 33 dining places across the 17 destination choices. Customers can enter their own quotes, compare complete like-for-like totals and conditions, keep private device notes offline and export them. **These are personal quotes, not automatically fetched or verified OTA prices.** The protected owner hospitality desk exposes approval gates, an unsent supplier enquiry and hypothetical unit economics; it does not activate accounts or record earnings.
+
+Runtime/tag `c54a98d30b46a540786477af2ef630be9c64ee85` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Website/PWA/classic share the implementation. Validation: 721 unit tests, 48 design assertions, 292 browser checks across release-validation runs plus two existing development-only skips, and 69 server-read-only production checks. Final packaged hospitality/PWA/persistent-control suites passed 114/57/39. Existing device/general checks passed 36/46 before the final evidence-method-only catalogue correction. No paid service, provider application, contract, booking, affiliate test click or live notification was activated by this work.
+
+The 2.5 repairs and 41 pet records remain; pet-dining evidence gaps remain separate from general dining. Physical-phone retest and the intermittent external-link root cause remain open. Approved supplier access, commercial/content rights, implementation and certification still precede live cross-provider hotel prices or monetised fulfilment. Read document 42 for architecture, differences, source limits, phone steps, rollout criteria and recovery.
+
+## Previous live release — website, PWA and API 2.5.0
 
 Guest/member/admin repairs are deployed, including readable returned store buttons, neutral route loading, deliberate recovery, authentication/logout guards, saved-reminder linkage, optional email consent, a working notification centre, delivery-failure handling and a private campaign inventory. Public product prices/history/rankings no longer use the 170 internal demo observations. There are 25 product references but zero established live product-price observations at verification; do not advertise a newly connected price feed.
 

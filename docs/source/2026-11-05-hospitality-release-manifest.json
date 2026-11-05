@@ -1,0 +1,82 @@
+{
+  "version": "2.6.0",
+  "createdAt": "2026-11-05T11:13:08.543Z",
+  "sourceCommit": "c54a98d30b46a540786477af2ef630be9c64ee85",
+  "workingTreeChanged": false,
+  "files": [
+    {
+      "mode": "pwa",
+      "file": "dealmosaic-2.6.0-pwa.tar.gz",
+      "sha256": "01bb6f2ce23eb7fa76816ec14361d439945ee967819cefeec1f77d278048b65e",
+      "release": {
+        "version": "2.6.0",
+        "build": "2.6.0-a634124cc033",
+        "mode": "pwa",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-iUVlknj_.js",
+          "/assets/DirectShop-C4KzMlg1.js",
+          "/assets/Hospitality-BtIF1-nm.js",
+          "/assets/HospitalityBusiness-BcXksToK.js",
+          "/assets/HospitalityCompare-CfFV07c6.js",
+          "/assets/PetFriendly-BPus7xQ2.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-CqzBQfIT.js",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/hospitality-DZyJxaWL.js",
+          "/assets/hospitality-comparison-DnyqrE8S.css",
+          "/assets/hospitality-comparison-n7qn2Pg9.js",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-DE41GBEX.js",
+          "/assets/pets-Crtg45vJ.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 916069,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    },
+    {
+      "mode": "classic",
+      "file": "dealmosaic-2.6.0-classic.tar.gz",
+      "sha256": "872c40be486fac62692684609e8bb1a7ef281a02d4cdf41d5f8c9a4eafb503b8",
+      "release": {
+        "version": "2.6.0",
+        "build": "2.6.0-8d7b13d80939",
+        "mode": "classic",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-DYFlJqpW.js",
+          "/assets/DirectShop-OOK6VbAj.js",
+          "/assets/Hospitality-DetboTkN.js",
+          "/assets/HospitalityBusiness-OvZQHEZ9.js",
+          "/assets/HospitalityCompare-DLNHmSRm.js",
+          "/assets/PetFriendly-BV8RkT1P.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-CWfDmwr0.js",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/hospitality-DZyJxaWL.js",
+          "/assets/hospitality-comparison-DnyqrE8S.css",
+          "/assets/hospitality-comparison-n7qn2Pg9.js",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-LfC2AopE.js",
+          "/assets/pets-Crtg45vJ.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 914059,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    }
+  ]
+}

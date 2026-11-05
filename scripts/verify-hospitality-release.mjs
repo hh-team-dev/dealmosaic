@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 /** Production verification is server-read-only. Personal note exercises use only
  * isolated browser storage; all server mutations and external destinations are blocked. */
 import assert from "node:assert/strict";
@@ -46,6 +47,19 @@ check(
   health.version === expected.version &&
     health.environment === expectedEnvironment,
 );
+if (expectedEnvironment === "production") {
+  const revision = execFileSync(
+    "git",
+    ["rev-parse", `pwa-v${expected.version}`],
+    { encoding: "utf8" },
+  ).trim();
+  check(
+    "Production API revision matches frozen runtime tag",
+    typeof health.revision === "string" &&
+      health.revision.length >= 7 &&
+      revision.startsWith(health.revision),
+  );
+}
 const release = await (await get("/pwa-release.json")).json();
 report.web = {
   version: release.version,

@@ -1,6 +1,9 @@
 # DealMosaic 2.0.1 — PWA + website handover
 
-> **Current release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
+> **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
+
+
+> **Previous release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
 
 
 > **5 November update:** the guest/member/admin repair is tracked in [document 41](41-device-review-and-conversion-repair.md). The owner now permits useful external hotel/restaurant links where there is no genuine offer or authorised internal capability. Hotels are the next phase after current defects; restaurants follow hotels. Earlier dated release and business-model evidence below is historical.

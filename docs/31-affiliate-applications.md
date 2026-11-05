@@ -1,6 +1,9 @@
 # 31 — Affiliate applications: what I did, what only the owner can do
 
-> **Current release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
+> **Current release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
+
+
+> **Previous release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
 
 
 > **4 November 2026 correction:** This is a historical application record. “Open” means campaign access, not that every click pays, a destination works or commission has been received. The fresh hotel-access check and five-row protective hold are documented in [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md). Do not use stale cached application status to reapply.

@@ -2,7 +2,7 @@
 
 **Owner decision:** proceed with hotels first, then restaurants; physical-device retest can follow. Research reviewed: both supplied PDFs, all 13 pages. **Design date: 5 November 2026.**
 
-**Release status:** 2.6.0 implementation and validation in progress. Production remains 2.5.0 until the release receipt below is completed. This document deliberately separates working features, designed future systems and partner approvals.
+**Release status:** Website, PWA and API **2.6.0 deployed and production-verified on 5 November 2026**. Personal comparison and the owner business desk are live. Automatic supplier prices, bookings and new hospitality commission connections are not activated. The receipt below distinguishes tested implementation from future integrations.
 
 ## 1. The decision in one minute
 
@@ -320,7 +320,45 @@ No owner manual action was used as a substitute for the implementation completed
 - New unit and browser suites cover provenance, unknown fees, condition mismatch, eligibility, tie handling, arithmetic, storage, CSV safety, access control, mobile layout and accessibility.
 - Privacy, terms, ranking/data-source descriptions, prerendered pages, edge routes, global destination navigation and offline policy are updated in the same pass.
 
-**Validation and deployment:** completion receipts will record the exact tested source, package hashes, production API/web revisions, browser results and backup. Until those receipts are filled, implementation work is not described as live.
+### Published release
+
+- Runtime source/tag: `c54a98d30b46a540786477af2ef630be9c64ee85` / `pwa-v2.6.0`, pushed to the existing repository.
+- Existing free Render service: `dep-dbm6d549v7es7390s8tg`, live; no new service or paid tier. Cloudflare Pages: `5924e0cb-a23e-467c-bdc9-887093f9f488`, existing production project; API origin preserved.
+- Production: https://dealmosaic.pages.dev. Hotel workspace: https://dealmosaic.pages.dev/stays/compare. Dining workspace: https://dealmosaic.pages.dev/dining/compare. Owner desk: `/admin?tab=hospitality`, login and admin permission required.
+- Clean-source package manifest: `docs/source/2026-11-05-hospitality-release-manifest.json`; `workingTreeChanged: false`.
+
+| Verification | Observed result |
+| --- | --- |
+| Type / unit / security checks | 721 tests in 37 files; 48 design assertions; 386 files passed secret scan before receipt additions |
+| Browser regressions | 292 passed across release-validation runs; 2 existing development-only skips |
+| Exact final packaged hospitality | 114 passed, Chromium 320px/desktop and WebKit 390px |
+| Exact final packaged PWA | 57 passed, including cold-offline personal notes and classic fallback preservation |
+| Exact final persistent controls | 39 passed, installation/ticker/dock/form protection |
+| Device review + general shopping | 36 + 46 passed before the final source-method-only AltAir correction; same functional implementation |
+| Both PWA/classic builds | 59 HTML pages / 58 unique h1 checks each; shared implementation parity passed |
+| Deployment rehearsal | 68 passed against an isolated test API; not counted as production evidence |
+| Production verification | 69 checks; exact web build/API revision; private noindex/no-store shells; anonymous protected-route denial; mobile accessibility/layout and local-note persistence in Chromium/WebKit |
+| Production restraint | 0 server mutations, 0 external-provider/affiliate navigation; temporary local test notes deleted |
+
+The production script validates anonymous access denial, not a real owner's signed-in production session. Owner desk authorization and interactions were tested with isolated fixtures. The final source-method correction upgraded AltAir from an indexed excerpt to the inspected official announcement; it changed no comparison arithmetic. Physical-device installation, account-container behaviour and the deferred external-link retest remain distinct from these automated checks.
+
+### Matched deployable packages
+
+Directory: `/home/user/releases/dealmosaic-2.6.0/`. Both archive checksums passed. Keep the compatible API when switching frontend flavors; do not replace the database. The classic removal worker must remain at the same origin/path and preserves personal quote storage.
+
+- **pwa** `dealmosaic-2.6.0-pwa.tar.gz`; build `2.6.0-a634124cc033`; SHA-256 `01bb6f2ce23eb7fa76816ec14361d439945ee967819cefeec1f77d278048b65e`.
+- **classic** `dealmosaic-2.6.0-classic.tar.gz`; build `2.6.0-8d7b13d80939`; SHA-256 `872c40be486fac62692684609e8bb1a7ef281a02d4cdf41d5f8c9a4eafb503b8`.
+
+### Source recovery
+
+- Verified source snapshot: `backups/dealmosaic_2026-11-05_11-23-53.tar.gz`, **422 files / 9,020,337 bytes uncompressed**, all per-file checksums matched. SHA-256 `e4893bb57b3b7d3e3d80e6a73277713c59329e2287181f6c3f82cba2ba47e991`.
+- The snapshot excludes credentials, customer/test databases, generated build output and review media. It precedes this checksum note and final PDF bookkeeping; those later records are preserved in Git and the complete-history bundle.
+- Complete source/history recovery: `backups/pwa-v2.6.0.bundle` and its `SHA256` sidecar. Verify both the sidecar and `git bundle verify` before restoring. Runtime tag remains `pwa-v2.6.0`; the later documentation commit is not a new runtime deployment.
+- Matching PWA/classic frontend archives are separate in `/home/user/releases/dealmosaic-2.6.0/`. No database reset or pre-PWA rollback is required. Restore the classic removal worker at the same origin/path if reverting to network-only operation; local personal quotes are preserved.
+- All individual handover PDFs and their combined master are regenerated together. Isolated test servers are stopped and test databases/media removed. No screenshot is retained.
+
+
+
 
 **Preserved unresolved items:** physical-device retest; intermittent external destination failure root cause; five held hotel offers; supplier approval/API rights; direct goods shop facts and banking; no hotel/restaurant booking authority implied by the goods shop.
 

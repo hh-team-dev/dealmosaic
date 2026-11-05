@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-05T11:23:41.503355+00:00",
+  "sourceCommit": "c54a98d30b46a540786477af2ef630be9c64ee85",
+  "unitTests": 721,
+  "unitFiles": 37,
+  "designAssertions": 48,
+  "browserPassedAcrossRuns": 292,
+  "developmentOnlySkips": 2,
+  "finalArtifactSuites": {
+    "hospitality": 114,
+    "pwa": 57,
+    "engagement": 39
+  },
+  "precedingFunctionalSuites": {
+    "deviceReview": 36,
+    "general": 46
+  },
+  "finalDelta": "AltAir official announcement evidence upgraded from index to page; no arithmetic change",
+  "productionChecks": 69,
+  "api": {
+    "id": "dep-dbm6d549v7es7390s8tg",
+    "status": "live",
+    "commit": "c54a98d30b46a540786477af2ef630be9c64ee85",
+    "finishedAt": "2026-11-05T11:21:45.752727Z"
+  },
+  "pages": {
+    "id": "5924e0cb-a23e-467c-bdc9-887093f9f488",
+    "url": "https://5924e0cb.dealmosaic.pages.dev",
+    "environment": "production",
+    "commit": "c54a98d30b46a540786477af2ef630be9c64ee85",
+    "apiOriginPreserved": true
+  },
+  "screenshotsRetained": false,
+  "paidServicesActivated": false,
+  "providerApplicationsSubmitted": false
+}
