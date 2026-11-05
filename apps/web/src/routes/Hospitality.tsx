@@ -1132,7 +1132,8 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                 provider.
               </p>
               <p>
-                Directory sources were reviewed on 4 November 2026.
+                Directory sources were reviewed on 4 November 2026, with the
+                Vijayawada additions reviewed on 5 November 2026.
                 City-specific map searches are discovery links, not a licensed
                 restaurant database or a guarantee of matching results. Brand
                 names belong to their owners. Artwork is original decorative

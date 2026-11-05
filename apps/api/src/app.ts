@@ -20,6 +20,7 @@ import { maintenanceRoutes } from './routes/maintenance.js';
 import { adminRoutes } from './routes/admin.js';
 import { directRoutes, directAdminRoutes } from './routes/direct.js';
 import { goRoutes } from './routes/go.js';
+import { hospitalityEventsRoutes } from './routes/hospitality-events.js';
 import { maybeRunDaily } from './services/daily-job.js';
 import { seedCatalogue } from './db/catalog-seed.js';
 
@@ -136,6 +137,7 @@ app.route('/api/direct-admin', directAdminRoutes);
   // The money route: every coupon tap leaves through here so the sale can be
   // attributed to us. See routes/go.ts.
   app.route('/api/go', goRoutes);
+  app.route('/api/hospitality-events', hospitalityEventsRoutes);
 
 /**
  * `POST /api/maintenance/daily` was the original entry point for the scheduler.

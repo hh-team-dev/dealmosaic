@@ -192,7 +192,7 @@ export function DataSources() {
           </p>
 
           <h2 className="h2">Hospitality places and personal quotes</h2>
-          <p>The hospitality comparison workspaces contain 40 selected hotels and 33 dining places, combining our existing pet-policy research with separately sourced general places. Each place shows its publication source and review date. This is not exhaustive inventory or proof of current availability, pet admission or accessibility. There is no connected live room-rate or table-reservation feed. Monetary amounts in the personal quote collection come from your entries, not the venue directory; they are never labelled provider-verified.</p>
+          <p>The hospitality comparison workspaces contain 41 selected hotels and 34 dining places across 18 destination choices, combining our existing pet-policy research with separately sourced general places. Each place shows its publication source and review date. Filters with sourced evidence or your own comparable quotes decide matches; filters without sourced data build a provider-confirmation checklist instead of silently deciding. This is not exhaustive inventory or proof of current availability, pet admission or accessibility. There is no connected live room-rate or table-reservation feed. Monetary amounts in the personal quote collection come from your entries, not the venue directory; they are never labelled provider-verified. Optional anonymous usage counts are sent only after you allow them, as the privacy policy describes.</p>
           <h2 className="h2">Product-price sources</h2>
           {connectors === null && <div className="skeleton skeleton-card" />}
           {connectors?.map((c) => (

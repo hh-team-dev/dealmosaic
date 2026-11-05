@@ -33,6 +33,20 @@ type Readiness = {
   promotionNote: string;
   directVenueNote: string;
   applicationBrief: string;
+  traffic: {
+    windowDays: number;
+    retentionDays: number;
+    totals: Record<string, number>;
+    searchesByCity: Array<{ city: string; searches: number }>;
+    searchesByKind: Array<{ kind: string; searches: number }>;
+    providerClicks: Array<{ provider: string; clicks: number }>;
+    topVenues: Array<{ venue: string; clicks: number }>;
+    outcomes: Array<{ outcome: string; reports: number }>;
+    topFilters: Array<{ filter: string; searches: number }>;
+    perDay: Array<{ day: string; events: number }>;
+    oldestEventAt: string | null;
+    scope: string;
+  };
 };
 const labels: Record<string, string> = {
   agreementRecorded: "Signed provider agreement",
@@ -215,6 +229,123 @@ export default function HospitalityBusiness() {
             services activated by this release:{" "}
             {data.paidServicesActivated ? "yes" : "none"}.
           </p>
+          <section
+            className="card stack"
+            aria-labelledby="traffic-insights-heading"
+          >
+            <h3 id="traffic-insights-heading">
+              Traffic & search insights (last {data.traffic.windowDays} days)
+            </h3>
+            <p className="small muted">{data.traffic.scope}</p>
+            <div className="admin-tiles">
+              <div className="admin-tile">
+                <strong className="admin-tile-value">
+                  {data.traffic.totals.search ?? 0}
+                </strong>
+                <span className="admin-tile-label">Applied searches</span>
+              </div>
+              <div className="admin-tile">
+                <strong className="admin-tile-value">
+                  {data.traffic.totals.provider ?? 0}
+                </strong>
+                <span className="admin-tile-label">Provider visits</span>
+              </div>
+              <div className="admin-tile">
+                <strong className="admin-tile-value">
+                  {data.traffic.totals.outcome ?? 0}
+                </strong>
+                <span className="admin-tile-label">Voluntary reports</span>
+              </div>
+              <div className="admin-tile">
+                <strong className="admin-tile-value">
+                  {data.traffic.totals.shortlist ?? 0}
+                </strong>
+                <span className="admin-tile-label">Shortlist actions</span>
+              </div>
+            </div>
+            {data.traffic.searchesByCity.length > 0 && (
+              <details open>
+                <summary>
+                  <strong>Searches by destination</strong>
+                </summary>
+                <ul>
+                  {data.traffic.searchesByCity.map((r) => (
+                    <li key={r.city}>
+                      {r.city}: {r.searches}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {data.traffic.providerClicks.length > 0 && (
+              <details>
+                <summary>
+                  <strong>Provider visits by destination type</strong>
+                </summary>
+                <ul>
+                  {data.traffic.providerClicks.map((r) => (
+                    <li key={r.provider}>
+                      {r.provider}: {r.clicks}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {data.traffic.topVenues.length > 0 && (
+              <details>
+                <summary>
+                  <strong>Most-visited places (top 10)</strong>
+                </summary>
+                <ul>
+                  {data.traffic.topVenues.map((r) => (
+                    <li key={r.venue}>
+                      {r.venue}: {r.clicks}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {data.traffic.topFilters.length > 0 && (
+              <details>
+                <summary>
+                  <strong>Most-used search filters</strong>
+                </summary>
+                <ul>
+                  {data.traffic.topFilters.map((r) => (
+                    <li key={r.filter}>
+                      {r.filter}: {r.searches}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {data.traffic.outcomes.length > 0 && (
+              <details>
+                <summary>
+                  <strong>Voluntary booking reports</strong>
+                </summary>
+                <ul>
+                  {data.traffic.outcomes.map((r) => (
+                    <li key={r.outcome}>
+                      {r.outcome}: {r.reports}
+                    </li>
+                  ))}
+                </ul>
+                <p className="small muted">
+                  Reports come only from customers who volunteer them. Most
+                  visitors stay silent, and silence proves nothing either way.
+                </p>
+              </details>
+            )}
+            <p className="small muted">
+              Events older than {data.traffic.retentionDays} days are deleted
+              automatically
+              {data.traffic.oldestEventAt
+                ? `; oldest stored event: ${data.traffic.oldestEventAt.slice(0, 10)}`
+                : "; no events stored yet"}
+              . Individual events and session ids are never shown here.
+            </p>
+          </section>
           <div className="callout">
             <h3>What earns—and what does not</h3>
             <p>{data.promotionNote}</p>

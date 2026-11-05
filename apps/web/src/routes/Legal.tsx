@@ -44,9 +44,9 @@ export function Privacy() {
   return (
     <LegalPage
       title="Privacy policy"
-      updated="4 November 2026"
+      updated="5 November 2026"
       path="/privacy"
-      description="What DealMosaic collects for accounts, comparisons and direct orders, and how to request access or deletion."
+      description="What DealMosaic collects for accounts, comparisons, hospitality discovery and direct orders, and how to request access or deletion."
     >
       <div className="callout callout-info">
         <div className="callout-title">
@@ -54,7 +54,7 @@ export function Privacy() {
         </div>
         <p className="small" style={{ margin: 0, color: 'var(--ink)' }}>
           We collect what an account genuinely needs: your email, a display name, a password hash and your preferences.
-          We do not run ad networks or third-party trackers. Account data can be managed from Settings. Direct orders also need delivery and payment-reconciliation records, described below.
+          We do not run ad networks or third-party trackers. Hotel and dining discovery can optionally share anonymous usage counts, only after you allow them. Account data can be managed from Settings. Direct orders also need delivery and payment-reconciliation records, described below.
         </p>
       </div>
 
@@ -83,6 +83,12 @@ export function Privacy() {
         </li>
         <li>
           <strong>Activity you create</strong> — searches, saved products, alerts and reports, so the product works.
+        </li>
+        <li>
+          <strong>Anonymous hospitality counts (only with your permission)</strong> — when you choose “Allow anonymous counts”
+          in the hotel or dining comparison workspace, we receive counts and fixed filter keys: destination and place identifiers from our own directory,
+          party counts, which filters were used, shortlist activity, provider visits and any booking outcome you volunteer.
+          Free text you type (place search words, room arrangements, provider names) is never included.
         </li>
       </ul>
 
@@ -115,6 +121,9 @@ export function Privacy() {
 
       <h2>Hotel and dining planning</h2>
       <p>City and brand selections can appear in the page address and copied city links. In the provider-search and simple calculator forms, hotel dates, guest counts, child ages and calculator amounts are held in page memory, not stored in your DealMosaic account or sent to our server. Choosing the hotel-search link sends the search details to the named provider. Official directory links do not pass your dates or guest details. We do not automatically request your location. The provider has its own privacy policy. Pet-planning form entries remain in page memory and are excluded from shared directory links. Copying a confirmation template does not send it. The public directory CSV contains venue information only. Optional local-restaurant search refinements remain in page memory and are sent to Google Maps only when you open a map search. They are not included in copied city links.</p>
+      <h2>Hotel and dining discovery counts</h2>
+      <p>The hotel and dining comparison workspaces ask whether you want to share anonymous usage counts. Until you choose “Allow anonymous counts”, nothing is sent. When allowed, each event carries a random daily-rotating identifier stored in this browser — not your account id, not a fingerprint, not an advertising id. Events contain only counts and fixed keys (destination, our own place identifiers, party counts, filter names, shortlist actions, provider-visit attempts and volunteered outcomes). Your typed search words, room arrangements and provider names are never included. A provider visit is recorded as an outbound attempt; we cannot see whether you arrived, what you paid, or whether you booked. Booking outcomes exist only when you volunteer them, and staying silent proves nothing either way.</p>
+      <p>We store no IP address, browser identifier, account link, contact detail or payment data with these events, and we delete them automatically after 180 days. The owner sees only aggregate totals — never individual events or identifiers. You can switch off sharing at any time from the same workspace panel, which also removes the local identifier, or choose “Use a new anonymous ID” to sever the link to earlier counts. Sensitive planning details (accessibility needs, children) are never turned into identified profiles.</p>
       <h2>Stay planning tools</h2>
       <p>Trip-budget and rebooking figures remain in the current page memory and are not sent to us or saved to your account. Use Clear on a shared device; browsers may retain open pages. Copy and download export only a generic stay-question checklist, not your financial inputs. These actions do not send a hotel request, create a booking or set a reminder.</p>
       <h2>Your personal hospitality quote collection</h2>
@@ -123,7 +132,8 @@ export function Privacy() {
       <p>
         Exactly one cookie is set: <code>dm_session</code>, which keeps you signed in. It is <code>HttpOnly</code>,{' '}
         <code>SameSite=Lax</code> and <code>Secure</code> over HTTPS. It contains no personal data — only an opaque
-        token. There are no analytics or advertising cookies, so there is nothing to “accept”.
+        token. There are no analytics or advertising cookies. Optional hospitality counts use two local browser values instead —
+        your allow/deny choice and a random daily-rotating identifier — and both exist only in the comparison workspaces, as described above.
       </p>
 
       <h2>Who else sees data</h2>
@@ -152,7 +162,7 @@ export function Privacy() {
         <li>Access and correct your profile and preferences.</li>
         <li>Export your account data as a JSON file. Direct-order requests are handled separately by the seller.</li>
         <li>Delete the account, which removes your profile, preferences, PIN code, sessions and activity immediately.</li>
-        <li>Withdraw consent for optional items (phone, PIN code, email notifications) at any time.</li>
+        <li>Withdraw consent for optional items (phone, PIN code, email notifications, hospitality counts) at any time.</li>
       </ul>
       <p>
         Some security records are retained for abuse prevention. Account deletion does not automatically erase direct-order records needed for fulfilment, disputes or legal compliance. Ask the seller about your specific order.
@@ -177,7 +187,7 @@ export function Terms() {
   return (
     <LegalPage
       title="Terms of use"
-      updated="4 November 2026"
+      updated="5 November 2026"
       path="/terms"
       description="The rules for using DEALMOSAIC: what our prices are and are not, what we promise about ranking, and the limits of that promise."
     >
@@ -219,7 +229,7 @@ export function Terms() {
       </ul>
 
       <h2>Hotels, restaurants and food outlets</h2>
-      <p>These sections provide sourced place discovery, selected provider-listed promotions, entered-value calculators and comparison of your personal quotes. They do not supply live hotel inventory, confirmed table or outlet availability, automatically fetched room prices or native bookings. A selected city does not confirm a branch, room or offer. Personal comparison groups rely on the exact plan, room or meal description, inclusions, cancellation, payment and eligibility conditions you enter; they are not independent verification of equivalent offers. Reconfirm all terms and charges with the provider. Unknown or more-than-24-hour-old entries cannot win the personal comparison. Cashback is never deducted; refundable deposits are separate from cost. The provider handles booking, ordering, fulfilment, payment, cancellation and refunds.</p>
+      <p>These sections provide sourced place discovery across 18 destination choices, evidence-grouped filtering, selected provider-listed promotions, entered-value calculators and comparison of your personal quotes. They do not supply live hotel inventory, confirmed table or outlet availability, automatically fetched room prices or native bookings. A selected city does not confirm a branch, room or offer. Filters without sourced data build a provider-confirmation checklist instead of silently deciding for you. Provider visits are outbound attempts, not tracked bookings; outcomes exist only when you volunteer them. Personal comparison groups rely on the exact plan, room or meal description, inclusions, cancellation, payment and eligibility conditions you enter; they are not independent verification of equivalent offers. Reconfirm all terms and charges with the provider. Unknown or more-than-24-hour-old entries cannot win the personal comparison. Cashback is never deducted; refundable deposits are separate from cost. The provider handles booking, ordering, fulfilment, payment, cancellation and refunds.</p>
       <h2>Accounts</h2>
       <p>
         Search and personal features require a confirmed account. Keep your password to yourself; we will never ask for

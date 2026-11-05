@@ -357,6 +357,38 @@ export async function initDb(): Promise<void> {
       at          TEXT NOT NULL
     )`);
   await db.exec('CREATE INDEX IF NOT EXISTS idx_admin_audit_at ON admin_audit(at DESC)');
+
+  /**
+   * ANONYMOUS HOSPITALITY ANALYTICS, CONSENT-GATED.
+   *
+   * Counts and fixed-vocabulary keys only: city ids, venue ids, provider keys,
+   * party counts, filter keys, shortlist actions and voluntary outcomes. No IP
+   * address, user agent, account id, contact detail, free text or payment data
+   * is stored. `session` is a random daily-rotating client value, not an
+   * identity. Rows older than 180 days are purged on write and on admin read.
+   */
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS hospitality_events (
+      id             TEXT PRIMARY KEY,
+      session        TEXT NOT NULL,
+      type           TEXT NOT NULL,
+      kind           TEXT NOT NULL,
+      city           TEXT NOT NULL,
+      venue          TEXT,
+      provider       TEXT,
+      nights         INTEGER,
+      rooms          INTEGER,
+      adults         INTEGER,
+      children       INTEGER,
+      filters_json   TEXT,
+      outcome        TEXT,
+      action         TEXT,
+      shortlist_size INTEGER,
+      device         TEXT NOT NULL,
+      created_at     TEXT NOT NULL
+    )`);
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_hospev_at ON hospitality_events(created_at DESC)');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_hospev_type ON hospitality_events(type, created_at DESC)');
 }
 
 export const nowIso = (): string => new Date().toISOString();

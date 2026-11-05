@@ -3,8 +3,29 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Chrome } from "../components/PublicChrome";
 import { Seo } from "../lib/seo";
 import { usePwa } from "../lib/pwa";
-import { CITIES, cityById, indiaToday } from "../lib/hospitality";
+import { CITIES, cityById, indiaToday, nightsBetween } from "../lib/hospitality";
 import { sourceAge } from "../lib/pets";
+import {
+  ACCESS_JOURNEY_STEPS,
+  OUTCOME_LABELS,
+  activeFilterKeys,
+  blankDiscoveryFilters,
+  confirmationChecklist,
+  evaluateVenues,
+  providerVisits,
+  readOutcomes,
+  writeOutcome,
+  type BookingOutcome,
+  type DiscoveryFilters,
+  type VenueVerdict,
+} from "../lib/hospitality-discovery";
+import {
+  readConsent,
+  rotateAnalyticsSession,
+  trackHospitality,
+  writeConsent,
+  type HospitalityConsent,
+} from "../lib/hospitality-analytics";
 import {
   COMPARISON_VENUES,
   COMPARISON_STORAGE_KEY,
@@ -87,6 +108,75 @@ function SourceLink({ venue }: { venue: ComparisonVenue }) {
             ? "Named in the publisher’s directory; individual venue operations were not checked."
             : "Published page information reviewed; not a venue inspection."}
       </span>
+    </div>
+  );
+}
+function VisitLink({
+  href,
+  label,
+  primary,
+  onVisit,
+}: {
+  href: string;
+  label: string;
+  primary?: boolean;
+  onVisit: () => void;
+}) {
+  const { disconnected } = usePwa();
+  if (disconnected)
+    return (
+      <span className="hd-visit-note" role="note">
+        Reconnect to visit providers.
+      </span>
+    );
+  return (
+    <a
+      className={primary ? "hd-visit hd-visit-primary" : "hd-visit"}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onVisit}
+    >
+      {label} ↗<span className="sr-only"> (new tab)</span>
+    </a>
+  );
+}
+function OutcomeButtons({
+  venueId,
+  venueName,
+  onReport,
+}: {
+  venueId: string;
+  venueName: string;
+  onReport: (outcome: BookingOutcome) => void;
+}) {
+  const [current, setCurrent] = useState<BookingOutcome | null>(null);
+  useEffect(() => {
+    setCurrent(
+      readOutcomes().find((r) => r.venueId === venueId)?.outcome ?? null,
+    );
+  }, [venueId]);
+  return (
+    <div className="hd-outcome">
+      <p>
+        Visited a provider for {venueName}? Your answer stays on this device
+        unless you allow anonymous counts — and silence never means a booking.
+      </p>
+      <div className="hd-outcome-btns" role="group" aria-label={`What happened with ${venueName}`}>
+        {(Object.keys(OUTCOME_LABELS) as BookingOutcome[]).map((o) => (
+          <button
+            key={o}
+            type="button"
+            aria-pressed={current === o}
+            onClick={() => {
+              setCurrent(o);
+              onReport(o);
+            }}
+          >
+            {OUTCOME_LABELS[o]}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -415,11 +505,11 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
   });
   const [draft, setDraft] = useState<QuotePlan>(blankPlan);
   const [plan, setPlan] = useState<QuotePlan | null>(null);
-  const [query, setQuery] = useState("");
-  const [official, setOfficial] = useState(false);
-  const [budget, setBudget] = useState("");
-  const [includeUnpriced, setIncludeUnpriced] = useState(true);
+  const [filters, setFilters] = useState<DiscoveryFilters>(blankDiscoveryFilters);
   const [shortlist, setShortlist] = useState<string[]>([]);
+  const [consent, setConsent] = useState<HospitalityConsent>("unset");
+  const [consentNote, setConsentNote] = useState("");
+  const lastProvider = useRef<Record<string, string>>({});
   const [quotes, setQuotes] = useState<PersonalQuote[]>([]);
   const [storageProblem, setStorageProblem] = useState("");
   const [message, setMessage] = useState("");
@@ -451,6 +541,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
   }
   useEffect(() => {
     load();
+    setConsent(readConsent());
     const sync = (e: StorageEvent) => {
       if (!e.key || e.key === COMPARISON_STORAGE_KEY) load();
     };
@@ -573,6 +664,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
       setMessage(
         "Quote saved on this device only. No booking, reminder or message was sent.",
       );
+      trackHospitality({ type: "quote", kind, city: city.id });
     }
     return ok;
   }
@@ -614,32 +706,232 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
     setMessage(
       "Plan applied. Places below are a sourced collection, not confirmed availability.",
     );
+    trackHospitality({
+      type: "search",
+      kind,
+      city: city.id,
+      nights: hotel ? nightsBetween(next.arrival, next.departure) : 0,
+      rooms: next.rooms,
+      adults: next.adults,
+      children: next.childAges.length,
+      filterKeys: activeFilterKeys(filters),
+    });
     requestAnimationFrame(() => resultsTitle.current?.focus());
   }
-  const all = venuesFor(kind, city.id, query, official);
+  const cityVenues = venuesFor(kind, city.id);
   const matching = quotes.filter(
     (q) =>
       q.plan.kind === kind &&
       plan &&
       samePlan(q.plan, plan) &&
-      venuesFor(kind, city.id).some((v) => v.id === q.venueId),
+      cityVenues.some((v) => v.id === q.venueId),
   );
-  const minimum = (id: string) => {
-    const values = matching
-      .filter((q) => q.venueId === id && !quoteIssue(q, now))
-      .map((q) => quoteCost(q).totalMinor!);
-    return values.length ? Math.min(...values) : null;
-  };
-  const cap = parseQuoteMoney(budget);
-  const invalidBudget = budget.trim() !== "" && cap === null;
-  const shown = all.filter((v) => {
-    const cost = minimum(v.id);
-    return cost === null ? includeUnpriced : cap === null || cost <= cap;
-  });
+  const {
+    verdicts,
+    hidden,
+    invalidBudget,
+    invalidAdvance,
+  } = evaluateVenues(kind, city.id, filters, plan, quotes, now);
+  const matches = verdicts.filter((v) => v.group === "match");
+  const confirmations = verdicts.filter((v) => v.group === "confirm");
+  const checklist = confirmationChecklist(filters, plan);
+  const set = <K extends keyof DiscoveryFilters>(key: K, value: DiscoveryFilters[K]) =>
+    setFilters((f) => ({ ...f, [key]: value }));
   const groups = comparisonGroups(matching, now);
   const collection = quotes.filter((q) => q.plan.kind === kind);
   const selected = COMPARISON_VENUES.filter((v) => shortlist.includes(v.id));
   const count = COMPARISON_VENUES.filter((v) => v.kind === kind).length;
+  const toggleShortlist = (id: string) => {
+    if (shortlist.includes(id)) {
+      const next = shortlist.filter((x) => x !== id);
+      setShortlist(next);
+      trackHospitality({
+        type: "shortlist",
+        kind,
+        city: city.id,
+        action: "remove",
+        shortlistSize: next.length,
+      });
+    } else if (shortlist.length < 4) {
+      const next = [...shortlist, id];
+      setShortlist(next);
+      trackHospitality({
+        type: "shortlist",
+        kind,
+        city: city.id,
+        action: "add",
+        shortlistSize: next.length,
+      });
+    } else {
+      setMessage(
+        "Compare up to four places at once. Remove one from the shortlist to add another.",
+      );
+    }
+  };
+  const reportOutcome = (venueId: string, outcome: BookingOutcome) => {
+    const provider = lastProvider.current[venueId] ?? "unrecorded";
+    writeOutcome({
+      venueId,
+      outcome,
+      provider,
+      at: new Date().toISOString(),
+    });
+    trackHospitality({
+      type: "outcome",
+      kind,
+      city: city.id,
+      venue: venueId,
+      provider,
+      outcome,
+    });
+    setMessage(
+      consent === "granted"
+        ? "Thanks — recorded on this device and in anonymous counts."
+        : "Thanks — recorded on this device only.",
+    );
+  };
+  const allowAnalytics = () => {
+    if (writeConsent("granted")) {
+      setConsent("granted");
+      setConsentNote(
+        "Thanks — only anonymous counts are sent, and you can switch off any time.",
+      );
+    } else {
+      setConsentNote(
+        "Browser storage is blocked, so the choice could not be saved.",
+      );
+    }
+  };
+  const declineAnalytics = () => {
+    if (writeConsent("denied")) {
+      setConsent("denied");
+      setConsentNote("Understood — everything stays on this device.");
+    } else {
+      setConsentNote(
+        "Browser storage is blocked, so the choice could not be saved.",
+      );
+    }
+  };
+  const rotateId = () => {
+    setConsentNote(
+      rotateAnalyticsSession()
+        ? "A fresh anonymous ID is now in use; it cannot be linked to earlier counts."
+        : "Browser storage is blocked, so the ID could not be changed.",
+    );
+  };
+  const renderVerdict = (verdict: VenueVerdict) => {
+    const v = verdict.venue;
+    const visits = providerVisits(v, plan);
+    return (
+      <article
+        className="hc-venue hd-card"
+        key={v.id}
+        data-comparison-venue={v.id}
+      >
+        <span
+          className={
+            verdict.group === "match" ? "hd-tag hd-tag-match" : "hd-tag"
+          }
+        >
+          {verdict.group === "match"
+            ? "Matches your must-haves"
+            : "Needs confirmation"}
+        </span>
+        <span className="hospitality-eyebrow">
+          {v.evidence === "official"
+            ? "Official publication"
+            : "Third-party publication"}
+        </span>
+        <h3>{v.name}</h3>
+        <p className="hd-area">{v.area}</p>
+        <div className="hd-price">
+          {verdict.lowestMinor === null ? (
+            <>
+              <strong>Add your quote</strong>
+              <span>No live price or budget confirmation</span>
+            </>
+          ) : (
+            <>
+              <strong>{inr(verdict.lowestMinor)}</strong>
+              <span>
+                Lowest entered total for this plan;{" "}
+                {hotel ? "room" : "meal"} terms may differ
+              </span>
+            </>
+          )}
+        </div>
+        {verdict.reasons.length > 0 && (
+          <ul className="hd-reasons">
+            {verdict.reasons.map((r) => (
+              <li key={r}>{r}</li>
+            ))}
+          </ul>
+        )}
+        <details>
+          <summary>Source & things to confirm</summary>
+          <p>{v.note}</p>
+          <p className="small">
+            {v.publisher} · source reviewed {day(v.reviewedAt)}.{" "}
+            {sourceAge(v.reviewedAt) > 90
+              ? "Older evidence: recheck the information."
+              : "Source review is not a venue inspection."}{" "}
+            {v.petResearch
+              ? "This record comes from pet-policy research; confirm current admission and fees."
+              : "Pet admission and accessibility are not established here."}
+          </p>
+          <SourceLink venue={v} />
+        </details>
+        <div className="hd-visits">
+          {visits.map((visit, i) => (
+            <VisitLink
+              key={visit.key}
+              href={visit.href}
+              label={visit.label}
+              primary={i === 0}
+              onVisit={() => {
+                lastProvider.current[v.id] = visit.key;
+                trackHospitality({
+                  type: "provider",
+                  kind,
+                  city: city.id,
+                  venue: v.id,
+                  provider: visit.key,
+                });
+              }}
+            />
+          ))}
+        </div>
+        {!disconnected && (
+          <p className="hd-visit-note">
+            Provider pages open in a new tab. DealMosaic cannot see what
+            happens there — booking, prices and support stay with them.
+          </p>
+        )}
+        <OutcomeButtons
+          venueId={v.id}
+          venueName={v.name}
+          onReport={(o) => reportOutcome(v.id, o)}
+        />
+        <div className="hc-actions hd-card-actions">
+          <button
+            className="hospitality-primary"
+            onClick={() => openQuote(v)}
+          >
+            Add a quote
+            <span className="sr-only"> for {v.name}</span>
+          </button>
+          <button
+            className="hospitality-secondary"
+            aria-pressed={shortlist.includes(v.id)}
+            onClick={() => toggleShortlist(v.id)}
+          >
+            {shortlist.includes(v.id) ? "Remove from shortlist" : "Shortlist"}
+            <span className="sr-only"> {v.name}</span>
+          </button>
+        </div>
+      </article>
+    );
+  };
   return (
     <>
       <Seo
@@ -654,7 +946,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
       />
       <Chrome>
         <div
-          className={`hospitality hc-page ${hotel ? "hospitality-stays" : "hospitality-dining"}`}
+          className={`hospitality hc-page hd-page ${hotel ? "hospitality-stays" : "hospitality-dining"}`}
         >
           <div className="hospitality-container">
             <nav
@@ -712,8 +1004,8 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
                 <span>Commission never decides the order</span>
               </div>
             </header>
-            <section className="hc-panel" aria-labelledby="hc-plan-title">
-              <span className="hospitality-eyebrow">
+            <section className="hc-panel hd-panel" aria-labelledby="hc-plan-title">
+              <span className="hd-kicker">
                 01 / Make the plan precise
               </span>
               <h2 id="hc-plan-title" ref={planTitle} tabIndex={-1}>
@@ -922,139 +1214,344 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
               <h2 id="hc-results-title" ref={resultsTitle} tabIndex={-1}>
                 {city.name}, thoughtfully compared.
               </h2>
-              <div className="hc-form hc-filters">
-                <label>
-                  Find a place or neighbourhood
-                  <input
-                    type="search"
-                    maxLength={100}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                </label>
-                <label>
-                  {hotel ? "Whole-stay" : "Whole-meal"} budget (₹)
-                  <input
-                    inputMode="decimal"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                  />
-                  <span className="small">
-                    Uses complete, comparable quotes for your applied plan—not
-                    assumed market prices.
-                  </span>
-                </label>
-                <label className="hc-check">
-                  <input
-                    type="checkbox"
-                    checked={official}
-                    onChange={(e) => setOfficial(e.target.checked)}
-                  />
-                  Official publication sources only
-                </label>
-                <label className="hc-check">
-                  <input
-                    type="checkbox"
-                    checked={includeUnpriced}
-                    onChange={(e) => setIncludeUnpriced(e.target.checked)}
-                  />
-                  Include places without a priced quote
-                </label>
-              </div>
-              {invalidBudget && (
-                <p role="alert" className="hc-error">
-                  Enter a valid rupee budget, without commas or symbols. The
-                  budget filter has not been applied.
-                </p>
-              )}
-              <p className="small" role="status">
-                {shown.length} selected places shown. Alphabetical order—not an
-                endorsement or availability ranking.{" "}
-                {cap !== null &&
-                  "Unpriced places, if included, have not passed your budget check."}
-              </p>
-              <div className="hc-venues">
-                {shown.map((v) => {
-                  const cost = minimum(v.id);
-                  return (
-                    <article
-                      className="hc-venue"
-                      key={v.id}
-                      data-comparison-venue={v.id}
+              <div className="hd-panel hd-filters">
+                <div className="hd-grid">
+                  <label>
+                    Find a place or neighbourhood
+                    <input
+                      type="search"
+                      maxLength={100}
+                      value={filters.query}
+                      onChange={(e) => set("query", e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    {hotel ? "Whole-stay" : "Whole-meal"} budget (₹)
+                    <input
+                      inputMode="decimal"
+                      value={filters.budget}
+                      onChange={(e) => set("budget", e.target.value)}
+                    />
+                    <span className="small">
+                      Uses complete, comparable quotes for your applied plan—not
+                      assumed market prices.
+                    </span>
+                  </label>
+                  <label>
+                    Sort results
+                    <select
+                      value={filters.sort}
+                      onChange={(e) =>
+                        set("sort", e.target.value as DiscoveryFilters["sort"])
+                      }
                     >
-                      <span className="hospitality-eyebrow">
-                        {v.evidence === "official"
-                          ? "Official publication"
-                          : "Third-party publication"}
+                      <option value="az">Alphabetical</option>
+                      <option value="lowest">Lowest entered total</option>
+                      <option value="recent">Recently reviewed source</option>
+                    </select>
+                  </label>
+                  <label className="hd-check">
+                    <input
+                      type="checkbox"
+                      checked={filters.officialOnly}
+                      onChange={(e) => set("officialOnly", e.target.checked)}
+                    />
+                    Official publication sources only
+                  </label>
+                  <label className="hd-check">
+                    <input
+                      type="checkbox"
+                      checked={filters.includeUnpriced}
+                      onChange={(e) => set("includeUnpriced", e.target.checked)}
+                    />
+                    Include places without a priced quote
+                  </label>
+                </div>
+                {invalidBudget && (
+                  <p role="alert" className="hd-error">
+                    Enter a valid rupee budget, without commas or symbols. The
+                    budget filter has not been applied.
+                  </p>
+                )}
+                <details>
+                  <summary>Must-have terms — checked against your quotes</summary>
+                  <p className="hd-hint">
+                    These need an applied plan and your own quotes. Venues
+                    without matching evidence are hidden, and the hidden count
+                    stays visible below.
+                  </p>
+                  <div className="hd-grid">
+                    {hotel && (
+                      <label>
+                        Meal plan needed
+                        <select
+                          value={filters.meal}
+                          onChange={(e) =>
+                            set("meal", e.target.value as DiscoveryFilters["meal"])
+                          }
+                        >
+                          <option value="any">Any meal plan</option>
+                          <option value="breakfast">
+                            Breakfast for every guest
+                          </option>
+                          <option value="room-only">Room only</option>
+                        </select>
+                      </label>
+                    )}
+                    <label>
+                      Cancellation needed
+                      <select
+                        value={filters.cancellation}
+                        onChange={(e) =>
+                          set(
+                            "cancellation",
+                            e.target.value as DiscoveryFilters["cancellation"],
+                          )
+                        }
+                      >
+                        <option value="any">Any cancellation terms</option>
+                        <option value="free">Free cancellation</option>
+                        <option value="refundable-by">
+                          Refundable until my deadline
+                        </option>
+                      </select>
+                    </label>
+                    {filters.cancellation === "refundable-by" && (
+                      <label>
+                        Refundable until (India time)
+                        <input
+                          type="datetime-local"
+                          value={filters.cancelBy}
+                          max={plan ? plan.arrival + "T23:59" : undefined}
+                          onChange={(e) => set("cancelBy", e.target.value)}
+                        />
+                      </label>
+                    )}
+                    <label>
+                      Payment preference
+                      <select
+                        value={filters.payment}
+                        onChange={(e) =>
+                          set("payment", e.target.value as DiscoveryFilters["payment"])
+                        }
+                      >
+                        <option value="any">Any payment timing</option>
+                        <option value="pay-at-venue">Pay at the venue</option>
+                        <option value="pay-now">Pay now</option>
+                      </select>
+                    </label>
+                    <label>
+                      Maximum cash before arrival (₹)
+                      <input
+                        inputMode="decimal"
+                        value={filters.maxAdvance}
+                        onChange={(e) => set("maxAdvance", e.target.value)}
+                      />
+                      <span className="small">
+                        Advance payment plus any refundable deposit, from your
+                        quotes — not a provider promise.
                       </span>
-                      <h3>{v.name}</h3>
-                      <p>{v.area}</p>
-                      <div className="hc-price">
-                        {cost === null ? (
-                          <>
-                            <strong>Add your quote</strong>
-                            <span>No live price or budget confirmation</span>
-                          </>
-                        ) : (
-                          <>
-                            <strong>{inr(cost)}</strong>
-                            <span>
-                              Lowest entered total for this plan; room or meal
-                              terms may differ
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      <details>
-                        <summary>Source & things to confirm</summary>
-                        <p>{v.note}</p>
-                        <p className="small">
-                          {v.publisher} · source reviewed {day(v.reviewedAt)}.{" "}
-                          {sourceAge(v.reviewedAt) > 90
-                            ? "Older evidence: recheck the information."
-                            : "Source review is not a venue inspection."}{" "}
-                          {v.petResearch
-                            ? "This record comes from pet-policy research; confirm current admission and fees."
-                            : "Pet admission and accessibility are not established here."}
-                        </p>
-                        <SourceLink venue={v} />
-                      </details>
-                      <div className="hc-actions">
-                        <button
-                          className="hospitality-primary"
-                          onClick={() => openQuote(v)}
+                    </label>
+                  </div>
+                  {invalidAdvance && (
+                    <p role="alert" className="hd-error">
+                      Enter a valid rupee limit, without commas or symbols. The
+                      advance-cash check has not been applied.
+                    </p>
+                  )}
+                </details>
+                <details>
+                  <summary>Stars, pets & smoking</summary>
+                  <p className="hd-hint">
+                    Star ratings are not sourced for any place here, so choosing
+                    one keeps every place visible as needing confirmation.
+                  </p>
+                  <div className="hd-grid">
+                    <label>
+                      Star category
+                      <select
+                        value={filters.stars}
+                        onChange={(e) =>
+                          set("stars", Number(e.target.value) as 0 | 3 | 4 | 5)
+                        }
+                      >
+                        <option value={0}>Any category</option>
+                        <option value={3}>3 star</option>
+                        <option value={4}>4 star</option>
+                        <option value={5}>5 star</option>
+                      </select>
+                      <span className="small">
+                        Not established anywhere here — always confirm.
+                      </span>
+                    </label>
+                    <label className="hd-check">
+                      <input
+                        type="checkbox"
+                        checked={filters.petFriendly}
+                        onChange={(e) => set("petFriendly", e.target.checked)}
+                      />
+                      Pet-friendly only (researched records)
+                    </label>
+                    {hotel && (
+                      <label>
+                        Smoking preference
+                        <select
+                          value={filters.smoking}
+                          onChange={(e) =>
+                            set("smoking", e.target.value as DiscoveryFilters["smoking"])
+                          }
                         >
-                          Add a quote
-                          <span className="sr-only"> for {v.name}</span>
-                        </button>
-                        <button
-                          className="hospitality-secondary"
-                          aria-pressed={shortlist.includes(v.id)}
-                          onClick={() => {
-                            if (shortlist.includes(v.id))
-                              setShortlist((ids) =>
-                                ids.filter((id) => id !== v.id),
-                              );
-                            else if (shortlist.length < 4)
-                              setShortlist((ids) => [...ids, v.id]);
-                            else
-                              setMessage(
-                                "Compare up to four places at once. Remove one from the shortlist to add another.",
-                              );
-                          }}
+                          <option value="any">No preference</option>
+                          <option value="non-smoking">Non-smoking room</option>
+                          <option value="smoking">Smoking room</option>
+                        </select>
+                        <span className="small">
+                          No sourced data — added to your confirmation checklist.
+                        </span>
+                      </label>
+                    )}
+                  </div>
+                </details>
+                {hotel && (
+                  <details>
+                    <summary>
+                      Signature checks — confirmed with the provider
+                    </summary>
+                    <p className="hd-hint">
+                      Nobody publishes these reliably, so they build your
+                      confirmation checklist instead of silently filtering.
+                    </p>
+                    <div className="hd-grid">
+                      <label className="hd-check">
+                        <input
+                          type="checkbox"
+                          checked={filters.dayUse}
+                          onChange={(e) => set("dayUse", e.target.checked)}
+                        />
+                        Day-use booking needed
+                      </label>
+                      <label>
+                        Arrival-time need
+                        <select
+                          value={filters.arrival}
+                          onChange={(e) =>
+                            set("arrival", e.target.value as DiscoveryFilters["arrival"])
+                          }
                         >
-                          {shortlist.includes(v.id)
-                            ? "Remove from shortlist"
-                            : "Shortlist"}
-                          <span className="sr-only"> {v.name}</span>
-                        </button>
+                          <option value="any">Standard times are fine</option>
+                          <option value="early">Early check-in</option>
+                          <option value="late">Late check-out</option>
+                        </select>
+                      </label>
+                      <label className="hd-check">
+                        <input
+                          type="checkbox"
+                          checked={filters.roomCertainty}
+                          onChange={(e) =>
+                            set("roomCertainty", e.target.checked)
+                          }
+                        />
+                        Guaranteed room arrangement, no room move
+                      </label>
+                      <div className="hd-access">
+                        <span className="small hd-wide">
+                          Accessible journey — each step must be confirmed
+                          separately:
+                        </span>
+                        {ACCESS_JOURNEY_STEPS.map((step) => (
+                          <label className="hd-check" key={step.id}>
+                            <input
+                              type="checkbox"
+                              checked={filters.accessJourney.includes(step.id)}
+                              onChange={(e) =>
+                                set(
+                                  "accessJourney",
+                                  e.target.checked
+                                    ? [...filters.accessJourney, step.id]
+                                    : filters.accessJourney.filter(
+                                        (s) => s !== step.id,
+                                      ),
+                                )
+                              }
+                            />
+                            {step.label}
+                          </label>
+                        ))}
                       </div>
-                    </article>
-                  );
-                })}
+                      <label className="hd-check">
+                        <input
+                          type="checkbox"
+                          checked={filters.childSleep}
+                          onChange={(e) => set("childSleep", e.target.checked)}
+                        />
+                        Confirm child sleeping arrangements
+                      </label>
+                    </div>
+                  </details>
+                )}
               </div>
-              {!shown.length && (
-                <div className="hc-panel">
+              <p className="hd-status" role="status">
+                {verdicts.length} selected places shown: {matches.length}{" "}
+                {matches.length === 1 ? "match" : "matches"}
+                {confirmations.length > 0 &&
+                  `, ${confirmations.length} needing confirmation`}
+                {hidden.length > 0 &&
+                  `, ${hidden.length} hidden by your must-haves`}
+                . Order within each group follows your sort — never commission
+                or availability claims.
+              </p>
+              {matches.length > 0 && (
+                <>
+                  <div className="hd-group-head">
+                    <h3>Matches your must-haves</h3>
+                    <span className="hd-count">{matches.length}</span>
+                  </div>
+                  <p className="hd-group-note">
+                    Every must-have is satisfied with evidence — your quotes or
+                    sourced records. Availability and current prices still need
+                    the provider.
+                  </p>
+                  <div className="hc-venues hd-cards">
+                    {matches.map(renderVerdict)}
+                  </div>
+                </>
+              )}
+              {confirmations.length > 0 && (
+                <>
+                  <div className="hd-group-head">
+                    <h3>Needs provider confirmation</h3>
+                    <span className="hd-count hd-count-soft">
+                      {confirmations.length}
+                    </span>
+                  </div>
+                  <p className="hd-group-note">
+                    Unknown here means unknown — not yes, not no. Check the
+                    listed points with the provider before deciding.
+                  </p>
+                  <div className="hc-venues hd-cards">
+                    {confirmations.map(renderVerdict)}
+                  </div>
+                </>
+              )}
+              {hidden.length > 0 && (
+                <details className="hd-panel">
+                  <summary>
+                    {hidden.length} hidden by your must-haves — see why
+                  </summary>
+                  <ul className="hd-checklist">
+                    {hidden.slice(0, 6).map((h) => (
+                      <li key={h.venue.id}>
+                        <strong>{h.venue.name}:</strong> {h.reason}
+                      </li>
+                    ))}
+                    {hidden.length > 6 && (
+                      <li>…and {hidden.length - 6} more.</li>
+                    )}
+                  </ul>
+                </details>
+              )}
+              {!verdicts.length && (
+                <div className="hc-panel hd-panel">
                   <h3>No match in this selected collection.</h3>
                   <p>
                     This does not mean the city has no available rooms or
@@ -1063,12 +1560,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
                   </p>
                   <button
                     className="hospitality-secondary"
-                    onClick={() => {
-                      setQuery("");
-                      setBudget("");
-                      setOfficial(false);
-                      setIncludeUnpriced(true);
-                    }}
+                    onClick={() => setFilters(blankDiscoveryFilters())}
                   >
                     Clear place filters
                   </button>
@@ -1079,6 +1571,61 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
                   </p>
                 </div>
               )}
+            </section>
+            {checklist.length > 0 && (
+              <section className="hd-panel" aria-labelledby="hd-checklist-title">
+                <span className="hd-kicker">Ask the provider</span>
+                <h2 id="hd-checklist-title">
+                  What to confirm before you commit
+                </h2>
+                <p>
+                  No sourced data exists for these points, so they travel with
+                  you as questions — not as silent filters or assumed answers.
+                </p>
+                <ul className="hd-checklist">
+                  {checklist.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            <section
+              className="hd-panel hd-consent"
+              aria-labelledby="hd-consent-title"
+            >
+              <span className="hd-kicker">Your choice</span>
+              <h2 id="hd-consent-title">Anonymous usage counts</h2>
+              <p>
+                Help improve search by sharing anonymous counts: searches per
+                city, filter choices, shortlist activity, provider visits and
+                voluntary booking reports. No names, emails, search words,
+                room details or payment data — ever.{" "}
+                <Link to="/privacy">Privacy policy</Link>
+              </p>
+              <div className="hd-actions">
+                <button className="hd-btn" onClick={allowAnalytics}>
+                  Allow anonymous counts
+                </button>
+                <button
+                  className="hd-btn hd-btn-ghost"
+                  onClick={declineAnalytics}
+                >
+                  Keep everything on this device
+                </button>
+                {consent === "granted" && (
+                  <button className="hd-btn hd-btn-ghost" onClick={rotateId}>
+                    Use a new anonymous ID
+                  </button>
+                )}
+              </div>
+              <p className="hd-status" role="status">
+                {consentNote ||
+                  (consent === "granted"
+                    ? "Anonymous counts are on. Switch off any time — past counts cannot be linked back to you."
+                    : consent === "denied"
+                      ? "Nothing leaves this device. You can allow anonymous counts any time."
+                      : "No choice made yet — nothing is sent.")}
+              </p>
             </section>
             {selected.length > 0 && (
               <section className="hc-panel" aria-label="Place shortlist">
@@ -1113,11 +1660,7 @@ export default function HospitalityCompare({ kind }: { kind: VenueKind }) {
                         </button>
                         <button
                           className="hospitality-secondary"
-                          onClick={() =>
-                            setShortlist((ids) =>
-                              ids.filter((id) => id !== v.id),
-                            )
-                          }
+                          onClick={() => toggleShortlist(v.id)}
                         >
                           Remove
                           <span className="sr-only">

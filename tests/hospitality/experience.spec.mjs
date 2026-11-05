@@ -154,7 +154,7 @@ test("distinct warm pages, one h1, original illustrations, canonical and accessi
   }
 });
 
-test("all 17 destinations change context and provider guide without claiming inventory", async ({
+test("all 18 destinations change context and provider guide without claiming inventory", async ({
   page,
 }) => {
   await page.goto("/stays");
@@ -176,9 +176,10 @@ test("all 17 destinations change context and provider guide without claiming inv
     "haridwar",
     "gurugram",
     "noida",
+    "vijayawada",
   ];
   await expect(page.getByLabel("City region").locator("option")).toHaveCount(
-    17,
+    18,
   );
   for (const city of cities) {
     await page.getByLabel("City region").selectOption(city);
@@ -497,7 +498,7 @@ test("malformed successful feed is an error, not a fabricated empty result", asy
   ).toHaveCount(0);
 });
 
-test("local restaurants, cafes and fast food follow all 17 destinations without automatic external calls", async ({
+test("local restaurants, cafes and fast food follow all 18 destinations without automatic external calls", async ({
   page,
 }) => {
   const external = [];
@@ -512,7 +513,7 @@ test("local restaurants, cafes and fast food follow all 17 destinations without 
     .evaluateAll((options) =>
       options.map((o) => ({ id: o.value, name: o.textContent })),
     );
-  expect(cities).toHaveLength(17);
+  expect(cities).toHaveLength(18);
   for (const city of cities) {
     await page.getByLabel("City region").selectOption(city.id);
     await expect(page.locator("#local-dining-title")).toContainText(city.name);

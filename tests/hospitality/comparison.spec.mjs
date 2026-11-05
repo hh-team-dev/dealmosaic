@@ -144,11 +144,11 @@ test("native entry points, sourced counts, city filters, shortlist and accessibl
     .getByRole("link", { name: /Compare hotels on DealMosaic/ })
     .click();
   await expect(page.locator("h1")).toContainText("The right stay.");
-  await expect(page.locator(".hc-header")).toContainText("40 selected stays");
+  await expect(page.locator(".hc-header")).toContainText("41 selected stays");
   await expect(page.locator("[data-comparison-venue]")).toHaveCount(2);
   await expect(
     page.getByLabel("Destination", { exact: true }).locator("option"),
-  ).toHaveCount(17);
+  ).toHaveCount(18);
   await page
     .locator('[data-comparison-venue="ginger-mumbai-airport"]')
     .getByRole("button", { name: /Shortlist/ })
@@ -167,7 +167,7 @@ test("native entry points, sourced counts, city filters, shortlist and accessibl
   await axe(page);
   await page.getByRole("link", { name: "Compare dining", exact: true }).click();
   await expect(page.locator(".hc-header")).toContainText(
-    "33 selected dining places",
+    "34 selected dining places",
   );
   await page
     .getByLabel("Destination", { exact: true })
@@ -494,6 +494,78 @@ test("downstream click revenue is not mistaken for every outbound tap", async ({
   await page.getByRole("button", { name: "Calculate this scenario" }).click();
   await expect(page.locator("main")).toContainText("₹54.00");
   await expect(page.locator('[name="bookingPercent"]')).toHaveCount(0);
+  await size(page);
+  await axe(page);
+});
+test("vijayawada discovery groups evidence honestly and never invents prices", async ({
+  page,
+}) => {
+  await page.goto("/stays/compare?city=vijayawada");
+  const card = page.locator('[data-comparison-venue="vivanta-vijayawada-mg-road"]');
+  await expect(card).toContainText("Vivanta Vijayawada, MG Road");
+  await expect(card).toContainText("Matches your must-haves");
+  await expect(card).toContainText("Add your quote");
+  await expect(
+    card.getByRole("link", { name: /Official site/ }),
+  ).toHaveAttribute("href", "https://www.vivantahotels.com/en-in/hotels/vivanta-vijayawada");
+  await expect(
+    card.getByRole("link", { name: /Check these dates on Booking.com/ }),
+  ).toHaveCount(0);
+  await plan(page);
+  const booking = card.getByRole("link", {
+    name: /Check these dates on Booking.com/,
+  });
+  await expect(booking).toHaveAttribute("href", /booking\.com\/searchresults/);
+  await expect(booking).toHaveAttribute("rel", "noopener noreferrer");
+  await page.getByText("Stars, pets & smoking", { exact: true }).click();
+  await page.getByLabel("Star category").selectOption("5");
+  await expect(card).toContainText("Needs confirmation");
+  await expect(card).toContainText("Star category is not established");
+  await expect(page.getByRole("button", { name: "Clear place filters" })).toHaveCount(0);
+  await size(page);
+  await axe(page);
+});
+test("hospitality analytics waits for consent and sends only anonymous counts", async ({
+  page,
+}) => {
+  const calls = [];
+  page.on("request", (r) => {
+    if (r.url().endsWith("/api/hospitality-events")) calls.push(r);
+  });
+  // Force the fetch transport so every browser exposes the request body;
+  // the beacon path stays available in production.
+  await page.addInitScript(() => {
+    Object.defineProperty(window.navigator, "sendBeacon", {
+      value: () => false,
+      configurable: true,
+    });
+  });
+  await page.goto("/stays/compare?city=mumbai");
+  await plan(page);
+  await page
+    .locator('[data-comparison-venue="ginger-mumbai-airport"]')
+    .getByRole("button", { name: /Shortlist/ })
+    .click();
+  await page.waitForTimeout(1800);
+  expect(calls).toEqual([]);
+  await page.getByRole("button", { name: "Allow anonymous counts" }).click();
+  await expect(page.locator(".hd-consent").getByRole("status")).toContainText(
+    "only anonymous counts are sent",
+  );
+  await page
+    .getByRole("button", { name: "Apply my plan", exact: true })
+    .click();
+  const req = await page.waitForRequest(
+    (r) => r.url().endsWith("/api/hospitality-events"),
+    { timeout: 8000 },
+  );
+  const body = req.postDataJSON();
+  expect(body.session).toMatch(/^[0-9a-f]{24}$/);
+  expect(body.events.length).toBeGreaterThan(0);
+  expect(JSON.stringify(body)).not.toMatch(/rooming|Deluxe King/i);
+  await expect(
+    page.getByRole("button", { name: "Use a new anonymous ID" }),
+  ).toBeVisible();
   await size(page);
   await axe(page);
 });

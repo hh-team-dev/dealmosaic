@@ -63,13 +63,13 @@ describe("sourced venue collection", () => {
         .size,
     ).toBe(COMPARISON_VENUES.length);
   });
-  it("contains 40 hotels and 33 dining places without fabricated prices or star categories", () => {
+  it("contains 41 hotels and 34 dining places without fabricated prices or star categories", () => {
     expect(COMPARISON_VENUES.filter((v) => v.kind === "hotel")).toHaveLength(
-      40,
+      41,
     );
     expect(
       COMPARISON_VENUES.filter((v) => v.kind === "restaurant"),
-    ).toHaveLength(33);
+    ).toHaveLength(34);
     expect(
       COMPARISON_VENUES.every((v) => v.stars === null && !("price" in v)),
     ).toBe(true);

@@ -4,6 +4,10 @@ import {
   type HospitalityReleaseGate,
 } from "@dealmosaic/core";
 import type { AppBindings } from "../middleware/session.js";
+import {
+  hospitalityTraffic,
+  purgeHospitalityEvents,
+} from "./hospitality-events.js";
 
 /** Mounted only under the existing administrator/authentication boundary. Read-only. */
 export const adminHospitalityRoutes = new Hono<AppBindings>();
@@ -17,9 +21,15 @@ const gates: HospitalityReleaseGate = {
   returnedBookingLinkValidated: false,
   supportOwnerConfirmed: false,
 };
-const brief = `DealMosaic — request for a no-fee hotel referral / qualified-click partnership\n\nWebsite: https://dealmosaic.pages.dev\nContact: hh.team.dev@gmail.com\nTarget audience: travellers comparing stays across 17 Indian destination choices.\nCurrent product: mobile website/PWA, 40 sourced hotel records, personal full-stay quote comparison and disclosed provider promotions. No live room-rate API is connected. Traffic, bookings and earnings are not represented as established volumes.\nRequested launch order: approved hotel-specific or destination referral links first, permitted widgets second, authorised native APIs only if available. For Cuelinks campaign 2516 (Trivago), please explicitly confirm whether organic text links on DealMosaic’s coupon-free native hotel comparison pages are permitted for our comparison/deals publisher, given the Deals/Coupons media restrictions; confirm the India-specific net click-out payout, allowable landing URLs, PWA/mobile-web treatment and settlement. No link will be added on the assumption that a different page label bypasses these restrictions. CPC or qualified downstream click-out revenue is preferred when genuinely available; CPA remains acceptable where already approved. Booking, customer payment, vouchers, cancellations and support must stay with the provider. Please distinguish a click on our site from a later payable click on yours, and confirm country/traffic rules, active campaign status, invalid/duplicate click rules, net publisher payout, thresholds, settlement timing and mobile/app attribution.\nPlease confirm in writing: application eligibility; API/content/photo and comparison-display rights; India inventory; zero joining/setup/monthly/minimum-commitment/usage or certification fees within agreed limits; rate limits and permitted caching; currency/tax/mandatory-fee fields; room mapping and per-room child occupancy; returned tracked deep links; sub-ID and conversion reconciliation; cancellation/validation/payout triggers and deductions; sandbox and certification requirements; customer support ownership; termination and data deletion.\nWe do not accept a paid trial, advertising commitment, automatic paid upgrade or minimum booking guarantee. Please disclose any condition that prevents a zero-cash-cost launch.\nLegal entity, contracting country, tax and bank/KYC particulars will be supplied privately by the owner after reviewing the proposed terms. This message is an enquiry, not acceptance of a contract.`;
-adminHospitalityRoutes.get("/", (c) => {
+const brief = `DealMosaic — request for a no-fee hotel referral / qualified-click partnership\n\nWebsite: https://dealmosaic.pages.dev\nContact: hh.team.dev@gmail.com\nTarget audience: travellers comparing stays across 18 Indian destination choices.\nCurrent product: mobile website/PWA, 41 sourced hotel records, evidence-grouped discovery, personal full-stay quote comparison and disclosed provider promotions. No live room-rate API is connected. Traffic, bookings and earnings are not represented as established volumes.\nRequested launch order: approved hotel-specific or destination referral links first, permitted widgets second, authorised native APIs only if available. For Cuelinks campaign 2516 (Trivago), please explicitly confirm whether organic text links on DealMosaic’s coupon-free native hotel comparison pages are permitted for our comparison/deals publisher, given the Deals/Coupons media restrictions; confirm the India-specific net click-out payout, allowable landing URLs, PWA/mobile-web treatment and settlement. No link will be added on the assumption that a different page label bypasses these restrictions. CPC or qualified downstream click-out revenue is preferred when genuinely available; CPA remains acceptable where already approved. Booking, customer payment, vouchers, cancellations and support must stay with the provider. Please distinguish a click on our site from a later payable click on yours, and confirm country/traffic rules, active campaign status, invalid/duplicate click rules, net publisher payout, thresholds, settlement timing and mobile/app attribution.\nPlease confirm in writing: application eligibility; API/content/photo and comparison-display rights; India inventory; zero joining/setup/monthly/minimum-commitment/usage or certification fees within agreed limits; rate limits and permitted caching; currency/tax/mandatory-fee fields; room mapping and per-room child occupancy; returned tracked deep links; sub-ID and conversion reconciliation; cancellation/validation/payout triggers and deductions; sandbox and certification requirements; customer support ownership; termination and data deletion.\nWe do not accept a paid trial, advertising commitment, automatic paid upgrade or minimum booking guarantee. Please disclose any condition that prevents a zero-cash-cost launch.\nLegal entity, contracting country, tax and bank/KYC particulars will be supplied privately by the owner after reviewing the proposed terms. This message is an enquiry, not acceptance of a contract.`;
+adminHospitalityRoutes.get("/", async (c) => {
   c.header("Cache-Control", "no-store");
+  try {
+    await purgeHospitalityEvents();
+  } catch {
+    // Retention cleanup is best-effort; the report below is unaffected.
+  }
+  const traffic = await hospitalityTraffic(30);
   return c.json({
     assessedAt: new Date().toISOString(),
     scope:
@@ -128,5 +138,6 @@ adminHospitalityRoutes.get("/", (c) => {
     directVenueNote:
       "For hotels and restaurants, a fulfilled-referral fee needs a signed venue agreement, explicit customer consent, actual confirmation and reconciliation. No direct venue fulfilment or hospitality payment collection is enabled.",
     applicationBrief: brief,
+    traffic,
   });
 });

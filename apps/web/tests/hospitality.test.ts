@@ -42,7 +42,7 @@ const coupon = (extra: Partial<CouponView> = {}) =>
     ...extra,
   }) as CouponView;
 describe("hospitality directory and truthful scope", () => {
-  it("has the 17 agreed destination choices without duplicate Hyderabad", () =>
+  it("has the 18 agreed destination choices without duplicate Hyderabad", () =>
     expect(CITIES.map((c) => c.name)).toEqual([
       "Delhi NCR",
       "Mumbai",
@@ -61,6 +61,7 @@ describe("hospitality directory and truthful scope", () => {
       "Haridwar",
       "Gurugram (Gurgaon)",
       "Noida",
+      "Vijayawada",
     ]));
   it("unknown city input has a safe known fallback", () =>
     expect(cityById("javascript:alert(1)")).toBe(CITIES[0]));
@@ -281,7 +282,7 @@ describe("strict hospitality feed boundary", () => {
 
 describe("expanded destinations and local dining", () => {
   it("keeps identifiers unique and Hyderabad single while exposing NCR subcities", () => {
-    expect(new Set(CITIES.map((c) => c.id)).size).toBe(17);
+    expect(new Set(CITIES.map((c) => c.id)).size).toBe(18);
     expect(CITIES.filter((c) => c.id === "hyderabad")).toHaveLength(1);
     for (const id of ["delhi-ncr", "gurugram", "noida"])
       expect(cityById(id).id).toBe(id);

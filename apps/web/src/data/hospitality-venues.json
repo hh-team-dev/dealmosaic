@@ -403,6 +403,32 @@
     "stars": null
   },
   {
+    "id": "vivanta-vijayawada-mg-road",
+    "name": "Vivanta Vijayawada, MG Road",
+    "city": "vijayawada",
+    "kind": "hotel",
+    "area": "39-1-63, M G Road, Vijayawada, Andhra Pradesh",
+    "sourceUrl": "https://www.tajhotels.com/en-in/destination/hotels-in-vijayawada",
+    "website": "https://www.vivantahotels.com/en-in/hotels/vivanta-vijayawada",
+    "publisher": "IHCL / Vivanta",
+    "reviewedAt": "2026-11-05",
+    "note": "Property and address listed on the group’s official Vijayawada destination page. Confirm the selected room, accessibility, check-in rules and full stay price directly.",
+    "stars": null
+  },
+  {
+    "id": "mynt-vivanta-vijayawada",
+    "name": "Mynt — All Day Dining, Vivanta Vijayawada",
+    "city": "vijayawada",
+    "kind": "restaurant",
+    "area": "Vivanta Vijayawada, M G Road",
+    "sourceUrl": "https://www.vivantahotels.com/en-in/hotels/vivanta-vijayawada/restaurants",
+    "website": "https://www.vivantahotels.com/en-in/hotels/vivanta-vijayawada/restaurants",
+    "publisher": "Vivanta / IHCL",
+    "reviewedAt": "2026-11-05",
+    "note": "Named on the hotel’s official dining page alongside Wink Bar and Bay Leaf. Confirm the menu, opening hours, visitor access and table availability with the venue.",
+    "stars": null
+  },
+  {
     "id": "dining-room-pilibhit-house",
     "name": "The Dining Room — Pilibhit House",
     "city": "haridwar",

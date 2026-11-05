@@ -117,5 +117,12 @@
     "query": "Noida, Uttar Pradesh, India",
     "mmt": "noida",
     "note": "Choose Noida directly. It also remains part of Delhi NCR discovery."
+  },
+  {
+    "id": "vijayawada",
+    "name": "Vijayawada",
+    "query": "Vijayawada, Andhra Pradesh, India",
+    "mmt": "vijayawada",
+    "note": "Set your dates, then confirm the full stay cost with the provider."
   }
 ]

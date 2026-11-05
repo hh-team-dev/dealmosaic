@@ -379,7 +379,7 @@ export default function PetFriendly() {
     <>
       <Seo
         title="Pet-friendly hotels & restaurants: sourced places, clearer policies"
-        description="Explore sourced pet-friendly hotel and restaurant entries across 17 destination choices. Check species, fees, restrictions, evidence and separately matched offers before you go."
+        description="Explore sourced pet-friendly hotel and restaurant entries across 18 destination choices. Check species, fees, restrictions, evidence and separately matched offers before you go."
         path="/pet-friendly"
       />
       <Chrome>
