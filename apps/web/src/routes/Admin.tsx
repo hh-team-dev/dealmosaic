@@ -26,6 +26,7 @@ const HospitalityBusiness = lazy(() => import('../components/HospitalityBusiness
 const ConnectionsDesk = lazy(() => import('../components/ConnectionsDesk'));
 const CampaignInventory = lazy(() => import('../components/CampaignInventory'));
 const ShopControl = lazy(() => import('../components/ShopControl'));
+const ImageBankAdmin = lazy(() => import('../components/ImageBankAdmin'));
 
 /**
  * /admin — the owner's control centre.
@@ -39,7 +40,7 @@ const ShopControl = lazy(() => import('../components/ShopControl'));
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'connections' | 'hospitality' | 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'connections' | 'hospitality' | 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit' | 'image-bank';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'shop', label: 'My shop' },
@@ -49,6 +50,7 @@ const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'campaigns', label: 'Campaigns' },
   { id: 'hospitality', label: 'Hotels & dining' },
   { id: 'coupons', label: 'Coupons' },
+  { id: 'image-bank', label: 'Image bank' },
   { id: 'reports', label: 'Price reports' },
   { id: 'people', label: 'People' },
   { id: 'audit', label: 'Audit log' },
@@ -160,6 +162,7 @@ export default function Admin() {
               {tab === 'revenue' && <Revenue key={attempt} onError={fail} />}
               {tab === 'hospitality' && <Suspense fallback={<p role="status">Loading hospitality business desk…</p>}><HospitalityBusiness /></Suspense>}
               {tab === 'campaigns' && <Suspense fallback={<p role="status">Loading campaign inventory…</p>}><CampaignInventory /></Suspense>}
+              {tab === 'image-bank' && <Suspense fallback={<p role="status">Loading image bank…</p>}><ImageBankAdmin /></Suspense>}
               {tab === 'coupons' && <Coupons key={attempt} onError={fail} />}
               {tab === 'reports' && <Reports key={attempt} onError={fail} />}
               {tab === 'people' && <People key={attempt} onError={fail} />}

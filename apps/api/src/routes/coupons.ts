@@ -10,6 +10,20 @@ import * as cuelinks from '../lib/cuelinks.js';
 import { buildDiscovery } from '../services/discover.js';
 import { syncAffiliateOffers } from '../services/affiliate-sync.js';
 import { assessCoupon, nextTrustState } from '../services/coupon-confidence.js';
+import { couponImageDataUrl } from '../lib/coupon-images.js';
+
+type CouponImageRow = {
+  category_slug: string;
+  image_url: string;
+  image_type: string;
+  alt_text: string | null;
+};
+
+type SingleImageRow = {
+  image_url: string;
+  image_type: string;
+  alt_text: string | null;
+};
 
 /**
  * COUPONS AND DISCOUNTS.
@@ -574,5 +588,64 @@ couponRoutes.get('/merchants', async (c) => {
       total: Number(r.total),
       codes: Number(r.codes),
     })),
+  });
+});
+
+/**
+ * GET /api/coupons/images
+ * List all categories that have a default image in the bank, plus the image URL.
+ * Public and cacheable — used by the frontend to decorate coupon cards.
+ */
+couponRoutes.get('/images', async (c) => {
+  const result = await db
+    .prepare(
+      `SELECT category_slug, image_url, image_type, alt_text
+         FROM coupon_images
+        WHERE is_default = 1
+        ORDER BY category_slug ASC`
+    )
+    .all();
+  const rows = result as unknown as CouponImageRow[];
+
+  c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=7200');
+  return c.json({
+    images: rows.map((r) => ({
+      categorySlug: r.category_slug,
+      imageUrl: r.image_url,
+      imageType: r.image_type,
+      altText: r.alt_text ?? `Image for ${r.category_slug} deals`,
+    })),
+    count: rows.length,
+  });
+});
+
+/**
+ * GET /api/coupons/image/:categorySlug
+ * Get the default image for a single category. Falls back to a generated SVG
+ * if no bank image exists for that category.
+ */
+couponRoutes.get('/image/:categorySlug', async (c) => {
+  const categorySlug = c.req.param('categorySlug');
+
+  const result = await db
+    .prepare(
+      `SELECT image_url, image_type, alt_text
+         FROM coupon_images
+        WHERE category_slug = ? AND is_default = 1
+        LIMIT 1`
+    )
+    .get(categorySlug);
+  const row = result as unknown as SingleImageRow | undefined;
+
+  const imageUrl = row?.image_url ?? couponImageDataUrl(categorySlug);
+  const imageType = row?.image_type ?? 'svg';
+  const altText = row?.alt_text ?? `Image for ${categorySlug} deals`;
+
+  c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=7200');
+  return c.json({
+    categorySlug,
+    imageUrl,
+    imageType,
+    altText,
   });
 });

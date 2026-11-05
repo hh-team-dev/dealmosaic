@@ -318,6 +318,30 @@ export async function initDb(): Promise<void> {
   await db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_coupon_reports_once ON coupon_reports(coupon_id, user_id)');
   await db.exec('CREATE INDEX IF NOT EXISTS idx_coupon_reports_coupon ON coupon_reports(coupon_id)');
 
+  /** ----------------------------------------------------------------
+   * COUPON IMAGE BANK.
+   *
+   * Original, zero-cost artwork for coupon categories: SVG drawings generated
+   * in code (no stock photography, no scraped retailer images, no paid assets).
+   * Admin can upload additional images, set defaults per category, and reorder.
+   * Every hue stays inside the existing warm palette — no blue, no black,
+   * no near-black, no neutral grey.
+   * ---------------------------------------------------------------- */
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS coupon_images (
+      id          TEXT PRIMARY KEY,
+      category_slug TEXT NOT NULL,
+      image_url   TEXT NOT NULL,
+      image_type  TEXT NOT NULL DEFAULT 'svg',
+      alt_text    TEXT,
+      sort_order  INTEGER NOT NULL DEFAULT 0,
+      is_default  INTEGER NOT NULL DEFAULT 0,
+      uploaded_by TEXT,
+      created_at  TEXT NOT NULL
+    )`);
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupon_images_cat ON coupon_images(category_slug, is_default)');
+  await db.exec('CREATE INDEX IF NOT EXISTS idx_coupon_images_default ON coupon_images(is_default)');
+
   /**
    * CORRECTING A CLAIM WE NEVER EARNED.
    *

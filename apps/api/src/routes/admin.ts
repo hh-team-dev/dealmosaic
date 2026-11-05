@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { adminHospitalityRoutes } from './admin-hospitality.js';
 import { adminCampaignRoutes } from './admin-campaigns.js';
 import { adminConnectionRoutes } from './admin-connections.js';
+import { adminCouponImageRoutes } from './admin-coupon-images.js';
 import { fetchEarningsSnapshot } from '../services/earnings.js';
 import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
@@ -47,6 +48,7 @@ adminRoutes.use('*', requireAdmin);
 adminRoutes.route('/campaigns', adminCampaignRoutes);
 adminRoutes.route('/connections', adminConnectionRoutes);
 adminRoutes.route('/hospitality', adminHospitalityRoutes);
+adminRoutes.route('/coupon-images', adminCouponImageRoutes);
 
 /* ------------------------------------------------------------------ */
 /* Audit log                                                           */

@@ -3535,6 +3535,125 @@ input:-webkit-autofill:active {
   color: #fff;
 }
 .deal-go:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ------------------------------------------------------------------
+   IMAGE BANK — Deal card with category background artwork.
+   ------------------------------------------------------------------ */
+
+/* A card that has a category image: the image becomes the card's
+   background, behind a warm semi-transparent overlay so text stays
+   readable in bright sunlight on a phone. */
+.deal-card.has-image {
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+}
+
+/* The overlay is a pseudo-element so the content stays on top. */
+.deal-card.has-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    /* Warm overlay: category tint at 45% over a very light surface tint */
+    linear-gradient(135deg,
+      rgba(253, 239, 227, 0.55) 0%,
+      rgba(253, 235, 241, 0.45) 100%),
+    var(--deal-bg, var(--grad-ember));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Move all content above the overlay. */
+.deal-card.has-image > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hide the monogram when an image is present — the image IS the identity. */
+.deal-card.has-image .deal-monogram {
+  display: none;
+}
+
+/* Merchant name on image cards: slightly bolder, with a soft text shadow
+   for contrast against any background brightness. */
+.deal-card.has-image .deal-card-merchant {
+  color: var(--ink);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Category chip: warm pill on image cards. */
+.deal-card.has-image .deal-card-category {
+  color: var(--ink-muted);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Title: deep ink for readability. */
+.deal-card.has-image .deal-card-title {
+  color: var(--ink);
+}
+
+/* Price: grass deep, strong. */
+.deal-card.has-image .deal-card-price {
+  color: var(--grass-d);
+}
+
+/* Confidence line: softer on image cards. */
+.deal-card.has-image .deal-confidence {
+  color: var(--ink-muted);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Code tile: tinted background pops against any image. */
+.deal-card.has-image .deal-code {
+  background: var(--tint);
+  border-color: var(--hairline-strong);
+}
+.deal-card.has-image .deal-code:hover {
+  background: var(--tint-2);
+  border-color: var(--magenta);
+}
+
+/* "Go to shop" button: brand ember, unmissable. */
+.deal-card.has-image .deal-go {
+  background: var(--brand);
+}
+.deal-card.has-image .deal-go:hover,
+.deal-card.has-image .deal-go:active {
+  background: var(--brand-d);
+}
+
+/* Save heart: subtle on image cards. */
+.deal-card.has-image .deal-save {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.deal-card.has-image .deal-save:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Footer border: softer on image cards. */
+.deal-card.has-image .deal-card-foot {
+  border-top-color: var(--hairline-strong);
+}
+
+/* Urgency: coral deep stands out. */
+.deal-card.has-image .deal-urgency {
+  color: var(--coral-d);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Compact cards: image fills the header area only. */
+.deal-card.deal-card-compact.has-image::before {
+  inset: 0;
+}
+
+/* ---------------------------------------------------------------- */
+
 .deal-card-foot {
   display: flex;
   flex-direction: column;
@@ -4616,3 +4735,120 @@ body { padding-bottom:calc(90px + env(safe-area-inset-bottom,0px)); }
 .connection-facts dt { font-size: .78rem; }
 .connection-facts dd { margin: .2rem 0 0; font-weight: 600; }
 .connections-desk { overflow-wrap: anywhere; }
+
+/* ------------------------------------------------------------------
+   IMAGE BANK — Admin UI
+   ------------------------------------------------------------------ */
+
+.image-bank-category {
+  margin-top: 24px;
+}
+
+.image-bank-cat-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.image-bank-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.image-bank-item {
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-bank-item.is-default {
+  border-color: var(--hairline-strong);
+  background: var(--tint);
+}
+
+.image-bank-preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--raised);
+}
+
+.image-bank-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-bank-default-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--grass-d);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.image-bank-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px;
+  border: 2px dashed var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--raised);
+  color: var(--ink-muted);
+  cursor: pointer;
+  text-align: center;
+}
+
+.image-bank-upload-label:hover {
+  border-color: var(--magenta);
+  color: var(--magenta-d);
+}
+
+.image-bank-upload-label span {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.image-bank-controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.image-bank-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.image-bank-type {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.image-bank-alt {
+  font-size: 0.64rem;
+  color: var(--ink-muted);
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------ */

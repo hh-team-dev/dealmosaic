@@ -1,6 +1,6 @@
 import { useToast } from './Toast';
 import { StoreFallback } from './StoreFallback';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   expiryLabel,
   merchantMonogram,
@@ -15,38 +15,61 @@ import { Icon } from './Icon';
 import { ClaimBadge, CodeButton, ConfidenceLine } from './DealFacts';
 
 /**
- * THE DEAL CARD.
+ * THE DEAL CARD — Image Bank Edition.
  *
- * Design brief: on a 360 px phone, in bright sunlight, a shopper must know three
- * things in under two seconds — *what it is*, *how much*, and *what to tap*.
- * Everything else is secondary and is therefore smaller and quieter.
+ * Design brief: on a 360 px phone, in bright sunlight, a shopper must know
+ * three things in under two seconds — *what it is*, *how much*, and *what to
+ * tap*. Everything else is secondary.
  *
- * Four honesty decisions are visible if you look for them:
+ * What changed:
+ *   • Each card now carries a category image from the Image Bank as its
+ *     background — original SVG artwork generated in code (zero cost, no paid
+ *     assets, no scraped retailer photos). The monogram tile is the fallback
+ *     when no image exists yet.
+ *   • A warm semi-transparent overlay sits between the image and the text so
+ *     everything stays readable in bright sunlight.
+ *   • The "Shop at store" button moves to the right side of the actions row,
+ *     large and unmissable.
+ *   • All colours stay inside the existing warm palette: ember, coral, grass,
+ *     sun, magenta, pink, lime, tang. No blue, no black, no near-black.
  *
- *  1. **No invented product photo.** We have no licensed photography for
- *     affiliate offers, so each store gets a monogram tile in its own colour.
- *     A stock photo of a different product would look better and be a lie.
- *  2. **The qualifier survives.** "from ₹125" and "under ₹199" are printed as
- *     written. Flattening them to "₹125" would imply a price the merchant never
- *     offered.
- *  3. **"up to" stays "up to".** The percentage is the store's ceiling, and a
- *     card that says "70% off" when the store said "up to 70% off" is the exact
- *     manipulation this project exists to avoid.
- *  4. **Commission never touches the layout.** There is no ordering input from
- *     affiliate data here; the outbound link is marked `rel="sponsored"` and
- *     says where it goes.
+ * Four honesty decisions remain:
+ *   1. **No invented product photo.** SVG shapes suggest a category; they never
+ *      claim to show the merchant's actual goods.
+ *   2. **The qualifier survives.** "from ₹125" and "under ₹199" are printed as
+ *      written.
+ *   3. **"up to" stays "up to".**
+ *   4. **Commission never touches the layout.** Outbound links are marked
+ *      `rel="sponsored"` and say where they go.
  */
+
 export function DealCard({ deal, compact = false }: { deal: DealView; compact?: boolean }) {
   const toast = useToast();
   const [copied, setCopied] = useState(false);
   const [opened, setOpened] = useState(false);
   const saved = useSaved();
   const isSavedNow = saved.some((d) => d.id === deal.id);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  // Fetch the category image from the image bank on mount.
+  useEffect(() => {
+    const categorySlug = deal.categories?.split(',')[0]?.trim() ?? deal.dealGroup ?? 'other';
+    if (!categorySlug) return;
+
+    // Avoid refetching if the slug hasn't changed.
+    fetch(`/api/coupons/image/${encodeURIComponent(categorySlug)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.imageUrl) setImageUrl(data.imageUrl);
+      })
+      .catch(() => {
+        // Silent failure — monogram fallback is perfectly acceptable.
+      });
+  }, [deal.categories, deal.dealGroup]);
 
   const copy = useCallback(async () => {
     if (!deal.code) return;
     try {
-      // Copy the code, never the padding around it.
       await navigator.clipboard.writeText(deal.code.trim());
       setCopied(true);
       recordView(deal);
@@ -61,16 +84,31 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
   const saving = deal.discountType === 'cashback' ? discountLabel(deal) : null;
   const monogram = merchantMonogram(deal.campaignName || deal.platformName);
 
+  // Category colour for accents, drawn from the warm palette.
+  const categorySlug = deal.categories?.split(',')[0]?.trim() ?? deal.dealGroup ?? 'other';
+
   return (
-    <article className={`deal-card${compact ? ' deal-card-compact' : ''}`}>
+    <article
+      className={`deal-card${compact ? ' deal-card-compact' : ''}${imageUrl ? ' has-image' : ''}`}
+      style={
+        imageUrl
+          ? ({ '--deal-bg': `url("${imageUrl}")` } as React.CSSProperties)
+          : undefined
+      }
+    >
       <div className="deal-card-top">
-        <span className={`deal-monogram deal-monogram-${monogram.tint}`} aria-hidden="true">
-          {monogram.initials}
-        </span>
+        {imageUrl ? null : (
+          <span
+            className={`deal-monogram deal-monogram-${monogram.tint}`}
+            aria-hidden="true"
+          >
+            {monogram.initials}
+          </span>
+        )}
         <div className="deal-card-headings">
           <span className="deal-card-merchant">{deal.campaignName || deal.platformName}</span>
           <span className="deal-card-category">
-            {deal.categories?.split(',')[0]?.trim() || groupLabel(deal.dealGroup)}
+            {categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)}
           </span>
         </div>
         <button
@@ -88,12 +126,6 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
 
       <h3 className="deal-card-title">{deal.title}</h3>
 
-      {/*
-        The evidence line. Never a star rating, never a blended "quality" score:
-        either a person confirmed this code, or nobody has told us anything, in
-        which case the card says so in grey. Both are useful; only one is a
-        reason to trust the code.
-      */}
       <ConfidenceLine coupon={deal} />
 
       {price && (
@@ -154,7 +186,9 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
   );
 }
 
-/** The loading placeholder. Fixed height, so the page does not jump on arrival. */
+/**
+ * The loading placeholder. Fixed height, so the page does not jump on arrival.
+ */
 export function DealCardSkeleton() {
   return (
     <article className="deal-card deal-card-skeleton" aria-hidden="true">
