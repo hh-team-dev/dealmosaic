@@ -1,0 +1,72 @@
+{
+  "version": "2.5.0",
+  "createdAt": "2026-11-05T09:55:45.637Z",
+  "sourceCommit": "a13bac718781569f04f1b997d63e5d5b9d910858",
+  "workingTreeChanged": false,
+  "files": [
+    {
+      "mode": "pwa",
+      "file": "dealmosaic-2.5.0-pwa.tar.gz",
+      "sha256": "4e68f78cc18b58220b79870a121ad5f9b17986f2313d29fe22c6e0ff12d3574e",
+      "release": {
+        "version": "2.5.0",
+        "build": "2.5.0-d493517c016c",
+        "mode": "pwa",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-B2sqW2n4.js",
+          "/assets/DirectShop-C_bGebQ6.js",
+          "/assets/Hospitality-DRQcYkKA.js",
+          "/assets/PetFriendly-Df6av-LS.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-DKy6yvZF.js",
+          "/assets/hospitality-Cz0LTTAl.js",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-htkkx8gL.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 841975,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    },
+    {
+      "mode": "classic",
+      "file": "dealmosaic-2.5.0-classic.tar.gz",
+      "sha256": "c526d3ed0585fc3bca6939a9f92da846e8cf916243be5806527eff6a4fea950f",
+      "release": {
+        "version": "2.5.0",
+        "build": "2.5.0-0c6e18f7e1e9",
+        "mode": "classic",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-BEeSlSH1.js",
+          "/assets/DirectShop-C-OHsgys.js",
+          "/assets/Hospitality-D9J7MwVK.js",
+          "/assets/PetFriendly-5a_qQBYV.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-CpCk3D9j.js",
+          "/assets/hospitality-Cz0LTTAl.js",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-BtmwD_t8.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 839965,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    }
+  ]
+}

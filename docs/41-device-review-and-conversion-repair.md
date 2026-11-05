@@ -2,7 +2,7 @@
 
 **5 November 2026 · Website / installed PWA / classic website share this release**
 
-**Release status:** candidate under validation; production is still 2.4.0 until the deployment record below is completed. The owner's order is current defects first, hotels second, restaurants third. This is the first repair phase, not a claim that a hotel booking engine has been delivered.
+**Release status:** **2.5.0 deployed and production-verified** at https://dealmosaic.pages.dev. The owner's order is current defects first, hotels second, restaurants third. This is the first repair phase, not a claim that a hotel booking engine has been delivered.
 
 ## 1. Evidence and limits
 
@@ -88,15 +88,51 @@ The Search schema exposes local-hotel check-in dates, occupancy/child ages, curr
 
 ## 6. Validation and deployment record
 
-To be completed from the final validation and deployment outputs, not inferred from source edits.
+Final checks ran on the clean-source packages from **`a13bac718781569f04f1b997d63e5d5b9d910858`**, with `workingTreeChanged: false` in their release manifest.
 
-- Website/PWA release version: **2.5.0**.
-- TypeScript and design checks passed: 48 design assertions, no failures; black/near-black and hues 158–320 degrees remain prohibited.
-- Full unit suite: **639 passed / 35 files**. Built candidate: **36 device-review, 46 existing interactions, 81 hospitality and 51 PWA checks passed**. Two development-source-only probes were correctly skipped in the production build. The final small-screen campaign wrapping change is being rechecked on the final package.
-- Runtime source commit / Git tag / Render deployment / Cloudflare Pages deployment: pending.
-- Paired PWA/classic archives, checksums, source backup and recovery verification: pending.
+| Gate | Final result |
+|---|---|
+| TypeScript | Passed |
+| Unit suite | **639 passed, 35 files** |
+| Colour / contrast audit | **48 assertions, 0 failures**; no black/near-black or hues 158–320 degrees |
+| Device-review browser suite | **36 passed**: touch Chromium, phone WebKit and desktop; expanded campaign cards also checked at 320px with a long domain |
+| Existing interaction suite | **46 passed, 2 skipped**; the skips are development-source-only imports, deliberately unavailable in a production build |
+| Hospitality / pet browser suite | **81 passed** |
+| Installed-PWA / offline / real classic-switch suite | **51 passed** |
+| Total browser results | **214 passed, 2 intentional skips, 0 failures** |
+| Prerender | Both builds passed; 59 HTML pages, 58 distinct non-404 headings |
+| Website / PWA parity | Passed for both deployable flavors |
+| Secret scan | Passed; production credentials and private media are not in source |
+| Published production verification | **94 read-only checks passed**, no browser exceptions and no external destination requested |
 
-Release order: commit/push the reviewed source, deploy the compatible API, verify provenance and authorization, then deploy the paired web release. The neutral shell must exist in the uploaded artifact. Static output must not contain legacy demo prices even if built against the older API. Do not run fixture scripts or browser mutation suites against production.
+**Runtime source / tag:** `a13bac718781569f04f1b997d63e5d5b9d910858` / `pwa-v2.5.0`.
+
+**API:** Render `dep-dbm55dlg1s2s73c5h9pg`, live on 5 November. Health confirms version `2.5.0`, revision `a13bac718781`, environment `production`. The existing service plan was checked as **free**. Although the service reported automatic deploy enabled, no deployment for this commit was present; one explicit deployment was requested, then observed live.
+
+**Website / PWA:** Cloudflare Pages **`b776ff72`**, https://b776ff72.dealmosaic.pages.dev; canonical production https://dealmosaic.pages.dev. The exact verified PWA archive was extracted and uploaded. No backend setting, paid plan or API origin was changed for the frontend deployment.
+
+### Production findings
+
+- All 25 reference products remain, but there are **zero live product-price observations** at verification. Unsupported sample prices and MRPs are absent; this is containment, not a newly connected retailer feed.
+- Administrator inventory, commercial account detail and notifications reject anonymous requests with 401.
+- `/login`, `/app/settings`, `/admin?tab=campaigns` and store-link recovery return neutral, noindex, no-store HTML—not the homepage—before JavaScript.
+- A nonexistent store link returns local recovery, without generating a merchant visit.
+- The published focused store button has white text on berry, **6.30:1** contrast and **44px** height. No phone-width page overflow was observed in the read-only home check.
+- The five previously held hotel records were independently re-read and remain **rejected**. No restoration was performed.
+- No live test account, campaign application, affiliate visit, booking, order, payment or test notification was created. Browser mutations were isolated to the guarded local test database.
+
+Reproduce the read-only published checks with `node scripts/verify-device-release.mjs` after installing test dependencies. Results: `docs/source/2026-11-05-production-repair-verification.json`. Summary and package receipts: `2026-11-05-repair-validation.json` and `2026-11-05-release-manifest.json` in the same folder. This does not validate an authenticated owner session on the physical phone or the full advertiser attribution chain.
+
+### Paired archives and recovery
+
+Location: `/home/user/releases/dealmosaic-2.5.0/`. `SHA256SUMS` was verified before deployment.
+
+- **PWA:** `2.5.0-d493517c016c`; 18 precached assets, 841,975 bytes. Archive `dealmosaic-2.5.0-pwa.tar.gz`.
+  SHA-256: `4e68f78cc18b58220b79870a121ad5f9b17986f2313d29fe22c6e0ff12d3574e`.
+- **CLASSIC:** `2.5.0-0c6e18f7e1e9`; 18 precached assets, 839,965 bytes. Archive `dealmosaic-2.5.0-classic.tar.gz`.
+  SHA-256: `c526d3ed0585fc3bca6939a9f92da846e8cf916243be5806527eff6a4fea950f`.
+
+The frozen source tag, verified **405-file source snapshot** (`dealmosaic_2026-11-05_10-05-14.tar.gz`) and recovery bundle are recorded in document 28. The final handover updates may be a later Git commit than the runtime source; do not confuse a documentation commit with a newly deployed application.
 
 ## 7. Recovery and phone retest
 

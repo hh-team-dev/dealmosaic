@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-05",
+  "runtimeCommit": "a13bac718781569f04f1b997d63e5d5b9d910858",
+  "unit": {
+    "files": 35,
+    "passed": 639
+  },
+  "design": {
+    "assertions": 48,
+    "failures": 0
+  },
+  "browser": {
+    "deviceReview": {
+      "startTime": "2026-11-05T09:55:46.811Z",
+      "duration": 46213.636,
+      "expected": 36,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "existingInteractions": {
+      "startTime": "2026-11-05T09:56:33.978Z",
+      "duration": 45209.738,
+      "expected": 46,
+      "skipped": 2,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "hospitality": {
+      "startTime": "2026-11-05T09:57:20.151Z",
+      "duration": 150799.582,
+      "expected": 81,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "pwa": {
+      "startTime": "2026-11-05T09:59:52.064Z",
+      "duration": 54293.804000000004,
+      "expected": 51,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "privateReviewMediaDeleted": true,
+  "productionVerification": "2026-11-05-production-repair-verification.json",
+  "render": {
+    "id": "dep-dbm55dlg1s2s73c5h9pg",
+    "status": "live",
+    "commit": "a13bac718781569f04f1b997d63e5d5b9d910858",
+    "checkedAt": "2026-11-05T09:57:15Z"
+  },
+  "pagesDeployment": "b776ff72"
+}

@@ -1,10 +1,10 @@
 # DEALMOSAIC — MASTER HANDOVER
 
-> **5 November repair candidate — 2.5.0:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) is the current guest/member/admin repair handover. Validation/deployment is in progress; the live 2.4.0 record below remains authoritative until the release record is updated. Hotels follow this repair; restaurants follow hotels. Useful external hospitality links are permitted where no genuine internal capability exists.
+> **Current 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.
 
-> **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
+> **Previous hospitality field-test review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime at that review remained 2.4.0; the proposed booking/merchant platform was not deployed. Read document 41 for the later 2.5.0 repair release.
 
-> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
+> **Previous 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
@@ -12,7 +12,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **5 November 2026** · Live **2.4.0**, repair candidate **2.5.0** · Current repair evidence is in document 41.
+Last updated: **5 November 2026** · Live website/PWA/API **2.5.0** · Current release evidence is in document 41.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching
@@ -24,7 +24,13 @@ Earlier dated release sections below are retained as history.
 
 ---
 
-## Current live release — PWA and website 2.4.0
+## Current live release — website, PWA and API 2.5.0
+
+Guest/member/admin repairs are deployed, including readable returned store buttons, neutral route loading, deliberate recovery, authentication/logout guards, saved-reminder linkage, optional email consent, a working notification centre, delivery-failure handling and a private campaign inventory. Public product prices/history/rankings no longer use the 170 internal demo observations. There are 25 product references but zero established live product-price observations at verification; do not advertise a newly connected price feed.
+
+Validation: **639 unit tests**, **214 browser checks passed / 2 development-only skips**, **48 design assertions**, paired package parity, and **94 read-only production checks**. The five hotel holds remain rejected. The intermittent external-link failure's exact cause remains unproven; no guaranteed sales or attribution are claimed. Full physical-phone verification, native hotel rate integration and the restaurant phase remain open. Read document 41 for the precise fixed/not-fixed boundary, source IDs, archives and phone checklist.
+
+## Previous live release — PWA and website 2.4.0
 
 The actual pet-friendly directory adds 41 sourced entries (23 stays, 18 dining places), visible without deals. Hotels cover all 17 destination choices; restaurant evidence gaps remain in Haridwar and Jamshedpur. It is explicitly non-exhaustive. Sources, dates, species, restrictions and conflicts are exposed. Separate eligible-offer panels currently contain zero established current offers, not invented travel coupons. Private unsent questions, cost/deposit separation, public CSV and city/type sharing are included. The website, PWA and classic fallback share the implementation.
 
@@ -1802,3 +1808,6 @@ number is right, in a market where every competitor's number is a sales pitch.*
 *End of master handover. If something in here contradicts the live system, the
 live system is right — and this file should be corrected in the same commit that
 corrects the system.*
+
+
+Current repair handover: **[41 — Guest, member and administrator repair](41-device-review-and-conversion-repair.md)**. Historical dates and source hashes above remain historical.

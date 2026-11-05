@@ -1,5 +1,8 @@
 # 30 — How DealMosaic earns, and how the owner runs it
 
+> **Current release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
+
+
 > **4 November 2026 update:** the owner now also wants to sell their own handcrafted
 > goods. The design is in `32-direct-sales-blueprint.md`; the scoped implementation and
 > exact deployment status are in **`33-direct-shop-release.md`**. Sales remain paused

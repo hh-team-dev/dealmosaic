@@ -1,14 +1,27 @@
 # 28 — Backup and recovery dossier
 
-> **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
+> **Current release — 2.5.0, 5 November:** [Document 41](41-device-review-and-conversion-repair.md) is the authoritative deployed guest/member/admin repair record: runtime `a13bac7`, Pages `b776ff72`, repaired API and matching PWA/classic packages. Older dated release evidence below is historical.
 
-> **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
+
+> **Previous hospitality field-test review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime at that review remained 2.4.0; the proposed booking/merchant platform was not deployed. Read document 41 for the later 2.5.0 repair release.
+
+> **Previous 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **Preceding enhancement — 2.1.1:** [36-persistent-install-and-deals.md](36-persistent-install-and-deals.md) records the globally persistent install invitation and floating offers, motion/accessibility controls, form protection, exact release verification and recovery. The 2.0.1 details below remain the preceding release's verified history.
 
 > **PWA / website release 2.0.1 — 4 November 2026:** the distinctly marked handover is [35-pwa-handover.md](35-pwa-handover.md). It records installation, platform limits, static-only offline safety, shared-code feature parity, paired PWA/classic deployable packages and rollback. The exact pre-PWA website is preserved as `website-v1.4.0` / `release/website-v1.4.0` at `5f85cf3`, plus a complete verified Git bundle. For the preceding 2.0.1 deployment/test evidence read section 10 of the PWA handover; the audit release below remains historical evidence. Never roll back a PWA by serving old website files without the same-URL removal worker.
 
-## Current recovery point — PWA / website 2.4.0
+## Current recovery point — website / PWA / API 2.5.0
+
+- Runtime source/tag: `a13bac718781569f04f1b997d63e5d5b9d910858` / `pwa-v2.5.0`.
+- Pages: `b776ff72`; API: `dep-dbm55dlg1s2s73c5h9pg`.
+- Frozen PWA/classic archives and SHA-256 receipts: `/home/user/releases/dealmosaic-2.5.0/`; source metadata is copied to `docs/source/2026-11-05-release-manifest.json`.
+- Keep the repaired API when switching frontend flavors. Do not restore public demo prices as a rollback technique. Same-origin classic removal-worker rules still apply.
+- Verified source snapshot: `backups/dealmosaic_2026-11-05_10-05-14.tar.gz`, **405 files / 8,784,904 bytes uncompressed**. Every per-file checksum matched. SHA-256: `4a41aac1becb3945f9ca0cf2291a2cf4086bb08cbc4f6774a947843292c21462`.
+- This source snapshot excludes credentials, private database records, build output and review media. The paired frontend archives are separate. Final documentation/receipt updates after that timestamp are preserved in Git.
+- Complete Git recovery bundle: `backups/pwa-v2.5.0.bundle`, with a separate SHA-256 receipt. It preserves runtime history, the frozen release tag and final committed handover. Use `git bundle verify` and the checksum receipt before restoring.
+
+## Previous recovery point — PWA / website 2.4.0
 
 - Runtime tag: `pwa-v2.4.0` at `151bc4d01ebe20ec7c5fd6d46f1341f3a7896b05`.
 - Paired packages: `/home/user/releases/dealmosaic-2.4.0/`; PWA `2.4.0-6a89cd91fc88`, classic `2.4.0-16ea84c91465`. Both archive checksums and shared-chunk parity pass; hospitality scenarios pass 81/81 on each flavor.
