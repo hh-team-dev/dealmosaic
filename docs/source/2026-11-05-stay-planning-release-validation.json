@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-05T13:45:56.058041+00:00",
+  "runtime": "42bc6f3557c852f809c536e831935dd187c13971",
+  "version": "2.7.0",
+  "unitTests": 756,
+  "unitFiles": 38,
+  "designAssertions": 48,
+  "browserSuites": {
+    "deviceReview": 39,
+    "general": 46,
+    "hospitality": 135,
+    "pwa": 60,
+    "persistentControls": 39,
+    "classicPlanner": 18
+  },
+  "browserPassed": 337,
+  "browserSkipped": 2,
+  "skipReason": "Two project executions of a development-only source-import probe; packaged interaction scenarios pass.",
+  "localReadOnlyChecks": 83,
+  "sourceFreezeNote": "Final commit adds corrected verification selectors and waits plus primary-source evidence; packaged PWA/classic application hashes are unchanged from the full suite. Final 18 planner checks and 83 read-only local checks rerun on final packages.",
+  "pwaBuild": "2.7.0-5f0593753792",
+  "classicBuild": "2.7.0-f3333371600a",
+  "resolvedBeforeRelease": [
+    "Explicit select accessible names added before full suite.",
+    "Navigation harness waits for outstanding API reads before hard navigation to avoid WebKit aborted-read access-control errors.",
+    "Production verifier exact currency selector corrected to include .00."
+  ],
+  "noProductionFinancialOrAffiliateActions": true,
+  "logs": {
+    "check": {
+      "sha256": "5d1460a57c582b53cc028343ed0c384c9f2e459dcb05a51cd65375c45bcdb0b1",
+      "tail": "  \u2713 podium gold      #8A5A00  white text 5.93:1\n  \u2713 podium stone     #8A6A5C  white text 4.89:1\n  \u2713 podium bronze    #A3581F  white text 5.29:1\n  \u2713 rank 1 (action)  #C2410C  white text 5.18:1\n  \u2713 rank 2 (ink)     #4A2B22  white text 12.65:1\n  \u2713 rank 3 (ink-soft) #8D6A57  white text 4.85:1\n  \u2713 step 2 (sun-d)   #8A5A00  white text 5.93:1\n  \u2713 step 3 (coral-d) #C0392B  white text 5.44:1\n  \u2713 discount badge   #C0392B  white text 5.44:1\n  \u00b7 worst white-on-fill pair 4.85:1 (floor 4.5:1)\n\n=== 6. No black or near-black anywhere ===\n  \u2713 darkest colour in the stylesheet is #4a2b22 (luminance 0.0330)\n\n\u2705 PASS \u2014 48 assertions, 0 failure(s)\n\n\n> dealmosaic@2.7.0 secrets:scan\n> node scripts/secrets-scan.mjs\n\n\u2705 No secrets found in 408 scanned files.\n   Reminder: an encrypted vault (secrets/vault.json) is the only place\n   credentials should ever be stored.\n"
+    },
+    "test-device-review": {
+      "sha256": "72f0b7c44d1a6e8fdab611e0af783682a55a368db46ca2dcf81b531d921cb42b",
+      "tail": " (922ms)\n  \u2713  35 [desktop] \u203a tests/device-review/journeys.spec.mjs:406:1 \u203a campaign API failure and dashboard alert failure have explicit retry, not false zero results (872ms)\n  \u2713  36 [desktop] \u203a tests/device-review/journeys.spec.mjs:443:1 \u203a failed sign-in releases account loading even when an older session response arrives later (410ms)\n  \u2713  37 [desktop] \u203a tests/device-review/journeys.spec.mjs:487:1 \u203a notification centre distinguishes failed loading, retry, and unconfirmed email delivery (473ms)\n  \u2713  38 [desktop] \u203a tests/device-review/journeys.spec.mjs:536:1 \u203a client-only routes retain a neutral noindex page when application JavaScript is unavailable (327ms)\n  \u2713  39 [desktop] \u203a tests/device-review/journeys.spec.mjs:563:1 \u203a CPC entry keeps payment type and country limitations explicit without creating a click (784ms)\n\n  39 passed (51.1s)\n"
+    },
+    "audit-interactions": {
+      "sha256": "9b67c8bdbe0080c9b6800966e604907cc35078f7dd96e4f59d3b6930ff76fe1c",
+      "tail": "esktop] \u203a tests/browser/interactions.spec.mjs:191:1 \u203a deals failure can be retried without changing filters (433ms)\n  \u2713  44 [desktop] \u203a tests/browser/interactions.spec.mjs:196:1 \u203a direct collection failure has a working retry (371ms)\n  \u2713  45 [desktop] \u203a tests/browser/interactions.spec.mjs:201:1 \u203a invalid and unknown delivery PINs do not create a payable order (491ms)\n  \u2713  46 [desktop] \u203a tests/browser/interactions.spec.mjs:210:1 \u203a account export downloads parseable data and notification preference persists (594ms)\n  \u2713  47 [desktop] \u203a tests/browser/interactions.spec.mjs:222:1 \u203a owner coupon reject and restore buttons persist state (509ms)\n  \u2713  48 [desktop] \u203a tests/browser/interactions.spec.mjs:235:1 \u203a owner price-report confirmation uses a valid state and shows rupees, not one hundredth of the price (428ms)\n\n  2 skipped\n  46 passed (47.5s)\n"
+    },
+    "test-hospitality": {
+      "sha256": "e57b07c874d1e04fefe00a7df1c1e04a3c771c58b116a06b3c8b4dc9219b4938",
+      "tail": "723ms)\n  \u2713  130 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:52:1 \u203a whole-trip arithmetic, blanks, stale output and clearing (945ms)\n  \u2713  131 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:74:1 \u203a rebooking includes cancellation loss and cash gap; validates refund (824ms)\n  \u2713  132 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:97:1 \u203a all nine checklists and clipboard denial have usable fallback (811ms)\n  \u2713  133 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:142:1 \u203a copy exports checklist only, does not persist or send figures (1.1s)\n  \u2713  134 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:170:1 \u203a all internal destinations resolve and retain city where applicable (2.1s)\n  \u2713  135 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:191:1 \u203a narrow-screen accessibility and no horizontal overflow (859ms)\n\n  135 passed (4.4m)\n"
+    },
+    "test-pwa": {
+      "sha256": "3cb74b32be873966c0900b252230f477526c33e99f8c7cd4242eca8137004960",
+      "tail": "\n  \u2713  55 [webkit-390] \u203a tests/pwa/app.spec.mjs:45:1 \u203a corrupt saved records cannot break an offline cold start (1.6s)\n  \u2713  56 [webkit-390] \u203a tests/pwa/app.spec.mjs:47:1 \u203a evicted offline files produce an honest branded recovery page instead of a blank screen (966ms)\n  \u2713  57 [webkit-390] \u203a tests/pwa/app.spec.mjs:50:1 \u203a hospitality cold-offline routes keep navigation but do not claim live inventory (913ms)\n  \u2713  58 [webkit-390] \u203a tests/pwa/app.spec.mjs:60:1 \u203a personal hotel and dining notes survive a cold offline launch without pretending to be live rates (2.1s)\n  \u2713  59 [webkit-390] \u203a tests/pwa/app.spec.mjs:67:1 \u203a personal hospitality storage survives a classic website fallback (1.4s)\n  \u2713  60 [webkit-390] \u203a tests/pwa/app.spec.mjs:72:1 \u203a stay planning works on offline cold launch without retaining financial figures (1.4s)\n\n  60 passed (1.1m)\n"
+    },
+    "test-engagement": {
+      "sha256": "35933caec3181470e3cd7257d1b7d44c10cbefc26d370b456fff8507368b7b1d",
+      "tail": " bar (1.8s)\n  \u2713  34 [webkit-390] \u203a tests/engagement/bar.spec.mjs:34:1 \u203a an unfinished account form is not silently discarded by a ticker click (1.2s)\n  \u2713  35 [webkit-390] \u203a tests/engagement/bar.spec.mjs:36:1 \u203a the same mounted ticker does not refetch on ordinary route changes (832ms)\n  \u2713  36 [webkit-390] \u203a tests/engagement/bar.spec.mjs:38:1 \u203a offline keeps the strip but never repeats stale live offers (961ms)\n  \u2713  37 [webkit-390] \u203a tests/engagement/bar.spec.mjs:40:1 \u203a request failure retains a useful fixed status and a working retry (844ms)\n  \u2713  38 [webkit-390] \u203a tests/engagement/bar.spec.mjs:42:1 \u203a one offer remains visible, expires without navigation, and never claims verification (5.5s)\n  \u2713  39 [webkit-390] \u203a tests/engagement/bar.spec.mjs:44:1 \u203a keyboard focus exposes an offer in a stationary scrollable row (948ms)\n\n  39 passed (1.8m)\n"
+    },
+    "classic-planning": {
+      "sha256": "40a1b15d7cb446dd49c64408d8e8611690d31a3c5f67ea0e8e9148b56900c966",
+      "tail": "low (499ms)\n  \u2713  13 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:52:1 \u203a whole-trip arithmetic, blanks, stale output and clearing (989ms)\n  \u2713  14 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:74:1 \u203a rebooking includes cancellation loss and cash gap; validates refund (730ms)\n  \u2713  15 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:97:1 \u203a all nine checklists and clipboard denial have usable fallback (853ms)\n  \u2713  16 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:142:1 \u203a copy exports checklist only, does not persist or send figures (920ms)\n  \u2713  17 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:170:1 \u203a all internal destinations resolve and retain city where applicable (5.3s)\n  \u2713  18 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:193:1 \u203a narrow-screen accessibility and no horizontal overflow (786ms)\n\n  18 passed (31.0s)\n"
+    },
+    "planning-final": {
+      "sha256": "47635c06356ce4cf9a1104794c4bc717574e61584d4796ba2743619d60b15c82",
+      "tail": "erflow (509ms)\n  \u2713  13 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:52:1 \u203a whole-trip arithmetic, blanks, stale output and clearing (951ms)\n  \u2713  14 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:74:1 \u203a rebooking includes cancellation loss and cash gap; validates refund (965ms)\n  \u2713  15 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:97:1 \u203a all nine checklists and clipboard denial have usable fallback (1.0s)\n  \u2713  16 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:142:1 \u203a copy exports checklist only, does not persist or send figures (1.2s)\n  \u2713  17 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:170:1 \u203a all internal destinations resolve and retain city where applicable (5.4s)\n  \u2713  18 [webkit-390] \u203a tests/hospitality/planning.spec.mjs:193:1 \u203a narrow-screen accessibility and no horizontal overflow (1.0s)\n\n  18 passed (31.1s)\n"
+    },
+    "local": {
+      "sha256": "9a3086a862b2f6dc506529167975d163318966627872c4e43b8b5e4da8ddf98b",
+      "tail": "{\n  \"checksPassed\": 83,\n  \"api\": {\n    \"version\": \"2.7.0\",\n    \"revision\": null,\n    \"environment\": \"test\"\n  },\n  \"web\": {\n    \"version\": \"2.7.0\",\n    \"build\": \"2.7.0-5f0593753792\",\n    \"mode\": \"pwa\"\n  },\n  \"browsers\": [\n    {\n      \"engine\": \"chromium\",\n      \"errors\": [],\n      \"localNotesDeleted\": true\n    },\n    {\n      \"engine\": \"webkit\",\n      \"errors\": [],\n      \"localNotesDeleted\": true\n    }\n  ],\n  \"mutations\": 0,\n  \"external\": 0\n}\n"
+    }
+  }
+}

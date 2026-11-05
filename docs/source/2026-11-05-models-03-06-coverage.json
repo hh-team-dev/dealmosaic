@@ -6,5 +6,7 @@
   "visuallyCrossChecked": 12,
   "imageCopiesDeleted": true,
   "driveOriginalsUntouched": true,
-  "limits": "Clipped columns and missing passages outside screenshots not reconstructed; OCR headers and rupee glyphs can be noisy."
+  "limits": "Clipped columns and missing passages outside screenshots not reconstructed; OCR headers and rupee glyphs can be noisy.",
+  "inventorySha256": "75c2e0505c4492a51df436599abe12e654be8d2204c8f8079576bc98b7fe2db0",
+  "extractionManifestSha256": "d30eda281fcc569ef98a09d2229c535e7454efc10922e4c2657582e1c3b7fe99"
 }

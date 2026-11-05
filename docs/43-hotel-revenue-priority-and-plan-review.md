@@ -1,5 +1,7 @@
 # 2.6.1: Hotel revenue priorities and review of Our Business 01 / 02
 
+> **Current release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
+
 **Reviewed:** 5 November 2026. **Release status:** **2.6.1 deployed and production-verified.** Customer design retained; owner tools improved. No new monetisation programme is activated.
 
 ## 1. Decision in one minute

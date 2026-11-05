@@ -1,16 +1,16 @@
 # 2.7.0 — Four-plan review and practical stay planning
 
-**Review date:** 5 November 2026. **Release status:** implementation complete; final release validation and deployment receipts are recorded separately below. No new earning programme, paid service or hospitality booking operation is activated.
+**Review date:** 5 November 2026. **Release status:** **2.7.0 deployed and production-verified.** No new earning programme, paid service or hospitality booking operation is activated.
 
 ## 1. What was reviewed
 
-| Supplied source | Screenshots read | Best contribution | Main caution |
-| --- | ---: | --- | --- |
-| Model03 | 64 | Whole-trip cost, clear inclusions, customer-first price explanation | Retired/unverified API recipe, invented taxes/fees, unsupported deal scores and earnings |
-| Model04 | 65 | Need-specific discovery, narrow pilots, rebooking decisions, operating discipline | Estimated supplier prices still need evidence; RFQ operations are not effortless |
-| Model05 | 64 | Wider ideas: refunds, timing, duration and split-stay questions | Provider-price fabrication, automatic stacking, unfunded cashback and tax mistakes |
-| Model06 | 19 | Corrects attribution/review/revenue overclaims; prioritises a smaller product | Moderated reports and leads still need rights, supply and daily work |
-| **Total** | **212** | Useful ideas retained across all four | No original conversation reconstructed beyond supplied images |
+| Source / images read | Most useful idea | Main caution |
+| --- | --- | --- |
+| Model03 / 64 | Whole-trip budgets | Unsupported API and fee assumptions |
+| Model04 / 65 | Traveller needs; rebooking | Supplier evidence and lead workload |
+| Model05 / 64 | Refund, timing and split-stay ideas | Invented rates; stacking; tax errors |
+| Model06 / 19 | Clear corrections; narrower scope | Reports and leads still need staff |
+| **Total / 212** | **Ideas retained from all four** | **Only supplied content assessed** |
 
 Every screenshot was downloaded and its extracted text read in source/filename order. Twelve critical images were also visually cross-checked, including formulas, clipped revenue tables and tax assertions. Overlaps were read rather than treated as permission to skip unique text. Public-folder scrolling continued until three stable end-of-list observations. All temporary screenshot copies were deleted; the original Drive folders were not modified.
 
@@ -18,7 +18,7 @@ Every screenshot was downloaded and its extracted text read in source/filename o
 
 ## 2. The decision
 
-Do not choose one model wholesale. Keep the earlier preferred Our Business01 direction of practical network-first monetisation, combine it with Model04/06's conditional operating discipline, and use Model03/05 as sources of customer-helpful ideas—not as verified technical or commercial manuals.
+Do not choose one model wholesale. Keep the earlier preferred Our Business 01 direction of practical network-first monetisation, combine it with Model04 / Model06's conditional operating discipline, and use Model03 / Model05 as sources of customer-helpful ideas—not as verified technical or commercial manuals.
 
 **Minimum-fuss execution:** improve what travellers can actually do now without a new account, paid API, invented hotel rate, hotel contract or unstaffed customer-service queue. Three native tools are now implemented together at **`/stays/plan`**, reached from hotel discovery, dining discovery and both personal comparison workspaces. The same source serves the website, installed PWA and classic fallback.
 
@@ -83,16 +83,16 @@ These are correctness and operational safeguards, not evidence of proven profita
 
 1. **Hotel data access:** Hotellook closed on 20 October 2025. A Travelpayouts login does not restore its retired API or establish a universal multi-OTA price licence. Brand-specific approved tools are still worth investigating. [1](https://support.travelpayouts.com/hc/en-us/articles/29534131568530-FAQ-on-the-closure-of-Hotellook)
 2. **Google Places:** pricing is SKU-dependent, not a universal free 10,000 photos/reviews/routes allowance. Attribution, display and caching restrictions apply. No Google billing or copied review/photo pipeline was enabled. [2](https://developers.google.com/maps/documentation/places/web-service/usage-and-billing) [3](https://developers.google.com/maps/documentation/places/web-service/policies)
-3. **Hotel GST:** the official 56th Council FAQ says accommodation supply up to ₹7,500 per unit/day attracts 5% without ITC under the September2025 change, not the screenshots' old 12% rule. That correction is not a licence to guess tax treatment, double-add included tax, or invent a 10% service charge. [4](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2163560&reg=3&lang=2)
+3. **Hotel GST:** the official 56th Council FAQ says accommodation supply up to ₹7,500 per unit/day attracts 5% without ITC under the September 2025 change, not the screenshots' old 12% rule. That correction is not a licence to guess tax treatment, double-add included tax, or invent a 10% service charge. [4](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2163560&reg=3&lang=2)
 4. **Foreign receipts:** RBI's $250,000 LRS facility concerns permitted outward remittances by resident individuals. It is not an annual cap on receiving affiliate revenue, contrary to Model05. [5](https://rbi.org.in/Scripts/FAQDisplay.aspx?Id=115)
-5. **Privacy timing:** the notified DPDP Rules have phased commencement: immediate provisions, Rule4 after one year, and main operational rules after eighteen months. On 5November2026, a blanket 'everything is already in force' statement is wrong. Existing privacy safeguards are retained, not postponed. This review is not a legal compliance certificate. [6](https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf)
+5. **Privacy timing:** the notified DPDP Rules have phased commencement: immediate provisions, Rule 4 after one year, and main operational rules after eighteen months. On 5 November 2026, a blanket 'everything is already in force' statement is wrong. Existing privacy safeguards are retained, not postponed. This review is not a legal compliance certificate. [6](https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf)
 6. **Tax/legal shortcuts:** do not rely on universal 10% TDS, automatic GST exemption below one number, sole-proprietor profession-tax exemption, or 'no payments means no legal liability'. Payout classification, aggregate activities, jurisdiction and current law matter. Obtain owner-specific advice; no legal registration or fee was initiated here.
 
 ## 6. Revenue priority remains practical
 
-The same-day full account audit in document43 remains the commercial baseline; it was not replaced with screenshot assertions or a second unnecessary 23,127-row scan.
+The same-day full account audit in document 43 remains the commercial baseline; it was not replaced with screenshot assertions or a second unnecessary 23,127-row scan.
 
-1. **Resolve the specific Trivago2516 permission question.** Existing account access is open and India appears, but the CPS-labelled campaign pays for qualified downstream click-outs and prohibits Deals/Coupons and other media. DealMosaic's actual publisher and proposed placement must be explicitly accepted. The enquiry remains unsent; no relabelling workaround or link activation.
+1. **Resolve the specific Trivago 2516 permission question.** Existing account access is open and India appears, but the CPS-labelled campaign pays for qualified downstream click-outs and prohibits Deals/Coupons and other media. DealMosaic's actual publisher and proposed placement must be explicitly accepted. The enquiry remains unsent; no relabelling workaround or link activation.
 2. **Use the easiest genuinely approved, accurate existing offer.** A suitable CPS promotion can be closer to a first validated commission than an unapproved CPC programme. Preserve CPC investigation preference without pretending every first tap is payable.
 3. **Only add another network/tool for a concrete gap.** Review actual programme approval, India/PWA rules, display rights, limits, settlement and zero-upfront costs. No generic claim that all providers approve instantly.
 4. **Consider a small direct-lead pilot only with response capacity and written acceptance.** Define a qualified lead, permission, fee, rejection/duplicate window, payment trigger and reconciliation. Do not launch public requests until a real supply/response arrangement exists.
@@ -112,7 +112,26 @@ The new tools earn nothing merely by existing. Their business hypothesis is bett
 
 ## 8. Validation, deployment and owner check
 
-Final evidence is saved in the dated 2.7.0 validation/production/manifest receipts. The release must pass the full isolated browser suites and exact-artifact production verification before this section is marked deployed. Earlier 2.6.1 evidence remains historical and must not be presented as new tests.
+**Live:** https://dealmosaic.pages.dev/stays/plan
+
+- Runtime/source tag: `42bc6f3557c852f809c536e831935dd187c13971` / `pwa-v2.7.0`.
+- Cloudflare Pages deployment: `3ed88455`; Render deployment: `dep-dbm8h3rm8hqs73f1rk7g`, exact runtime revision, existing free plan.
+- PWA build: `2.7.0-5f0593753792`; classic: `2.7.0-f3333371600a`. Both archives have verified SHA-256 checksums and clean-source package manifests.
+- **756 unit tests** across 38 files; **48 design assertions**.
+- **337 browser checks passed**: device journeys 39, general 46, hospitality 135, PWA 60, persistent controls 39, extra classic-planner 18. Two development-only source-import probes are intentionally skipped in packaged builds.
+- **83 local / 84 production read-only checks** passed. Production Chromium/WebKit recorded zero browser exceptions, zero server mutations and zero external/affiliate navigation attempts; isolated personal notes were removed.
+- New coverage includes all nine checklists, copy failure/download, complete/unknown budget inputs, rebooking losses/cash gap, stale-result clearing, destination links, 320px/accessibility, private memory, real offline cold start and classic fallback.
+- Preliminary issues were corrected: explicit select labels, verifier currency precision, and a test harness that hard-navigated away before outstanding WebKit reads finished. No final failure was suppressed. The final packages retain the same tested application build hashes; final planner and local checks were rerun after validation-script corrections.
+
+Evidence in `docs/source/`, using the prefix `2026-11-05-stay-planning-`:
+
+- `release-validation.json` — test totals, limits and log hashes.
+- `production-verification.json` and `local-verification.json` — read-only checks.
+- `release-manifest.json` and `deployment.json` — exact artifacts and deployments.
+
+Source coverage and the detailed model-by-model ledger accompany them. Earlier 2.6.1 evidence is historical, not reused as new tests.
+
+Recovery: both deployable archives are in `/home/user/releases/dealmosaic-2.7.0/`. Document 28 and the dated backup/PDF receipts record source recovery and handover validation.
 
 Physical Android/iPhone testing is still the owner's next step after deployment. Automated Chromium/WebKit checks do not prove that the earlier phone-specific external-link problem is resolved. The new planning tools have no affiliate outbound action, so testing them cannot establish advertiser attribution or payout.
 

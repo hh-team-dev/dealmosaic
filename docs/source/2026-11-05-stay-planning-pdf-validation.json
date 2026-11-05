@@ -1,0 +1,144 @@
+{
+  "checkedAt": "2026-11-05T13:52:16.189948+00:00",
+  "pdfCount": 25,
+  "checks": {
+    "212": true,
+    "337": true,
+    "756": true,
+    "84": true,
+    "Model03": true,
+    "Model04": true,
+    "Model05": true,
+    "Model06": true,
+    "42bc6f3": true,
+    "deployed and production-verified": true
+  },
+  "offPageTextBlocks": [],
+  "files": [
+    {
+      "file": "00-MASTER-HANDOVER.pdf",
+      "pages": 35,
+      "sha256": "a6871f57f4b890983c92e7b3bb9916edf9fd3da8bafb7fa1862543f2529d526e"
+    },
+    {
+      "file": "00-executive-summary.pdf",
+      "pages": 4,
+      "sha256": "65960e2b3e55d391ceae6dbce6309c77102632bd3051ab7a6a176e9078c1c834"
+    },
+    {
+      "file": "04-design-system.pdf",
+      "pages": 6,
+      "sha256": "9a484db80467d6875b34709f0b5fca7a5f3e17a7a9fe3b4cd794774fcce1c7f0"
+    },
+    {
+      "file": "14-seo-launch-checklist.pdf",
+      "pages": 4,
+      "sha256": "612a6d47a50b3cd471c95cc53f9e174c3ab95f473f4ca6dcc54d3f2b5047eb98"
+    },
+    {
+      "file": "15-project-handover.pdf",
+      "pages": 19,
+      "sha256": "3caff8afb33fcf39239cee640db2a8d6f6e0aab5bcbc0bb48c27c9d68faac739"
+    },
+    {
+      "file": "27-five-agent-consolidation.pdf",
+      "pages": 6,
+      "sha256": "08ac9f4db0276b297f5912a1016e9a889d00e91647fd12cf0fb4f4f26588dbbd"
+    },
+    {
+      "file": "28-backup-and-recovery.pdf",
+      "pages": 19,
+      "sha256": "fa54498c389ef626f5b014ef66a8d77990153b3482671b34a280c1fb568f56de"
+    },
+    {
+      "file": "29-site-tour-fixes.pdf",
+      "pages": 6,
+      "sha256": "5f548fafeffe69c6f9daa66c4cf9ba9d2ddf37f01eb13e9bcec34efeddfe99fc"
+    },
+    {
+      "file": "30-earning-and-admin.pdf",
+      "pages": 4,
+      "sha256": "1fb2529aee27d6be5ffdb3ef6554293ae14ea5d591f94888773535c1e5399c72"
+    },
+    {
+      "file": "31-affiliate-applications.pdf",
+      "pages": 4,
+      "sha256": "5ab066e6eb0d82afcb524802c5a2c8e042557c925b6c0f2b7421ec9ec62e38aa"
+    },
+    {
+      "file": "32-direct-sales-blueprint.pdf",
+      "pages": 7,
+      "sha256": "3675d8b4f7c709020e54f577cd67a0c414056df46a0ffe9089a2ffc677df5cd5"
+    },
+    {
+      "file": "33-direct-shop-release.pdf",
+      "pages": 6,
+      "sha256": "b49a3bb2e14db06ee1e96873dd5ab49df36d674966232a07a98183a62297e66f"
+    },
+    {
+      "file": "34-sitewide-audit.pdf",
+      "pages": 6,
+      "sha256": "466fb5735b7bf868cbb1205139d1e5923ae019ba5c5dd9b6b16a25963a40749c"
+    },
+    {
+      "file": "35-pwa-handover.pdf",
+      "pages": 9,
+      "sha256": "ab3d18cbb0a5cfc34bf9ede8e99e2a7dd811444abb329abe782d8d24e6e06f88"
+    },
+    {
+      "file": "36-persistent-install-and-deals.pdf",
+      "pages": 5,
+      "sha256": "16c63a5572148fcfc131c27e5e1d629d61a9c10934e58759b2d20a7f5c866e0b"
+    },
+    {
+      "file": "37-hotels-and-dining.pdf",
+      "pages": 7,
+      "sha256": "9b6d352a4ef66d07afeb8f0bfa6b04bed2eab239b74466dd4e1de375fd0a21cc"
+    },
+    {
+      "file": "38-expanded-destinations.pdf",
+      "pages": 4,
+      "sha256": "11b021acf05c563773996a2624689fb8b31a3c237348a917e4ea8eb3c58fc2d6"
+    },
+    {
+      "file": "39-pet-friendly-directory.pdf",
+      "pages": 5,
+      "sha256": "16f44480373a18e97be80da20bb9c1796dcc9032e14d128c093edbb6e8550ad2"
+    },
+    {
+      "file": "40-hospitality-revenue-reset.pdf",
+      "pages": 9,
+      "sha256": "93820f81719b8aa16415bf6240f62fe20538c82b2813a27a278d3da0af6b9217"
+    },
+    {
+      "file": "41-device-review-and-conversion-repair.pdf",
+      "pages": 6,
+      "sha256": "172c26e103c7766057d9a6175df49ff8d9ef1f75a2509c6415242af08c1ee443"
+    },
+    {
+      "file": "42-hospitality-business-and-native-comparison.pdf",
+      "pages": 13,
+      "sha256": "45ca7726ed3e2b47ac3fdfbdecd9a34e867fded162428b5dd24df1d05eadc6c0"
+    },
+    {
+      "file": "43-hotel-revenue-priority-and-plan-review.pdf",
+      "pages": 8,
+      "sha256": "1b3c119702a665285b9a55ac5e659a2cb5ebee5d1e8c2886c6c0572b5f3ab21c"
+    },
+    {
+      "file": "44-four-plan-review-and-stay-planning.pdf",
+      "pages": 5,
+      "sha256": "248490c5666a80083df811a8fbc17078c805fb227fef07bd576e27cad904ce7e"
+    },
+    {
+      "file": "DEALMOSAIC-handover-set.pdf",
+      "pages": 204,
+      "sha256": "91079271a2b428b3e581d6a471b6f96f42d97979c4c6f23adad646368c35597a"
+    },
+    {
+      "file": "brand-identity.pdf",
+      "pages": 5,
+      "sha256": "eb5f692f968d0224af9911ae73987ccef9759471f901896803910587486341d8"
+    }
+  ]
+}

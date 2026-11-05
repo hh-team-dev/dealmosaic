@@ -1,0 +1,86 @@
+{
+  "version": "2.7.0",
+  "createdAt": "2026-11-05T13:44:15.784Z",
+  "sourceCommit": "42bc6f3557c852f809c536e831935dd187c13971",
+  "workingTreeChanged": false,
+  "files": [
+    {
+      "mode": "pwa",
+      "file": "dealmosaic-2.7.0-pwa.tar.gz",
+      "sha256": "32b0a6f85d6c3618508bc2708cbfbfed2f52ffdd2f073e429e6cb6aa5479c84d",
+      "release": {
+        "version": "2.7.0",
+        "build": "2.7.0-5f0593753792",
+        "mode": "pwa",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-CpMLVy2Z.js",
+          "/assets/DirectShop-BjhFcg86.js",
+          "/assets/Hospitality-C2219AWs.js",
+          "/assets/HospitalityBusiness-CA4nQgBl.js",
+          "/assets/HospitalityCompare-CKd2h8k6.js",
+          "/assets/PetFriendly-CIG115DG.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-H0bcb9bb.js",
+          "/assets/StayPlanner-BfQfJpoY.js",
+          "/assets/StayPlanner-LVlG8JNE.css",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/hospitality-DZyJxaWL.js",
+          "/assets/hospitality-comparison-DnyqrE8S.css",
+          "/assets/hospitality-comparison-n7qn2Pg9.js",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-CKcWkrDM.js",
+          "/assets/pets-Crtg45vJ.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 937291,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    },
+    {
+      "mode": "classic",
+      "file": "dealmosaic-2.7.0-classic.tar.gz",
+      "sha256": "a6970020407683a70de613bdf1a5bb6048665a12bfe7540d0fcd44e6b573b846",
+      "release": {
+        "version": "2.7.0",
+        "build": "2.7.0-f3333371600a",
+        "mode": "classic",
+        "assets": [
+          "/pwa-shell.html",
+          "/assets/CampaignInventory-B2glM34a.js",
+          "/assets/DirectShop-DxLYSrPY.js",
+          "/assets/Hospitality-7jjkXlJe.js",
+          "/assets/HospitalityBusiness-B-Tfgjp4.js",
+          "/assets/HospitalityCompare-adE7tTlG.js",
+          "/assets/PetFriendly-Dw2atBV4.js",
+          "/assets/PetFriendly-mk-h50He.css",
+          "/assets/ShopControl-D37dfSdV.js",
+          "/assets/StayPlanner-CEK-_Alo.js",
+          "/assets/StayPlanner-LVlG8JNE.css",
+          "/assets/hospitality-DOmSqoWC.css",
+          "/assets/hospitality-DZyJxaWL.js",
+          "/assets/hospitality-comparison-DnyqrE8S.css",
+          "/assets/hospitality-comparison-n7qn2Pg9.js",
+          "/assets/index-B8xC5SR5.css",
+          "/assets/index-iKqaK0Z-.js",
+          "/assets/pets-Crtg45vJ.js",
+          "/fonts/Outfit.woff2",
+          "/fonts/Plus-Jakarta-Sans.woff2",
+          "/favicon.svg",
+          "/apple-touch-icon.png",
+          "/brand/dm-icon-192.png",
+          "/brand/dm-icon-512.png",
+          "/brand/dm-icon-maskable-512.png"
+        ],
+        "precacheBytes": 935281,
+        "cachePolicy": "static-only; API/network-only; no mutation replay"
+      }
+    }
+  ]
+}

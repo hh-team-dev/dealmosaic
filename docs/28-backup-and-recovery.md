@@ -1,6 +1,8 @@
 # 28 — Backup and recovery dossier
 
-> **Current release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
+> **Current release — 2.7.0, 5 November:** [Document 44](44-four-plan-review-and-stay-planning.md) records the complete 212-screenshot Model03–06 review, private whole-trip budget, need-specific questions and rebooking-cost tools shared by website/PWA/classic. Runtime `42bc6f3` / `pwa-v2.7.0`; Pages `3ed88455`; API `dep-dbm8h3rm8hqs73f1rk7g`. 756 unit / 337 browser / 84 production checks passed. No new programme or booking service activated; physical-device check remains pending.
+
+> **Previous release — 2.6.1, 5 November:** [Document 43](43-hotel-revenue-priority-and-plan-review.md) records the Our Business 01/02 review, full CPC/CPS account scan, qualified Trivago click-out opportunity and placement restriction, live campaign eligibility controls and corrected scenario arithmetic. Runtime `19b8c14` / `pwa-v2.6.1`; Pages `1e072c89`; API `dep-dbm792142hec73ds3a40`. No new programme, CPC income, ad script or booking service was activated.
 
 
 > **Previous release — 2.6.0, 5 November:** [Document 42](42-hospitality-business-and-native-comparison.md) records the deployed native personal hotel/dining comparison workspaces and owner business desk. Runtime `c54a98d` / `pwa-v2.6.0`; Pages `5924e0cb`; API `dep-dbm6d549v7es7390s8tg`. Live supplier rates, booking and new hospitality earnings are not activated. Previous dated receipts remain historical.
@@ -702,3 +704,12 @@ npm run secrets:scan
 
 
 **Verified 2.3.0 source archive:** `backups/dealmosaic_2026-11-04_15-49-31.tar.gz` — 360 checksum-verified files, 1,943,811 bytes; SHA-256 `ef595dd2c5f7b5678f39be4bcbc9ef87a7af6e8ed8b1cd7ce38bc507595445f2`. Final self-referential archive notes and PDF verification follow this archive and are retained in the complete-history 2.3.0 Git bundle.
+
+
+## 2.7.0 source recovery — 5 November 2026
+
+- Source archive: `backups/dealmosaic_2026-11-05_13-47-59.tar.gz`, 447 files verified; SHA-256 `94ff1a1a375b6ef154500a23369fd9aaadd709541c561b9dce0af9073d14bd73`.
+- Both clean-source deployable builds: `/home/user/releases/dealmosaic-2.7.0/`, with `SHA256SUMS` and release manifest; PWA/classic parity checked.
+- Runtime/tag: `42bc6f3557c852f809c536e831935dd187c13971` / `pwa-v2.7.0`.
+- The source archive precedes its own receipt and final documentation. `backups/pwa-v2.7.0.bundle` and its checksum retain final pushed documentation/history. Verify the bundle with `git bundle verify` before restoration.
+- Older 2.6.1/2.6.0/2.5 recovery remains preserved. Screenshot copies and isolated test data were deleted; no private production database snapshot was added.

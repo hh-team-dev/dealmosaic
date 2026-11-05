@@ -1,0 +1,14 @@
+{
+  "service": "srv-dbjrk8o473hc73anclcg",
+  "deployment": "dep-dbm8h3rm8hqs73f1rk7g",
+  "status": "live",
+  "revision": "42bc6f3557c852f809c536e831935dd187c13971",
+  "checkedAt": "2026-11-05T13:47:41.780927+00:00",
+  "pagesDeployment": "3ed88455",
+  "pagesPreview": "https://3ed88455.dealmosaic.pages.dev",
+  "origin": "https://dealmosaic.pages.dev",
+  "plan": "free",
+  "productionChecks": 84,
+  "paidServicesActivated": false,
+  "newProgrammesActivated": false
+}
