@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from '../components/Chrome';
 import { DiscoverShelves } from '../components/DiscoverShelves';
-import { SampleComparison } from '../components/SampleComparison';
 import { Icon } from '../components/Icon';
 import { Button } from '../components/Ui';
 import { useToast } from '../components/Toast';
@@ -101,13 +100,13 @@ export default function Landing() {
           <span className="hero-blob hero-blob-1" aria-hidden="true" />
           <span className="hero-blob hero-blob-2" aria-hidden="true" />
           <div className="container hero-inner">
-            <span className="badge badge-lime"><span className="dot dot-grass" aria-hidden="true" />Live across India · prices in ₹</span>
+            <span className="badge badge-lime"><span className="dot dot-grass" aria-hidden="true" />Store offers · India · ₹</span>
             <h1 style={{ marginTop: 12 }}>
-              The price you’ll <em>actually</em> pay.
+              Good deals. <em>Clearer</em> choices.
             </h1>
             <p className="lede" style={{ maxWidth: '56ch' }}>
-              Sticker prices leave out delivery, fees and tax. We add them, match the exact pack or variant, and rank
-              what is really left to pay — and where a cost is unknown, we say so instead of guessing.
+              Search products and store offers. Check the code, delivery fees and final checkout total
+              before you buy. Confirmed product prices are compared only when available.
             </p>
 
             {/*
@@ -204,7 +203,7 @@ export default function Landing() {
               </span>
               <span className="chip">
                 <span className="dot dot-ember" aria-hidden="true" />
-                No trackers
+                No ad trackers
               </span>
             </div>
           </div>
@@ -250,13 +249,6 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ------------------------- sample comparison ------------------------ */}
-        <section className="section-tight" id="sample">
-          <div className="container">
-            <SampleComparison />
-          </div>
-        </section>
-
         {/* -------------------------- two speeds ----------------------------- */}
         <section className="section-tight">
           <div className="container">
@@ -264,8 +256,7 @@ export default function Landing() {
             <h2>Marketplaces and 10-minute delivery, held to the same standard</h2>
             <p className="lede">
               A laptop and a packet of chips need different answers. Electronics prices hold for days; a
-              10-minute delivery price changes by area and by the hour. We compare both — and when a store keeps
-              its prices to itself, we say so once, instead of pretending a number we do not have.
+              10-minute delivery price changes by area and by the hour. Both need the same checks: exact pack, delivery area and total bill. We only compare prices from authorised live sources; a store offer is not an exact-item price quote.
             </p>
 
             <div className="grid grid-2" style={{ marginTop: 18 }}>
@@ -323,9 +314,9 @@ export default function Landing() {
             */}
             <div className="grid grid-3" style={{ marginTop: 18 }}>
               {[
-                { icon: 'tag' as const, title: 'All the stores in one place', body: 'Stop opening five apps to compare one price. Everything is on one page.' },
-                { icon: 'copy' as const, title: 'The code copies itself', body: 'Tap once. The code is copied and the store opens in a new tab. Paste it at checkout.' },
-                { icon: 'wallet' as const, title: 'Free for you. Always.', body: 'The store pays us a small commission when you buy. The price you pay stays the same.' },
+                { icon: 'tag' as const, title: 'Useful offers in one place', body: 'Browse available store promotions, save the ones you like and keep the checkout conditions close.' },
+                { icon: 'copy' as const, title: 'Keep your code handy', body: 'The store button tries to copy the code before opening a new tab. Paste it at checkout; long-press to copy if needed.' },
+                { icon: 'wallet' as const, title: 'Check the whole bill.', body: 'Look beyond the headline discount. Check delivery, taxes and eligibility before you pay.' },
               ].map((item) => (
                 <div className="card" key={item.title}>
                   <div style={{ color: 'var(--action-d)', marginBottom: 8 }}>

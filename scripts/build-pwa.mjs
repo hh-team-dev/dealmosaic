@@ -13,6 +13,13 @@ let shell = readFileSync(join(root, 'index.html'), 'utf8')
   .replace('<div id="root"></div>', '<div id="root"><h1>Opening DealMosaic</h1><p>Your saved list can be read offline after this app is prepared. Live prices, checkout, account changes and owner controls need a connection. No order or payment is queued. Reconnect to retrieve current information.</p></div>')
   .replace('</head>', '<script>window.__DM_OFFLINE_SHELL__=true;</script></head>');
 writeFileSync(shellPath, shell);
+// Neutral, online SPA fallback: never show homepage prices or controls while
+// an account, search or recovery page's JavaScript is loading.
+writeFileSync(join(root, 'app-shell.html'), readFileSync(join(root, 'index.html'), 'utf8')
+ .replace(/<title>[\s\S]*?<\/title>/, '<title>Opening your page — DealMosaic</title>')
+ .replace(/<meta\s+name="robots"[^>]*>/, '<meta name="robots" content="noindex,nofollow">')
+ .replace(/<link rel="canonical"[^>]*>/, '')
+ .replace('<div id="root"></div>', '<div id="root"><main style="font-family:system-ui;padding:24px;color:#5e3625"><h1>Your DealMosaic page</h1><p role="status">Opening the page you requested. Account tools, current offers and store-link recovery need a connection and JavaScript. No private account data is included in this page.</p><p>If it does not open, check your connection and reload, or return to <a href="/">DealMosaic home</a>.</p></main></div>'));
 mkdirSync(join(root, 'install'), { recursive: true });
 writeFileSync(join(root, 'install/index.html'), readFileSync(join(root, 'index.html'), 'utf8')
  .replace(/<title>[\s\S]*?<\/title>/, '<title>Install DealMosaic · app settings</title>')

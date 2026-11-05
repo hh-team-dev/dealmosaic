@@ -29,7 +29,7 @@ export async function recordDailySnapshots(): Promise<SnapshotRun> {
   const today = nowIso().slice(0, 10);
 
   const offers = (await db
-    .prepare('SELECT id, item_price_minor, currency, data_origin FROM offers WHERE is_active = 1')
+    .prepare("SELECT id, item_price_minor, currency, data_origin FROM offers WHERE is_active = 1 AND data_origin = 'live'")
     .all()) as Array<{ id: string; item_price_minor: number; currency: string; data_origin: string }>;
 
   if (offers.length === 0) return { offers: 0, written: 0, skipped: 0 };

@@ -8,6 +8,7 @@ import { formatDate, inr } from '../lib/format';
 import { useToast } from '../components/Toast';
 import { deleteAlert, listAlerts, type AlertView } from '../lib/alerts-api';
 import { useSaved } from '../lib/saved';
+import { AccountNotifications } from '../components/AccountNotifications';
 import { DiscoverShelves } from '../components/DiscoverShelves';
 
 export default function Dashboard() {
@@ -16,16 +17,19 @@ export default function Dashboard() {
   const saved = useSaved();
   const [alerts, setAlerts] = useState<AlertView[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [alertError, setAlertError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let alive = true;
+    setAlertError(false); setAlerts(null);
     listAlerts()
       .then((d) => alive && setAlerts(d.alerts))
-      .catch(() => alive && setAlerts([]));
+      .catch(() => alive && setAlertError(true));
     return () => {
       alive = false;
     };
-  }, []);
+  }, [attempt]);
 
   async function cancelAlert(id: string): Promise<void> {
     setBusy(id);
@@ -97,14 +101,13 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {alerts === null ? (
+          {alertError ? <div role="alert"><p>Alerts could not load. This does not mean your list is empty.</p><button className="btn btn-ghost" onClick={() => setAttempt(n => n + 1)}>Retry alerts</button></div> : alerts === null ? (
             <p className="small muted" style={{ margin: 0 }}>
               Loading your alerts…
             </p>
           ) : alerts.length === 0 ? (
             <p className="small" style={{ margin: 0 }}>
-              No alerts yet. Open any product and set a target price — we email you once, and only if the cheapest live
-              offer actually falls below it.
+              No price alerts. Targets can be set only for variants with live store prices. Saved-offer reminders are separate; manage them from your saved board.
             </p>
           ) : (
             <ul className="alert-list">
@@ -121,7 +124,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   <span className={`badge ${a.status === 'triggered' ? 'badge-grass' : a.isBelowTarget ? 'badge-sun' : 'badge-neutral'}`}>
-                    {a.status === 'triggered' ? 'Sent' : a.isBelowTarget ? 'Below target' : 'Watching'}
+                    {a.status === 'triggered' ? 'Closed' : a.bestPriceMinor === null ? 'Price unavailable' : a.isBelowTarget ? 'Below target' : 'Watching'}
                   </span>
                   <button
                     type="button"
@@ -136,10 +139,11 @@ export default function Dashboard() {
             </ul>
           )}
           <p className="tiny muted" style={{ margin: 0 }}>
-            An alert fires once and then closes. There is no daily digest and no nudge to shop — a notification you
-            cannot trust is worth nothing.
+            A confirmed price-target email closes its alert. If delivery fails, the alert stays active for a later attempt. Saved-offer weekly emails are separate.
           </p>
         </section>
+
+        <AccountNotifications />
 
         <div className="grid grid-2">
           <Link to="/saved" className="card card-top-magenta" style={{ textDecoration: 'none' }}>
@@ -180,7 +184,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <dt>Quick commerce</dt>
-                <dd>{preferences?.pincode ? 'PIN-scoped prices enabled' : 'Add a PIN to enable'}</dd>
+                <dd>{preferences?.pincode ? 'PIN saved; authorised prices still required' : 'PIN needed for local quotes'}</dd>
               </div>
             </dl>
             <Link to="/app/settings" className="btn btn-quiet btn-sm" style={{ marginTop: 12 }}>
@@ -196,7 +200,7 @@ export default function Dashboard() {
               address — and it is deleted with your account.
             </p>
             <p className="tiny" style={{ marginBottom: 0 }}>
-              You can use DEALMOSAIC without a PIN code; quick-commerce comparison simply stays switched off.
+              You can browse without a PIN. Adding one does not itself connect a retailer or make live grocery prices available.
             </p>
           </div>
         </div>
@@ -205,8 +209,7 @@ export default function Dashboard() {
           <div className="card">
             <h3 style={{ marginTop: 0 }}>Your data, your call</h3>
             <p className="small">
-              Download everything we hold on you as JSON, or delete the account and every related row — sessions,
-              preferences and searches included. No 30-day “retention” window.
+              Export your account data or delete your account, sessions, preferences and searches. Separate direct-shop order records are retained as explained in our privacy policy.
             </p>
             <div className="row" style={{ gap: 8 }}>
               <button className="btn btn-quiet btn-sm" onClick={handleExport}>
@@ -222,7 +225,7 @@ export default function Dashboard() {
             <h3 style={{ marginTop: 0 }}>What we never ask for</h3>
             <ul className="small" style={{ marginBottom: 0, paddingLeft: 18 }}>
               <li>Your retailer login or shopping-account password</li>
-              <li>Card, UPI or bank details — we never process payments</li>
+              <li>Card or bank details for retailer comparisons; retailer checkout stays with the retailer</li>
               <li>Your date of birth (an age confirmation is enough)</li>
               <li>A phone number, unless you choose to add one</li>
             </ul>

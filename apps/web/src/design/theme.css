@@ -3513,6 +3513,8 @@ input:-webkit-autofill:active {
   background: var(--surface);
 }
 .deal-go {
+  min-height: 44px;
+  justify-content: center;
   display: inline-flex;
   align-items: center;
   gap: 3px;
@@ -3525,9 +3527,14 @@ input:-webkit-autofill:active {
   text-decoration: none;
   white-space: nowrap;
 }
-.deal-go:hover {
+/* Touch browsers may retain :hover after returning from the store. Set both
+   colours; the global a:hover colour otherwise matches this background. */
+.deal-go:visited { color: #fff; }
+.deal-go:hover, .deal-go:active, .deal-go:focus-visible {
   background: var(--magenta-d);
+  color: #fff;
 }
+.deal-go:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .deal-card-foot {
   display: flex;
   flex-direction: column;
@@ -4583,3 +4590,11 @@ body { padding-bottom:calc(90px + env(safe-area-inset-bottom,0px)); }
 .explore-dock a:focus-visible { outline:3px solid var(--ember-d); outline-offset:1px; }
 @media(max-width:599px) { .explore-dock { inset-inline:0; bottom:0; width:100%; border-radius:16px 16px 0 0; padding:6px 5px calc(6px + env(safe-area-inset-bottom,0px)); gap:2px; } }
 @media print { .explore-dock { display:none; } }
+
+/* Recovery and campaign details retain the existing warm palette and layout. */
+.store-link-help { display: block; padding: 7px 0; overflow-wrap: anywhere; }
+.campaign-row { min-width: 0; overflow-wrap: anywhere; }
+.campaign-row summary { cursor: pointer; overflow-wrap: anywhere; }
+.campaign-row summary .tiny { display: block; margin-top: 5px; }
+.campaign-row dd { margin: 2px 0 12px; overflow-wrap: anywhere; }
+.selectable-code { user-select: all; overflow-wrap: anywhere; }

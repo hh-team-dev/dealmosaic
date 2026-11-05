@@ -59,7 +59,7 @@ export default function Login() {
       />
     <AuthLayout
       title="Welcome back"
-      subtitle="Sign in for price alerts and account settings. Browsing and price comparison need no account."
+      subtitle="Manage saved-offer reminders, report code results and choose account preferences. Browsing needs no account."
     >
       {error && (
         <div className="callout callout-danger" role="alert" style={{ marginBottom: 16 }}>

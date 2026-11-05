@@ -4,7 +4,7 @@ import { Chrome } from "../components/PublicChrome";
 import { Seo } from "../lib/seo";
 import { usePwa } from "../lib/pwa";
 import { useToast } from "../components/Toast";
-import { listCoupons, type CouponView } from "../lib/coupons-api";
+import { listCoupons, publishedOfferDate, type CouponView } from "../lib/coupons-api";
 import { ShopLink } from "../components/ShopLink";
 import {
   CITIES,
@@ -317,13 +317,8 @@ function Offers({
               <h3>{c.title}</h3>
               <p className="small">
                 Published expiry:{" "}
-                {new Date(c.expiresAt!).toLocaleDateString("en-IN", {
-                  timeZone: "Asia/Kolkata",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-                . Not checkout-tested by DealMosaic.
+                {publishedOfferDate(c.expiresAt)}
+                . Confirm the store’s cutoff time and booking/stay conditions. Not checkout-tested by DealMosaic.
               </p>
               {c.code && (
                 <p className="hospitality-code">
@@ -354,7 +349,7 @@ function Offers({
       <p className="hospitality-note">
         Offer links may earn a commission on qualifying transactions. Official
         directory links are not affiliate links. Commission does not decide
-        display order. <Link to="/disclosure">How we earn</Link>
+        display order. <Link to="/disclosure">Affiliate disclosure</Link>
       </p>
     </section>
   );

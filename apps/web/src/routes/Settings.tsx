@@ -203,7 +203,7 @@ export default function Settings() {
           <div className="switch">
             <div className="switch-text">
               <strong>In-app notifications</strong>
-              <span className="tiny">Price alerts land in your notification centre — no SMS, no paid channels.</span>
+              <span className="tiny">Show qualifying price-target updates on your dashboard. This does not enable phone push or SMS.</span>
             </div>
             <button
               className="switch-toggle"
@@ -219,17 +219,16 @@ export default function Settings() {
               <strong>A weekly email about what you saved</strong>
               <span className="tiny">
                 One email a week at most: saved deals that are about to end, ones that have just ended, and
-                anything you saved since we last wrote. No marketing, no daily nagging. Price alerts are
-                separate and fire only when a price really drops.
+                anything you saved since we last wrote. No marketing, no daily nagging. Price-target emails are separate requests; cancel them from your dashboard.
               </span>
             </div>
             <button
               className="switch-toggle"
               role="switch"
               disabled={savingNotification}
-              aria-checked={preferences?.notifyEmail ?? true}
+              aria-checked={preferences?.notifyEmail ?? false}
               aria-label="Email notifications"
-              onClick={() => void toggleNotification('notifyEmail', !(preferences?.notifyEmail ?? true))}
+              onClick={() => void toggleNotification('notifyEmail', !(preferences?.notifyEmail ?? false))}
             />
           </div>
         </section>

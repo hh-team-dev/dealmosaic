@@ -24,8 +24,8 @@ createServer(async(req,res)=>{
  if(existsSync(path)&&statSync(path).isDirectory())path+='/index.html';
  if(!existsSync(path)) {
   if(extname(url.pathname)){res.writeHead(404);res.end('Not found');return;}
-  const clientRoute=/^\/(?:search|browse|deals|stays|dining|pet-friendly|saved|install|handcrafted|admin|how-we-rank|data-sources|register|login|verify-email|forgot-password|reset-password|privacy|terms|disclosure|contact|app(?:\/.*)?|buy\/[^/]+|direct-orders\/[^/]+|p\/[^/]+|c\/[^/]+)\/?$/;
-  if (clientRoute.test(url.pathname)) path=root+'/index.html';
+  const clientRoute=/^\/(?:search|browse|deals|stays|dining|pet-friendly|saved|store-link-help|install|handcrafted|admin|how-we-rank|data-sources|register|login|verify-email|forgot-password|reset-password|privacy|terms|disclosure|contact|app(?:\/.*)?|buy\/[^/]+|direct-orders\/[^/]+|p\/[^/]+|c\/[^/]+)\/?$/;
+  if (clientRoute.test(url.pathname)) path=root+'/app-shell.html';
   else {path=root+'/404.html';status=404;}
  }
  res.writeHead(status,{'content-type':types[extname(path)]||'application/octet-stream','cache-control':'no-store','service-worker-allowed':'/'});res.end(readFileSync(path));

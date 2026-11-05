@@ -186,10 +186,8 @@ function homeBody(discovery) {
 
   return `
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
-      <h1>The price you’ll actually pay</h1>
-      <p>Sticker prices leave out delivery, fees and tax. We add them, match the exact pack or
-      variant, and rank what is really left to pay across Indian stores — and where a cost is
-      unknown, we say so instead of guessing.</p>
+      <h1>Good deals. Clearer choices.</h1>
+      <p>Search products and store offers. Check the code, delivery fees and final checkout total before you buy. Confirmed product prices are compared only when available.</p>
       <p><a href="/deals">Every live coupon and deal</a> ·
          <a href="/browse">Browse every product we compare</a> ·
          <a href="/how-we-rank">How we rank offers</a> ·
@@ -230,7 +228,7 @@ function productBody(p, variants) {
         <a href="/c/${esc(p.categorySlug)}">${esc(p.category)}</a></nav>
       <h1>${esc(p.title)} price comparison in India</h1>
       <p>${esc(p.description ?? '')}</p>
-      ${cheapest ? `<p><strong>Prices from ${esc(inr(cheapest))}</strong> across Indian stores, delivery included.</p>` : ''}
+      ${cheapest ? `<p><strong>Prices from ${esc(inr(cheapest))}</strong> for recorded item prices; confirm delivery and other fees at checkout.</p>` : ''}
       <h2>Available sizes</h2>
       <ul>${variantList}</ul>
       <p><a href="/browse">See every product we compare</a></p>
@@ -394,7 +392,7 @@ function howWeRankBody() {
         <li>Delivery information — whether the store publishes a delivery charge.</li>
         <li>Seller information — whether the platform publishes seller ratings at all.</li>
       </ul>
-      <p><a href="/data-sources">Where the data comes from</a> · <a href="/disclosure">How we earn</a></p>
+      <p><a href="/data-sources">Where the data comes from</a> · <a href="/disclosure">Affiliate disclosure</a></p>
     </main>`;
 }
 
@@ -493,7 +491,7 @@ function termsBody() {
       <h2>What we promise — and what we cannot</h2>
       <p>We promise to show what we observed, dated, with the source named, and to say
       "unknown" rather than guess. We cannot promise a price will still be live when you
-      click, and a demonstration price is labelled as one.</p>
+      click. Demonstration prices are excluded from public comparisons.</p>
       <h2>Direct purchases</h2>
       <p>UPI transaction references await a bank-credit check. The selected shipping service
       is the lowest total among the confirmed services checked for that parcel, not every
@@ -517,9 +515,9 @@ function disclosureBody() {
     <main style="font-family:system-ui;padding:24px;max-width:820px;margin:0 auto">
       <nav><a href="/">Home</a></nav>
       <h1>Affiliate disclosure</h1>
-      <h2>How we earn</h2>
+      <h2>About retailer links</h2>
       <p>When you buy through a link on DEALMOSAIC, the store may pay us a small
-      commission. The price you pay is unchanged. Separately, the operator can earn directly
+      commission. DealMosaic adds no fee for following these links; retailer prices and terms can vary. Separately, the operator can earn directly
       from owner-operated products. These Featured placements disclose that interest and do
       not alter organic comparison winners or rankings.</p>
       <h2>Hospitality directory and offer links</h2>
@@ -531,9 +529,7 @@ function disclosureBody() {
         <li>It cannot buy a "verified" label. Verification means we checked.</li>
       </ul>
       <h2>Where we are not affiliated</h2>
-      <p>Not every store here pays us — several applications are pending. Where a link
-      earns nothing we still show the offer if it is genuinely the better buy, and the
-      link is marked as an outbound link to the store.</p>
+      <p>Some links are plain, non-affiliate destinations. Their inclusion does not imply a partnership. Useful offers are not ranked by commission.</p>
       <h2>Rewards, honestly</h2>
       <p>Cashback is not a discount. It arrives later, can be refused, and never reduces
       what you pay at the till. Where we show it, it is a separate line and never
@@ -575,7 +571,7 @@ async function main() {
     /* an API outage must not fail the build; the shelves simply stay client-side */
   }
 
-  page({ title: 'DEALMOSAIC — the price you’ll actually pay', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody(discovery) });
+  page({ title: 'DEALMOSAIC — good deals, clearer choices', description: 'Compare the true landed cost of any product across Indian stores — item price, delivery, fees and tax, ranked by what you actually pay.', path: '/', bodyHtml: homeBody(discovery) });
   count++;
 
   page({
@@ -680,11 +676,12 @@ async function main() {
     } catch {
       continue;
     }
-    const variants = detail.variants ?? [];
+    const live = pricesAreLive(detail);
+    const variants = (detail.variants ?? []).map(v => live ? v : ({ ...v, priceFromMinor: null, mrpMinor: null }));
     const cheapest = variants.map((v) => v.priceFromMinor).filter(Boolean).sort((a, b) => a - b)[0];
     page({
       title: `${p.title} price in India${cheapest ? ` — from ${inr(cheapest)}` : ''} | DEALMOSAIC`,
-      description: `Compare ${p.title} prices across Indian stores. ${p.description ?? ''} Delivery, fees and tax included, at most three ranked offers.`.slice(0, 300),
+      description: `Compare ${p.title} prices across Indian stores. ${p.description ?? ''} Check available item-price observations and confirm delivery, fees and the final checkout total.`.slice(0, 300),
       path: `/p/${p.slug}`,
       jsonLd: productJsonLd(detail.product ?? p, variants, pricesAreLive(detail)),
       bodyHtml: productBody(detail.product ?? p, variants),

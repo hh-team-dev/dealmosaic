@@ -1,5 +1,8 @@
 # DealMosaic 2.0.1 — PWA + website handover
 
+> **5 November update:** the guest/member/admin repair is tracked in [document 41](41-device-review-and-conversion-repair.md). The owner now permits useful external hotel/restaurant links where there is no genuine offer or authorised internal capability. Hotels are the next phase after current defects; restaurants follow hotels. Earlier dated release and business-model evidence below is historical.
+
+
 > **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
 
 > **2.2.0 hospitality release:** see [37-hotels-and-dining.md](37-hotels-and-dining.md) for Hotels, Dining, the universal dock, nine-region discovery scope, verification and recovery. Earlier release evidence below is historical.

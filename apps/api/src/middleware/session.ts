@@ -174,7 +174,7 @@ export function toPreferences(row: PrefRow | undefined): UserPreferences {
     displayCurrency: row?.display_currency ?? 'INR',
     pincode: row?.pincode ?? null,
     notifyInApp: row ? Boolean(row.notify_inapp) : true,
-    notifyEmail: row ? Boolean(row.notify_email) : true,
+    notifyEmail: row ? Boolean(row.notify_email) : false,
   };
 }
 

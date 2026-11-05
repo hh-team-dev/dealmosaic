@@ -606,3 +606,10 @@
 .hospitality-pet-callout p { font-size:14px; margin-bottom:0; }
 .hospitality-pet-callout a { margin:5px 0; max-width:100%; white-space:normal; }
 @media(max-width:599px) { .hospitality-pet-callout { grid-template-columns:1fr; padding:22px 18px; gap:12px; } }
+
+.hospitality-offer .shop-link, .hospitality-offer .shop-link:hover,
+.hospitality-offer .shop-link:focus-visible, .hospitality-offer .shop-link:visited {
+  background: var(--hospitality-accent);
+  color: #fff;
+  border-color: var(--hospitality-accent);
+}

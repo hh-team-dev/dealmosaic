@@ -49,7 +49,7 @@ describe('coupons', () => {
     const res = await req('GET', '/api/coupons');
     expect(res.status).toBe(200);
     expect(res.body.coupons).toEqual([]);
-    expect(res.body.emptyMessage).toMatch(/No verified discount codes/i);
+    expect(res.body.emptyMessage).toMatch(/No current offer/i);
   });
 
   it('states that cashback is never subtracted from a payable total', async () => {

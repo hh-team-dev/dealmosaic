@@ -29,10 +29,10 @@ catalogueRoutes.get('/products', async (c) => {
        */
       `SELECT p.id, p.slug, p.title, p.brand, p.category, p.category_slug, p.description, p.is_grocery,
               (SELECT MIN(o.item_price_minor) FROM offers o JOIN product_variants ov ON ov.id = o.variant_id
-                WHERE ov.product_id = p.id AND o.is_active = 1) AS price_from_minor,
-              MIN(v.mrp_minor) AS mrp_from_minor,
+                WHERE ov.product_id = p.id AND o.is_active = 1 AND o.data_origin = 'live') AS price_from_minor,
+              (SELECT MIN(o.mrp_minor) FROM offers o JOIN product_variants ov ON ov.id = o.variant_id WHERE ov.product_id = p.id AND o.is_active = 1 AND o.data_origin = 'live') AS mrp_from_minor,
               (SELECT o.data_origin FROM offers o JOIN product_variants ov ON ov.id = o.variant_id
-                WHERE ov.product_id = p.id AND o.is_active = 1 ORDER BY o.item_price_minor ASC LIMIT 1) AS price_origin,
+                WHERE ov.product_id = p.id AND o.is_active = 1 AND o.data_origin = 'live' ORDER BY o.item_price_minor ASC LIMIT 1) AS price_origin,
               COUNT(DISTINCT v.id) AS variant_count
          FROM catalogue_products p
          JOIN product_variants v ON v.product_id = p.id
@@ -94,8 +94,8 @@ catalogueRoutes.get('/products/:slug', async (c) => {
 
   const variants = await (db
     .prepare(
-      `SELECT v.*, (SELECT COUNT(*) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1) AS offer_count,
-              (SELECT MIN(o.item_price_minor) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1) AS from_minor
+      `SELECT v.*, (SELECT MIN(o.mrp_minor) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1 AND o.data_origin = 'live') AS observed_mrp, (SELECT COUNT(*) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1 AND o.data_origin = 'live') AS offer_count,
+              (SELECT MIN(o.item_price_minor) FROM offers o WHERE o.variant_id = v.id AND o.is_active = 1 AND o.data_origin = 'live') AS from_minor
          FROM product_variants v WHERE v.product_id = ? ORDER BY v.sort_order`,
     )
     .all(String(product.id))) as Array<Record<string, unknown>>;
@@ -127,7 +127,7 @@ catalogueRoutes.get('/products/:slug', async (c) => {
                 o.last_checked_at, o.product_url, o.affiliate, p.name AS platform_name
            FROM offers o
            LEFT JOIN platforms p ON p.slug = o.platform_slug
-          WHERE o.variant_id IN (${placeholders}) AND o.is_active = 1
+          WHERE o.variant_id IN (${placeholders}) AND o.is_active = 1 AND o.data_origin = 'live'
           ORDER BY o.item_price_minor ASC`,
       )
       .all(...variantIds)) as Array<Record<string, unknown>>;
@@ -266,7 +266,7 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       gtin: v.gtin,
       mpn: v.mpn,
       isbn: v.isbn,
-      mrpMinor: v.mrp_minor,
+      mrpMinor: v.observed_mrp,
       netQuantity: v.net_quantity,
       unit: v.unit,
       packCount: v.pack_count,
@@ -276,7 +276,7 @@ catalogueRoutes.get('/products/:slug', async (c) => {
       priceOrigin: labelFor((offersByVariant[String(v.id)] ?? []).map((o) => String(o.dataOrigin))),
     })),
     disclosure:
-      'Variant identities are real. Offer prices come from the connector layer and are labelled with their origin — demonstration data until an authorised feed is connected.',
+      'Product and variant details are catalogue references. Prices and history are shown only from live store observations; no confirmed price means no quote or price ranking.',
   });
 });
 
@@ -284,8 +284,8 @@ catalogueRoutes.get('/products/:slug', async (c) => {
 catalogueRoutes.get('/connectors', async (c) => {
   const health = await connectorHealth();
   return c.json({
-    connectors: health,
-    knownPlatforms: KNOWN_PLATFORMS,
+    connectors: health.filter(c => c.status !== 'demo'),
+    knownPlatforms: KNOWN_PLATFORMS.map(({ routeToAccess: _ownerInstructions, ...publicInfo }) => publicInfo),
     unimplemented: unimplementedPlatforms().map((p) => p.slug),
     policy:
       'A connector that has no authorised data source is disabled and says why. DEALMOSAIC never scrapes, never bypasses bot protection, and never fills a gap with an invented number.',

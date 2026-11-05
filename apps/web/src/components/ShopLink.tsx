@@ -1,31 +1,12 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { CouponView } from '../lib/coupons-api';
 import { Icon } from './Icon';
 
-/**
- * THE BUTTON THAT PAYS FOR THE SITE.
- *
- * Before this existed, a coupon card offered exactly one action: copy the code.
- * The shopper copied it, left, pasted it at the merchant's checkout that they
- * opened themselves — and the sale was never attributed to DealMosaic, so it was
- * never paid for. Traffic without attribution is charity.
- *
- * So every card now has a second, primary action: **Shop at {store}**. It does two
- * things in one tap, in this order:
- *
- *   1. copies the code (best effort — a blocked clipboard must not stop the sale);
- *   2. opens `/api/go/{couponId}?src=…`, our own route, which mints a unique
- *      sub-id, records the click and forwards to the merchant through the
- *      affiliate network.
- *
- * The copy has to happen synchronously inside the tap, which is why it is a plain
- * `<a>` with an `onClick` rather than an async handler that redirects afterwards —
- * browsers only allow clipboard writes during a user gesture, and a redirect would
- * end the gesture.
- *
- * `rel="sponsored nofollow noopener noreferrer"` is not decoration: it is the
- * machine-readable version of the disclosure, and it is what Google asks for from
- * a page with paid links.
- */
+/** One user gesture attempts to copy the code and opens the recorded network
+ * link. Publisher tracking is preserved; a unique sub-id helps reconcile clicks.
+ * Neither action auto-applies a code, makes it exclusive or guarantees attribution.
+ * Clipboard permission failures must never prevent navigation. */
 export function ShopLink({
   coupon,
   source,
@@ -37,7 +18,9 @@ export function ShopLink({
   compact?: boolean;
   label?: string;
 }) {
+  const [opened, setOpened] = useState(false);
   async function onTap() {
+    setOpened(true);
     if (!coupon.code) return;
     try {
       // Trimmed on purpose: a clipboard that pastes `NEW200 ` into a checkout
@@ -50,8 +33,9 @@ export function ShopLink({
   }
 
   return (
+    <>
     <a
-      className={`btn btn-action shop-link${compact ? ' shop-link-sm' : ''}`}
+      className={`btn btn-primary shop-link${compact ? ' shop-link-sm' : ''}`}
       href={`/api/go/${coupon.id}?src=${encodeURIComponent(source)}`}
       target="_blank"
       rel="sponsored nofollow noopener noreferrer"
@@ -61,6 +45,8 @@ export function ShopLink({
       {label ?? `Shop at ${coupon.platformName}`}
       <Icon name="external" size={14} />
     </a>
+    {opened && <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(coupon.id)}`}>Store not opening? Keep your code & get help</Link>}
+    </>
   );
 }
 
@@ -85,13 +71,13 @@ export function HowItWorks({ className = '' }: { className?: string }) {
       <li>
         <span className="how-step">2</span>
         <span className="how-text">
-          <strong>Add the item to the cart.</strong> Paste the code in the coupon box at checkout.
+          <strong>Add the item to the cart.</strong> Paste the code, if one is shown, in the coupon box at checkout.
         </span>
       </li>
       <li>
         <span className="how-step">3</span>
         <span className="how-text">
-          <strong>Pay the lower price.</strong> We earn a small commission from the store — never from you.
+          <strong>Check your final saving.</strong> Confirm the code is accepted, then check delivery, taxes and exclusions before you pay.
         </span>
       </li>
     </ol>

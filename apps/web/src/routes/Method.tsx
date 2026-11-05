@@ -184,13 +184,12 @@ export function DataSources() {
       <Chrome>
         <div className="container section prose">
           <span className="eyebrow">Transparency</span>
-          <h1 className="h1">Where our prices come from — including the gaps</h1>
+          <h1 className="h1">Know what you are comparing</h1>
           <p className="lede">
-            Most comparison sites publish a vague promise about “thousands of retailers”. Here is the actual list, with the
-            actual status of each one.
+            Store-listed promotions, exact-item prices and shopper reports are different kinds of information. Check the source and the date before relying on a number.
           </p>
 
-          <h2 className="h2">Live connectors in this deployment</h2>
+          <h2 className="h2">Product-price sources</h2>
           {connectors === null && <div className="skeleton skeleton-card" />}
           {connectors?.map((c) => (
             <div key={c.slug} className="card connector-card">
@@ -209,7 +208,7 @@ export function DataSources() {
             </div>
           ))}
 
-          <h2 className="h2">Platforms we know about and cannot read yet</h2>
+          <h2 className="h2">Platform price coverage</h2>
           <div className="table-wrap" tabIndex={0} role="region" aria-label="Scrollable comparison table">
             <table className="data-table">
               <caption className="sr-only">Platform access status</caption>
@@ -218,7 +217,6 @@ export function DataSources() {
                   <th scope="col">Platform</th>
                   <th scope="col">Status</th>
                   <th scope="col">Why</th>
-                  <th scope="col">Route to access</th>
                 </tr>
               </thead>
               <tbody>
@@ -231,7 +229,6 @@ export function DataSources() {
                       </span>
                     </td>
                     <td className="small">{p.note}</td>
-                    <td className="small muted">{p.routeToAccess}</td>
                   </tr>
                 ))}
               </tbody>

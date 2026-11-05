@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { LogoMark, Wordmark } from './Logo';
 import { Button } from './Ui';
@@ -84,7 +85,7 @@ export function SiteFooter() {
           </p>
           <p className="tiny" style={{ maxWidth: '48ch' }}>
             <strong>Affiliate disclosure:</strong> when you buy through some retailer links we may earn a commission.
-            It never changes the price you pay, and it is never an input to our ranking. Some links are not monetised
+            DealMosaic adds no fee for following these links; retailer prices and terms can vary. Commission never affects our ranking. Some links are not monetised
             and are shown as plain links.
           </p>
         </div>
@@ -95,6 +96,7 @@ export function SiteFooter() {
             <Link to="/terms">Terms of use</Link>
             <Link to="/disclosure">Affiliate disclosure</Link>
             <Link to="/contact">Contact & support</Link>
+            <Link to="/store-link-help">Store-link help</Link>
             <Link to="/register">Create account</Link>
             <Link to="/how-we-rank">How we rank</Link>
             <Link to="/data-sources">Where our prices come from</Link>
@@ -103,7 +105,7 @@ export function SiteFooter() {
             <Link to="/install">Install & app settings</Link>
           </div>
           <p className="tiny" style={{ marginTop: 14 }}>
-            Built for India first · Your data stays yours · No trackers, no ad networks, no selling of personal data.
+            Built for India first · Your data stays yours · No third-party ad trackers on DealMosaic; retailer and affiliate sites have their own privacy policies. No sale of personal data.
           </p>
         </div>
       </div>
@@ -116,10 +118,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const signingOutRef = useRef(false);
+  const [signingOut, setSigningOut] = useState(false);
   async function handleLogout() {
-    await logout();
-    toast.push('Signed out. See you soon.', 'info');
-    navigate('/');
+    if (signingOutRef.current) return;
+    signingOutRef.current = true; setSigningOut(true);
+    try {
+      await logout();
+      toast.push('Signed out. See you soon.', 'info');
+      navigate('/');
+    } catch {
+      toast.push('Sign-out could not be confirmed. Please retry before leaving a shared device.', 'error');
+    } finally { signingOutRef.current = false; setSigningOut(false); }
   }
 
   return (
@@ -146,8 +156,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {user?.displayName}
               </span>
             </Link>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              Sign out
+            <Button variant="ghost" size="sm" onClick={handleLogout} loading={signingOut}>
+              {signingOut ? 'Signing out…' : 'Sign out'}
             </Button>
           </div>
         </div>

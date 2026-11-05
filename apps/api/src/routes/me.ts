@@ -30,6 +30,27 @@ meRoutes.get('/', async (c) => {
   return c.json({ user: toProfile(user), preferences: await getPreferences(user.id) });
 });
 
+/** Private, consent-aware notification history. Never an empty promotional push. */
+meRoutes.get('/notifications', async (c) => {
+  const user = c.get('user')!;
+  const preferences = await getPreferences(user.id);
+  c.header('Cache-Control', 'private, no-store');
+  if (!preferences.notifyInApp) return c.json({ enabled: false, notifications: [] });
+  const rows = await db.prepare("SELECT id, payload, created_at FROM notification_events WHERE user_id = ? AND kind = 'price_alert' ORDER BY created_at DESC LIMIT 50").all(user.id) as Array<{ id: string; payload: string; created_at: string }>;
+  const notifications = rows.flatMap(row => {
+    try {
+      const p = JSON.parse(row.payload);
+      if (p?.dataOrigin !== 'live' || p.inApp !== true || !Number.isSafeInteger(p.bestMinor) || p.bestMinor <= 0 || !Number.isSafeInteger(p.targetMinor) || p.targetMinor <= 0) return [];
+      return [{ id: row.id, title: typeof p.productTitle === 'string' ? p.productTitle : 'Price target',
+        productSlug: typeof p.productSlug === 'string' && /^[a-z0-9-]+$/.test(p.productSlug) ? p.productSlug : null,
+        observedPriceMinor: p.bestMinor, targetMinor: p.targetMinor,
+        platform: typeof p.platformSlug === 'string' ? p.platformSlug : 'the store',
+        createdAt: row.created_at, emailSent: p.emailed === true }];
+    } catch { return []; }
+  });
+  return c.json({ enabled: true, notifications });
+});
+
 meRoutes.patch('/', requireCsrf, async (c) => {
   const user = c.get('user')!;
   const body = await c.req.json().catch(() => ({}));

@@ -27,6 +27,7 @@ const SPA_ROUTES = [
   /^\/dining\/?$/,
   /^\/pet-friendly\/?$/,
   /^\/saved\/?$/,
+  /^\/store-link-help\/?$/,
   /^\/install\/?$/,
   /^\/handcrafted\/?$/,
   /^\/buy\/[a-f0-9-]{36}\/?$/,
@@ -114,10 +115,10 @@ export default {
 
     /* ---- 4. Client route → app shell with a real 200 ------------------ */
     if (isSpaRoute(pathname)) {
-      const shell = await env.ASSETS.fetch(new URL('/index.html', url));
+      const shell = await env.ASSETS.fetch(new URL('/app-shell', url));
       return new Response(shell.body, {
         status: 200,
-        headers: new Headers([...shell.headers, ...(/^\/(buy|direct-orders|handcrafted)(\/|$)/.test(pathname) ? [['X-Robots-Tag', 'noindex']] : [])]),
+        headers: new Headers([...shell.headers, ['X-Robots-Tag', 'noindex, nofollow'], ['Cache-Control', 'no-store']]),
       });
     }
 

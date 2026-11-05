@@ -1,5 +1,8 @@
 # DealMosaic — Hospitality revenue reset
 
+> **5 November update:** the guest/member/admin repair is tracked in [document 41](41-device-review-and-conversion-repair.md). The owner now permits useful external hotel/restaurant links where there is no genuine offer or authorised internal capability. Hotels are the next phase after current defects; restaurants follow hotels. Earlier dated release and business-model evidence below is historical.
+
+
 **4 November 2026 · Field-test response, evidence and implementation blueprint**
 
 **Decision:** replace the outbound-search-led hospitality experience with an **on-site discovery, comparison and merchant-offer service**. Prioritise direct, contracted, pay-at-venue partnerships for a contained pilot. Keep approved affiliate fulfilment as an optional, clearly labelled route. Treat fully integrated OTA booking as a later contractual integration, not a frontend shortcut.

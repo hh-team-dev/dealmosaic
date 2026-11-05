@@ -95,7 +95,7 @@ export default function Product() {
     <>
       <Seo
         title={`${product.title} price comparison in India`}
-        description={`Compare the real landed cost of ${product.title} across Indian stores. See every variant, delivery charges and fees itemised, with a commission-blind ranking.`}
+        description={`Explore ${product.title} variants and available store-price observations. Check delivery, fees and the final total at retailer checkout.`}
         path={`/p/${product.slug}`}
         type="product"
         jsonLd={jsonLd}

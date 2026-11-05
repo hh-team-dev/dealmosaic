@@ -144,9 +144,9 @@ authRoutes.post('/register', authLimiter, async (c) => {
   const hash = await hashPassword(password);
   await db.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?').run(hash, nowIso(), id);
   await db.prepare(
-    `INSERT INTO user_preferences (user_id, country_code, display_currency, created_at, updated_at)
-     VALUES (?, 'IN', 'INR', ?, ?)`,
-  ).run(id, now, now);
+    `INSERT INTO user_preferences (user_id, country_code, display_currency, notify_email, created_at, updated_at)
+     VALUES (?, 'IN', 'INR', ?, ?, ?)`,
+  ).run(id, body.notifyEmail === true ? 1 : 0, now, now);
 
   const token = await issueAuthToken(id, email, 'verify_email');
   logAuthEvent({ userId: id, event: 'register', ipHash: hashIp(clientIp(c)) });

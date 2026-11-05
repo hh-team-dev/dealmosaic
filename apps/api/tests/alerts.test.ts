@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 process.env.DB_PATH = ':memory:';
 process.env.NODE_ENV = 'development';
@@ -14,6 +14,7 @@ process.env.SYNC_TOKEN = 'test-sync-token';
  * failures a user experiences as spam.
  */
 
+afterEach(() => vi.restoreAllMocks());
 let app: any;
 let clientSeq = 0;
 
@@ -59,7 +60,7 @@ async function signedIn(email: string): Promise<Client> {
     email,
     password,
     passwordConfirm: password,
-    ageConfirmed: true,
+    ageConfirmed: true, notifyEmail: true,
   });
   expect(reg.status).toBeLessThan(400);
   const verify = await c.req('POST', '/api/auth/verify-email', { token: tokenFromUrl(reg.body?.devActionUrl) });
@@ -87,6 +88,9 @@ beforeAll(async () => {
     .get()) as { id: string; slug: string; best: number };
   variantId = row.id;
   productSlug = row.slug;
+  // Explicit local-only live fixture for alert behaviour. Separate regression
+  // tests prove untouched demonstration rows never reach public prices/alerts.
+  await db.prepare("UPDATE offers SET data_origin = 'live' WHERE variant_id IN (SELECT id FROM product_variants WHERE product_id = (SELECT product_id FROM product_variants WHERE id = ?))").run(variantId);
 });
 
 describe('price alerts', () => {
@@ -177,13 +181,26 @@ describe('the alert engine', () => {
     expect(body.triggered[0].emailSent).toBe(false);
     expect(body.triggered[0].note).toBeTruthy();
 
-    // A triggered alert is closed: a second run sends nothing.
-    const again = await app.request('/api/alerts/run', {
-      method: 'POST',
-      headers: { 'x-sync-token': 'test-sync-token' },
-    });
-    const second = await again.json();
-    expect(second.triggered).toHaveLength(0);
+    // Failed delivery is not silently marked as sent or closed.
+    const beforeRetry = await high.req('GET', '/api/alerts');
+    expect(beforeRetry.body?.alerts[0].status).toBe('active');
+    const notices = await high.req('GET', '/api/me/notifications');
+    expect(notices.body?.notifications).toHaveLength(1);
+    expect(notices.body?.notifications[0].emailSent).toBe(false);
+    expect((await low.req('GET', '/api/me/notifications')).body?.notifications).toHaveLength(0);
+    const mailer = await import('../src/lib/mailer.js');
+    const mail = vi.spyOn(mailer, 'sendMail').mockResolvedValue({ sent: true, transport: 'brevo' });
+    const again = await app.request('/api/alerts/run', { method: 'POST', headers: { 'x-sync-token': 'test-sync-token' } });
+    expect((await again.json()).triggered[0].emailSent).toBe(true);
+    expect(mail).toHaveBeenCalledTimes(1);
+    expect(mail.mock.calls[0]?.[0].body).not.toContain('checked just now');
+    const final = await high.req('GET', '/api/me/notifications');
+    expect(final.body?.notifications).toHaveLength(1);
+    expect(final.body?.notifications[0].emailSent).toBe(true);
+    const closed = await app.request('/api/alerts/run', { method: 'POST', headers: { 'x-sync-token': 'test-sync-token' } });
+    expect((await closed.json()).triggered).toHaveLength(0);
+    expect(mail).toHaveBeenCalledTimes(1);
+
   });
 });
 
@@ -260,8 +277,8 @@ describe('the headline price carries its origin', () => {
      * free to print "from ₹271.79" above a list where every row says "illustrative".
      */
     expect(body.productOrigin).toBeTruthy();
-    expect(body.productOrigin.origin).toBe('demo');
-    expect(body.productOrigin.caveat).toContain('not a live quote');
+    expect(body.productOrigin.origin).toBe('live');
+    expect(body.productOrigin.caveat).toBe('');
 
     for (const v of body.variants) {
       if (v.priceFromMinor === null) continue;

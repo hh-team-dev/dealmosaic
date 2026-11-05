@@ -58,13 +58,16 @@ export async function seedCatalogue(): Promise<void> {
           variant.gtin ?? null,
           variant.mpn ?? null,
           variant.isbn ?? null,
-          Math.round(variant.mrp * 100),
+          process.env.NODE_ENV === 'production' ? null : Math.round(variant.mrp * 100),
           variant.netQuantity ?? null,
           variant.unit ?? null,
           variant.packCount ?? 1,
           vi,
         );
 
+        // Product references are useful in production; invented retailer offers
+        // and ratings are not. Test fixtures remain isolated to non-production.
+        if (process.env.NODE_ENV === 'production') continue;
         for (const platformSlug of product.platforms) {
           const meta = PLATFORM_META[platformSlug];
           if (!meta) continue;
@@ -124,7 +127,7 @@ export async function seedCatalogue(): Promise<void> {
     }
   });
 
-  console.info(`[catalogue] seeded ${PRODUCTS.length} products (demo data, watermarked in the UI)`);
+  console.info(`[catalogue] seeded ${PRODUCTS.length} products (product references; non-live observations are excluded from public prices)`);
 }
 
 export const CATALOGUE_PRODUCT_COUNT = PRODUCTS.length;

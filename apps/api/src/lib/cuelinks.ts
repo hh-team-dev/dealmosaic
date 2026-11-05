@@ -122,7 +122,8 @@ export interface CampaignsPage {
  * API accepts `campaign_type` but ignores most other query parameters.
  */
 export function fetchCampaigns(page = 1, perPage = 100, type = 'CPS'): Promise<CampaignsPage> {
-  const qs = new URLSearchParams({ page: String(page), per_page: String(perPage), campaign_type: type });
+  const qs = new URLSearchParams({ page: String(page), per_page: String(perPage) });
+  if (type) qs.set('campaign_type', type);
   return call<CampaignsPage>(`/campaigns?${qs.toString()}`);
 }
 
@@ -294,7 +295,7 @@ export function toCouponRow(offer: CuelinksOffer): CouponRow {
     discountValue,
     maxDiscountMinor: null,
     minOrderMinor: null,
-    terms: cleanCopy(offer.terms, 400),
+    terms: cleanCopy(offer.terms, 8000),
     trackingUrl: offer.tracking_url,
     startsAt: offer.start_date ? `${offer.start_date}T00:00:00.000Z` : null,
     expiresAt: offer.end_date ? `${offer.end_date}T23:59:59.000Z` : null,

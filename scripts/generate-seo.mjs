@@ -146,13 +146,14 @@ const llms = `# DEALMOSAIC
 
 ## Data provenance (important)
 DEALMOSAIC does not scrape retailers and does not bypass bot protection. Where no
-authorised feed exists, no price is shown. In the current build the comparison
-catalogue is DEMONSTRATION DATA and is labelled as such in the interface.
+authorised feed exists, no price is shown. Demonstration observations are excluded
+from public prices, rankings, history and price-alert triggers. Product identities
+remain browsable without inventing a quote.
 See ${SITE}/data-sources for the live connector status of every platform.
 
 ## Pages
 - ${SITE}/ — product overview
-- ${SITE}/deals — verified coupons and deals
+- ${SITE}/deals — store-listed coupons and deals, with separate claim and redemption evidence
 - ${SITE}/browse — every product compared
 - ${SITE}/how-we-rank — the ranking rules in full
 - ${SITE}/data-sources — connector status and access routes

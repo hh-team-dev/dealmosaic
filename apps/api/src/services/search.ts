@@ -446,11 +446,22 @@ export async function buildComparison(
   query: string,
   variant: VariantRow,
   allVariants: VariantRow[],
-): Promise<ComparisonPayload> {
+): Promise<SearchOutcome> {
   const platforms = await loadPlatforms();
   const offerRows = await (db
-    .prepare('SELECT * FROM offers WHERE variant_id = ? AND is_active = 1 ORDER BY item_price_minor ASC')
+    .prepare("SELECT * FROM offers WHERE variant_id = ? AND is_active = 1 AND data_origin = 'live' ORDER BY item_price_minor ASC")
     .all(variant.id)) as unknown as OfferRow[];
+
+  // Fixture arithmetic is never an observed price, even when all cost lines add
+  // up. Keep product identities, but never rank or quote non-live observations.
+  if (offerRows.length === 0) {
+    return {
+      kind: 'no_results', query,
+      reason: `No confirmed current store price is available for ${variant.title} (${variant.variant_label}). We will not invent a price or rank a general store search as this exact item.`,
+      suggestions: [],
+      offers: await findOfferMatches(query),
+    };
+  }
 
   const priced = offerRows.map((offer) => {
     const price = buildOfferPrice(offer);
@@ -598,7 +609,7 @@ export async function buildComparison(
       id: v.id,
       label: v.variant_label,
       offerCount: (
-        (await db.prepare('SELECT COUNT(*) AS n FROM offers WHERE variant_id = ? AND is_active = 1').get(v.id)) as {
+        (await db.prepare("SELECT COUNT(*) AS n FROM offers WHERE variant_id = ? AND is_active = 1 AND data_origin = 'live'").get(v.id)) as {
           n: number;
         }
       ).n,
@@ -655,7 +666,7 @@ export async function buildComparison(
       gtin: variant.gtin,
       mpn: variant.mpn,
       isbn: variant.isbn,
-      mrpMinor: variant.mrp_minor,
+      mrpMinor: offerRows.find(o => o.mrp_minor !== null)?.mrp_minor ?? null,
       unit: variant.unit,
       netQuantity: variant.net_quantity,
       packCount: variant.pack_count,

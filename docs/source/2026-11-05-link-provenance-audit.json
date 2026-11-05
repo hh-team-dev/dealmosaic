@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-05T09:38:41.035Z",
+  "method": "Read-only SQL and URL parsing; no redirect followed",
+  "eligibleRows": 1123,
+  "unsafeOrAbsentLinks": 0,
+  "malformedEndDates": 0,
+  "mentionsDealMosaicInOfferCopy": 0,
+  "origins": [
+    {
+      "data_origin": "demo",
+      "rows": 170
+    }
+  ],
+  "linkHosts": {
+    "linksredirect.com": 1123
+  }
+}

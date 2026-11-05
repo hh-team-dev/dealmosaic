@@ -133,6 +133,8 @@ alertRoutes.post('/', requireCsrf, requireVerifiedUser, async (c) => {
     .get(parsed.data.variantId)) as { id: string; variant_label: string } | undefined;
   if (!variant) throw badRequest('That variant is not in our catalogue.');
 
+  const best = await bestOfferForVariant(variant.id);
+  if (!best) throw badRequest('Price alerts require a live store price for this exact variant. Browse current store offers instead.');
   const targetMinor = Math.round(parsed.data.targetPrice * 100);
 
   // One alert per variant per shopper: setting a second target for the same
@@ -156,7 +158,6 @@ alertRoutes.post('/', requireCsrf, requireVerifiedUser, async (c) => {
     )
     .run(id, user.id, variant.id, targetMinor, nowIso(), nowIso());
 
-  const best = await bestOfferForVariant(variant.id);
   return c.json(
     {
       ok: true,

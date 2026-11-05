@@ -241,7 +241,7 @@ export function Terms() {
 
       <h2>Affiliate links</h2>
       <p>
-        Some outbound links earn us a commission. It never changes what you pay and never influences our ranking. See
+        Some outbound links earn us a commission. DealMosaic adds no fee for following them, and commission never influences our ranking. Retailer prices and terms may vary. See
         the <Link to="/disclosure">affiliate disclosure</Link> for the detail.
       </p>
 
@@ -264,23 +264,20 @@ export function Disclosure() {
       title="Affiliate disclosure"
       updated="4 November 2026"
       path="/disclosure"
-      description="DEALMOSAIC may earn a commission on some retailer links. It never changes the price you pay and is never an input to our ranking — here is exactly how that works."
+      description="DEALMOSAIC may earn a commission on some retailer links. DealMosaic adds no link-following fee; commission is never an input to our ranking — here is exactly how that works."
     >
       <div className="callout">
         <div className="callout-title">
           <Icon name="shield" size={16} /> One line, no small print
         </div>
         <p className="small" style={{ margin: 0, color: 'var(--ink)' }}>
-          When you buy through some retailer links on DEALMOSAIC, we may earn a commission. The price you pay is
-          identical, and commission never affects which offers we rank, or in what order.
+          When you buy through some retailer links on DEALMOSAIC, we may earn a commission. DealMosaic adds no fee for following these links. Retailer prices and terms may vary; commission never affects our ranking.
         </p>
       </div>
 
-      <h2>How we earn</h2>
+      <h2>About retailer links</h2>
       <p>
-        DEALMOSAIC is free to use. One source of revenue is affiliate commission: if you click through to a retailer and
-        buy, that retailer may pay us a percentage. This is the same model used by most comparison sites — the difference
-        is what we do with it.
+        Browsing DealMosaic is free. Affiliate links may result in commission on qualifying activity under the retailer’s or network’s terms. An opened link, copied code or account registration does not guarantee a discount, an attributed sale or a payment.
       </p>
 
       <h2>What commission cannot do</h2>

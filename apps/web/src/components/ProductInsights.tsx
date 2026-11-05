@@ -314,6 +314,12 @@ export function PriceAlertForm({
     }
   }
 
+  if (currentPriceMinor === null) {
+    return <div className="alert-panel"><strong>Price alerts need a confirmed store price</strong>
+      <p className="small">There is no live price to monitor for {variantLabel}. We will not set an alert against a sample price or promise a notification we cannot support.</p>
+      <Link className="btn btn-ghost btn-sm" to="/deals">Explore current store offers</Link></div>;
+  }
+
   if (!user) {
     return (
       <div className="alert-panel">

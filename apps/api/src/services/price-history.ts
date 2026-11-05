@@ -178,7 +178,7 @@ export async function priceHistoryForVariants(
          FROM offer_snapshots s
          JOIN offers o ON o.id = s.offer_id
         WHERE o.variant_id IN (${placeholders})
-          AND s.observed_at >= ?
+          AND s.observed_at >= ? AND s.data_origin = 'live' AND o.data_origin = 'live'
         ORDER BY s.observed_at ASC`,
     )
     .all(...variantIds, since)) as unknown as Array<{

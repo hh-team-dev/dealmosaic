@@ -1,3 +1,4 @@
+import { SavedAccountStatus } from '../components/SavedAccountStatus';
 import { usePwa } from '../lib/pwa';
 import { useToast } from '../components/Toast';
 import { useCallback, useState } from 'react';
@@ -48,6 +49,7 @@ export default function Saved() {
             </p>
           </header>
 
+          <SavedAccountStatus />
           <div className="callout"><strong>{offline ? 'Offline · saved notes only' : 'Saved details are a snapshot'}</strong><p>Prices, codes and availability may have changed since saving. {offline ? 'Reconnect before visiting a retailer or changing your list. Nothing is queued for later.' : 'Check the retailer’s current total before paying.'}</p><Link to="/install">Install & offline help</Link></div>
 
           {saved.length === 0 ? (
@@ -123,7 +125,7 @@ export default function Saved() {
                             <span className="deal-code-hint">{copied === d.id ? 'Copied' : 'Copy'}</span>
                           </button>
                         ) : (
-                          <span className="deal-code deal-code-none">No code needed</span>
+                          <span className="deal-code deal-code-none">No code listed</span>
                         )}
                         {d.outboundUrl && !offline && (
                           <a
@@ -136,6 +138,7 @@ export default function Saved() {
                           </a>
                         )}
                       </div>
+                      <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(d.id)}`}>Offer details & store-link help</Link>
                       <footer className="deal-card-foot">
                         <span className="deal-urgency">
                           <Icon name="clock" size={12} /> {expiryLabel(d.expiresAt, null) ?? 'No expiry published'}

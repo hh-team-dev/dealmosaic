@@ -136,7 +136,10 @@ function mirrorToServer(dealId: string, saved: boolean): void {
         await apiRequest(`/api/me/saved-deals/${encodeURIComponent(dealId)}`, { method: 'DELETE' });
       }
     } catch {
-      /* Not signed in, offline, or the API refused. The device list is unaffected. */
+      /* Not signed in, offline, or the API refused. The device list is unaffected.
+         The Saved page reports actual account linkage, never assumed reminders. */
+    } finally {
+      window.dispatchEvent(new Event('dealmosaic:saved-account-change'));
     }
   })();
 }

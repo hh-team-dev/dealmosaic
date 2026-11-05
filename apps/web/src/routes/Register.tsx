@@ -23,6 +23,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [notifyEmail, setNotifyEmail] = useState(false);
   const [fields, setFields] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -65,7 +66,7 @@ export default function Register() {
     try {
       const res = await apiRequest<RegisterResponse>('/api/auth/register', {
         method: 'POST',
-        body: { displayName, email, password, passwordConfirm, ageConfirmed },
+        body: { displayName, email, password, passwordConfirm, ageConfirmed, notifyEmail },
       });
       setDone(res);
       toast.push('Account created. Confirm your email to sign in.', 'success');
@@ -96,8 +97,8 @@ export default function Register() {
             <Icon name="info" size={16} /> One step left
           </div>
           <p className="small" style={{ margin: 0, color: 'var(--ink)' }}>
-            Accounts must be confirmed before search unlocks — it keeps the comparison data clean and your account
-            safe.
+            Confirm your email to use account features and manage your preferences. Searching, browsing offers
+            and saving on this device stay available without an account.
           </p>
         </div>
 
@@ -129,7 +130,7 @@ export default function Register() {
       <>
       <Seo
         title="Create an account"
-        description="A free DealMosaic account watches prices for you and keeps your saved deals on any device."
+        description="Manage saved-offer reminder preferences and report coupon results with a free DealMosaic account. Browsing needs no account."
         path="/register"
         index={false}
       />
@@ -138,7 +139,7 @@ export default function Register() {
       subtitle={
         searchedFor
           ? `Free. Confirm your email and we will take you straight to the comparison for “${searchedFor}”.`
-          : 'Free. No card, no ads in your results, and you can delete everything in one click.'
+          : 'Free. Manage saved-offer reminders and report code results. Browse first — an account is optional.'
       }
     >
       {formError && (
@@ -223,6 +224,7 @@ export default function Register() {
           )}
         </div>
 
+        <label className="checkbox-row" style={{ marginBottom: 16 }}><input type="checkbox" checked={notifyEmail} onChange={e => setNotifyEmail(e.target.checked)} /><span>Email me eligible updates about offers I save, at most weekly (optional). I can switch this off in settings.</span></label>
         <Button type="submit" variant="primary" size="lg" block loading={submitting}>
           {submitting ? 'Creating account…' : 'Create free account'}
         </Button>

@@ -69,7 +69,10 @@ function tokenFromUrl(url: string | undefined): string {
 }
 
 beforeAll(async () => {
-  ({ app } = await import('../src/app.js'));
+  const mod = await import('../src/app.js'); app = mod.app; await mod.ready;
+  const { db } = await import('../src/db/index.js');
+  // Synthetic live fixtures exist ONLY in this in-memory ranking test suite.
+  await db.prepare("UPDATE offers SET data_origin = 'live'").run();
 });
 
 async function registerAndVerify(client: Client, overrides: Partial<typeof user> = {}) {
@@ -315,8 +318,8 @@ describe('search access', () => {
     expect(res.body.offers.length).toBeLessThanOrEqual(3);
     expect(res.body.offers[0].rank).toBe(1);
     // Every returned offer must be labelled as demonstration data until a real feed exists.
-    expect(res.body.dataMode).toBe('demo');
-    expect(res.body.disclaimers.join(' ')).toContain('DEMONSTRATION DATA');
+    expect(res.body.dataMode).toBe('live');
+    expect(res.body.offers.every((o: any) => o.dataOrigin === 'live')).toBe(true);
   });
 
   it('never puts an unverifiable total first when a verified one exists', async () => {

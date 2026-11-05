@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { adminCampaignRoutes } from './admin-campaigns.js';
 import { fetchEarningsSnapshot } from '../services/earnings.js';
 import { z } from 'zod';
 import { db, newId, nowIso } from '../db/index.js';
@@ -41,6 +42,7 @@ adminRoutes.use('*', async (c, next) => {
 });
 adminRoutes.use('*', requireUser);
 adminRoutes.use('*', requireAdmin);
+adminRoutes.route('/campaigns', adminCampaignRoutes);
 
 /* ------------------------------------------------------------------ */
 /* Audit log                                                           */
@@ -106,7 +108,7 @@ adminRoutes.get('/overview', async (c) => {
     .prepare(
       `SELECT (SELECT COUNT(*) FROM catalogue_products) AS products,
               (SELECT COUNT(*) FROM product_variants) AS variants,
-              (SELECT COUNT(*) FROM offers) AS offers,
+              (SELECT COUNT(*) FROM offers WHERE is_active = 1 AND data_origin = 'live') AS offers,
               (SELECT COUNT(*) FROM offer_snapshots) AS snapshots,
               (SELECT COUNT(*) FROM price_alerts) AS alerts,
               (SELECT COUNT(*) FROM community_prices) AS community,

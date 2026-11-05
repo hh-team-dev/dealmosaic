@@ -305,11 +305,11 @@ couponRoutes.get('/', async (c) => {
     /** Stated in the API so the interface cannot drift from the policy. */
     rules: {
       cashbackIsNotADiscount: 'Cashback is returned as its own line and never subtracted from the payable total.',
-      onlyCheckedCoupons: 'Coupons appear here only after a second independent report or a moderator check.',
+      onlyCheckedCoupons: 'Store-listed claims are separated from checkout reports. Only supported redemption evidence is labelled as checked.',
     },
     emptyMessage:
       deduped.length === 0
-        ? 'No verified discount codes for this store yet. We do not list unverified codes, because a code that fails at checkout is worse than no code at all.'
+        ? 'No current offer matches these filters. Store-listed claims are not checkout verification; check other offers or clear the filters.'
         : null,
   });
 });

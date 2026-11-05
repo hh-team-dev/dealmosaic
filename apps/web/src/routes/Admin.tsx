@@ -22,6 +22,7 @@ import {
   type AdminUser,
 } from '../lib/admin-api';
 
+const CampaignInventory = lazy(() => import('../components/CampaignInventory'));
 const ShopControl = lazy(() => import('../components/ShopControl'));
 
 /**
@@ -36,12 +37,13 @@ const ShopControl = lazy(() => import('../components/ShopControl'));
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'shop', label: 'My shop' },
   { id: 'overview', label: 'Overview' },
   { id: 'revenue', label: 'Earnings' },
+  { id: 'campaigns', label: 'Campaigns' },
   { id: 'coupons', label: 'Coupons' },
   { id: 'reports', label: 'Price reports' },
   { id: 'people', label: 'People' },
@@ -151,6 +153,7 @@ export default function Admin() {
               {tab === 'shop' && <Suspense fallback={<p role="status">Loading shop controls…</p>}><ShopControl /></Suspense>}
               {tab === 'overview' && <Overview key={attempt} onError={fail} />}
               {tab === 'revenue' && <Revenue key={attempt} onError={fail} />}
+              {tab === 'campaigns' && <Suspense fallback={<p role="status">Loading campaign inventory…</p>}><CampaignInventory /></Suspense>}
               {tab === 'coupons' && <Coupons key={attempt} onError={fail} />}
               {tab === 'reports' && <Reports key={attempt} onError={fail} />}
               {tab === 'people' && <People key={attempt} onError={fail} />}
@@ -234,7 +237,7 @@ function Overview({ onError }: { onError: (e: unknown) => void }) {
               {' · '}
               {o.job.lastOk ? 'reported ok' : 'reported a problem'} · {o.job.due ? 'run is due' : 'next run not yet due'}
             </p>
-            <pre className="admin-pre">{pretty(o.job.lastResult)}</pre>
+            <details><summary>Technical run details</summary><pre className="admin-pre">{pretty(o.job.lastResult)}</pre></details>
           </>
         ) : (
           <p className="muted">No job has run yet.</p>
@@ -248,7 +251,7 @@ function Overview({ onError }: { onError: (e: unknown) => void }) {
         {o.affiliate ? (
           <p className="muted" style={{ margin: 0 }}>
             <strong>{o.affiliate.merchantsEarning}</strong> of <strong>{o.affiliate.merchantsTracked}</strong>{' '}
-            listed merchants are approved and earn on a completed purchase. {o.affiliate.earning.toLocaleString('en-IN')}{' '}
+            listed merchants have open access in the cache. Eligible, attributed transactions may earn under each campaign’s terms; access alone is not income. {o.affiliate.earning.toLocaleString('en-IN')}{' '}
             of {o.affiliate.tracked.toLocaleString('en-IN')} cached campaigns are open. Last synced{' '}
             {o.affiliate.lastSyncedAt ? formatDay(o.affiliate.lastSyncedAt) : 'never'}.
           </p>
@@ -600,8 +603,8 @@ function Revenue({ onError }: { onError: (e: unknown) => void }) {
                 ['Pending', data.network.commission.pendingMinor, 'sale recorded, return window open'],
                 ['Validated', data.network.commission.validatedMinor, 'merchant accepted it'],
                 ['Payable', data.network.commission.payableMinor, 'due at the next payout'],
-                ['Claimed', data.network.commission.claimedMinor, 'already paid to you'],
-                ['Sales', data.network.performance.transactions, 'paid orders in the window'],
+                ['Claimed', data.network.commission.claimedMinor, 'network status; reconcile bank receipt'],
+                ['Sales', data.network.performance.transactions, 'transactions reported in the window'],
                 ['Conversion', data.network.performance.conversionRate, 'clicks that became orders'],
               ].map(([label, value, note]) => (
                 <div className="admin-tile" key={String(label)}>

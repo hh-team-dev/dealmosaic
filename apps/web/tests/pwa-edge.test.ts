@@ -12,7 +12,13 @@ it('keeps HTTP 404 when the shared app frame is served for an unknown route',asy
 });
 
 it.each(['/stays','/dining','/stays/','/dining/'])('hospitality route %s hydrates the shared app instead of a false 404',async(path)=>{
- const assetFetch=vi.fn(async(input:URL|Request)=>new URL(input instanceof Request?input.url:input).pathname==='/index.html'?new Response('<div id="root">Shared app frame</div>'):new Response('missing',{status:404}));
+ const assetFetch=vi.fn(async(input:URL|Request)=>new URL(input instanceof Request?input.url:input).pathname==='/app-shell'?new Response('<div id="root">Shared app frame</div>'):new Response('missing',{status:404}));
  const response=await edge.fetch(new Request('https://dealmosaic.example'+path),{ASSETS:{fetch:assetFetch}});
  expect(response.status).toBe(200);expect(await response.text()).toContain('Shared app frame');
+});
+
+it.each(['/login','/admin','/store-link-help?offer=test','/search?q=shoes'])('uses a neutral no-store shell for %s, not the homepage body',async path=>{
+ const assetFetch=vi.fn(async(input:URL|Request)=>new URL(input instanceof Request?input.url:input).pathname==='/app-shell'?new Response('<main>Your DealMosaic page</main>'):new Response('missing',{status:404}));
+ const res=await edge.fetch(new Request('https://dealmosaic.example'+path),{ASSETS:{fetch:assetFetch}});
+ expect(res.status).toBe(200);expect(await res.text()).toContain('Your DealMosaic page');expect(res.headers.get('cache-control')).toBe('no-store');expect(res.headers.get('x-robots-tag')).toContain('noindex');
 });

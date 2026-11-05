@@ -1,4 +1,4 @@
-import { db, newId, nowIso } from '../db/index.js';
+import { db, nowIso } from '../db/index.js';
 import { sendMail } from '../lib/mailer.js';
 
 /** Where a shopper lands after clicking an alert email. */
@@ -19,11 +19,10 @@ const SITE_URL = (process.env.SITE_URL ?? 'https://dealmosaic.pages.dev').replac
  *  - The comparison uses `item_price_minor` of the *cheapest active offer* for
  *    that exact variant. A 256 GB phone never triggers an alert set on the
  *    128 GB one.
- *  - Offers whose origin is demonstration data are counted separately and
- *    labelled as such in the email, because "₹14,999" from a demo connector is
- *    not a price anyone can buy at.
- *  - An alert fires **once** (`status = 'triggered'`). Re-arming is a decision
- *    the shopper makes, not one we make for them.
+ *  - Only live, in-stock observations from the last 24 hours can qualify.
+ *    Demonstration prices never trigger a message.
+ *  - A confirmed email send closes the alert. Failed delivery leaves it active
+ *    for a later run; the in-app record is updated rather than duplicated.
  *  - Every send is recorded in `notification_events`, so a duplicate is
  *    detectable after the fact rather than denied.
  */
@@ -68,17 +67,17 @@ const rupee = (minor: number): string => `₹${Math.round(minor / 100).toLocaleS
  */
 export async function bestOfferForVariant(
   variantId: string,
-): Promise<{ offerId: string; platformSlug: string; priceMinor: number; dataOrigin: string } | null> {
+): Promise<{ offerId: string; platformSlug: string; priceMinor: number; dataOrigin: string; checkedAt: string } | null> {
   const row = (await db
     .prepare(
-      `SELECT id, platform_slug, item_price_minor, data_origin
+      `SELECT id, platform_slug, item_price_minor, data_origin, last_checked_at
          FROM offers
-        WHERE variant_id = ? AND is_active = 1 AND in_stock = 1
+        WHERE variant_id = ? AND is_active = 1 AND in_stock = 1 AND data_origin = 'live' AND item_price_minor > 0 AND last_checked_at >= ?
         ORDER BY item_price_minor ASC
         LIMIT 1`,
     )
-    .get(variantId)) as
-    | { id: string; platform_slug: string; item_price_minor: number; data_origin: string }
+    .get(variantId, new Date(Date.now() - 86_400_000).toISOString())) as
+    | { id: string; platform_slug: string; item_price_minor: number; data_origin: string; last_checked_at: string }
     | undefined;
 
   if (!row) return null;
@@ -87,6 +86,7 @@ export async function bestOfferForVariant(
     platformSlug: row.platform_slug,
     priceMinor: row.item_price_minor,
     dataOrigin: row.data_origin,
+    checkedAt: row.last_checked_at,
   };
 }
 
@@ -104,20 +104,22 @@ export async function runAlerts(limit = 200): Promise<{
 }> {
   const rows = (await db
     .prepare(
-      `SELECT a.*, u.email, u.display_name,
+      `SELECT a.*, u.email, u.display_name, COALESCE(pref.notify_inapp, 0) AS notify_inapp,
               v.variant_label, v.product_id,
               p.title AS product_title, p.slug AS product_slug
          FROM price_alerts a
          JOIN users u ON u.id = a.user_id
+         LEFT JOIN user_preferences pref ON pref.user_id = a.user_id
          LEFT JOIN product_variants v ON v.id = a.variant_ref
          LEFT JOIN catalogue_products p ON p.id = v.product_id
-        WHERE a.status = 'active'
+        WHERE a.status = 'active' AND u.email_verified_at IS NOT NULL
         ORDER BY a.created_at ASC
         LIMIT ?`,
     )
     .all(limit)) as unknown as Array<
     AlertRow & {
       email: string;
+      notify_inapp: number;
       display_name: string | null;
       variant_label: string | null;
       product_title: string | null;
@@ -143,7 +145,6 @@ export async function runAlerts(limit = 200): Promise<{
 
     const productTitle = row.product_title ?? 'your saved product';
     const variantLabel = row.variant_label ? ` (${row.variant_label})` : '';
-    const demo = best.dataOrigin === 'demo' || best.dataOrigin === 'feed';
     const productUrl = row.product_slug ? `${SITE_URL}/p/${row.product_slug}` : `${SITE_URL}/browse`;
 
     const result = await sendMail({
@@ -155,9 +156,7 @@ export async function runAlerts(limit = 200): Promise<{
         `${productTitle}${variantLabel} is now listed at ${rupee(best.priceMinor)} on ${best.platformSlug}.`,
         `You asked to be told when it fell below ${rupee(row.target_price_minor)}.`,
         ``,
-        demo
-          ? `One thing to be straight about: this price comes from demonstration data for ${best.platformSlug}, not from a live retailer feed. Treat it as a signal that the product is worth checking, not as a quote you can pay.`
-          : `This price is from the retailer feed we hold for ${best.platformSlug}, checked just now.`,
+        `Stored observation: ${best.checkedAt}. This is the item price, not a guaranteed checkout total; delivery and other fees may apply.`,
         ``,
         `See the full comparison: ${productUrl}`,
         ``,
@@ -166,22 +165,27 @@ export async function runAlerts(limit = 200): Promise<{
         `— DEALMOSAIC`,
       ].join('\n'),
       actionUrl: productUrl,
-    });
+    }).catch(() => ({ sent: false, error: 'Email delivery could not be confirmed.' }));
 
-    await db
+    if (result.sent) await db
       .prepare("UPDATE price_alerts SET status = 'triggered', updated_at = ? WHERE id = ?")
       .run(nowIso(), row.id);
 
     await db
       .prepare(
         `INSERT INTO notification_events (id, user_id, kind, payload, created_at)
-         VALUES (?, ?, 'price_alert', ?, ?)`,
+         VALUES (?, ?, 'price_alert', ?, ?)
+         ON CONFLICT(id) DO UPDATE SET payload = excluded.payload, created_at = excluded.created_at`,
       )
       .run(
-        newId(),
+        `price-alert:${row.id}:${row.updated_at}`,
         row.user_id,
         JSON.stringify({
           alertId: row.id,
+          inApp: row.notify_inapp === 1,
+          productTitle,
+          productSlug: row.product_slug,
+          checkedAt: best.checkedAt,
           variantRef: row.variant_ref,
           targetMinor: row.target_price_minor,
           bestMinor: best.priceMinor,

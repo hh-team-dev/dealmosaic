@@ -17,6 +17,7 @@ import Browse from './routes/Browse';
 import Deals from './routes/Deals';
 import Admin from './routes/Admin';
 import Saved from './routes/Saved';
+import StoreLinkHelp from './routes/StoreLinkHelp';
 import Install from './routes/Install';
 import { PwaExperience } from './components/PwaExperience';
 import { DataSources, HowWeRank } from './routes/Method';
@@ -89,6 +90,7 @@ export default function App() {
             <Route path="/buy/:id" element={<Suspense fallback={<p role="status">Loading…</p>}><DirectProductPage /></Suspense>} />
             <Route path="/direct-orders/:id" element={<Suspense fallback={<p role="status">Loading…</p>}><DirectOrderPage /></Suspense>} />
           <Route path="/saved" element={<Saved />} />
+            <Route path="/store-link-help" element={<StoreLinkHelp />} />
             <Route path="/c/:slug" element={<Browse />} />
             <Route path="/p/:slug" element={<Product />} />
             <Route path="/how-we-rank" element={<HowWeRank />} />

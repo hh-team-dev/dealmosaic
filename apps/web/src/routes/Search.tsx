@@ -275,9 +275,10 @@ function NoMatches({ data }: { data: NoResults }) {
         <section className="empty-state card card-lg stack" aria-labelledby="no-results-title">
           <Icon name="search" size={28} />
           <h1 id="no-results-title" className="h3">
-            No match for “{data.query}”
+            No confirmed comparison for “{data.query}”
           </h1>
           <p className="muted">{data.reason}</p>
+          <Link className="btn btn-primary" to="/deals">Explore current store offers</Link>
         </section>
       )}
 

@@ -10,6 +10,7 @@ import { Seo, breadcrumbJsonLd } from '../lib/seo';
 import {
   daysLeft,
   listCoupons,
+  expiryLabel,
   listMerchants,
   type CouponView,
   type MerchantView,
@@ -149,7 +150,7 @@ export default function Deals() {
     <>
       <Seo
         title="Today's best coupon codes and deals across Indian stores"
-        description="Verified coupon codes and real discounts from Indian stores — Tata Cliq, Myntra, Croma, Nykaa, Vijay Sales and more. Every code shows its expiry and how many shoppers confirmed it."
+        description="Store-listed coupon codes and offers from Indian stores — Tata Cliq, Myntra, Croma, Nykaa, Vijay Sales and more. Every code shows its expiry and how many shoppers confirmed it."
         path="/deals"
         jsonLd={breadcrumbJsonLd([
           { name: 'Home', path: '/' },
@@ -165,7 +166,7 @@ export default function Deals() {
               <Icon name="tag" size={14} /> Live offers
             </span>
             <h1 className="deals-hero-title">
-              Every code here is <span className="deals-hero-accent">live right now</span>
+              Store offers. <span className="deals-hero-accent">Less searching.</span>
             </h1>
             {/*
               Four sentences became two. The detail did not disappear — it is in the
@@ -186,7 +187,7 @@ export default function Deals() {
             <div className="deals-hero-stats">
               <div className="deals-stat">
                 <strong>{totals ? totals.live.toLocaleString('en-IN') : '—'}</strong>
-                <span>{filtered ? 'matching offers' : 'offers live now'}</span>
+                <span>{filtered ? 'matching offers' : 'current listings'}</span>
               </div>
               <div className="deals-stat">
                 <strong>{totals ? totals.withCode.toLocaleString('en-IN') : '—'}</strong>
@@ -386,10 +387,10 @@ export default function Deals() {
                 this team can also retire one directly.
               </li>
               <li>
-                <strong>We earn a commission.</strong> If you buy through a link here, the store pays
-                us a small percentage at no extra cost to you. It never affects which offers appear
-                or how they are ordered.{" "}
-                <Link to="/disclosure">Full disclosure</Link>.
+                <strong>Your checkout is the final check.</strong> Confirm the item, code eligibility and
+                complete bill before paying. Codes are not necessarily exclusive and do not automatically
+                apply unless the store explicitly says so.{" "}
+                <Link to="/disclosure">Affiliate-link disclosure</Link>.
               </li>
             </ul>
           </section>
@@ -474,7 +475,7 @@ function CouponCard({
         ) : (
           <span className={`deal-meta${urgent ? ' deal-meta-urgent' : ''}`}>
             <Icon name="clock" size={13} />
-            {days === 0 ? 'Ends today' : `${days} day${days === 1 ? '' : 's'} left`}
+            {expiryLabel(coupon.expiresAt, days)}
           </span>
         )}
         <ConfidenceLine coupon={coupon} />

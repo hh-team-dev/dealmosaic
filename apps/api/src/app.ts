@@ -1,4 +1,6 @@
 import { Hono } from 'hono';
+import { readFileSync } from 'node:fs';
+const releaseVersion = JSON.parse(readFileSync(new URL('../../../package.json', import.meta.url), 'utf8')).version as string;
 import { ApiError } from './lib/http.js';
 import { db, initDb, seedReferenceData } from './db/index.js';
 import { loadSession, type AppBindings } from './middleware/session.js';
@@ -87,7 +89,8 @@ app.get('/api/health', (c) => {
   const res = c.json({
     ok: true,
     service: 'dealmosaic-api',
-    version: '1.0.0',
+    version: releaseVersion,
+    revision: process.env.RENDER_GIT_COMMIT?.slice(0, 12) ?? null,
     time: new Date().toISOString(),
     database: db.open ? 'connected' : 'unavailable',
     markets: ['IN'],

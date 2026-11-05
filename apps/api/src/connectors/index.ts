@@ -76,7 +76,7 @@ export const KNOWN_PLATFORMS: KnownPlatform[] = [
     displayName: 'BigBasket / BB Now',
     kind: 'qcommerce',
     status: 'partnership_required',
-    note: 'Affiliate rates vary and cookie windows are short; no documented price API.',
+    note: 'Store offers and local product prices are different datasets. No authorised product-price connection is active here.',
     routeToAccess: 'BigBasket affiliate programme plus a data agreement.',
   },
   {
@@ -84,7 +84,7 @@ export const KNOWN_PLATFORMS: KnownPlatform[] = [
     displayName: 'JioMart',
     kind: 'qcommerce',
     status: 'partnership_required',
-    note: 'Affiliate programme pays up to ~4% with a 30-day window; no public price feed.',
+    note: 'No authorised product-price connection is active here. Prices and delivery depend on the selected location.',
     routeToAccess: 'JioMart affiliate network onboarding.',
   },
   {
@@ -133,14 +133,14 @@ const feed = createFeedConnector();
 
 /** Connectors that can actually be queried right now. */
 export function activeConnectors(): Connector[] {
-  const list: Connector[] = [demo];
+  const list: Connector[] = process.env.NODE_ENV === 'production' ? [] : [demo];
   if (ebay.isConfigured()) list.push(ebay);
   if (feed.isConfigured()) list.push(feed);
   return list;
 }
 
 export function allConnectors(): Connector[] {
-  return [demo, ebay, feed];
+  return process.env.NODE_ENV === 'production' ? [ebay, feed] : [demo, ebay, feed];
 }
 
 export async function connectorHealth(): Promise<Array<ConnectorHealth & { slug: string; displayName: string; kind: string }>> {

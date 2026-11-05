@@ -1,4 +1,5 @@
 import { useToast } from './Toast';
+import { Link } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 import {
   expiryLabel,
@@ -38,6 +39,7 @@ import { ClaimBadge, CodeButton, ConfidenceLine } from './DealFacts';
 export function DealCard({ deal, compact = false }: { deal: DealView; compact?: boolean }) {
   const toast = useToast();
   const [copied, setCopied] = useState(false);
+  const [opened, setOpened] = useState(false);
   const saved = useSaved();
   const isSavedNow = saved.some((d) => d.id === deal.id);
 
@@ -111,7 +113,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         {deal.code ? (
           <CodeButton code={deal.code} copied={copied} onCopy={() => void copy()} />
         ) : (
-          <span className="deal-code deal-code-none">No code needed</span>
+          <span className="deal-code deal-code-none">No code listed</span>
         )}
         {/*
           Through our own redirect, not straight to the merchant. The feed's
@@ -127,6 +129,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
             target="_blank"
             rel="sponsored nofollow noopener noreferrer"
             onClick={() => {
+              setOpened(true);
               recordView(deal);
               if (deal.code) void navigator.clipboard?.writeText(deal.code.trim()).catch(() => {});
             }}
@@ -137,6 +140,7 @@ export function DealCard({ deal, compact = false }: { deal: DealView; compact?: 
         ) : null}
       </div>
 
+      {opened && <Link className="tiny store-link-help" to={`/store-link-help?offer=${encodeURIComponent(deal.id)}`}>Store not opening? Keep your code & get help</Link>}
       <footer className="deal-card-foot">
         {urgency ? (
           <span className="deal-urgency">

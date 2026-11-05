@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { db, newId, nowIso } from '../db/index.js';
 import { createRateLimiter } from '../lib/rate-limit.js';
 import type { AppBindings } from '../middleware/session.js';
@@ -43,6 +43,7 @@ type ClickRow = {
   tracking_url: string | null;
   trust_state: string;
   expires_at: string | null;
+  starts_at: string | null;
 };
 
 /**
@@ -69,36 +70,58 @@ function deviceOf(ua: string): 'phone' | 'tablet' | 'desktop' {
   return 'desktop';
 }
 
+function unavailable(c: Context<AppBindings>, id: string, code: string, message: string, status: 404 | 410) {
+  c.header('Cache-Control', 'no-store');
+  if (c.req.header('accept')?.includes('text/html')) {
+    return c.redirect(`/store-link-help?offer=${encodeURIComponent(id)}`, 303);
+  }
+  return c.json({ error: code, message }, status);
+}
+
+function eligible(row: ClickRow): boolean {
+  const now = Date.now();
+  const end = row.expires_at ? Date.parse(row.expires_at) : null;
+  const start = row.starts_at ? Date.parse(row.starts_at) : null;
+  return ['listed', 'community_verified', 'moderator_verified'].includes(row.trust_state)
+    && (end === null || (Number.isFinite(end) && end > now))
+    && (start === null || (Number.isFinite(start) && start <= now));
+}
+function safeHost(url: string | null): string | null {
+  try { const parsed = new URL(url ?? ''); return parsed.protocol === 'https:' && !parsed.username && !parsed.password ? parsed.hostname : null; }
+  catch { return null; }
+}
+
+// Read-only recovery metadata. Never calls the network and never logs a click.
+// Held/unpublished offers expose neither their code nor their private destination.
+goRoutes.get('/:couponId/details', async c => {
+  c.header('Cache-Control', 'no-store');
+  c.header('X-Robots-Tag', 'noindex, nofollow');
+  const row = await db.prepare(`SELECT id, platform_slug, code, tracking_url, trust_state, expires_at,
+    starts_at, title, campaign_name, terms FROM coupons WHERE id = ?`).get(c.req.param('couponId')) as (ClickRow & { title: string; campaign_name: string | null; terms: string | null }) | undefined;
+  if (!row || !eligible(row) || !safeHost(row.tracking_url)) return c.json({ available: false,
+    reason: 'The offer is unavailable, outside its validity window, or has no safe store link.' });
+  return c.json({ available: true, title: row.title, store: row.campaign_name || row.platform_slug,
+    code: row.code, terms: row.terms, expiresAt: row.expires_at, linkHost: safeHost(row.tracking_url) });
+});
+
 goRoutes.get('/:couponId', async (c) => {
+  c.header('Cache-Control', 'no-store');
+  c.header('X-Robots-Tag', 'noindex, nofollow');
   await clickLimiter(c, async () => {});
 
   const id = c.req.param('couponId');
   const row = (await db
     .prepare(
-      `SELECT id, platform_slug, code, tracking_url, trust_state, expires_at
+      `SELECT id, platform_slug, code, tracking_url, trust_state, expires_at, starts_at
          FROM coupons
         WHERE id = ?`,
     )
     .get(id)) as ClickRow | undefined;
 
-  if (!row) return c.json({ error: 'not_found', message: 'That offer is no longer in the list.' }, 404);
-  const expiry = row.expires_at ? Date.parse(row.expires_at) : null;
-  if (row.trust_state === 'rejected' || row.trust_state === 'expired' || (expiry !== null && (!Number.isFinite(expiry) || expiry <= Date.now()))) {
-    return c.json({ error: 'withdrawn', message: 'That offer has been withdrawn.' }, 410);
-  }
-  if (!row.tracking_url) {
-    return c.json(
-      { error: 'no_link', message: 'No tracked link is on file for this offer yet.' },
-      404,
-    );
-  }
-
-  try {
-    const url = new URL(row.tracking_url);
-    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) throw new Error('Unsafe link');
-  } catch {
-    return c.json({ error: 'invalid_link', message: 'That store link is unavailable. Please choose another offer.' }, 410);
-  }
+  if (!row) return unavailable(c, id, 'not_found', 'That offer is no longer in the list.', 404);
+  if (!eligible(row)) return unavailable(c, id, 'withdrawn', 'That offer is unavailable or outside its validity window.', 410);
+  if (!row.tracking_url) return unavailable(c, id, 'no_link', 'No tracked link is on file for this offer.', 404);
+  if (!safeHost(row.tracking_url)) return unavailable(c, id, 'invalid_link', 'That store link is unavailable. Please choose another offer.', 410);
 
   const clickId = newId();
   // Short, unique, and alphanumeric: some networks reject punctuation in sub-ids.

@@ -210,19 +210,23 @@ export function statedPercentLabel(d: { statedPercent: number | null; percentIsC
 }
 
 /** The tightest honest urgency line: a real date, or nothing at all. */
-export function expiryLabel(expiresAt: string | null, daysLeft: number | null): string | null {
-  if (!expiresAt) return null;
-  // Callers that did not receive a server-computed day count (the saved page
-  // rebuilds cards from localStorage) still get a real label — deriving it here
-  // beats printing "No expiry published" on an offer that has a date.
-  const days =
-    daysLeft ??
-    Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 86_400_000));
-  if (days <= 0) return 'Ends today';
-  if (days === 1) return 'Ends tomorrow';
-  if (days <= 7) return `${days} days left`;
-  const date = new Date(expiresAt);
-  return `Until ${date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+/** Older affiliate imports encoded a date-only feed value as UTC end-of-day.
+ * Preserve that published calendar date instead of displaying the following day
+ * in India. This is a date label, NOT a claim about the merchant's cutoff zone. */
+export function publishedOfferDate(expiresAt: string | null): string | null {
+  if (!expiresAt || !Number.isFinite(Date.parse(expiresAt))) return null;
+  const dateOnlyEncoding = /T23:59:59(?:\.000)?Z$/.test(expiresAt);
+  return new Date(expiresAt).toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric',
+    timeZone: dateOnlyEncoding ? 'UTC' : 'Asia/Kolkata',
+  });
+}
+
+export function expiryLabel(expiresAt: string | null, _daysLeft: number | null): string | null {
+  const date = publishedOfferDate(expiresAt);
+  if (!date) return expiresAt ? 'Check expiry with the store' : null;
+  // An old saved snapshot is not perpetually "Ends today".
+  return `${Date.parse(expiresAt!) <= Date.now() ? 'Expired' : 'Published end'}: ${date}`;
 }
 
 /**

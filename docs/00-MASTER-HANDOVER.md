@@ -1,5 +1,7 @@
 # DEALMOSAIC — MASTER HANDOVER
 
+> **5 November repair candidate — 2.5.0:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) is the current guest/member/admin repair handover. Validation/deployment is in progress; the live 2.4.0 record below remains authoritative until the release record is updated. Hotels follow this repair; restaurants follow hotels. Useful external hospitality links are permitted where no genuine internal capability exists.
+
 > **Latest field-test and revenue review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime remains 2.4.0; the proposed booking/merchant platform is not deployed.
 
 > **Current 2.4.0 release:** [39-pet-friendly-directory.md](39-pet-friendly-directory.md) covers the sourced pet-friendly directory, separate eligible-offer panels, private planning, verification and recovery. The preceding 2.3.0 destination expansion is preserved in document 38; earlier release evidence below is historical.
@@ -10,7 +12,7 @@
 
 **Everything, from first principle to the last commit, in one document.**
 
-Last updated: **4 November 2026** · Version **2.4.0** · Current release evidence is in document 39.
+Last updated: **5 November 2026** · Live **2.4.0**, repair candidate **2.5.0** · Current repair evidence is in document 41.
 Earlier dated release sections below are retained as history.
 
 > **If you are a new developer, read this file top to bottom before touching

@@ -164,7 +164,7 @@ export async function affiliateReadiness(): Promise<AffiliateReadiness> {
       `SELECT COUNT(*) AS tracked,
               SUM(CASE WHEN access_status = 'open' THEN 1 ELSE 0 END) AS earning,
               SUM(CASE WHEN access_status = 'pending' THEN 1 ELSE 0 END) AS pending,
-              SUM(CASE WHEN access_status = 'open' THEN 0 ELSE 1 END) AS not_applied,
+              SUM(CASE WHEN access_status = 'not_applied' THEN 1 ELSE 0 END) AS not_applied,
               MAX(synced_at) AS last
          FROM affiliate_campaigns`,
     )
@@ -205,7 +205,7 @@ export async function affiliateReadiness(): Promise<AffiliateReadiness> {
     earningMerchants: top.map((r) => ({ name: r.name, payout: r.payout, currency: r.payout_currency, type: r.campaign_type })),
     lastSyncedAt: totals.last ?? null,
     note:
-      'approval only. A store marked open earns a commission on a completed purchase; ' +
+      'Access status only. Open campaigns may pay on eligible, attributed and validated activity under their terms; ' +
       'pending and not_applied earn nothing, and their links are still shown if the ' +
       'offer is genuinely good. Cashback is never counted as a discount.',
   };
