@@ -8,9 +8,10 @@ export function PwaExperience({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [later, setLater] = useState(false);
-  const safeOfflinePage = ['/saved', '/install'].includes(pathname.replace(/\/$/, '') || '/');
+  const localQuotePage = /^\/(stays|dining)\/compare\/?$/.test(pathname);
+  const safeOfflinePage = localQuotePage || ['/saved', '/install'].includes(pathname.replace(/\/$/, '') || '/');
   const bootBlocked = app.bootOffline && !safeOfflinePage;
-  const locked = app.disconnected && sensitiveTask(pathname);
+  const locked = app.disconnected && sensitiveTask(pathname) && !localQuotePage;
   return <>
     <EngagementBar />
     {app.installed && <nav className="pwa-nav" aria-label="App navigation">

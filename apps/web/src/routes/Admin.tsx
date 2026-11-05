@@ -22,6 +22,7 @@ import {
   type AdminUser,
 } from '../lib/admin-api';
 
+const HospitalityBusiness = lazy(() => import('../components/HospitalityBusiness'));
 const CampaignInventory = lazy(() => import('../components/CampaignInventory'));
 const ShopControl = lazy(() => import('../components/ShopControl'));
 
@@ -37,13 +38,14 @@ const ShopControl = lazy(() => import('../components/ShopControl'));
  * plainly rather than pretending the feature is missing.
  */
 
-type Tab = 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
+type Tab = 'hospitality' | 'campaigns' | 'shop' | 'overview' | 'revenue' | 'coupons' | 'reports' | 'people' | 'audit';
 
 const TABS: Array<{ id: Tab; label: string }> = [
   { id: 'shop', label: 'My shop' },
   { id: 'overview', label: 'Overview' },
   { id: 'revenue', label: 'Earnings' },
   { id: 'campaigns', label: 'Campaigns' },
+  { id: 'hospitality', label: 'Hotels & dining' },
   { id: 'coupons', label: 'Coupons' },
   { id: 'reports', label: 'Price reports' },
   { id: 'people', label: 'People' },
@@ -153,6 +155,7 @@ export default function Admin() {
               {tab === 'shop' && <Suspense fallback={<p role="status">Loading shop controls…</p>}><ShopControl /></Suspense>}
               {tab === 'overview' && <Overview key={attempt} onError={fail} />}
               {tab === 'revenue' && <Revenue key={attempt} onError={fail} />}
+              {tab === 'hospitality' && <Suspense fallback={<p role="status">Loading hospitality business desk…</p>}><HospitalityBusiness /></Suspense>}
               {tab === 'campaigns' && <Suspense fallback={<p role="status">Loading campaign inventory…</p>}><CampaignInventory /></Suspense>}
               {tab === 'coupons' && <Coupons key={attempt} onError={fail} />}
               {tab === 'reports' && <Reports key={attempt} onError={fail} />}

@@ -18,7 +18,7 @@ let initialized = false;
 let lastCheck = 0;
 const patch = (next: Partial<Snapshot>) => { state = { ...state, ...next }; for (const fn of listeners) fn(); };
 export const usePwa = () => useSyncExternalStore(fn => { listeners.add(fn); return () => { listeners.delete(fn); }; }, () => state, () => state);
-export const sensitiveTask = (path: string) => /^\/(admin|buy|direct-orders|app|login|register|verify-email|reset-password|forgot-password)(\/|$)/.test(path);
+export const sensitiveTask = (path: string) => /^\/(stays|dining)\/compare(\/|$)/.test(path) || /^\/(admin|buy|direct-orders|app|login|register|verify-email|reset-password|forgot-password)(\/|$)/.test(path);
 
 async function offlineReady() {
   try {

@@ -11,7 +11,7 @@ it('keeps HTTP 404 when the shared app frame is served for an unknown route',asy
  expect(response.status).toBe(404);expect(await response.text()).toContain('Shared app frame');
 });
 
-it.each(['/stays','/dining','/stays/','/dining/'])('hospitality route %s hydrates the shared app instead of a false 404',async(path)=>{
+it.each(['/stays','/dining','/stays/','/dining/','/stays/compare','/dining/compare','/stays/compare/','/dining/compare/'])('hospitality route %s hydrates the shared app instead of a false 404',async(path)=>{
  const assetFetch=vi.fn(async(input:URL|Request)=>new URL(input instanceof Request?input.url:input).pathname==='/app-shell'?new Response('<div id="root">Shared app frame</div>'):new Response('missing',{status:404}));
  const response=await edge.fetch(new Request('https://dealmosaic.example'+path),{ASSETS:{fetch:assetFetch}});
  expect(response.status).toBe(200);expect(await response.text()).toContain('Shared app frame');

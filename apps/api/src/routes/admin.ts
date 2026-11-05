@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { adminHospitalityRoutes } from './admin-hospitality.js';
 import { adminCampaignRoutes } from './admin-campaigns.js';
 import { fetchEarningsSnapshot } from '../services/earnings.js';
 import { z } from 'zod';
@@ -43,6 +44,7 @@ adminRoutes.use('*', async (c, next) => {
 adminRoutes.use('*', requireUser);
 adminRoutes.use('*', requireAdmin);
 adminRoutes.route('/campaigns', adminCampaignRoutes);
+adminRoutes.route('/hospitality', adminHospitalityRoutes);
 
 /* ------------------------------------------------------------------ */
 /* Audit log                                                           */

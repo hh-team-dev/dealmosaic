@@ -67,6 +67,7 @@ CORE = [
     ('39-pet-friendly-directory.md', '2.4.0: Pet-friendly stays, dining and careful planning'),
     ('40-hospitality-revenue-reset.md', 'Hospitality: field-test response and on-site revenue blueprint'),
     ('41-device-review-and-conversion-repair.md', '2.5.0: Guest, member and administrator repair'),
+    ('42-hospitality-business-and-native-comparison.md', '2.6.0: Hospitality business architecture and native comparison'),
     ('00-executive-summary.md', 'Executive summary (Phase 0 charter)'),
 ]
 

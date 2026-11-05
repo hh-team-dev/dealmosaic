@@ -92,8 +92,10 @@ beforeAll(async () => {
 describe('admin access control', () => {
   it('refuses an anonymous visitor with 401, not a hidden page', async () => {
     cookie = '';
-    const res = await request('GET', '/api/admin/overview');
-    expect(res.status).toBe(401);
+    for (const path of ['/api/admin/overview','/api/admin/hospitality']) {
+      const res = await request('GET', path);
+      expect(res.status).toBe(401);
+    }
   });
 
   it('refuses a signed-in ordinary user with 403', async () => {
@@ -103,7 +105,7 @@ describe('admin access control', () => {
   });
 
   it('refuses every admin read to an ordinary user, not just the overview', async () => {
-    for (const path of ['/api/admin/coupons', '/api/admin/users', '/api/admin/audit', '/api/admin/jobs', '/api/admin/community']) {
+    for (const path of ['/api/admin/coupons', '/api/admin/users', '/api/admin/audit', '/api/admin/jobs', '/api/admin/community', '/api/admin/hospitality']) {
       const res = await request('GET', path);
       expect(res.status, `${path} should be closed`).toBe(403);
     }
@@ -127,6 +129,16 @@ describe('admin access control', () => {
     expect(res.status).toBe(200);
     expect(res.body.coupons.total).toBeTypeOf('number');
     expect(res.body.catalogue).toBeTruthy();
+  });
+
+  it('shows truthful hospitality gates and an unsent enquiry only to an administrator', async () => {
+    const res = await request('GET', '/api/admin/hospitality');
+    expect(res.status).toBe(200);
+    expect(res.body.nativeRateConnections).toBe(0);
+    expect(res.body.nativeBookingsEnabled).toBe(false);
+    expect(res.body.providers.every((p: any) => !p.allowed && p.missing.length === 8)).toBe(true);
+    expect(res.body.applicationBrief).toContain('not acceptance of a contract');
+    expect(JSON.stringify(res.body)).not.toMatch(/api[_-]?key|password.?[:=]/i);
   });
 
   it('refuses a state change without the CSRF header, even for an administrator', async () => {

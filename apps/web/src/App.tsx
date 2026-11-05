@@ -22,6 +22,7 @@ import Install from './routes/Install';
 import { PwaExperience } from './components/PwaExperience';
 import { DataSources, HowWeRank } from './routes/Method';
 
+const HospitalityCompare = lazy(() => import('./routes/HospitalityCompare'));
 const PetFriendly = lazy(() => import('./routes/PetFriendly'));
 const Stays = lazy(() => import('./routes/Hospitality').then(m => ({default:m.Stays})));
 const Dining = lazy(() => import('./routes/Hospitality').then(m => ({default:m.Dining})));
@@ -80,6 +81,8 @@ export default function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/stays" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening Hotels & Stays…</p></main>}><Stays /></Suspense>} />
             <Route path="/dining" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening Dining & Food…</p></main>}><Dining /></Suspense>} />
+            <Route path="/stays/compare" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening hotel comparisons…</p></main>}><HospitalityCompare key="hotel" kind="hotel" /></Suspense>} />
+            <Route path="/dining/compare" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening dining comparisons…</p></main>}><HospitalityCompare key="restaurant" kind="restaurant" /></Suspense>} />
             <Route path="/pet-friendly" element={<Suspense fallback={<main id="main" className="public-main"><p role="status">Opening pet-friendly places…</p></main>}><PetFriendly /></Suspense>} />
             <Route path="/install" element={<Install />} />
             <Route path="/search" element={<Search />} />

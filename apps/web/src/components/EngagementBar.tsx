@@ -14,7 +14,7 @@ export function EngagementBar() {
   const app = usePwa();
   const location = useLocation();
   const routePath = location.pathname.replace(/\/$/, '') || '/';
-  const cityContext = /^\/(stays|dining|pet-friendly)$/.test(routePath) ? new URLSearchParams(location.search).get('city') : null;
+  const cityContext = /^\/(stays|dining|pet-friendly)(?:\/compare)?$/.test(routePath) ? new URLSearchParams(location.search).get('city') : null;
   const toast = useToast();
   const bar = useRef<HTMLElement>(null);
   const dirty = useRef(false);
@@ -84,8 +84,8 @@ export function EngagementBar() {
     <nav className="explore-dock" aria-label="Explore DealMosaic">
       {[
         {to:'/', label:'Shop', icon:'M4 9h16l-2-5H6zM5 9v11h14V9M9 20v-7h6v7',active:routePath==='/'||/^\/(browse|search|p|c|handcrafted|buy|direct-orders)(?:\/|$)/.test(location.pathname)},
-        {to:'/stays',label:'Hotels',icon:'M4 20V4h16v16M8 8h2m4 0h2M8 12h2m4 0h2M9 20v-4h6v4',active:routePath==='/stays'},
-        {to:'/dining',label:'Dining',icon:'M5 3v7m3-7v7M3 3v7q3 5 6 0V3M6 13v8M17 3q-6 7 0 9v9M17 3v9',active:routePath==='/dining'},
+        {to:'/stays',label:'Hotels',icon:'M4 20V4h16v16M8 8h2m4 0h2M8 12h2m4 0h2M9 20v-4h6v4',active:/^\/stays(?:\/|$)/.test(routePath)},
+        {to:'/dining',label:'Dining',icon:'M5 3v7m3-7v7M3 3v7q3 5 6 0V3M6 13v8M17 3q-6 7 0 9v9M17 3v9',active:/^\/dining(?:\/|$)/.test(routePath)},
         {to:'/deals',label:'Deals',icon:'M3 4h8l10 10-7 7L3 10zM7 8h.01',active:routePath==='/deals'},
         {to:'/saved',label:'Saved',icon:'M12 20S2 14 2 8a5 5 0 0110-1A5 5 0 0122 8c0 6-10 12-10 12z',active:routePath==='/saved'},
       ].map(item=><Link key={item.to} to={cityContext && cityContext!=='all' && ['/stays','/dining'].includes(item.to) ? `${item.to}?city=${encodeURIComponent(cityContext)}` : item.to} aria-current={item.active?'page':undefined} className={item.active?'is-active':''} onClick={event=>{if(routePath!==item.to&&!beforeNavigate())event.preventDefault();}}><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d={item.icon} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg><span>{item.label}</span></Link>)}

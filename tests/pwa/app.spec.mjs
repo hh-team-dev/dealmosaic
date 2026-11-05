@@ -51,3 +51,19 @@ test('hospitality cold-offline routes keep navigation but do not claim live inve
  await page.goto('/install');await page.getByText('Offline ready',{exact:true}).waitFor();await page.waitForFunction(()=>Boolean(navigator.serviceWorker.controller));await context.setOffline(true);
  for(const path of ['/stays?city=jaipur','/dining?city=mumbai','/pet-friendly?city=siliguri']){await page.goto(path);await expect(page.getByRole('heading',{name:'Your saved list is still here'})).toBeVisible();await expect(page.getByRole('navigation',{name:'Explore DealMosaic'})).toBeVisible();await expect(page.locator('.hospitality-offer')).toHaveCount(0);await expect(page.locator('.hospitality-brand-card')).toHaveCount(0);}
 });
+
+function personalHospitalityNote(kind='hotel') {
+ const start=new Date(Date.now()+3*86400000).toISOString().slice(0,10);
+ const end=new Date(Date.now()+5*86400000).toISOString().slice(0,10);
+ return {id:'isolated-personal-'+kind,venueId:kind==='hotel'?'ginger-mumbai-airport':'qmin-ginger-jamshedpur',provider:'Private local '+kind+' quote',plan:{kind,city:kind==='hotel'?'mumbai':'jamshedpur',arrival:start,departure:kind==='hotel'?end:start,adults:2,rooms:1,childAges:[],rooming:'',time:kind==='hotel'?'':'19:00',diningMode:'dine-in'},item:'Exact personal test conditions',meal:kind==='hotel'?'room-only':'other',cancellation:kind==='hotel'?'non-refundable':'not-applicable',cancelUntil:'',payment:'pay-now',eligibility:'public',eligibilityDetails:'',baseMinor:123000,extraFeesMinor:0,onSiteMinor:0,extrasMinor:0,depositMinor:0,cashbackMinor:null,complete:true,recordedAt:new Date().toISOString(),provenance:'personal'};
+}
+test('personal hotel and dining notes survive a cold offline launch without pretending to be live rates',async({page,context})=>{
+ await ready(page);await page.evaluate(notes=>localStorage.setItem('dealmosaic.hospitality-quotes.v1',JSON.stringify({version:1,quotes:notes})),[personalHospitalityNote(),personalHospitalityNote('restaurant')]);await context.setOffline(true);
+ for(const [path,label] of [['/stays/compare?city=mumbai','hotel'],['/dining/compare?city=jamshedpur','restaurant']]){
+  await page.goto(path);await expect(page.locator('[data-personal-quote]')).toHaveCount(1);await expect(page.locator('[data-personal-quote]')).toContainText('Private local '+label+' quote');await expect(page.locator('.hc-header')).toContainText('not a live price feed');await expect(page.locator('[data-comparison-venue] a[target=_blank]')).toHaveCount(0);await expect(page.locator('[inert]')).toHaveCount(0);await axe(page);
+ }
+ expect((await cacheKeys(page)).some(url=>/\/api\/|\/stays\/compare|\/dining\/compare/.test(url))).toBe(false);
+});
+test('personal hospitality storage survives a classic website fallback',async({page})=>{
+ test.skip(!existsSync('/tmp/dealmosaic-pwa-packages/classic/index.html'),'Paired build needed');await ready(page);await page.evaluate(note=>localStorage.setItem('dealmosaic.hospitality-quotes.v1',JSON.stringify({version:1,quotes:[note]})),personalHospitalityNote());writeFileSync(rootFile,'/tmp/dealmosaic-pwa-packages/classic');await page.evaluate(async()=>{await(await navigator.serviceWorker.getRegistration()).update();});await expect.poll(()=>page.evaluate(async()=>(await navigator.serviceWorker.getRegistrations()).length)).toBe(0);const response=await page.goto('/stays/compare?city=mumbai');expect(response.status()).toBe(200);await expect(page.locator('[data-personal-quote]')).toContainText('Private local hotel quote');await expect(page.locator('.hc-header')).toContainText('not a live price feed');await axe(page);
+});

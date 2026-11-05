@@ -74,6 +74,8 @@ export function HowWeRank() {
             </div>
           </div>
 
+          <h2 className="h2">Hotel and dining personal comparisons</h2>
+          <p>Hotel and dining workspaces use separate rules from product ranking. Places appear alphabetically. Quotes are personal entries, not live or provider-verified prices. A matching group requires the same place, dates, party, room allocation or meal, inclusions, cancellation deadline, payment timing and eligibility conditions. Only complete entered costs with established conditions and records no older than 24 hours can take a lowest-entered-total position; every equal-low quote shares the position. The comparison depends on your entries and is not a cheapest-anywhere guarantee. Unknown fees are not zero, refundable deposits are shown separately, and cashback and commission cannot lower the ranked cost.</p>
           <h2 className="h2">How two offers are proven to be the same product</h2>
           <p>
             Most price-comparison mistakes are not arithmetic — they are identity mistakes: comparing a 256 GB phone to a
@@ -189,6 +191,8 @@ export function DataSources() {
             Store-listed promotions, exact-item prices and shopper reports are different kinds of information. Check the source and the date before relying on a number.
           </p>
 
+          <h2 className="h2">Hospitality places and personal quotes</h2>
+          <p>The hospitality comparison workspaces contain 40 selected hotels and 33 dining places, combining our existing pet-policy research with separately sourced general places. Each place shows its publication source and review date. This is not exhaustive inventory or proof of current availability, pet admission or accessibility. There is no connected live room-rate or table-reservation feed. Monetary amounts in the personal quote collection come from your entries, not the venue directory; they are never labelled provider-verified.</p>
           <h2 className="h2">Product-price sources</h2>
           {connectors === null && <div className="skeleton skeleton-card" />}
           {connectors?.map((c) => (

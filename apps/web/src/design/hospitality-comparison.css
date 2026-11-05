@@ -1,0 +1,258 @@
+/* Original DealMosaic comparison workspace: warm paper, berry and ochre only. */
+.hc-page {
+  padding-block: 20px 48px;
+}
+.hc-breadcrumb {
+  padding-block: 14px;
+  font-size: 13px;
+}
+.hc-header {
+  padding-block: 30px 42px;
+  max-width: 940px;
+}
+.hc-header h1 {
+  font-size: clamp(38px, 5.6vw, 70px);
+}
+.hc-disclosure {
+  border-left: 3px solid var(--hospitality-accent);
+  padding-left: 18px;
+  max-width: 760px;
+}
+.hc-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.hc-facts span {
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 9px 13px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.hc-panel,
+.hc-editor {
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fffdf8;
+  margin-bottom: 28px;
+}
+.hc-editor {
+  border: 2px solid var(--hospitality-accent);
+  scroll-margin-top: 100px;
+}
+.hc-section {
+  margin-block: 38px;
+}
+.hc-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.hc-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  min-width: 0;
+}
+.hc-form input,
+.hc-form select {
+  font: inherit;
+  color: var(--ink);
+  background: #fffdf8;
+  border: 1px solid #b6a18c;
+  border-radius: 9px;
+  min-height: 46px;
+  padding: 10px 12px;
+  width: 100%;
+  min-width: 0;
+}
+.hc-form .small {
+  font-weight: 400;
+  line-height: 1.5;
+}
+.hc-form .hc-check {
+  flex-direction: row;
+  align-items: flex-start;
+  line-height: 1.6;
+  padding-block: 8px;
+}
+.hc-check input {
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  flex: 0 0 22px;
+  accent-color: var(--hospitality-accent);
+  margin: 0;
+}
+.hc-wide {
+  grid-column: 1 / -1;
+}
+.hc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.hc-actions > * {
+  max-width: 100%;
+}
+.hc-page button {
+  min-height: 44px;
+  white-space: normal;
+}
+.hc-page a,
+.hc-page button {
+  overflow-wrap: anywhere;
+}
+.hc-page [tabindex="-1"] {
+  scroll-margin-top: 110px;
+}
+.hc-filters {
+  border-block: 1px solid var(--line);
+  padding-block: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.hc-venues {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.hc-venue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(18px, 2.3vw, 28px);
+  border: 1px solid var(--line);
+  background: #fffdf8;
+  border-radius: 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hc-venue > * {
+  max-width: 100%;
+}
+.hc-venue h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 25px;
+}
+.hc-venue p {
+  margin-block: 10px;
+  font-size: 14px;
+}
+.hc-price {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-block: 10px 18px;
+}
+.hc-price strong {
+  font-size: 21px;
+  color: var(--hospitality-accent);
+}
+.hc-price span {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.hc-venue details {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  padding-block: 8px 18px;
+}
+.hc-venue summary {
+  min-height: 44px;
+  cursor: pointer;
+  padding-block: 10px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.hc-venue .hc-actions {
+  margin-top: auto;
+  padding-top: 16px;
+}
+.hc-venue dt {
+  color: var(--ink-muted);
+  font-size: 12px;
+  margin-top: 14px;
+}
+.hc-venue dd {
+  margin: 5px 0 0;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.hc-amount {
+  font-size: 26px;
+  font-weight: 700;
+}
+.hc-feedback {
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--hospitality-wash);
+  color: var(--ink);
+}
+.hc-error {
+  color: #9e274b !important;
+  font-weight: 650;
+}
+.hc-match {
+  padding: 24px;
+  border: 2px solid var(--hospitality-accent);
+  border-radius: 16px;
+  background: #fffdf8;
+  margin-bottom: 20px;
+}
+.hc-match li {
+  margin-block: 12px;
+  line-height: 1.6;
+}
+.hc-quote-list {
+  margin-top: 24px;
+}
+.hc-entry-link {
+  padding: 28px;
+  margin-block: 22px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffdf8;
+}
+@media (max-width: 760px) {
+  .hc-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hc-venues {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .hc-form {
+    grid-template-columns: 1fr;
+  }
+  .hc-panel,
+  .hc-editor {
+    padding: 18px 14px;
+  }
+  .hc-entry-link {
+    padding: 22px 16px;
+  }
+  .hc-page .hospitality-container {
+    width: calc(100% - 28px);
+  }
+  .hc-match {
+    padding: 18px 14px;
+  }
+  .hc-match ul {
+    padding-left: 18px;
+  }
+}
+
+.hc-source-links {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}

@@ -1,5 +1,7 @@
 # DEALMOSAIC — MASTER HANDOVER
 
+> **Hospitality implementation — 5 November 2026:** [42-hospitality-business-and-native-comparison.md](42-hospitality-business-and-native-comparison.md) contains the reviewed two-PDF business architecture and 2.6.0 implementation: native sourced places and personal quote comparisons, plus the owner business desk. Automatic hotel-rate APIs and hospitality booking remain approval-gated. Production remains 2.5.0 until the new release receipt is complete.
+
 > **Current 2.5.0 release — 5 November 2026:** [41-device-review-and-conversion-repair.md](41-device-review-and-conversion-repair.md) records the deployed guest/member/admin repairs, honest prices, recovery links, consent-aware notification centre and campaign inventory. Runtime/tag `a13bac7` / `pwa-v2.5.0`; Pages `b776ff72`; API Render `dep-dbm55dlg1s2s73c5h9pg`. Hotels follow these repairs; restaurants follow hotels. Useful external hospitality links remain permitted where no genuine internal capability exists.
 
 > **Previous hospitality field-test review — 4 November 2026:** [40-hospitality-revenue-reset.md](40-hospitality-revenue-reset.md) records the owner’s ongoing device tests, provider failures, fresh campaign access, reversible withdrawal of five hotel promotions and the on-site revenue blueprint. Runtime at that review remained 2.4.0; the proposed booking/merchant platform was not deployed. Read document 41 for the later 2.5.0 repair release.

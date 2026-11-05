@@ -26,6 +26,7 @@ import {
   type StayPlan,
 } from "../lib/hospitality";
 import "../design/hospitality.css";
+import "../design/hospitality-comparison.css";
 
 function Outside({
   href,
@@ -857,6 +858,12 @@ function Hospitality({ dining = false }: { dining?: boolean }) {
                 </span>
               </div>
             </header>
+            <section className="hc-entry-link" aria-label="Native comparison tools">
+              <span className="hospitality-eyebrow">Compare here, decide with confidence</span>
+              <h2>{dining ? "Real places. Your quotes. A clearer bill." : "Shortlist the place. Compare the whole stay."}</h2>
+              <p>Browse sourced {dining ? "restaurants and cafés" : "hotels"}, shortlist places and compare quotes you enter for the same plan. Fees, cancellation terms and refundable deposits stay visible. These are personal quotes—not automatically fetched live prices.</p>
+              <Link className="hospitality-primary" to={`${dining ? "/dining" : "/stays"}/compare?city=${city.id}`}>{dining ? "Compare dining on DealMosaic" : "Compare hotels on DealMosaic"} →</Link>
+            </section>
             <div className="hospitality-city-band">
               <CityPicker city={city} onChange={changeCity} />
               <div>
