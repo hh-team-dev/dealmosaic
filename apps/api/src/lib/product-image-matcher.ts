@@ -526,6 +526,15 @@ export function selectProductImage(
   category?: string | null,
   description?: string | null,
 ): string {
+  // Check if the target category has actual product images on disk
+  const targetCat = (category as ProductImageCategory) ?? 'other';
+  const hasProductImages = PRODUCT_IMAGES[targetCat] && PRODUCT_IMAGES[targetCat].length > 0;
+
+  // If the category has no product images, use category background image
+  if (!hasProductImages) {
+    return `/images/categories/${targetCat}.jpg`;
+  }
+
   // Extract keywords from all deal fields
   const keywords = extractKeywords(productName, merchantName, category, description);
 
@@ -535,6 +544,8 @@ export function selectProductImage(
     const matches = KEYWORD_INDEX[keyword];
     if (!matches) continue;
     for (const { category: cat, index } of matches) {
+      // Only score images from categories that have product images
+      if (!PRODUCT_IMAGES[cat] || PRODUCT_IMAGES[cat].length === 0) continue;
       const key = `${cat}-${index}`;
       scores.set(key, (scores.get(key) ?? 0) + 1);
     }
@@ -557,16 +568,15 @@ export function selectProductImage(
     return PRODUCT_IMAGES[catKey]![idx]!.url;
   }
 
-  // Fallback: use category-based selection
-  const cat = (category as ProductImageCategory) ?? 'other';
-  const catImages = PRODUCT_IMAGES[cat];
+  // Fallback: use category-based selection from product images
+  const catImages = PRODUCT_IMAGES[targetCat];
   if (catImages && catImages.length > 0) {
     const idx = Math.abs(hashString(dealId)) % catImages.length;
     return catImages[idx]!.url;
   }
 
   // Final fallback: use category background image
-  return `/images/categories/${cat}.jpg`;
+  return `/images/categories/${targetCat}.jpg`;
 }
 
 /**
