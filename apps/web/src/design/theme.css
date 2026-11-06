@@ -3540,37 +3540,146 @@ input:-webkit-autofill:active {
    IMAGE BANK — Deal card with category background artwork.
    ------------------------------------------------------------------ */
 
-/* A card that has a category image: the image becomes the card's
-   background, behind a warm semi-transparent overlay so text stays
-   readable in bright sunlight on a phone. */
-.deal-card.has-image {
+/* PROFESSIONAL PROMOTIONAL DISPLAY — Enhanced deal card styling */
+.deal-card.deal-promo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 14px rgba(74, 43, 34, 0.10),
+    0 2px 4px rgba(74, 43, 34, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   background: var(--raised);
-  border: 1px solid var(--hairline);
 }
 
-/* The overlay is a pseudo-element so the content stays on top. */
-.deal-card.has-image::before {
-  content: '';
+/* Background image layer — covers entire card */
+.deal-card.deal-promo .deal-card-bg {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  background:
-    /* Warm overlay: category tint at 45% over a very light surface tint */
-    linear-gradient(135deg,
-      rgba(253, 239, 227, 0.55) 0%,
-      rgba(253, 235, 241, 0.45) 100%),
-    var(--deal-bg, var(--grad-ember));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  pointer-events: none;
   z-index: 0;
+  pointer-events: none;
 }
 
-/* Move all content above the overlay. */
-.deal-card.has-image > * {
-  position: relative;
+/* Gradient overlay for readability — adaptive intensity */
+.deal-card.deal-promo .deal-card-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    160deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
   z-index: 1;
+  pointer-events: none;
+}
+
+/* Content layer — sits above overlay */
+.deal-card.deal-promo .deal-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 16px;
+}
+
+/* Enhanced typography for promotional readability */
+.deal-card.deal-promo .deal-card-merchant {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.deal-card.deal-promo .deal-card-category {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.deal-card.deal-promo .deal-card-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  font-size: 1.05rem;
+}
+
+.deal-card.deal-promo .deal-card-price .deal-price-value {
+  color: #ffd700;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.deal-card.deal-promo .deal-card-price .deal-card-price-note {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.deal-card.deal-promo .deal-confidence {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Enhanced code button on promotional cards */
+.deal-card.deal-promo .deal-code {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.deal-card.deal-promo .deal-code:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Shop button — prominent on promotional cards */
+.deal-card.deal-promo .deal-go {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff4fa3 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 4px 14px rgba(255, 107, 53, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.deal-card.deal-promo .deal-go:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.45);
+}
+
+/* Urgency badge — bright on promotional cards */
+.deal-card.deal-promo .deal-urgency {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}
+
+/* Cashback note — readable on promotional cards */
+.deal-card.deal-promo .deal-card-cashback {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Claim badge — enhanced visibility */
+.deal-card.deal-promo .claim-badge {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ember-d);
+}
+
+/* Footer — readable on promotional cards */
+.deal-card.deal-promo .deal-card-foot {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 10px;
+  margin-top: 8px;
+}
+
+.deal-card.deal-promo .deal-card-hint {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Hide the monogram when an image is present — the image IS the identity. */

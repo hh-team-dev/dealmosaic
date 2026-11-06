@@ -11,6 +11,7 @@ import { buildDiscovery } from '../services/discover.js';
 import { syncAffiliateOffers } from '../services/affiliate-sync.js';
 import { assessCoupon, nextTrustState } from '../services/coupon-confidence.js';
 import { couponImageDataUrl } from '../lib/coupon-images.js';
+import { selectProductImage } from '../lib/product-image-matcher.js';
 
 type CouponImageRow = {
   category_slug: string;
@@ -609,12 +610,19 @@ couponRoutes.get('/images', async (c) => {
 
   c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=7200');
   return c.json({
-    images: rows.map((r) => ({
-      categorySlug: r.category_slug,
-      imageUrl: r.image_url,
-      imageType: r.image_type,
-      altText: r.alt_text ?? `Image for ${r.category_slug} deals`,
-    })),
+    images: rows.map((r) => {
+      // Replace old SVG data URLs with static image URLs.
+      const staticUrl = couponImageDataUrl(r.category_slug);
+      const dbUrl = r.image_url;
+      const finalUrl = dbUrl && dbUrl.startsWith('data:') ? staticUrl : (dbUrl ?? staticUrl);
+      const finalType = dbUrl && !dbUrl.startsWith('data:') ? (dbUrl.endsWith('.svg') ? 'svg' : 'jpg') : 'jpg';
+      return {
+        categorySlug: r.category_slug,
+        imageUrl: finalUrl,
+        imageType: finalType,
+        altText: r.alt_text ?? `Image for ${r.category_slug} deals`,
+      };
+    }),
     count: rows.length,
   });
 });
@@ -627,6 +635,12 @@ couponRoutes.get('/images', async (c) => {
 couponRoutes.get('/image/:categorySlug', async (c) => {
   const categorySlug = c.req.param('categorySlug');
 
+  // Get deal information from query params for intelligent matching
+  const dealId = c.req.query('dealId') ?? 'unknown';
+  const productName = c.req.query('productName');
+  const merchantName = c.req.query('merchantName');
+  const description = c.req.query('description');
+
   const result = await db
     .prepare(
       `SELECT image_url, image_type, alt_text
@@ -637,9 +651,21 @@ couponRoutes.get('/image/:categorySlug', async (c) => {
     .get(categorySlug);
   const row = result as unknown as SingleImageRow | undefined;
 
-  const imageUrl = row?.image_url ?? couponImageDataUrl(categorySlug);
-  const imageType = row?.image_type ?? 'svg';
-  const altText = row?.alt_text ?? `Image for ${categorySlug} deals`;
+  // Use intelligent product image matching
+  const intelligentUrl = selectProductImage(
+    dealId,
+    productName,
+    merchantName,
+    categorySlug,
+    description,
+  );
+
+  // If the DB has an old SVG data URL, replace it with the intelligent match.
+  // The DB can still override with a custom uploaded image.
+  const dbUrl = row?.image_url;
+  const imageUrl = dbUrl && !dbUrl.startsWith('data:') ? dbUrl : intelligentUrl;
+  const imageType = dbUrl && !dbUrl.startsWith('data:') ? (dbUrl.endsWith('.svg') ? 'svg' : 'jpg') : 'jpg';
+  const altText = row?.alt_text ?? `${productName || categorySlug} deal image`;
 
   c.header('Cache-Control', 'public, max-age=3600, stale-while-revalidate=7200');
   return c.json({
