@@ -9,9 +9,10 @@
  * uploads are optional extras, capped at 500 KB each.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { Icon } from './Icon';
 import { useToast } from './Toast';
+import { ImageUpload } from './ImageUpload';
 
 type ImageRow = {
   id: string;
@@ -25,6 +26,14 @@ type ImageRow = {
   created_at: string;
 };
 
+type UploadedImage = {
+  id: string;
+  filename: string;
+  url: string;
+  category: string;
+  size: number;
+};
+
 type CategoryGroup = {
   slug: string;
   defaultImage: ImageRow | null;
@@ -34,7 +43,13 @@ type CategoryGroup = {
 export default function ImageBankAdmin() {
   const [groups, setGroups] = useState<CategoryGroup[]>([]);
   const [loading, setLoading] = useState(false);
+  const [matchingStats, setMatchingStats] = useState({
+    totalImages: 0,
+    categories: 0,
+    avgImagesPerCategory: 0,
+  });
   const toast = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -45,6 +60,14 @@ export default function ImageBankAdmin() {
       if (!r.ok) throw new Error(`Server said ${r.status}`);
       const data = await r.json();
       setGroups(data.categories ?? []);
+
+      // Calculate matching statistics
+      const allImages = data.categories?.flatMap((g: CategoryGroup) => g.images) ?? [];
+      setMatchingStats({
+        totalImages: allImages.length,
+        categories: data.categories?.length ?? 0,
+        avgImagesPerCategory: Math.round(allImages.length / (data.categories?.length ?? 1)),
+      });
     } catch (e) {
       toast.push(
         `Could not load image bank: ${e instanceof Error ? e.message : String(e)}`,
@@ -82,6 +105,69 @@ export default function ImageBankAdmin() {
       setLoading(false);
     }
   }, [load, toast]);
+
+  const bulkUpload = useCallback(
+    async (files: FileList) => {
+      setLoading(true);
+      const uploaded: UploadedImage[] = [];
+
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith('image/')) continue;
+        if (file.size > 500 * 1024) continue;
+
+        const form = new FormData();
+        form.append('file', file);
+        form.append('categorySlug', extractCategoryFromFilename(file.name));
+
+        try {
+          const r = await fetch('/api/admin/coupon-images/upload', {
+            method: 'POST',
+            body: form,
+            headers: { 'cache-control': 'no-cache' },
+          });
+          if (r.ok) {
+            const data = await r.json();
+            uploaded.push({
+              id: data.id,
+              filename: data.filename,
+              url: data.url,
+              category: data.category,
+              size: file.size,
+            });
+          }
+        } catch (err) {
+          console.error('Upload failed:', err);
+        }
+      }
+
+      if (uploaded.length > 0) {
+        toast.push(
+          `Bulk upload complete: ${uploaded.length} image${uploaded.length !== 1 ? 's' : ''} uploaded`,
+          'success',
+        );
+        void load();
+      }
+      setLoading(false);
+    },
+    [load, toast],
+  );
+
+  const extractCategoryFromFilename = (filename: string): string => {
+    const base = filename.replace(/\.[^.]+$/, '');
+    const parts = base.split(/[-_ ]+/);
+    const knownCategories = [
+      'fashion', 'electronics', 'beauty', 'food', 'sports',
+      'health', 'home', 'baby', 'industrial', 'refurb',
+      'marketplace', 'travel', 'other'
+    ];
+    for (const part of parts) {
+      const lower = part.toLowerCase();
+      if (knownCategories.includes(lower)) {
+        return lower;
+      }
+    }
+    return 'other';
+  };
 
   const setDefault = useCallback(async (id: string, slug: string) => {
     try {
@@ -171,13 +257,68 @@ export default function ImageBankAdmin() {
       </div>
 
       <div className="card-body">
+        {/* Intelligent Matching Dashboard */}
+        <div className="image-bank-dashboard" style={{
+          background: 'linear-gradient(135deg, #fff9f0 0%, #fff5eb 100%)',
+          borderRadius: 12,
+          padding: 20,
+          marginBottom: 24,
+          border: '1px solid var(--hairline)',
+        }}>
+          <h3 style={{ margin: '0 0 16px 0', color: 'var(--ink)' }}>
+            <Icon name="spark" size={18} /> Intelligent Matching Dashboard
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--ember-d)' }}>
+                {matchingStats.totalImages}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--ink-muted)' }}>Total Images</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--grass-d)' }}>
+                {matchingStats.categories}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--ink-muted)' }}>Categories</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--magenta)' }}>
+                {matchingStats.avgImagesPerCategory}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--ink-muted)' }}>Avg / Category</div>
+            </div>
+          </div>
+          <p style={{ margin: '16px 0 0 0', fontSize: 13, color: 'var(--ink-muted)' }}>
+            Upload images for each category. The intelligent matcher will automatically assign relevant images to deals based on product name, merchant, and description.
+          </p>
+        </div>
+
         <div className="row gap-2">
           <button
             className="button button-solid"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+          >
+            <Icon name="download" size={14} /> Bulk Upload Images
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                bulkUpload(e.target.files);
+              }
+            }}
+            style={{ display: 'none' }}
+          />
+          <button
+            className="button button-outline"
             onClick={generateAll}
             disabled={loading}
           >
-            <Icon name="sparkle" size={14} /> Generate defaults for all categories
+            <Icon name="sparkle" size={14} /> Generate Defaults
           </button>
         </div>
 
