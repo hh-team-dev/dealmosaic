@@ -565,8 +565,8 @@ export function selectProductImage(
     return catImages[idx]!.url;
   }
 
-  // Final fallback: "other" category
-  return PRODUCT_IMAGES.other[0]!.url;
+  // Final fallback: use category background image
+  return `/images/categories/${cat}.jpg`;
 }
 
 /**
