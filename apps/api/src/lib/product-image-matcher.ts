@@ -20,11 +20,12 @@
  * All images are original AI artwork — no licensing issues, no scraped photos.
  */
 
-/** Product image category keys */
+import { createHash } from 'node:crypto';
+
+/** Product image category keys — only categories with actual product images */
 export type ProductImageCategory =
-  | 'fashion' | 'electronics' | 'beauty' | 'food' | 'sports'
-  | 'health' | 'home' | 'baby' | 'industrial' | 'refurb'
-  | 'marketplace' | 'travel' | 'other';
+  | 'fashion'
+  | 'electronics';
 
 /** A single product image entry */
 interface ProductImage {
@@ -36,7 +37,8 @@ interface ProductImage {
 
 /**
  * Product image library — maps category to available images.
- * Each category has multiple images to avoid repetition.
+ * Only fashion and electronics have product images. Other categories
+ * use category background images as fallback.
  */
 const PRODUCT_IMAGES: Record<ProductImageCategory, ProductImage[]> = {
   fashion: [
@@ -103,358 +105,6 @@ const PRODUCT_IMAGES: Record<ProductImageCategory, ProductImage[]> = {
       category: 'electronics',
     },
   ],
-  beauty: [
-    {
-      filename: 'beauty-01.jpg',
-      url: '/images/products/beauty-01.jpg',
-      keywords: ['cosmetic', 'makeup', 'lipstick', 'nail', 'polish', 'beauty', 'glam'],
-      category: 'beauty',
-    },
-    {
-      filename: 'beauty-02.jpg',
-      url: '/images/products/beauty-02.jpg',
-      keywords: ['skincare', 'skin', 'cream', 'serum', 'mask', 'face', 'moisturizer'],
-      category: 'beauty',
-    },
-    {
-      filename: 'beauty-03.jpg',
-      url: '/images/products/beauty-03.jpg',
-      keywords: ['hair', 'shampoo', 'conditioner', 'oil', 'treatment', 'haircare'],
-      category: 'beauty',
-    },
-    {
-      filename: 'beauty-04.jpg',
-      url: '/images/products/beauty-04.jpg',
-      keywords: ['perfume', 'fragrance', 'cologne', 'scent', 'deodorant', 'perfume'],
-      category: 'beauty',
-    },
-    {
-      filename: 'beauty-05.jpg',
-      url: '/images/products/beauty-05.jpg',
-      keywords: ['personal', 'care', 'soap', 'lotion', 'hygiene', 'grooming'],
-      category: 'beauty',
-    },
-  ],
-  food: [
-    {
-      filename: 'food-01.jpg',
-      url: '/images/products/food-01.jpg',
-      keywords: ['snack', 'chips', 'cookie', 'biscuit', 'candy', 'sweet', 'treat'],
-      category: 'food',
-    },
-    {
-      filename: 'food-02.jpg',
-      url: '/images/products/food-02.jpg',
-      keywords: ['drink', 'beverage', 'tea', 'coffee', 'juice', 'cold', 'drink'],
-      category: 'food',
-    },
-    {
-      filename: 'food-03.jpg',
-      url: '/images/products/food-03.jpg',
-      keywords: ['grocery', 'staple', 'rice', 'wheat', 'flour', 'oil', 'cooking'],
-      category: 'food',
-    },
-    {
-      filename: 'food-04.jpg',
-      url: '/images/products/food-04.jpg',
-      keywords: ['fruit', 'vegetable', 'fresh', 'organic', 'produce', 'natural'],
-      category: 'food',
-    },
-    {
-      filename: 'food-05.jpg',
-      url: '/images/products/food-05.jpg',
-      keywords: ['instant', 'noodle', 'pasta', 'ready', 'meal', 'convenience'],
-      category: 'food',
-    },
-  ],
-  sports: [
-    {
-      filename: 'sports-01.jpg',
-      url: '/images/products/sports-01.jpg',
-      keywords: ['yoga', 'mat', 'exercise', 'fitness', 'workout', 'gym', 'pilates'],
-      category: 'sports',
-    },
-    {
-      filename: 'sports-02.jpg',
-      url: '/images/products/sports-02.jpg',
-      keywords: ['cricket', 'bat', 'ball', 'bat', 'sport', 'game'],
-      category: 'sports',
-    },
-    {
-      filename: 'sports-03.jpg',
-      url: '/images/products/sports-03.jpg',
-      keywords: ['football', 'soccer', 'ball', 'sport', 'game', 'match'],
-      category: 'sports',
-    },
-    {
-      filename: 'sports-04.jpg',
-      url: '/images/products/sports-04.jpg',
-      keywords: ['badminton', 'racket', 'shuttle', 'sport', 'game'],
-      category: 'sports',
-    },
-    {
-      filename: 'sports-05.jpg',
-      url: '/images/products/sports-05.jpg',
-      keywords: ['swimming', 'swim', 'pool', 'water', 'sport', 'aqua'],
-      category: 'sports',
-    },
-  ],
-  health: [
-    {
-      filename: 'health-01.jpg',
-      url: '/images/products/health-01.jpg',
-      keywords: ['vitamin', 'supplement', 'health', 'wellness', 'nutrition', 'nutri'],
-      category: 'health',
-    },
-    {
-      filename: 'health-02.jpg',
-      url: '/images/products/health-02.jpg',
-      keywords: ['medicine', 'drug', 'tablet', 'capsule', 'pharmacy', 'treatment'],
-      category: 'health',
-    },
-    {
-      filename: 'health-03.jpg',
-      url: '/images/products/health-03.jpg',
-      keywords: ['protein', 'powder', 'shake', 'muscle', 'bodybuilding', 'fitness'],
-      category: 'health',
-    },
-    {
-      filename: 'health-04.jpg',
-      url: '/images/products/health-04.jpg',
-      keywords: ['ayurveda', 'herbal', 'natural', 'remedy', 'traditional', 'organic'],
-      category: 'health',
-    },
-    {
-      filename: 'health-05.jpg',
-      url: '/images/products/health-05.jpg',
-      keywords: ['care', 'support', 'brace', 'support', 'compression', 'medical'],
-      category: 'health',
-    },
-  ],
-  home: [
-    {
-      filename: 'home-01.jpg',
-      url: '/images/products/home-01.jpg',
-      keywords: ['furniture', 'chair', 'table', 'sofa', 'couch', 'decor', 'home'],
-      category: 'home',
-    },
-    {
-      filename: 'home-02.jpg',
-      url: '/images/products/home-02.jpg',
-      keywords: ['kitchen', 'cookware', 'utensil', 'pot', 'pan', 'cooking', 'appliance'],
-      category: 'home',
-    },
-    {
-      filename: 'home-03.jpg',
-      url: '/images/products/home-03.jpg',
-      keywords: ['cleaning', 'cleaner', 'detergent', 'wash', 'soap', 'hygiene'],
-      category: 'home',
-    },
-    {
-      filename: 'home-04.jpg',
-      url: '/images/products/home-04.jpg',
-      keywords: ['decor', 'decoration', 'art', 'painting', 'frame', 'wall', 'design'],
-      category: 'home',
-    },
-    {
-      filename: 'home-05.jpg',
-      url: '/images/products/home-05.jpg',
-      keywords: ['storage', 'organizer', 'box', 'container', 'rack', 'shelf'],
-      category: 'home',
-    },
-  ],
-  baby: [
-    {
-      filename: 'baby-01.jpg',
-      url: '/images/products/baby-01.jpg',
-      keywords: ['baby', 'infant', 'child', 'kid', 'toddler', 'baby'],
-      category: 'baby',
-    },
-    {
-      filename: 'baby-02.jpg',
-      url: '/images/products/baby-02.jpg',
-      keywords: ['diaper', 'nappy', 'baby', 'care', 'hygiene', 'infant'],
-      category: 'baby',
-    },
-    {
-      filename: 'baby-03.jpg',
-      url: '/images/products/baby-03.jpg',
-      keywords: ['toy', 'game', 'play', 'child', 'kid', 'baby'],
-      category: 'baby',
-    },
-    {
-      filename: 'baby-04.jpg',
-      url: '/images/products/baby-04.jpg',
-      keywords: ['feeding', 'bottle', 'milk', 'food', 'baby', 'infant'],
-      category: 'baby',
-    },
-    {
-      filename: 'baby-05.jpg',
-      url: '/images/products/baby-05.jpg',
-      keywords: ['clothing', 'dress', 'suit', 'baby', 'kid', 'child'],
-      category: 'baby',
-    },
-  ],
-  industrial: [
-    {
-      filename: 'industrial-01.jpg',
-      url: '/images/products/industrial-01.jpg',
-      keywords: ['tool', 'tools', 'hardware', 'equipment', 'industrial', 'work'],
-      category: 'industrial',
-    },
-    {
-      filename: 'industrial-02.jpg',
-      url: '/images/products/industrial-02.jpg',
-      keywords: ['safety', 'helmet', 'vest', 'protective', 'work', 'industrial'],
-      category: 'industrial',
-    },
-    {
-      filename: 'industrial-03.jpg',
-      url: '/images/products/industrial-03.jpg',
-      keywords: ['power', 'drill', 'tool', 'electric', 'equipment', 'machine'],
-      category: 'industrial',
-    },
-    {
-      filename: 'industrial-04.jpg',
-      url: '/images/products/industrial-04.jpg',
-      keywords: ['plumbing', 'pipe', 'fitting', 'tool', 'equipment', 'industrial'],
-      category: 'industrial',
-    },
-    {
-      filename: 'industrial-05.jpg',
-      url: '/images/products/industrial-05.jpg',
-      keywords: ['welding', 'soldering', 'metal', 'work', 'tool', 'equipment'],
-      category: 'industrial',
-    },
-  ],
-  refurb: [
-    {
-      filename: 'refurb-01.jpg',
-      url: '/images/products/refurb-01.jpg',
-      keywords: ['refurbished', 'refurb', 'renewed', 'used', 'second', 'hand'],
-      category: 'refurb',
-    },
-    {
-      filename: 'refurb-02.jpg',
-      url: '/images/products/refurb-02.jpg',
-      keywords: ['open', 'box', 'sealed', 'return', 'exchange', 'renewed'],
-      category: 'refurb',
-    },
-    {
-      filename: 'refurb-03.jpg',
-      url: '/images/products/refurb-03.jpg',
-      keywords: ['discount', 'deal', 'offer', 'save', 'cheap', 'budget'],
-      category: 'refurb',
-    },
-    {
-      filename: 'refurb-04.jpg',
-      url: '/images/products/refurb-04.jpg',
-      keywords: ['quality', 'tested', 'verified', 'checked', 'approved'],
-      category: 'refurb',
-    },
-    {
-      filename: 'refurb-05.jpg',
-      url: '/images/products/refurb-05.jpg',
-      keywords: ['warranty', 'guarantee', 'protection', 'coverage', 'insurance'],
-      category: 'refurb',
-    },
-  ],
-  marketplace: [
-    {
-      filename: 'marketplace-01.jpg',
-      url: '/images/products/marketplace-01.jpg',
-      keywords: ['market', 'general', 'merchandise', 'goods', 'products', 'shop'],
-      category: 'marketplace',
-    },
-    {
-      filename: 'marketplace-02.jpg',
-      url: '/images/products/marketplace-02.jpg',
-      keywords: ['variety', 'mixed', 'diverse', 'collection', 'assortment'],
-      category: 'marketplace',
-    },
-    {
-      filename: 'marketplace-03.jpg',
-      url: '/images/products/marketplace-03.jpg',
-      keywords: ['everyday', 'essential', 'daily', 'household', 'needs'],
-      category: 'marketplace',
-    },
-    {
-      filename: 'marketplace-04.jpg',
-      url: '/images/products/marketplace-04.jpg',
-      keywords: ['sale', 'offer', 'deal', 'discount', 'promotion', 'save'],
-      category: 'marketplace',
-    },
-    {
-      filename: 'marketplace-05.jpg',
-      url: '/images/products/marketplace-05.jpg',
-      keywords: ['new', 'arrival', 'fresh', 'latest', 'trending', 'popular'],
-      category: 'marketplace',
-    },
-  ],
-  travel: [
-    {
-      filename: 'travel-01.jpg',
-      url: '/images/products/travel-01.jpg',
-      keywords: ['luggage', 'bag', 'suitcase', 'travel', 'trip', 'journey'],
-      category: 'travel',
-    },
-    {
-      filename: 'travel-02.jpg',
-      url: '/images/products/travel-02.jpg',
-      keywords: ['accessory', 'organizer', 'holder', 'passport', 'travel', 'trip'],
-      category: 'travel',
-    },
-    {
-      filename: 'travel-03.jpg',
-      url: '/images/products/travel-03.jpg',
-      keywords: ['backpack', 'bag', 'carrier', 'hiking', 'adventure', 'outdoor'],
-      category: 'travel',
-    },
-    {
-      filename: 'travel-04.jpg',
-      url: '/images/products/travel-04.jpg',
-      keywords: ['comfort', 'neck', 'pillow', 'rest', 'sleep', 'travel'],
-      category: 'travel',
-    },
-    {
-      filename: 'travel-05.jpg',
-      url: '/images/products/travel-05.jpg',
-      keywords: ['camera', 'photo', 'memory', 'capture', 'document', 'travel'],
-      category: 'travel',
-    },
-  ],
-  other: [
-    {
-      filename: 'other-01.jpg',
-      url: '/images/products/other-01.jpg',
-      keywords: ['general', 'miscellaneous', 'various', 'different', 'other'],
-      category: 'other',
-    },
-    {
-      filename: 'other-02.jpg',
-      url: '/images/products/other-02.jpg',
-      keywords: ['product', 'item', 'goods', 'merchandise', 'stock'],
-      category: 'other',
-    },
-    {
-      filename: 'other-03.jpg',
-      url: '/images/products/other-03.jpg',
-      keywords: ['quality', 'premium', 'standard', 'regular', 'normal'],
-      category: 'other',
-    },
-    {
-      filename: 'other-04.jpg',
-      url: '/images/products/other-04.jpg',
-      keywords: ['value', 'affordable', 'budget', 'economic', 'cheap'],
-      category: 'other',
-    },
-    {
-      filename: 'other-05.jpg',
-      url: '/images/products/other-05.jpg',
-      keywords: ['special', 'unique', 'exclusive', 'limited', 'rare'],
-      category: 'other',
-    },
-  ],
 };
 
 /**
@@ -506,18 +156,19 @@ function extractKeywords(...texts: (string | undefined | null)[]): string[] {
  * Select the best image for a deal.
  *
  * Algorithm:
- *   1. Extract keywords from product name, merchant, category, description
- *   2. For each keyword, look up matching images in the keyword index
- *   3. Score each image by how many keywords it matches
- *   4. Among the top-scoring images, pick one using deal.id for determinism
- *   5. Return the image URL
+ *   1. Check if the target category has product images
+ *   2. If not, return category background image
+ *   3. If yes, extract keywords from product name, merchant, category, description
+ *   4. Score images by keyword match count
+ *   5. Pick the best match deterministically using deal.id
+ *   6. Return the image URL
  *
  * @param dealId - unique deal ID (for deterministic selection)
  * @param productName - product name
  * @param merchantName - merchant/store name
  * @param category - category slug
  * @param description - deal description
- * @returns URL to the best matching product image
+ * @returns URL to the best matching product image or category background
  */
 export function selectProductImage(
   dealId: string,
@@ -526,7 +177,7 @@ export function selectProductImage(
   category?: string | null,
   description?: string | null,
 ): string {
-  // Check if the target category has actual product images on disk
+  // Check if the target category has actual product images
   const targetCat = (category as ProductImageCategory) ?? 'other';
   const hasProductImages = PRODUCT_IMAGES[targetCat] && PRODUCT_IMAGES[targetCat].length > 0;
 
@@ -544,8 +195,6 @@ export function selectProductImage(
     const matches = KEYWORD_INDEX[keyword];
     if (!matches) continue;
     for (const { category: cat, index } of matches) {
-      // Only score images from categories that have product images
-      if (!PRODUCT_IMAGES[cat] || PRODUCT_IMAGES[cat].length === 0) continue;
       const key = `${cat}-${index}`;
       scores.set(key, (scores.get(key) ?? 0) + 1);
     }
